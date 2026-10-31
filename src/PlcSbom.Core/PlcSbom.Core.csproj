@@ -4,6 +4,13 @@
     <RootNamespace>PlcSbom.Core</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="NJsonSchema" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- CycloneDX 1.6.2 JSON schemas, embedded so validation works offline (CLAUDE.md section 2). -->
+    <EmbeddedResource Include="Validation/Schemas/*.json" LogicalName="PlcSbom.Schemas.%(Filename)%(Extension)" />
+  </ItemGroup>
+  <ItemGroup>
     <InternalsVisibleTo Include="PlcSbom.Tests" />
   </ItemGroup>
 </Project>

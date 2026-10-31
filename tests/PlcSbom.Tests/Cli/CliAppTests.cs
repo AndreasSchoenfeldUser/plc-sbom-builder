@@ -111,7 +111,6 @@ public sealed class CliAppTests
 
     [Theory]
     [InlineData("M9", "build", "--config", "machine.yml", "--release", "R2026.10")]
-    [InlineData("M1", "validate", "build/sbom-maschine.cdx.json", "--release-build")]
     [InlineData("M10", "report", "sbom.json", "--format", "md", "--out", "bericht.md")]
     [InlineData("M11", "compare", "sbom.json", "--field", "feld/1042.json", "--csv", "x.csv")]
     [InlineData("M12", "ids", "sbom.json", "--csaf", "csaf/")]

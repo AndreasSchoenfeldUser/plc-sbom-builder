@@ -1,5 +1,6 @@
 using System.CommandLine;
 using System.Globalization;
+using PlcSbom.Cli.Commands;
 using PlcSbom.Core;
 
 namespace PlcSbom.Cli;
@@ -38,7 +39,7 @@ public static class CliApp
             (parse, _) => ExecuteAsync(() => action(parse), stderr, parse.GetValue(verbose));
 
         root.Subcommands.Add(Build(Guard));
-        root.Subcommands.Add(Validate(Guard));
+        root.Subcommands.Add(Validate(Guard, verbose, stdout));
         root.Subcommands.Add(Report(Guard));
         root.Subcommands.Add(Compare(Guard));
         root.Subcommands.Add(Ids(Guard));
@@ -104,12 +105,12 @@ public static class CliApp
         return command;
     }
 
-    private static Command Validate(Func<Func<ParseResult, Task<int>>, Func<ParseResult, CancellationToken, Task<int>>> guard)
+    private static Command Validate(Func<Func<ParseResult, Task<int>>, Func<ParseResult, CancellationToken, Task<int>>> guard, Option<bool> verbose, TextWriter stdout)
     {
-        var sbom = new Argument<FileInfo>("sbom") { Description = "CycloneDX-Datei, auch eine fremde" };
+        var sbom = new Argument<string>("sbom") { Description = "CycloneDX-Datei, auch eine fremde" };
         var releaseBuild = new Option<bool>("--release-build") { Description = "Warnungen sind Befunde (Exit 1)" };
-        var command = new Command("validate", "Prüft eine SBOM gegen das Schema CycloneDX 1.6 und die Pflichtfelder der BSI TR-03183-2") { sbom, releaseBuild };
-        command.SetAction(guard(_ => NotImplemented("validate", "M1")));
+        var command = new Command("validate", "Prüft eine SBOM gegen das Schema CycloneDX 1.6 und die Pflichtfelder der BSI TR-03183-2; schreibt <sbom>.result.json") { sbom, releaseBuild };
+        command.SetAction(guard(p => ValidateCommand.RunAsync(p.GetValue(sbom)!, p.GetValue(releaseBuild), p.GetValue(verbose), stdout)));
         return command;
     }
 
