@@ -348,7 +348,8 @@ Alle Läufe lokal auf macOS 26.6.2 (arm64) mit .NET SDK 10.0.403, Ausgangsstand 
 | 5 | 31.10.2026, ab 22:40 | Gegenprüfung mit sbomqs an veränderten Kopien der Minimal-SBOM | 2 Abweichungen | Validator akzeptierte Lizenz als Freitext und eine verwaiste Komponente. Fehler im Werkzeug; Regeln `DISTRIBUTION_LICENCE_INVALID` und `COMPONENT_UNREACHABLE` ergänzt (SV-48 bis SV-52) |
 | 6 | 31.10.2026, 22:54 | 233 Tests, Formatprüfung, Gegenprüfung über beide Golden Files | 233 bestanden, Format ohne Befund, keine Abweichung | Stand M1 |
 | 7 | 31.10.2026, M2 | neue CODESYS-Tests | Build abgebrochen | Analyseregeln xUnit1051 (fehlendes `CancellationToken`) und xUnit2029 (`Assert.Empty` mit Filter) in den neuen Tests. Im Test behoben |
-| 8 | 31.10.2026, 22:56 | 292 Tests mit TRX-Bericht, Formatprüfung; Gegenprüfung mit sbomqs über die beiden CODESYS-Golden-Files | 292 bestanden, 0,55 s, Format ohne Befund; sbomqs: robin 36 gleich, 89 erklärt, 0 Abweichungen; zwei Steuerungen 36/59/0 | Grundlage dieser Datei |
+| 8 | 31.10.2026, 22:56 | 292 Tests mit TRX-Bericht, Formatprüfung; Gegenprüfung mit sbomqs über die beiden CODESYS-Golden-Files | 292 bestanden, 0,55 s, Format ohne Befund; sbomqs: robin 36 gleich, 89 erklärt, 0 Abweichungen; zwei Steuerungen 36/59/0 | M2 |
+| 9 | 31.10.2026, CI-Fix | 292 Tests, gebaut wie in CI (`-c Release -p:ContinuousIntegrationBuild=true`), vorher und nachher | vorher 207 bestanden, 85 fehlgeschlagen; nachher 292 bestanden; Debug-Build ebenfalls 292, Format ohne Befund | Fehler in den Tests, nicht im Werkzeug: Pfadsuche über `[CallerFilePath]` durch `RepoPaths` ersetzt |
 
 Die Tests selbst haben keinen Fehler im Werkzeug aufgedeckt, die Gegenprüfung in Lauf 5 zwei.
 
@@ -370,7 +371,7 @@ Die Meldung zu `--foo` kommt auf Englisch aus der Bibliothek System.CommandLine;
 ## 6. Nicht abgedeckt
 
 - `cyclonedx-cli validate` als zweite, unabhängige Schemaprüfung: noch nicht eingerichtet.
-- CI ist rot: Die Tests finden CLAUDE.md, ANLEITUNG.md und die Golden Files über `[CallerFilePath]`; in CI wird dieser Pfad beim Bauen auf `/_/` umgeschrieben. Lokal betrifft das nicht.
+- CI-Lauf steht aus: Die Tests fanden CLAUDE.md, ANLEITUNG.md, Golden Files und Fixtures über `[CallerFilePath]`; CI baut mit `ContinuousIntegrationBuild=true`, das diesen Pfad auf `/_/` umschreibt (lokal nachgestellt: 85 von 292 fehlgeschlagen). Seit Lauf 9 suchen sie das Repository über `PlcSbom.sln` oberhalb der Testbinärdateien ([RepoPaths.cs](tests/PlcSbom.Tests/RepoPaths.cs)). Ein Lauf auf ubuntu und windows bestätigt das noch nicht.
 - Lauf auf Windows: nur in CI (`windows-latest`), nicht lokal.
 - Test, dass die Schemaprüfung ohne Netz auskommt: Das Schema ist eingebettet und fremde Verweise werden abgelehnt, ein eigener Test mit gesperrtem Netz fehlt.
 - Adapter, `build`, `report`, `compare`, `ids`, `inspect` und der Openness-Worker: noch nicht umgesetzt; die Tests prüfen nur, dass sie mit `[NOT_IMPLEMENTED]` bzw. `[OPENNESS_WINDOWS_ONLY]` enden.

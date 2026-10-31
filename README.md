@@ -11,8 +11,8 @@ Stand 31.10.2026, Version 0.1.0: Das Gerüst (M0) steht, M1 ist fachlich abgesch
 | Meilenstein | Inhalt | Stand |
 |---|---|---|
 | M0 | Gerüst: Solution, CLI-Skelett, Exit-Codes, CI-Matrix, Pakete | erledigt |
-| M1 | Modell, CycloneDX-Writer, Validator (Schema und TR-Regeln) | fachlich fertig: Modell, Writer (Variante B, E-007), Validator, `validate`, `docs/regeln-tr03183.md`, Gegenprüfung mit sbomqs ohne Abweichung (E-010); offen ist eine grüne CI, weil die Tests dort Repository-Dateien nicht finden |
-| M2 | Adapter `codesys`, Quelle `v35` (CODESYS V3.5, PLCopen XML) | in Arbeit: Adapter, `inspect --adapter codesys`, Feldtabelle [docs/adapter-codesys.md](docs/adapter-codesys.md), drei echte Fixtures und Golden Files fertig; offen ist die grüne CI auf ubuntu und windows |
+| M1 | Modell, CycloneDX-Writer, Validator (Schema und TR-Regeln) | fachlich fertig: Modell, Writer (Variante B, E-007), Validator, `validate`, `docs/regeln-tr03183.md`, Gegenprüfung mit sbomqs ohne Abweichung (E-010); Ursache der roten CI (Pfade der Testdateien) behoben, Bestätigung durch einen CI-Lauf steht aus |
+| M2 | Adapter `codesys`, Quelle `v35` (CODESYS V3.5, PLCopen XML) | in Arbeit: Adapter, `inspect --adapter codesys`, Feldtabelle [docs/adapter-codesys.md](docs/adapter-codesys.md), drei echte Fixtures und Golden Files fertig; offen ist die Bestätigung durch einen CI-Lauf auf ubuntu und windows |
 | M3, M4 | Adapter `codesys`, Quellen `v23` (CODESYS V2.3) und `c4` (CODESYS 4) | offen, brauchen Comquent-Demo-Projekte |
 | M5 | Adapter `studio5000` (Rockwell) | offen |
 | M6 | Adapter `twincat` (Beckhoff) | offen |

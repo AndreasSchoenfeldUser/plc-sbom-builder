@@ -1,4 +1,3 @@
-using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace PlcSbom.Tests;
@@ -9,10 +8,7 @@ namespace PlcSbom.Tests;
 /// </summary>
 public static class Golden
 {
-    public static string PathOf(string name) => Path.Combine(Root(), "golden", name);
-
-    // Evaluated inside this file, so the path is this project's directory on every machine that builds it.
-    private static string Root([CallerFilePath] string here = "") => Path.GetDirectoryName(here)!;
+    public static string PathOf(string name) => RepoPaths.Of("tests", "PlcSbom.Tests", "golden", name);
 
     public static void AssertMatches(string name, byte[] actual)
     {

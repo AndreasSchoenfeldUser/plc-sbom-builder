@@ -1,4 +1,3 @@
-using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using PlcSbom.Core.Gaps;
 
@@ -10,8 +9,7 @@ namespace PlcSbom.Tests.Docs;
 /// </summary>
 public sealed partial class DocsConsistencyTests
 {
-    private static string RepoFile(string name, [CallerFilePath] string here = "") =>
-        File.ReadAllText(Path.GetFullPath(Path.Combine(Path.GetDirectoryName(here)!, "..", "..", "..", name)));
+    private static string RepoFile(string name) => File.ReadAllText(RepoPaths.Of(name));
 
     public static TheoryData<string> GapCodes => new(GapCatalog.All.Select(g => g.Code));
 
