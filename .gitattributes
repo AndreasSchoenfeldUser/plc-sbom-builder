@@ -1,0 +1,11 @@
+* text=auto
+*.cs text eol=lf
+*.csproj text eol=lf
+*.props text eol=lf
+*.md text eol=lf
+*.yml text eol=lf
+*.json text eol=lf
+*.sh text eol=lf
+# Fixtures and golden files byte-exact (line endings, BOM are test content).
+fixtures/** -text -merge
+tests/PlcSbom.Tests/golden/** -text -merge

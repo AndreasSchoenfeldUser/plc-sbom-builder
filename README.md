@@ -6,11 +6,11 @@ Produktziel, Recherchestand, Architektur und Meilensteine stehen in [CLAUDE.md](
 
 ## Stand
 
-Stand 31.10.2026: Es gibt noch keinen Code. Die Befehle und Beispiele unten beschreiben das Zielbild aus CLAUDE.md und laufen erst nach den genannten Meilensteinen.
+Stand 31.10.2026: Das Gerüst (M0) steht. Alle Befehle sind mit ihren Optionen angelegt; ein Aufruf endet mit Exit 2 und `[NOT_IMPLEMENTED]` und nennt den Meilenstein, der den Befehl umsetzt. Die Beispiele unten beschreiben das Zielbild aus CLAUDE.md.
 
 | Meilenstein | Inhalt | Stand |
 |---|---|---|
-| M0 | Gerüst: Solution, CLI-Skelett, Exit-Codes, CI-Matrix, Pakete | offen |
+| M0 | Gerüst: Solution, CLI-Skelett, Exit-Codes, CI-Matrix, Pakete | erledigt |
 | M1 | Modell, CycloneDX-Writer, Validator (Schema und TR-Regeln) | offen |
 | M2–M4 | Adapter `codesys` (V3.5, V2.3, CODESYS 4) | offen, V2.3 und CODESYS 4 brauchen Comquent-Demo-Projekte |
 | M5 | Adapter `studio5000` (Rockwell) | offen |
@@ -91,12 +91,23 @@ Gleich wie bei `plc-build`.
 
 ## Bauen und testen
 
-Voraussetzung: .NET 10 SDK. Ab M0:
+Voraussetzung: .NET 10 SDK.
 
 ```bash
 dotnet build PlcSbom.sln
-dotnet test PlcSbom.sln
+dotnet test                                     # Microsoft.Testing.Platform, siehe docs/entscheidungen.md E-002
+dotnet format PlcSbom.sln --verify-no-changes
+dotnet run tools/check-licenses.cs              # Lizenzen aller Pakete; mit -- --write neue THIRD-PARTY-NOTICES.md
 ```
+
+Paket für eine Plattform (self-contained, eine Datei):
+
+```bash
+dotnet publish src/PlcSbom.Cli/PlcSbom.Cli.csproj -c Release -r linux-x64 -o out/publish   # oder win-x64, osx-arm64
+out/publish/plc-sbom --help
+```
+
+CI (GitHub Actions, ubuntu und windows) baut, testet, prüft Format und Lizenzen, packt `plc-sbom-<version>-linux-x64.tar.gz` und `plc-sbom-<version>-win-x64.zip` und ruft die Exe aus dem ausgepackten Paket auf.
 
 Der Openness-Worker unter `workers/tia-openness/` ist eine eigene Solution (.NET Framework 4.8) und baut nur auf Windows mit TIA Portal V21. Live-Tests gegen TIA laufen nur mit `PLC_SBOM_LIVE=1`.
 

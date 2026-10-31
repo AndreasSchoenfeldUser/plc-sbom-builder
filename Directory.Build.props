@@ -1,0 +1,18 @@
+<Project>
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <!-- Single source of the tool version (CLAUDE.md section 11). -->
+    <Version>0.1.0</Version>
+    <Company>Comquent GmbH</Company>
+    <Product>PLC SBOM Builder</Product>
+    <Copyright>Comquent GmbH</Copyright>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    <Deterministic>true</Deterministic>
+    <!-- Symbols inside the assemblies: stack traces in verbose mode, no loose .pdb in the package. -->
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+</Project>

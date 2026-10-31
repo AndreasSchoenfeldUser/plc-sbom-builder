@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <AssemblyName>plc-sbom</AssemblyName>
+    <RootNamespace>PlcSbom.Cli</RootNamespace>
+  </PropertyGroup>
+  <!-- Delivery (CLAUDE.md section 11): self-contained single file, no installed .NET runtime needed.
+       Applies to `dotnet publish -r <rid>`; build and test stay framework-dependent.
+       No trimming: YamlDotNet and CycloneDX.Core (from M1) use reflection. -->
+  <PropertyGroup Condition="'$(RuntimeIdentifier)' != ''">
+    <SelfContained>true</SelfContained>
+    <PublishSingleFile>true</PublishSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../PlcSbom.Core/PlcSbom.Core.csproj" />
+    <PackageReference Include="System.CommandLine" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="PlcSbom.Tests" />
+  </ItemGroup>
+</Project>

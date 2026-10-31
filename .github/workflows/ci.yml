@@ -1,0 +1,101 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+env:
+  DOTNET_NOLOGO: "1"
+  DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+  TESTINGPLATFORM_TELEMETRY_OPTOUT: "1"
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            rid: linux-x64
+          - os: windows-latest
+            rid: win-x64
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore
+        run: dotnet restore PlcSbom.sln
+
+      - name: Format
+        run: dotnet format PlcSbom.sln --verify-no-changes --no-restore
+
+      - name: Build
+        run: dotnet build PlcSbom.sln -c Release --no-restore -p:ContinuousIntegrationBuild=true
+
+      - name: Test
+        run: dotnet test --solution PlcSbom.sln -c Release --no-build
+
+      - name: Licenses
+        if: runner.os == 'Linux'
+        run: dotnet run tools/check-licenses.cs -- --verify
+
+      - name: Publish
+        run: |
+          dotnet publish src/PlcSbom.Cli/PlcSbom.Cli.csproj -c Release -r ${{ matrix.rid }} \
+            -p:ContinuousIntegrationBuild=true -o out/publish
+          version=$(dotnet msbuild src/PlcSbom.Cli/PlcSbom.Cli.csproj -getProperty:Version)
+          echo "PACKAGE=plc-sbom-${version}-${{ matrix.rid }}" >> "$GITHUB_ENV"
+
+      - name: Package (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          mkdir -p out/pkg dist
+          cp out/publish/plc-sbom THIRD-PARTY-NOTICES.md out/pkg/
+          tar -czf "dist/${PACKAGE}.tar.gz" -C out/pkg .
+
+      - name: Package (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force out/pkg, dist | Out-Null
+          Copy-Item out/publish/plc-sbom.exe, THIRD-PARTY-NOTICES.md out/pkg/
+          Compress-Archive -Path out/pkg/* -DestinationPath "dist/$env:PACKAGE.zip"
+
+      # M0 is done when --help runs from the package on both platforms (CLAUDE.md section 12).
+      - name: Smoke test from package
+        run: |
+          smoke=out/smoke
+          mkdir -p "$smoke"
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            pwsh -NoProfile -Command "Expand-Archive -Path 'dist/$PACKAGE.zip' -DestinationPath '$smoke'"
+            exe="$smoke/plc-sbom.exe"
+          else
+            tar -xzf "dist/$PACKAGE.tar.gz" -C "$smoke"
+            exe="$smoke/plc-sbom"
+          fi
+          test -f "$smoke/THIRD-PARTY-NOTICES.md"
+          "$exe" --help
+          "$exe" --version
+          expect() { want=$1; shift; set +e; "$exe" "$@"; got=$?; set -e; [ "$got" = "$want" ] || { echo "exit $got, erwartet $want: $*"; exit 1; }; }
+          expect 2 unbekannt
+          expect 2 build --config machine.yml --release R1
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            expect 2 export-aml --project a.zap21 --out a.aml
+          else
+            expect 3 export-aml --project a.zap21 --out a.aml
+          fi
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: ${{ env.PACKAGE }}
+          path: dist/*
+          if-no-files-found: error
