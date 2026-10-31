@@ -139,6 +139,7 @@ plc-sbom-builder/
 ├── CLAUDE.md
 ├── README.md                       Überblick, Stand der Meilensteine, Bauen und Testen
 ├── ANLEITUNG.md                    Bedienungsanleitung für Anwender (Befehle, Ausgaben, Lückencodes, Pipeline)
+├── TESTFAELLE.md                   alle Testfälle, Testläufe und Ergebnisse
 ├── THIRD-PARTY-NOTICES.md          Lizenzen aller ausgelieferten Abhängigkeiten
 ├── global.json
 ├── Directory.Build.props

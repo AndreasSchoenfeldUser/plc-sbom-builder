@@ -100,6 +100,8 @@ dotnet format PlcSbom.sln --verify-no-changes
 dotnet run tools/check-licenses.cs              # Lizenzen aller Pakete; mit -- --write neue THIRD-PARTY-NOTICES.md
 ```
 
+Alle Testfälle mit Testläufen und Ergebnissen beschreibt [TESTFAELLE.md](TESTFAELLE.md) (Stand 31.10.2026: 219 Tests, alle bestanden).
+
 Paket für eine Plattform (self-contained, eine Datei):
 
 ```bash
