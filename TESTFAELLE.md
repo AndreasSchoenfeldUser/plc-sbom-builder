@@ -411,7 +411,8 @@ Alle Läufe lokal auf macOS 26.6.2 (arm64) mit .NET SDK 10.0.403, Ausgangsstand 
 | 9 | 31.10.2026, CI-Fix | 292 Tests, gebaut wie in CI (`-c Release -p:ContinuousIntegrationBuild=true`), vorher und nachher | vorher 207 bestanden, 85 fehlgeschlagen; nachher 292 bestanden; Debug-Build ebenfalls 292, Format ohne Befund | Fehler in den Tests, nicht im Werkzeug: Pfadsuche über `[CallerFilePath]` durch `RepoPaths` ersetzt |
 | 10 | 31.10.2026, 23:10 | 312 Tests mit TRX-Bericht, Formatprüfung; neu: Leser für Gerätebeschreibungen (E-015) | 312 bestanden, 0,61 s, Format ohne Befund. Zwischenlauf: 2 Doku-Abgleiche fehlgeschlagen, weil `devdesc-not-found` noch nicht in ANLEITUNG.md und CLAUDE.md stand; Doku ergänzt | Stand M2 |
 | 11 | 31.10.2026, 23:15, CI | GitHub Actions, Lauf 41247352670 auf Commit `37ce75b`: Build, 312 Tests, Format und Lizenzen auf `ubuntu-latest` und `windows-latest`, Rauchtest aus beiden Paketen, Gegenprüfung mit sbomqs über alle fünf Golden Files | alle Jobs grün; sbomqs ohne Abweichung (devdesc 33 gleich, 32 erklärt; robin 36/89; zwei Steuerungen 36/59; Hand-Modell 74/41; Minimal 20/5) | Abschluss M1 und M2; bestätigt die Pfadsuche aus Lauf 9 |
-| 12 | 31.10.2026, 23:36, M5 | 347 Tests mit TRX-Bericht, Formatprüfung; neu: L5X-Leser und Adapter `studio5000` (E-017); Gegenprüfung mit sbomqs v2.1.3 über alle acht Golden Files | 347 bestanden, 0,93 s, Format ohne Befund; sbomqs ohne Abweichung (ra-L85E 16 gleich, 9 erklärt; acd 25/20; Modulbaum 39/36; übrige wie Lauf 11). Zwischenstand: 4 Golden Files fehlten und wurden erzeugt und von Hand geprüft; das JSON-Feld `eKey` in `inspect` in `ekey` umbenannt | Grundlage dieser Datei |
+| 12 | 31.10.2026, 23:36, M5 | 347 Tests mit TRX-Bericht, Formatprüfung; neu: L5X-Leser und Adapter `studio5000` (E-017); Gegenprüfung mit sbomqs v2.1.3 über alle acht Golden Files | 347 bestanden, 0,93 s, Format ohne Befund; Tabelle der Gegenprüfung ohne Abweichung (ra-L85E 16 gleich, 9 erklärt; acd 25/20; Modulbaum 39/36; übrige wie Lauf 11), der Abgleich endete aber mit Exit 1; beim Ablesen übersehen, siehe Lauf 13. Zwischenstand: 4 Golden Files fehlten und wurden erzeugt und von Hand geprüft; das JSON-Feld `eKey` in `inspect` in `ekey` umbenannt | M5 |
+| 13 | 01.11.2026, CI und lokal | CI-Lauf 41250633501 auf Commit `d92b7cd`: Build und Tests auf ubuntu und windows grün, Job `crosscheck` rot. Danach Gegenprüfung lokal mit sbomqs v2.1.3, Exit-Code geprüft | Fehler im Abgleichwerkzeug, nicht im Validator: Die beiden baugleichen 1756-EN2T der synthetischen Datei haben bei sbomqs dieselbe Kennung, der Abgleich brach dort mit „Abgleich nicht eindeutig“ ab und ließ die Einträge aus der Tabelle weg. Behoben in `tools/crosscheck-sbomqs.cs`: Eintrag gegen jede Komponente mit dieser Kennung prüfen, zählen nur bei gleicher Bewertung. Danach Exit 0, Modulbaum 51 gleich, 44 erklärt, 0 Abweichungen; Gegenprobe mit einer Kopie, in der nur einer der beiden EN2T keinen Hersteller hat: Exit 1 mit „Abgleich nicht eindeutig“ | Grundlage dieser Datei |
 
 Die Tests selbst haben keinen Fehler im Werkzeug aufgedeckt, die Gegenprüfung in Lauf 5 zwei.
 
@@ -450,7 +451,7 @@ Kein xUnit-Test, sondern [tools/crosscheck-sbomqs.cs](tools/crosscheck-sbomqs.cs
 | `hand-model.cdx.json` | 74 | 0 | 41 | 0 |
 | `minimal-synthetisch.cdx.json` | 20 | 0 | 5 | 0 |
 | `studio5000-acd-aoi.cdx.json` | 25 | 0 | 20 | 0 |
-| `studio5000-module-baum.cdx.json` | 39 | 0 | 36 | 0 |
+| `studio5000-module-baum.cdx.json` | 51 | 0 | 44 | 0 |
 | `studio5000-ra-l85e.cdx.json` | 16 | 0 | 9 | 0 |
 
 Gegenprobe mit sechs absichtlich veränderten Kopien der Minimal-SBOM (nur lokal, nicht eingecheckt):

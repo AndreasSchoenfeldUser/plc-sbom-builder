@@ -180,7 +180,7 @@ Jede Abweichung lässt den Job scheitern. Sie gilt als Fehler im eigenen Validat
 | `SBOM-URI`, `source code URI`, `URI of deployable form`, `other unique identifiers`, `original licence (declared)` | – | nein, Pflicht nur „falls vorhanden“ |
 | `effective licence`, `hash of source code`, `security.txt URL`, `BOM links` | – | nein, optional |
 
-sbomqs benennt Komponenten mit gekürztem `<name>-<version>`; der Abgleich bildet diese Kürzung nach (`common.UniqueElementID` in sbomqs). Ist eine Kennung mehrdeutig oder unbekannt, scheitert der Abgleich mit Meldung.
+sbomqs benennt Komponenten mit gekürztem `<name>-<version>`; der Abgleich bildet diese Kürzung nach (`common.UniqueElementID` in sbomqs). Ist eine Kennung unbekannt, scheitert der Abgleich mit Meldung. Baugleiche Module haben dieselbe Kennung (zwei 1756-EN2T mit Revision 11.1 heißen beide „1756-EN2T, Firmware-11.1“), und welcher Komponente ein Eintrag von sbomqs gilt, ist dann nicht erkennbar. Der Abgleich prüft den Eintrag deshalb gegen jede dieser Komponenten und zählt ihn nur, wenn der Validator alle gleich bewertet; sonst scheitert er mit der Meldung „Abgleich nicht eindeutig“.
 
 ### 10.2 Bekannte Unterschiede
 
@@ -193,6 +193,7 @@ sbomqs benennt Komponenten mit gekürztem `<name>-<version>`; der Abgleich bilde
 | sbomqs führt die Felder aus 5.2.3 und 5.2.4 in seiner Tabelle als „required“ und gibt 0 Punkte, wenn sie fehlen | nicht verglichen, siehe Abschnitt 4 |
 | sbomqs nummeriert einige Felder anders als die TR (Quellcode-URI als 5.2.3, andere Kennungen als 5.2.5; in der TR beide 5.2.4) | ohne Folgen |
 | sbomqs akzeptiert `effectiveLicence` und `effectiveLicense` | Validator warnt bei `effectiveLicense` (E-009) |
+| sbomqs unterscheidet Komponenten nur über Name und Version, bom-ref spielt keine Rolle | baugleiche Module wie in 10.1 beschrieben |
 
 ### 10.3 Ergebnis am 31.10.2026
 

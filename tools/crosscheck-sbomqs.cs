@@ -163,13 +163,18 @@ foreach (var file in files)
             problems.Add($"{file}: Die sbomqs-Kennung „{element}“ passt zu keiner Komponente.");
             continue;
         }
-        if (refs.Count > 1)
+        // Identical modules (same name and version, e.g. two 1756-EN2T 11.1) share one sbomqs id; which of
+        // them a record belongs to is unknown. The record counts only if the validator judges all of them alike.
+        var candidates = refs
+            .Select(r => Classify(file, r, field, present, sbomqsText,
+                report.Findings.Where(f => f.ComponentRef == r && f.Fields.Contains(trField)).ToList(), schemaInvalid))
+            .ToList();
+        if (candidates.Select(c => (c.Verdict, c.Own)).Distinct().Count() > 1)
         {
-            problems.Add($"{file}: Die sbomqs-Kennung „{element}“ passt zu mehreren Komponenten ({string.Join(", ", refs)}); Abgleich nicht eindeutig.");
+            problems.Add($"{file}: Die sbomqs-Kennung „{element}“ passt zu mehreren Komponenten ({string.Join(", ", refs)}), und der Validator bewertet „{field}“ dort unterschiedlich; Abgleich nicht eindeutig.");
             continue;
         }
-        var findings = report.Findings.Where(f => f.ComponentRef == refs[0] && f.Fields.Contains(trField)).ToList();
-        rows.Add(Classify(file, refs[0], field, present, sbomqsText, findings, schemaInvalid));
+        rows.Add(candidates[0] with { Element = string.Join(", ", refs) });
     }
 }
 
