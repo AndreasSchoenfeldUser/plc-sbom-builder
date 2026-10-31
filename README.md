@@ -2,23 +2,23 @@
 
 Kommandozeilenwerkzeug, das eine CI-Pipeline in jedem Build aufruft. Es liest die SPS-Projekte einer Maschine aus und erzeugt daraus eine SBOM im Format CycloneDX 1.6 JSON, auch wenn die Maschine Steuerungen mehrerer Hersteller enthält. Die Datei wird gegen das CycloneDX-Schema und die Pflichtfelder der BSI TR-03183-2 geprüft; ein Fehler beendet den Build.
 
-Produktziel, Recherchestand, Architektur und Meilensteine stehen in [CLAUDE.md](CLAUDE.md). Produkt der Comquent GmbH; Schwesterwerkzeuge sind [plc-build](../plc-build-tool/) und [plc-git-bridge](../plc-git-bridge/).
+Die Bedienung (Befehle, Ausgaben, Lückencodes, Einsatz in der Pipeline) beschreibt die [ANLEITUNG.md](ANLEITUNG.md). Produktziel, Recherchestand, Architektur und Meilensteine stehen in [CLAUDE.md](CLAUDE.md). Produkt der Comquent GmbH; Schwesterwerkzeuge sind [plc-build](../plc-build-tool/) und [plc-git-bridge](../plc-git-bridge/).
 
 ## Stand
 
-Stand 31.10.2026: Das Gerüst (M0) steht. Alle Befehle sind mit ihren Optionen angelegt; ein Aufruf endet mit Exit 2 und `[NOT_IMPLEMENTED]` und nennt den Meilenstein, der den Befehl umsetzt. Die Beispiele unten beschreiben das Zielbild aus CLAUDE.md.
+Stand 31.10.2026, Version 0.1.0: Das Gerüst (M0) steht, M1 ist in Arbeit. `plc-sbom validate` ist nutzbar: Es prüft eine SBOM gegen das eingebettete Schema CycloneDX 1.6 und die Regeln der BSI TR-03183-2 und schreibt die Ergebnisdatei. Alle anderen Befehle sind mit ihren Optionen angelegt; ein Aufruf endet mit Exit 2 und `[NOT_IMPLEMENTED]` und nennt den Meilenstein, der den Befehl umsetzt. Die Beispiele unten beschreiben das Zielbild aus CLAUDE.md.
 
 | Meilenstein | Inhalt | Stand |
 |---|---|---|
 | M0 | Gerüst: Solution, CLI-Skelett, Exit-Codes, CI-Matrix, Pakete | erledigt |
-| M1 | Modell, CycloneDX-Writer, Validator (Schema und TR-Regeln) | offen |
+| M1 | Modell, CycloneDX-Writer, Validator (Schema und TR-Regeln) | in Arbeit: Modell, Writer, Validator und `validate` fertig; offen sind `docs/regeln-tr03183.md`, Entscheidung Variante A/B, Gegenprüfung mit `sbomqs --bsi` |
 | M2–M4 | Adapter `codesys` (V3.5, V2.3, CODESYS 4) | offen, V2.3 und CODESYS 4 brauchen Comquent-Demo-Projekte |
 | M5 | Adapter `studio5000` (Rockwell) | offen |
 | M6 | Adapter `twincat` (Beckhoff) | offen |
 | M7, M8 | Adapter `tia-aml` (TIA V17–V21, AML-Export), GSDML-Leser | offen |
 | M9 | `build` mit `machine.yml`, Merge, Determinismus | offen |
 | M10–M12 | `report`, `compare`, `ids` | offen |
-| M13 | Jenkinsfile, Anwender-README, Release-Pakete | offen |
+| M13 | Jenkinsfile, README und ANLEITUNG.md auf Release-Stand, Release-Pakete | offen |
 | M14 | Adapter `tia-portal` über TIA Openness V21 (Windows) | offen |
 
 ## Was das Werkzeug liest

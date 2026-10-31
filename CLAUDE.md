@@ -137,7 +137,8 @@ Versionen vor dem ersten `dotnet add package` auf nuget.org prüfen und zentral 
 ```
 plc-sbom-builder/
 ├── CLAUDE.md
-├── README.md                       für Anwender (ab M13)
+├── README.md                       Überblick, Stand der Meilensteine, Bauen und Testen
+├── ANLEITUNG.md                    Bedienungsanleitung für Anwender (Befehle, Ausgaben, Lückencodes, Pipeline)
 ├── THIRD-PARTY-NOTICES.md          Lizenzen aller ausgelieferten Abhängigkeiten
 ├── global.json
 ├── Directory.Build.props
@@ -297,6 +298,10 @@ Beispiel der Produktseite (verkürzt, Zielbild):
 | `firmware-not-in-project` | Projekt führt keine Firmware (EtherCAT-Klemme, GSD-Gerät, TIA-Gerät ohne `FirmwareVersion`) | Hinweis; Warnung bei TIA-Gerät ohne Attribut |
 | `firmware-projected-only` | Firmware nur als Sollwert, kein Ist-Stand eingelesen | Hinweis |
 | `hash-unavailable` | Kein SHA-512 der ausgelieferten Form möglich (Hersteller-Firmware) | Hinweis |
+| `filename-unavailable` | Komponente liegt nicht als Datei vor, kein Dateiname bestimmbar | Hinweis |
+| `program-source-missing` | Anwenderprogramm ohne `program` in `machine.yml`, kein Hash | Warnung |
+| `file-properties-unknown` | Unbekannt, ob ausführbar, Archiv oder strukturiert | Warnung |
+| `creator-contact-unknown` | Für den Hersteller weder E-Mail noch URL bekannt | Warnung |
 | `version-unresolved` | Bibliotheksversion `*` bzw. „neueste installierte“ | Warnung |
 | `libraries-not-read` | Quelle enthält keine Bibliotheken (`tia-aml`) und keine sind deklariert | Warnung |
 | `runtime-version-unknown` | Laufzeitversion steht nicht im Projekt (TwinCAT) | Warnung |
@@ -606,7 +611,7 @@ H5 ist beantwortet: Comquent-Demo-Projekt über `tia-aml` (exportiert mit `expor
 
 - Name = Station + „, Anwenderprogramm“, Version = Release + ` (git <kurz-hash>)`.
 - Hash: SHA-512 über das Quellverzeichnis der Station (`program` in `machine.yml`), Verfahren wie `../plc-build-tool/docs/adr/0005-hash-ueber-quellen.md`, nur mit SHA-512 statt SHA-256: alle Dateien rekursiv, Pfad relativ mit `/`, ordinal sortiert, je Datei `<pfad>\0<sha512 des inhalts>\n`, darüber SHA-512. Eine SPS liefert kein stabiles Binärartefakt; das Verfahren steht in `docs/regeln-tr03183.md`.
-- Ohne `program` in der Konfiguration: Lücke `hash-unavailable` mit Warnung, kein erfundener Hash.
+- Ohne `program` in der Konfiguration: Lücke `program-source-missing` mit Warnung, kein erfundener Hash.
 
 ### 5.7 Hersteller- und Teil-SBOMs
 
@@ -868,7 +873,7 @@ Jeder Meilenstein endet mit grünen Tests auf ubuntu und windows, `dotnet format
 | M10 | `report` (HTML, Markdown) | Baum, Tabellen, Quellen, Lückenliste und Hardware-Anhang wie in 8.2 |
 | M11 | `compare`, `--as-built`, `--csv` | Web-API-Fixture gegen AML-Soll, Abweichungen erkannt, Exit 1 bei Abweichung |
 | M12 | `ids` | Abdeckungsbericht gegen eine Handvoll echter Siemens-CSAF-Dateien |
-| M13 | `examples/Jenkinsfile`, README für Anwender, Release-Pakete mit eigener SBOM | Pipeline-Stufen Build → Archiv → optional Dependency-Track, Staffelung Entwicklungs-/Release-Build |
+| M13 | `examples/Jenkinsfile`, README und ANLEITUNG.md auf Release-Stand, Release-Pakete mit eigener SBOM | Pipeline-Stufen Build → Archiv → optional Dependency-Track, Staffelung Entwicklungs-/Release-Build |
 | M14 | Adapter `tia-portal` (TIA über Openness): Openness-Worker mit `doctor`, `inventory` und `export-aml`, Firewall-Skript, Live-Tests | 5.5.6 erfüllt |
 
 Die Adapter-Meilensteine M2 bis M8 und M14 folgen der festgelegten Reihenfolge: CODESYS (V3.5, V2.3, CODESYS 4), Rockwell, Beckhoff, TIA AML, TIA Openness. Fehlt für einen Spike die Comquent-Fixture, geht die Arbeit mit dem nächsten Adapter weiter und der Spike wird nachgeholt; das wird in `docs/entscheidungen.md` vermerkt.
@@ -902,6 +907,7 @@ Solange die Comquent-Demo-Projekte fehlen, M7 mit der V17-Fixture beginnen, M3 u
 
 ## 14. Arbeitsweise in diesem Repository
 
+- **Doku mitziehen (verbindlich).** Jede Änderung am Werkzeug (Befehl, Option, Exit-Code, Meldungscode, Lückencode, Prüfregel, Ausgabeformat, Adapter, `machine.yml`-Schlüssel, Meilensteinstand) passt im selben Commit **CLAUDE.md, README.md und ANLEITUNG.md** an. CLAUDE.md beschreibt Ziel und Regeln, README.md Überblick und Stand, ANLEITUNG.md die Bedienung für Anwender. Beispielausgaben in der Anleitung aus einem echten Lauf übernehmen, nicht ausdenken.
 - **Tests zuerst.** Golden Files unter `tests/PlcSbom.Tests/golden/`; Änderung an einem Golden File nur mit Begründung im Commit.
 - **Live-Tests** gegen TIA Portal nur mit `PLC_SBOM_LIVE=1`, nur auf dem Windows-Agenten, immer über den Worker-Prozess. Jeder Live-Lauf prüft, dass danach kein von ihm gestarteter Prozess übrig ist und die Eingabedatei unverändert ist (SHA-256 vorher/nachher).
 - **Herstellerfakten:** Vor dem Einbau einer Schnittstelle Handbuchseite, Siemens-Skill oder Fixture prüfen. Was nicht belegt ist, als Annahme im Code-Kommentar oder in `docs/entscheidungen.md` kennzeichnen und **[prüfen]** in dieser Datei erst entfernen, wenn es belegt ist. Nicht kompilierender Openness-Code ist schlimmer als ein offenes TODO.
