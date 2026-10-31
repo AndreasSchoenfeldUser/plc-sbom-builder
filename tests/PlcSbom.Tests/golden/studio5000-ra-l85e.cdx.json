@@ -1,0 +1,214 @@
+{
+  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:1a02a05d-7584-5a0b-9e78-e462de8d242a",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-10-31T12:00:00Z",
+    "tools": {
+      "components": [
+        {
+          "type": "application",
+          "manufacturer": {
+            "name": "Comquent GmbH"
+          },
+          "name": "PLC SBOM Builder",
+          "version": "0.1.0"
+        },
+        {
+          "type": "application",
+          "name": "Studio 5000 Logix Designer",
+          "version": "36.00"
+        }
+      ]
+    },
+    "manufacturer": {
+      "name": "Musterbau GmbH",
+      "contact": [
+        {
+          "email": "sbom@musterbau.example"
+        }
+      ]
+    },
+    "component": {
+      "bom-ref": "maschine-xy",
+      "type": "device",
+      "supplier": {
+        "name": "Musterbau GmbH"
+      },
+      "manufacturer": {
+        "name": "Musterbau GmbH",
+        "contact": [
+          {
+            "email": "sbom@musterbau.example"
+          }
+        ]
+      },
+      "name": "Maschine XY",
+      "version": "R2026.10",
+      "licenses": [
+        {
+          "expression": "LicenseRef-musterbau-proprietary",
+          "acknowledgement": "concluded"
+        }
+      ],
+      "properties": [
+        {
+          "name": "bsi:component:effectiveLicence",
+          "value": "LicenseRef-musterbau-proprietary"
+        },
+        {
+          "name": "plcsbom:git:commit",
+          "value": "a1b2c3d4e5f60718293a4b5c6d7e8f9012345678"
+        },
+        {
+          "name": "plcsbom:logicalComponent",
+          "value": "true"
+        }
+      ]
+    }
+  },
+  "components": [
+    {
+      "bom-ref": "abfuellung-fw",
+      "type": "firmware",
+      "supplier": {
+        "name": "Rockwell Automation"
+      },
+      "manufacturer": {
+        "name": "Rockwell Automation"
+      },
+      "name": "1756-L85E, Firmware",
+      "version": "36.11",
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "plcsbom:adapter",
+          "value": "studio5000"
+        },
+        {
+          "name": "plcsbom:device:ekey",
+          "value": "Disabled"
+        },
+        {
+          "name": "plcsbom:device:name",
+          "value": "Local"
+        },
+        {
+          "name": "plcsbom:device:orderNumber",
+          "value": "1756-L85E"
+        },
+        {
+          "name": "plcsbom:device:position",
+          "value": "Local/0"
+        },
+        {
+          "name": "plcsbom:device:type",
+          "value": "1756-L85E"
+        },
+        {
+          "name": "plcsbom:device:vendor",
+          "value": "Rockwell Automation"
+        },
+        {
+          "name": "plcsbom:device:vendor:origin",
+          "value": "assumed"
+        },
+        {
+          "name": "plcsbom:firmware:origin",
+          "value": "projected"
+        },
+        {
+          "name": "plcsbom:firmware:version",
+          "value": "36.11"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "firmware-projected-only"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "vendor-sbom-missing"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "rockwell/ra-ExampleForCICD_L85E.L5X"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "d39622b04aa02c0c152faf02c076cea0f06aff51a1019e75b2e1e2813245555e"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Abfuellung"
+        },
+        {
+          "name": "plcsbom:vendorKey:ProductCode",
+          "value": "168"
+        },
+        {
+          "name": "plcsbom:vendorKey:ProductType",
+          "value": "14"
+        },
+        {
+          "name": "plcsbom:vendorKey:VendorId",
+          "value": "1"
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "abfuellung-fw",
+      "dependsOn": []
+    },
+    {
+      "ref": "maschine-xy",
+      "dependsOn": [
+        "abfuellung-fw"
+      ]
+    }
+  ],
+  "compositions": [
+    {
+      "aggregate": "complete",
+      "dependencies": [
+        "maschine-xy"
+      ]
+    },
+    {
+      "aggregate": "unknown",
+      "dependencies": [
+        "abfuellung-fw"
+      ]
+    }
+  ]
+}

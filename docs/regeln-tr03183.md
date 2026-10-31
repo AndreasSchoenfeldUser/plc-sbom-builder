@@ -97,13 +97,13 @@ Spalte „erklärt“: das Pflichtfeld aus Abschnitt 3, dessen Fehlen der Code e
 | `runtime-version-unknown` | Warnung | Version | Lückenregeln: Laufzeit ohne Version | 5.2.2 Version. TwinCAT führt nur die XAE-Version im Projekt. |
 | `libraries-not-read` | Warnung | – | Adapter `tia-aml` (M7) | 5.2.2 Abhängigkeiten, 5.1. Das Programm wird `incomplete` gekennzeichnet; Bibliotheken sind eingebundene Fremdkomponenten (3.2.1, kompilierter Code). |
 | `program-not-read` | Hinweis | – | Adapter `tia-aml` (M7) | 5.2.2 Vollständigkeit: Das Programm wird `incomplete` gekennzeichnet, wie die TR es für unvollständige Aufzählungen vorsieht. |
-| `ekey-disabled` | Warnung | – | Adapter `studio5000` (M5) | Kein TR-Feld. Das Gerät im Feld kann vom projektierten abweichen; der Soll-Stand ist dann wenig belastbar. |
+| `ekey-disabled` | Warnung | – | Adapter `studio5000` (M5), nur an Modulen außer der Steuerung (E-017) | Kein TR-Feld. Das Gerät im Feld kann vom projektierten abweichen; der Soll-Stand ist dann wenig belastbar. |
 | `license-unknown` | Warnung | Distributionslizenz | Lückenregeln: keine Distributionslizenz bekannt | 5.2.2, 6.1. Pflichtfeld fehlt, Lücke vermerkt. |
 | `vendor-sbom-missing` | Hinweis | – | Lückenregeln: jede Firmware, bis eine Hersteller-SBOM zugeordnet ist (M9) | 5.1: Die Firmware gehört zum Lieferumfang, ihre Bestandteile kennt nur der Hersteller. Die Abhängigkeiten der Firmware sind deshalb `unknown`; das ist eine zulässige Angabe der Vollständigkeit. |
 | `protected-block-unknown` | Warnung | Ersteller, Version | Adapter `tia-portal` (M14) | 5.2.2 Ersteller und Version. |
 | `gsdml-not-found` | Warnung | – | Adapter `tia-aml` (M8) | Ohne GSDML fehlen Hersteller und Bestellnummer; die Pflichtfeld-Lücke selbst trägt `supplier-unknown`. |
 | `devdesc-not-found` | Warnung | – | Adapter `codesys`, Quelle `v35`, wenn `deviceDescriptions` gesetzt ist (E-015) | Kein TR-Feld. Ohne eindeutige Gerätebeschreibung fehlen Hersteller und Produktname; die Pflichtfeld-Lücke selbst trägt `supplier-unknown`. |
-| `order-number-not-in-project` | Warnung | – | Adapter `tia-aml` (M8), `codesys` (M2) | Kein TR-Pflichtfeld. Die Bestellnummer ist der Schlüssel für CSAF-Advisories (CLAUDE.md Abschnitt 6). |
+| `order-number-not-in-project` | Warnung | – | Adapter `tia-aml` (M8), `codesys` (M2), `studio5000` (M5, Modul ohne `CatalogNumber`) | Kein TR-Pflichtfeld. Die Bestellnummer ist der Schlüssel für CSAF-Advisories (CLAUDE.md Abschnitt 6). |
 | `supplier-unknown` | Warnung | Ersteller | Lückenregeln: kein Hersteller bekannt | 5.2.2 Ersteller. |
 | `creator-contact-unknown` | Warnung | Ersteller | Lückenregeln: Hersteller ohne E-Mail und URL | 5.2.2: E-Mail-Adresse, sonst URL. |
 | `device-unassigned` | Hinweis | – | Lückenregeln: Gerät ohne Station | Kein TR-Feld. Die Firmware hängt direkt an der Maschine. |
@@ -196,7 +196,7 @@ sbomqs benennt Komponenten mit gekürztem `<name>-<version>`; der Abgleich bilde
 
 ### 10.3 Ergebnis am 31.10.2026
 
-Lauf mit sbomqs v2.1.3 über beide Golden Files:
+Lauf mit sbomqs v2.1.3 über die beiden Golden Files von M1 (Ergebnisse späterer Golden Files in TESTFAELLE.md, Abschnitt 5):
 
 | Datei | gleich, vorhanden | gleich, fehlt | erklärt | Abweichung | sbomqs-Punkte (Pflichtfelder) |
 |---|---:|---:|---:|---:|---:|

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!-- Synthetic fixture (Comquent). Structure follows acd-ACDTestsWithAOI.L5X; covers what the real
+     exports do not show: a remote chassis behind an Ethernet adapter, an I/O module with keying
+     disabled, a module of another vendor id (fictitious), a module without revision and AOIs with
+     and without Vendor and RevisionExtension. IP addresses are documentation addresses (RFC 5737). -->
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="36.00" TargetName="Verpackung_L83" TargetType="Controller" ContainsContext="false" ExportDate="Sat Oct 31 12:00:00 2026" ExportOptions="NoRawData L5KData DecoratedData ForceProtectedEncoding AllProjDocTrans">
+<Controller Use="Target" Name="Verpackung_L83" ProcessorType="1756-L83E" MajorRev="36" MinorRev="11" CommPath="AB_ETHIP-1\192.0.2.10" ProjectSN="16#0000_0000">
+<RedundancyInfo Enabled="false" KeepTestEditsOnSwitchOver="false"/>
+<SafetyInfo/>
+<DataTypes/>
+<Modules>
+<Module Name="Local" CatalogNumber="1756-L83E" Vendor="1" ProductType="14" ProductCode="166" Major="36" Minor="11" ParentModule="Local" ParentModPortId="1" Inhibited="false" MajorFault="true">
+<EKey State="Disabled"/>
+<Ports>
+<Port Id="1" Address="0" Type="ICP" Upstream="false">
+<Bus Size="10"/>
+</Port>
+<Port Id="2" Address="192.0.2.10" Type="Ethernet" Upstream="false">
+<Bus/>
+</Port>
+</Ports>
+</Module>
+<Module Name="ENET_Lokal" CatalogNumber="1756-EN2T" Vendor="1" ProductType="12" ProductCode="166" Major="11" Minor="1" ParentModule="Local" ParentModPortId="1" Inhibited="false" MajorFault="false">
+<EKey State="CompatibleModule"/>
+<Ports>
+<Port Id="1" Address="2" Type="ICP" Upstream="true"/>
+<Port Id="2" Address="192.0.2.11" Type="Ethernet" Upstream="false">
+<Bus/>
+</Port>
+</Ports>
+</Module>
+<Module Name="Remote_Rack" CatalogNumber="1756-EN2T" Vendor="1" ProductType="12" ProductCode="166" Major="11" Minor="1" ParentModule="ENET_Lokal" ParentModPortId="2" Inhibited="false" MajorFault="false">
+<EKey State="ExactMatch"/>
+<Ports>
+<Port Id="1" Address="0" Type="ICP" Upstream="false">
+<Bus Size="7"/>
+</Port>
+<Port Id="2" Address="192.0.2.20" Type="Ethernet" Upstream="true"/>
+</Ports>
+</Module>
+<Module Name="DI_Remote" CatalogNumber="1756-IB16" Vendor="1" ProductType="7" ProductCode="11" Major="3" Minor="1" ParentModule="Remote_Rack" ParentModPortId="1" Inhibited="false" MajorFault="false">
+<EKey State="Disabled"/>
+<Ports>
+<Port Id="1" Address="3" Type="ICP" Upstream="true"/>
+</Ports>
+</Module>
+<Module Name="Waage" CatalogNumber="WG-100-EIP" Vendor="65000" ProductType="43" ProductCode="7" Major="2" Minor="4" ParentModule="ENET_Lokal" ParentModPortId="2" Inhibited="false" MajorFault="false">
+<EKey State="CompatibleModule"/>
+<Ports>
+<Port Id="2" Address="192.0.2.30" Type="Ethernet" Upstream="true"/>
+</Ports>
+</Module>
+<Module Name="Ohne_Revision" CatalogNumber="1756-OB16E" Vendor="1" ProductType="7" ProductCode="19" ParentModule="Local" ParentModPortId="1" Inhibited="false" MajorFault="false">
+<EKey State="CompatibleModule"/>
+<Ports>
+<Port Id="1" Address="4" Type="ICP" Upstream="true"/>
+</Ports>
+</Module>
+</Modules>
+<AddOnInstructionDefinitions>
+<AddOnInstructionDefinition Name="Comquent_Motor" Revision="2.3" RevisionExtension="Werksstand" Vendor="Comquent GmbH" ExecutePrescan="false" ExecutePostscan="false" ExecuteEnableInFalse="false" SoftwareRevision="v36.00">
+</AddOnInstructionDefinition>
+<AddOnInstructionDefinition Name="Ventil_Einfach" Revision="1.0" ExecutePrescan="false" ExecutePostscan="false" ExecuteEnableInFalse="false" SoftwareRevision="v36.00">
+</AddOnInstructionDefinition>
+</AddOnInstructionDefinitions>
+<Tags/>
+<Programs/>
+<Tasks/>
+</Controller>
+</RSLogix5000Content>

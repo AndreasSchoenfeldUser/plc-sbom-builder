@@ -47,6 +47,40 @@ public sealed class InspectCommandTests
     }
 
     [Fact]
+    public async Task Studio5000_inventory_matches_the_golden_file()
+    {
+        var fixture = Fixtures.PathOf("studio5000/module-baum-synthetisch.L5X");
+
+        var (exit, output, error) = await Run("inspect", fixture, "--adapter", "studio5000");
+
+        Assert.Equal(ExitCodes.Ok, exit);
+        Assert.Equal("", error);
+        Assert.DoesNotContain("192.0.2.", output); // port addresses never leave the reader
+        var normalized = output.Replace(fixture.Replace("\\", "\\\\"), "fixtures/studio5000/module-baum-synthetisch.L5X");
+        Golden.AssertMatches("studio5000-module-baum.inspect.json", Encoding.UTF8.GetBytes(normalized));
+    }
+
+    [Fact]
+    public async Task Studio5000_component_export_can_be_inspected()
+    {
+        var (exit, output, _) = await Run("inspect", Fixtures.PathOf("studio5000/ra-WetBulbTemperature.L5X"), "--adapter", "studio5000");
+
+        Assert.Equal(ExitCodes.Ok, exit);
+        var json = JsonNode.Parse(output)!;
+        Assert.Equal("studio5000", json["adapter"]!.GetValue<string>());
+        Assert.Equal("AddOnInstructionDefinition", json["project"]!["targetType"]!.GetValue<string>());
+    }
+
+    [Fact]
+    public async Task Non_l5x_file_ends_with_exit_2()
+    {
+        var (exit, _, error) = await Run("inspect", Fixtures.PathOf("codesys/v35/robin-codesys_project.xml"), "--adapter", "studio5000");
+
+        Assert.Equal(ExitCodes.Usage, exit);
+        Assert.StartsWith("[NOT_L5X] ", error);
+    }
+
+    [Fact]
     public async Task Missing_file_ends_with_exit_2()
     {
         var (exit, _, error) = await Run("inspect", "gibt-es-nicht.xml", "--adapter", "codesys");

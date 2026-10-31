@@ -1,0 +1,116 @@
+{
+  "format": 1,
+  "adapter": "studio5000",
+  "file": "fixtures/studio5000/module-baum-synthetisch.L5X",
+  "sha256": "a6e13057c99fbce12629f2863cfc9777c52ae5f06d6246a223b4a4f4c8f3181c",
+  "project": {
+    "schemaRevision": "1.0",
+    "softwareRevision": "36.00",
+    "targetName": "Verpackung_L83",
+    "targetType": "Controller",
+    "containsContext": false,
+    "exportDate": "Sat Oct 31 12:00:00 2026",
+    "controller": {
+      "name": "Verpackung_L83",
+      "use": "Target",
+      "processorType": "1756-L83E",
+      "majorRev": "36",
+      "minorRev": "11",
+      "redundancyEnabled": false
+    },
+    "modules": [
+      {
+        "name": "Local",
+        "catalogNumber": "1756-L83E",
+        "vendor": "1",
+        "productType": "14",
+        "productCode": "166",
+        "major": "36",
+        "minor": "11",
+        "parentModule": "Local",
+        "parentModPortId": "1",
+        "ekey": "Disabled",
+        "upstreamPortType": "ICP",
+        "slot": 0
+      },
+      {
+        "name": "ENET_Lokal",
+        "catalogNumber": "1756-EN2T",
+        "vendor": "1",
+        "productType": "12",
+        "productCode": "166",
+        "major": "11",
+        "minor": "1",
+        "parentModule": "Local",
+        "parentModPortId": "1",
+        "ekey": "CompatibleModule",
+        "upstreamPortType": "ICP",
+        "slot": 2
+      },
+      {
+        "name": "Remote_Rack",
+        "catalogNumber": "1756-EN2T",
+        "vendor": "1",
+        "productType": "12",
+        "productCode": "166",
+        "major": "11",
+        "minor": "1",
+        "parentModule": "ENET_Lokal",
+        "parentModPortId": "2",
+        "ekey": "ExactMatch",
+        "upstreamPortType": "Ethernet"
+      },
+      {
+        "name": "DI_Remote",
+        "catalogNumber": "1756-IB16",
+        "vendor": "1",
+        "productType": "7",
+        "productCode": "11",
+        "major": "3",
+        "minor": "1",
+        "parentModule": "Remote_Rack",
+        "parentModPortId": "1",
+        "ekey": "Disabled",
+        "upstreamPortType": "ICP",
+        "slot": 3
+      },
+      {
+        "name": "Waage",
+        "catalogNumber": "WG-100-EIP",
+        "vendor": "65000",
+        "productType": "43",
+        "productCode": "7",
+        "major": "2",
+        "minor": "4",
+        "parentModule": "ENET_Lokal",
+        "parentModPortId": "2",
+        "ekey": "CompatibleModule",
+        "upstreamPortType": "Ethernet"
+      },
+      {
+        "name": "Ohne_Revision",
+        "catalogNumber": "1756-OB16E",
+        "vendor": "1",
+        "productType": "7",
+        "productCode": "19",
+        "parentModule": "Local",
+        "parentModPortId": "1",
+        "ekey": "CompatibleModule",
+        "upstreamPortType": "ICP",
+        "slot": 4
+      }
+    ],
+    "addOnInstructions": [
+      {
+        "name": "Comquent_Motor",
+        "revision": "2.3",
+        "revisionExtension": "Werksstand",
+        "vendor": "Comquent GmbH"
+      },
+      {
+        "name": "Ventil_Einfach",
+        "revision": "1.0"
+      }
+    ]
+  }
+}

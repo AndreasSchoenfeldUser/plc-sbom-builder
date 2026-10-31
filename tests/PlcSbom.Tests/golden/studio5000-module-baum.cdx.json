@@ -1,0 +1,929 @@
+{
+  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:1a02a05d-7584-5a0b-9e78-e462de8d242a",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-10-31T12:00:00Z",
+    "tools": {
+      "components": [
+        {
+          "type": "application",
+          "manufacturer": {
+            "name": "Comquent GmbH"
+          },
+          "name": "PLC SBOM Builder",
+          "version": "0.1.0"
+        },
+        {
+          "type": "application",
+          "name": "Studio 5000 Logix Designer",
+          "version": "36.00"
+        }
+      ]
+    },
+    "manufacturer": {
+      "name": "Musterbau GmbH",
+      "contact": [
+        {
+          "email": "sbom@musterbau.example"
+        }
+      ]
+    },
+    "component": {
+      "bom-ref": "maschine-xy",
+      "type": "device",
+      "supplier": {
+        "name": "Musterbau GmbH"
+      },
+      "manufacturer": {
+        "name": "Musterbau GmbH",
+        "contact": [
+          {
+            "email": "sbom@musterbau.example"
+          }
+        ]
+      },
+      "name": "Maschine XY",
+      "version": "R2026.10",
+      "licenses": [
+        {
+          "expression": "LicenseRef-musterbau-proprietary",
+          "acknowledgement": "concluded"
+        }
+      ],
+      "properties": [
+        {
+          "name": "bsi:component:effectiveLicence",
+          "value": "LicenseRef-musterbau-proprietary"
+        },
+        {
+          "name": "plcsbom:git:commit",
+          "value": "a1b2c3d4e5f60718293a4b5c6d7e8f9012345678"
+        },
+        {
+          "name": "plcsbom:logicalComponent",
+          "value": "true"
+        }
+      ]
+    }
+  },
+  "components": [
+    {
+      "bom-ref": "abfuellung-aoi-comquent-motor",
+      "type": "library",
+      "supplier": {
+        "name": "Comquent GmbH"
+      },
+      "manufacturer": {
+        "name": "Comquent GmbH"
+      },
+      "name": "Comquent_Motor",
+      "version": "2.3",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "studio5000"
+        },
+        {
+          "name": "plcsbom:aoi:revisionExtension",
+          "value": "Werksstand"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "add-on-instruction"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "rockwell/module-baum-synthetisch.L5X"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "a6e13057c99fbce12629f2863cfc9777c52ae5f06d6246a223b4a4f4c8f3181c"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Abfuellung"
+        },
+        {
+          "name": "plcsbom:vendor:origin",
+          "value": "source"
+        }
+      ]
+    },
+    {
+      "bom-ref": "abfuellung-aoi-ventil-einfach",
+      "type": "library",
+      "name": "Ventil_Einfach",
+      "version": "1.0",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "studio5000"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "supplier-unknown"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "add-on-instruction"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "rockwell/module-baum-synthetisch.L5X"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "a6e13057c99fbce12629f2863cfc9777c52ae5f06d6246a223b4a4f4c8f3181c"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Abfuellung"
+        }
+      ]
+    },
+    {
+      "bom-ref": "abfuellung-fw",
+      "type": "firmware",
+      "supplier": {
+        "name": "Rockwell Automation"
+      },
+      "manufacturer": {
+        "name": "Rockwell Automation"
+      },
+      "name": "1756-L83E, Firmware",
+      "version": "36.11",
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "plcsbom:adapter",
+          "value": "studio5000"
+        },
+        {
+          "name": "plcsbom:device:ekey",
+          "value": "Disabled"
+        },
+        {
+          "name": "plcsbom:device:name",
+          "value": "Local"
+        },
+        {
+          "name": "plcsbom:device:orderNumber",
+          "value": "1756-L83E"
+        },
+        {
+          "name": "plcsbom:device:position",
+          "value": "Local/0"
+        },
+        {
+          "name": "plcsbom:device:type",
+          "value": "1756-L83E"
+        },
+        {
+          "name": "plcsbom:device:vendor",
+          "value": "Rockwell Automation"
+        },
+        {
+          "name": "plcsbom:device:vendor:origin",
+          "value": "assumed"
+        },
+        {
+          "name": "plcsbom:firmware:origin",
+          "value": "projected"
+        },
+        {
+          "name": "plcsbom:firmware:version",
+          "value": "36.11"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "firmware-projected-only"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "vendor-sbom-missing"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "rockwell/module-baum-synthetisch.L5X"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "a6e13057c99fbce12629f2863cfc9777c52ae5f06d6246a223b4a4f4c8f3181c"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Abfuellung"
+        },
+        {
+          "name": "plcsbom:vendorKey:ProductCode",
+          "value": "166"
+        },
+        {
+          "name": "plcsbom:vendorKey:ProductType",
+          "value": "14"
+        },
+        {
+          "name": "plcsbom:vendorKey:VendorId",
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "bom-ref": "abfuellung-fw-enet-lokal-remote-rack",
+      "type": "firmware",
+      "supplier": {
+        "name": "Rockwell Automation"
+      },
+      "manufacturer": {
+        "name": "Rockwell Automation"
+      },
+      "name": "1756-EN2T, Firmware",
+      "version": "11.1",
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "plcsbom:adapter",
+          "value": "studio5000"
+        },
+        {
+          "name": "plcsbom:device:ekey",
+          "value": "ExactMatch"
+        },
+        {
+          "name": "plcsbom:device:name",
+          "value": "Remote_Rack"
+        },
+        {
+          "name": "plcsbom:device:orderNumber",
+          "value": "1756-EN2T"
+        },
+        {
+          "name": "plcsbom:device:position",
+          "value": "ENET_Lokal/Remote_Rack"
+        },
+        {
+          "name": "plcsbom:device:type",
+          "value": "1756-EN2T"
+        },
+        {
+          "name": "plcsbom:device:vendor",
+          "value": "Rockwell Automation"
+        },
+        {
+          "name": "plcsbom:device:vendor:origin",
+          "value": "assumed"
+        },
+        {
+          "name": "plcsbom:firmware:origin",
+          "value": "projected"
+        },
+        {
+          "name": "plcsbom:firmware:version",
+          "value": "11.1"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "firmware-projected-only"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "vendor-sbom-missing"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "rockwell/module-baum-synthetisch.L5X"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "a6e13057c99fbce12629f2863cfc9777c52ae5f06d6246a223b4a4f4c8f3181c"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Abfuellung"
+        },
+        {
+          "name": "plcsbom:vendorKey:ProductCode",
+          "value": "166"
+        },
+        {
+          "name": "plcsbom:vendorKey:ProductType",
+          "value": "12"
+        },
+        {
+          "name": "plcsbom:vendorKey:VendorId",
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "bom-ref": "abfuellung-fw-enet-lokal-waage",
+      "type": "firmware",
+      "name": "WG-100-EIP, Firmware",
+      "version": "2.4",
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "plcsbom:adapter",
+          "value": "studio5000"
+        },
+        {
+          "name": "plcsbom:device:ekey",
+          "value": "CompatibleModule"
+        },
+        {
+          "name": "plcsbom:device:name",
+          "value": "Waage"
+        },
+        {
+          "name": "plcsbom:device:orderNumber",
+          "value": "WG-100-EIP"
+        },
+        {
+          "name": "plcsbom:device:position",
+          "value": "ENET_Lokal/Waage"
+        },
+        {
+          "name": "plcsbom:device:type",
+          "value": "WG-100-EIP"
+        },
+        {
+          "name": "plcsbom:firmware:origin",
+          "value": "projected"
+        },
+        {
+          "name": "plcsbom:firmware:version",
+          "value": "2.4"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "firmware-projected-only"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "supplier-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "vendor-sbom-missing"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "rockwell/module-baum-synthetisch.L5X"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "a6e13057c99fbce12629f2863cfc9777c52ae5f06d6246a223b4a4f4c8f3181c"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Abfuellung"
+        },
+        {
+          "name": "plcsbom:vendorKey:ProductCode",
+          "value": "7"
+        },
+        {
+          "name": "plcsbom:vendorKey:ProductType",
+          "value": "43"
+        },
+        {
+          "name": "plcsbom:vendorKey:VendorId",
+          "value": "65000"
+        }
+      ]
+    },
+    {
+      "bom-ref": "abfuellung-fw-local-2",
+      "type": "firmware",
+      "supplier": {
+        "name": "Rockwell Automation"
+      },
+      "manufacturer": {
+        "name": "Rockwell Automation"
+      },
+      "name": "1756-EN2T, Firmware",
+      "version": "11.1",
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "plcsbom:adapter",
+          "value": "studio5000"
+        },
+        {
+          "name": "plcsbom:device:ekey",
+          "value": "CompatibleModule"
+        },
+        {
+          "name": "plcsbom:device:name",
+          "value": "ENET_Lokal"
+        },
+        {
+          "name": "plcsbom:device:orderNumber",
+          "value": "1756-EN2T"
+        },
+        {
+          "name": "plcsbom:device:position",
+          "value": "Local/2"
+        },
+        {
+          "name": "plcsbom:device:type",
+          "value": "1756-EN2T"
+        },
+        {
+          "name": "plcsbom:device:vendor",
+          "value": "Rockwell Automation"
+        },
+        {
+          "name": "plcsbom:device:vendor:origin",
+          "value": "assumed"
+        },
+        {
+          "name": "plcsbom:firmware:origin",
+          "value": "projected"
+        },
+        {
+          "name": "plcsbom:firmware:version",
+          "value": "11.1"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "firmware-projected-only"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "vendor-sbom-missing"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "rockwell/module-baum-synthetisch.L5X"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "a6e13057c99fbce12629f2863cfc9777c52ae5f06d6246a223b4a4f4c8f3181c"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Abfuellung"
+        },
+        {
+          "name": "plcsbom:vendorKey:ProductCode",
+          "value": "166"
+        },
+        {
+          "name": "plcsbom:vendorKey:ProductType",
+          "value": "12"
+        },
+        {
+          "name": "plcsbom:vendorKey:VendorId",
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "bom-ref": "abfuellung-fw-local-4",
+      "type": "firmware",
+      "supplier": {
+        "name": "Rockwell Automation"
+      },
+      "manufacturer": {
+        "name": "Rockwell Automation"
+      },
+      "name": "1756-OB16E, Firmware",
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "plcsbom:adapter",
+          "value": "studio5000"
+        },
+        {
+          "name": "plcsbom:device:ekey",
+          "value": "CompatibleModule"
+        },
+        {
+          "name": "plcsbom:device:name",
+          "value": "Ohne_Revision"
+        },
+        {
+          "name": "plcsbom:device:orderNumber",
+          "value": "1756-OB16E"
+        },
+        {
+          "name": "plcsbom:device:position",
+          "value": "Local/4"
+        },
+        {
+          "name": "plcsbom:device:type",
+          "value": "1756-OB16E"
+        },
+        {
+          "name": "plcsbom:device:vendor",
+          "value": "Rockwell Automation"
+        },
+        {
+          "name": "plcsbom:device:vendor:origin",
+          "value": "assumed"
+        },
+        {
+          "name": "plcsbom:firmware:origin",
+          "value": "not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "firmware-not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "vendor-sbom-missing"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "rockwell/module-baum-synthetisch.L5X"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "a6e13057c99fbce12629f2863cfc9777c52ae5f06d6246a223b4a4f4c8f3181c"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Abfuellung"
+        },
+        {
+          "name": "plcsbom:vendorKey:ProductCode",
+          "value": "19"
+        },
+        {
+          "name": "plcsbom:vendorKey:ProductType",
+          "value": "7"
+        },
+        {
+          "name": "plcsbom:vendorKey:VendorId",
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "bom-ref": "abfuellung-fw-remote-rack-3",
+      "type": "firmware",
+      "supplier": {
+        "name": "Rockwell Automation"
+      },
+      "manufacturer": {
+        "name": "Rockwell Automation"
+      },
+      "name": "1756-IB16, Firmware",
+      "version": "3.1",
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "plcsbom:adapter",
+          "value": "studio5000"
+        },
+        {
+          "name": "plcsbom:device:ekey",
+          "value": "Disabled"
+        },
+        {
+          "name": "plcsbom:device:name",
+          "value": "DI_Remote"
+        },
+        {
+          "name": "plcsbom:device:orderNumber",
+          "value": "1756-IB16"
+        },
+        {
+          "name": "plcsbom:device:position",
+          "value": "Remote_Rack/3"
+        },
+        {
+          "name": "plcsbom:device:type",
+          "value": "1756-IB16"
+        },
+        {
+          "name": "plcsbom:device:vendor",
+          "value": "Rockwell Automation"
+        },
+        {
+          "name": "plcsbom:device:vendor:origin",
+          "value": "assumed"
+        },
+        {
+          "name": "plcsbom:firmware:origin",
+          "value": "projected"
+        },
+        {
+          "name": "plcsbom:firmware:version",
+          "value": "3.1"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "ekey-disabled"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "firmware-projected-only"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "vendor-sbom-missing"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "rockwell/module-baum-synthetisch.L5X"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "a6e13057c99fbce12629f2863cfc9777c52ae5f06d6246a223b4a4f4c8f3181c"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Abfuellung"
+        },
+        {
+          "name": "plcsbom:vendorKey:ProductCode",
+          "value": "11"
+        },
+        {
+          "name": "plcsbom:vendorKey:ProductType",
+          "value": "7"
+        },
+        {
+          "name": "plcsbom:vendorKey:VendorId",
+          "value": "1"
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "abfuellung-aoi-comquent-motor",
+      "dependsOn": []
+    },
+    {
+      "ref": "abfuellung-aoi-ventil-einfach",
+      "dependsOn": []
+    },
+    {
+      "ref": "abfuellung-fw",
+      "dependsOn": []
+    },
+    {
+      "ref": "abfuellung-fw-enet-lokal-remote-rack",
+      "dependsOn": []
+    },
+    {
+      "ref": "abfuellung-fw-enet-lokal-waage",
+      "dependsOn": []
+    },
+    {
+      "ref": "abfuellung-fw-local-2",
+      "dependsOn": []
+    },
+    {
+      "ref": "abfuellung-fw-local-4",
+      "dependsOn": []
+    },
+    {
+      "ref": "abfuellung-fw-remote-rack-3",
+      "dependsOn": []
+    },
+    {
+      "ref": "maschine-xy",
+      "dependsOn": [
+        "abfuellung-aoi-comquent-motor",
+        "abfuellung-aoi-ventil-einfach",
+        "abfuellung-fw",
+        "abfuellung-fw-enet-lokal-remote-rack",
+        "abfuellung-fw-enet-lokal-waage",
+        "abfuellung-fw-local-2",
+        "abfuellung-fw-local-4",
+        "abfuellung-fw-remote-rack-3"
+      ]
+    }
+  ],
+  "compositions": [
+    {
+      "aggregate": "complete",
+      "dependencies": [
+        "maschine-xy"
+      ]
+    },
+    {
+      "aggregate": "unknown",
+      "dependencies": [
+        "abfuellung-aoi-comquent-motor",
+        "abfuellung-aoi-ventil-einfach",
+        "abfuellung-fw",
+        "abfuellung-fw-enet-lokal-remote-rack",
+        "abfuellung-fw-enet-lokal-waage",
+        "abfuellung-fw-local-2",
+        "abfuellung-fw-local-4",
+        "abfuellung-fw-remote-rack-3"
+      ]
+    }
+  ]
+}

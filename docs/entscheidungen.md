@@ -134,3 +134,26 @@ Das .NET-10-SDK legt neue Solutions als `.slnx` an. CLAUDE.md nennt `PlcSbom.sln
 - Die Version der Gerätebeschreibung bleibt die der Beschreibung, nie die Firmware.
 
 **Folgen.** Ist `deviceDescriptions` nicht gesetzt, ändert sich nichts gegenüber E-014. Mit vollständigen Gerätebeschreibungen entfällt `supplier-unknown` am Gerät, `order-number-not-in-project` nur, wenn die Beschreibung eine Bestellnummer hat. Offen: Prüfung an Gerätebeschreibungen echter Industriegeräte (Comquent-Demo-Projekt).
+
+## E-016: M3 und M4 zurückgestellt, weiter mit M5 (31.10.2026)
+
+**Kontext.** M3 (CODESYS V2.3) und M4 (CODESYS 4) beginnen je mit einem Spike an einem Comquent-Demo-Projekt (CLAUDE.md Abschnitte 5.1.2, 5.1.3 und 13). Beide Demo-Projekte liegen noch nicht vor. Öffentliche Beispielprojekte mit Lizenz gibt es für V2.3 nicht, für CODESYS 4 (seit 24.09.2026) ebenfalls nicht.
+
+**Entscheidung.** Wie in CLAUDE.md Abschnitt 12 vorgesehen: Die Arbeit geht mit M5 (`studio5000`) weiter, M3 und M4 werden nachgeholt, sobald die Demo-Projekte da sind.
+
+**Folgen.** Die Quellen `v23` und `c4` des Adapters `codesys` bleiben bis dahin nicht umgesetzt. Die Reihenfolge der übrigen Adapter bleibt.
+
+## E-017: Regeln des Adapters studio5000 (31.10.2026)
+
+**Kontext.** Der L5X-Export nennt je Modul Bestellnummer (`CatalogNumber`), CIP-Herstellerkennung (`Vendor`), Produktkennung und die projektierte Revision (`Major`, `Minor`), aber keinen Herstellernamen und keinen Produktnamen. Echte Fixtures: drei Dateien aus `RockwellAutomation/ra-logix-cicd` (MIT), zwei aus `hutcheb/acd` (Apache-2.0). Alle Module darin haben `Vendor="1"`; das Controller-Modul hat überall `EKey State="Disabled"`. Ports von Ethernet-Modulen tragen IP-Adressen, der Controller einen `CommPath` mit IP-Adresse.
+
+**Entscheidung.**
+- Herstellerkennung `1` → `Rockwell Automation`, `vendor:origin = assumed`. Beleg: CLAUDE.md 5.2 („`Vendor="1"` = Rockwell“) und `ExtendedProperties` des 1756-EN2T in acd (`Rockwell Automation/Allen-Bradley`). Der Name wird nicht aus `ExtendedProperties` gelesen, weil er dort nur an manchen Modulen steht und dieselbe Kennung sonst zwei Schreibweisen bekäme. Andere Kennungen: kein Hersteller, `supplier-unknown`, keine eingebettete Kennungstabelle.
+- Firmware-Soll: Steuerung `Controller@MajorRev.MinorRev`, Module `Major.Minor`, unverändert ohne Auffüllen der Nebenversion. `firmware:origin = projected`.
+- Kodierung als neue Property `<ns>:device:ekey`. Dafür hat `Device` im Modell ein allgemeines Feld `SourceProperties` wie `SoftwareItem` (kein Sonderfall im Kern, H2); bestehende Golden Files ändern sich nicht. `ekey-disabled` (Warnung) nur an Modulen außer der Steuerung: Die Hauptversion der Steuerung bindet ohnehin das Projekt (Rockwell 1756-UM900, Wortlaut nicht abrufbar, als Annahme in `docs/adapter-studio5000.md` vermerkt), und an der Steuerung steht `Disabled` in jedem echten Export.
+- Position aus Parent und Steckplatz der Backplane (`Local/1`), hinter Netzwerkports aus Parent und Modulname. IP-Adressen liest der Leser gar nicht erst.
+- Nur Controller-Exporte ergeben eine Station; ein Export einzelner Bestandteile endet mit Exit 2 (`STUDIO5000_NOT_CONTROLLER`), der Wurzeltest mit `NOT_L5X`.
+- AOIs als Komponenten vom Typ `library` (`SoftwareKind.AddOnInstruction`), Version = `Revision`, `RevisionExtension` als `<ns>:aoi:revisionExtension`.
+- Werkzeugname `Studio 5000 Logix Designer` mit der `SoftwareRevision` des Exports. Der Export nennt den Produktnamen nicht; der Name folgt aus der Eingangsdefinition des Adapters (CLAUDE.md 1.1).
+
+**Folgen.** Jede Rockwell-Firmware trägt `creator-contact-unknown`, bis `machine.yml` einen Kontakt für den Hersteller nennt (M9). Ein Modul mit ausgeschalteter Kodierung ergibt eine Warnung, ein Release-Build mit `--release-build` scheitert daran; Abhilfe ist die Kodierung im Projekt einzuschalten. Fremdgeräte sind nur synthetisch belegt.

@@ -258,6 +258,10 @@ public static class CycloneDxWriter
         {
             p.Add($"{ns}:vendorKey:{key}", value);
         }
+        foreach (var (key, value) in device.SourceProperties)
+        {
+            p.Add($"{ns}:{key}", value);
+        }
         p.AddRange(GapProperties(device.Gaps, ns));
         return new Draft(bomRef, "firmware", $"{device.TypeName}, Firmware", device.Firmware, device.Vendor,
             device.FirmwareLicensing, device.Cpe, null, [], p.Items);

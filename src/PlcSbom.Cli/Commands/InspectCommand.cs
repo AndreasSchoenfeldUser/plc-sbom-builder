@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using PlcSbom.Core;
 using PlcSbom.Core.Adapters.Codesys.V35;
+using PlcSbom.Core.Adapters.Studio5000;
 
 namespace PlcSbom.Cli.Commands;
 
@@ -24,7 +25,6 @@ public static class InspectCommand
     /// <summary>Milestone of each adapter whose inspect is not built yet.</summary>
     private static readonly Dictionary<string, string> Pending = new(StringComparer.Ordinal)
     {
-        [AdapterIds.Studio5000] = "M5",
         [AdapterIds.TwinCat] = "M6",
         [AdapterIds.TiaAml] = "M7",
         [AdapterIds.TiaPortal] = "M14",
@@ -43,18 +43,33 @@ public static class InspectCommand
             throw new UsageException("USAGE", $"--gsdml gilt nur für die Adapter {AdapterIds.TiaAml} und {AdapterIds.TiaPortal}.");
         }
 
-        var content = CodesysV35Adapter.ReadFile(path);
-        var project = PlcOpenReader.Read(content, path);
-        var inventory = new CodesysInventory(
-            Format: 1,
-            Adapter: AdapterIds.Codesys,
-            Source: CodesysV35Adapter.Source,
-            File: path,
-            Sha256: Convert.ToHexStringLower(SHA256.HashData(content)),
-            Project: project);
-        await stdout.WriteAsync(JsonSerializer.Serialize(inventory, Json) + "\n").ConfigureAwait(false);
+        string json;
+        if (adapter == AdapterIds.Studio5000)
+        {
+            var content = Studio5000Adapter.ReadFile(path);
+            json = JsonSerializer.Serialize(new Studio5000Inventory(
+                Format: 1,
+                Adapter: AdapterIds.Studio5000,
+                File: path,
+                Sha256: Convert.ToHexStringLower(SHA256.HashData(content)),
+                Project: L5xReader.Read(content, path)), Json);
+        }
+        else
+        {
+            var content = CodesysV35Adapter.ReadFile(path);
+            json = JsonSerializer.Serialize(new CodesysInventory(
+                Format: 1,
+                Adapter: AdapterIds.Codesys,
+                Source: CodesysV35Adapter.Source,
+                File: path,
+                Sha256: Convert.ToHexStringLower(SHA256.HashData(content)),
+                Project: PlcOpenReader.Read(content, path)), Json);
+        }
+        await stdout.WriteAsync(json + "\n").ConfigureAwait(false);
         return ExitCodes.Ok;
     }
 
     private sealed record CodesysInventory(int Format, string Adapter, string Source, string File, string Sha256, PlcOpenProject Project);
+
+    private sealed record Studio5000Inventory(int Format, string Adapter, string File, string Sha256, L5xProject Project);
 }

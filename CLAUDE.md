@@ -1,6 +1,6 @@
 # CLAUDE.md: PLC SBOM Builder (`plc-sbom`), Prototyp
 
-> Stand: 31.10.2026 (Meilensteine und CODESYS V2.3/4 ergänzt; M1-Entscheidungen E-007 bis E-011 und TR-Regeln in `docs/regeln-tr03183.md` nachgetragen; M1 und M2 abgeschlossen; übrige Fakten Stand 29.10.2026). Grundlage: Produktseite comquent.de/produkte/plc-sbom-builder (Quelltext `src/app/produkte/inhalte.ts` im Website-Repository), der Entwurf `plc-sbom-builder-claude.md` mit der Recherche vom 25.10.2026, das Comquent-Whitepaper „SBOM für SPS-Projekte mit TIA Portal V21“, die Siemens-Openness-Skills (V21) und drei öffentliche AML-Exporte aus TIA V17, V18 und V21 (geprüft am 29.10.2026). Recherchefakten mit Datum 25.10.2026 sind nicht erneut geprüft; Versionen und Normstände vor der Nutzung nachsehen.
+> Stand: 31.10.2026 (Meilensteine und CODESYS V2.3/4 ergänzt; M1-Entscheidungen E-007 bis E-011 und TR-Regeln in `docs/regeln-tr03183.md` nachgetragen; M1, M2 und M5 umgesetzt, M3/M4 zurückgestellt (E-016); übrige Fakten Stand 29.10.2026). Grundlage: Produktseite comquent.de/produkte/plc-sbom-builder (Quelltext `src/app/produkte/inhalte.ts` im Website-Repository), der Entwurf `plc-sbom-builder-claude.md` mit der Recherche vom 25.10.2026, das Comquent-Whitepaper „SBOM für SPS-Projekte mit TIA Portal V21“, die Siemens-Openness-Skills (V21) und drei öffentliche AML-Exporte aus TIA V17, V18 und V21 (geprüft am 29.10.2026). Recherchefakten mit Datum 25.10.2026 sind nicht erneut geprüft; Versionen und Normstände vor der Nutzung nachsehen.
 > Produkt der Comquent GmbH (Industrial DevOps, Puchheim). Schwesterwerkzeuge: `plc-build` (../plc-build-tool), `plc-git-bridge` (../plc-git-bridge).
 
 ## 0. Start
@@ -281,12 +281,14 @@ Beispiel der Produktseite (verkürzt, Zielbild):
 | `<ns>:device:name` | Gerätename im Projekt (z. B. `PLC_1`) |
 | `<ns>:device:position` | Pfad aus Station, Rack, Steckplatz |
 | `<ns>:device:classification` | `CPU`, `HeadModule` usw., soweit die Quelle es liefert |
+| `<ns>:device:ekey` | Rockwell: elektronische Kodierung des Moduls (`ExactMatch`, `CompatibleModule`, `Disabled`) |
 | `<ns>:firmware:version` | Firmware-Stand wie in der Quelle |
 | `<ns>:firmware:origin` | `projected`, `as-found`, `not-in-project`, `unknown` |
 | `<ns>:vendorKey:<name>` | Herstellerschlüssel wie `GSDML`, `VendorId`, `DeviceId`, `ProductCode`, `RevisionNo` |
 | `<ns>:gsdml:softwareRelease` | `SoftwareRelease` aus der GSDML; beschreibt die GSDML, **nicht** die Firmware |
 | `<ns>:library` | Bibliothek eines Bibliothekstyps |
 | `<ns>:library:reference`, `<ns>:library:resolution`, `<ns>:library:company` | CODESYS: Referenz wie im Export (`#SM3_Basic`), Auflösung (`fixed`, `redirection`, `default`, `none`), Herstellerangabe der Referenz |
+| `<ns>:aoi:revisionExtension` | Rockwell: `RevisionExtension` einer Add-On Instruction, nicht Teil der Version |
 | `<ns>:version:requested` | angefragte, nicht aufgelöste Version (`*`, Standardauflösung eines Platzhalters) |
 | `<ns>:gap` | Lückencode, mehrfach möglich |
 | `<ns>:source` | Quelldatei relativ zum Repository |
@@ -398,14 +400,16 @@ Fertig, wenn: Weg entschieden, Golden File aus dem Comquent-Demo, Versionsprüfu
 
 ### 5.2 Rockwell Studio 5000: `studio5000` (M5)
 
-Eingang: vollständiger L5X-Export (Studio 5000 „Speichern unter … L5X“).
+Eingang: vollständiger L5X-Export (Studio 5000 „Speichern unter … L5X“), nur `TargetType="Controller"`; ein Export einzelner Bestandteile endet mit Exit 2 (`STUDIO5000_NOT_CONTROLLER`), eine Datei ohne Wurzel `RSLogix5000Content` mit Exit 2 (`NOT_L5X`). Ein L5X enthält genau einen Controller, `plc` entfällt. Umgesetzt mit M5; vollständige Feldtabelle, Regeln und Fixtures in `docs/adapter-studio5000.md`, Entscheidungen E-017.
 
 | Datum | Quelle in L5X | Hinweis |
 |---|---|---|
-| Steuerung | `Controller@ProcessorType`, `@MajorRev`, `@MinorRev` | Firmware-Soll = Major.Minor |
-| Module | `Module@CatalogNumber`, `@Vendor`, `@ProductType`, `@ProductCode`, `@Major`, `@Minor`, `@ParentModule` | `Vendor="1"` = Rockwell |
-| Kodierung | `Module/EKey@State` | `Disabled` → `ekey-disabled` |
-| Add-On Instructions | `AddOnInstructionDefinition@Name`, `@Revision`, `@RevisionExtension`, `@Vendor` | als `library` |
+| Engineering-Version | `RSLogix5000Content@SoftwareRevision` | in `metadata.tools` als „Studio 5000 Logix Designer“ (`36.00`) |
+| Steuerung | Modul, das sein eigener Parent ist (`Local`); Firmware `Controller@MajorRev`.`@MinorRev` | Firmware-Soll `36.11`, `projected` |
+| Module | `Module@CatalogNumber`, `@Vendor`, `@ProductType`, `@ProductCode`, `@Major`, `@Minor`, `@ParentModule` | Bestellnummer = `CatalogNumber`, auch Typname; Firmware-Soll = `Major.Minor`; `Vendor="1"` → `Rockwell Automation` mit `vendor:origin = assumed`, andere Kennungen `supplier-unknown`; Kennungen als `vendorKey` |
+| Position | Steckplatz aus dem Upstream-Port vom Typ `ICP` (`@Address`) | `<ParentModule>/<Steckplatz>`, hinter Ethernet `<ParentModule>/<Modulname>`; IP-Adressen an Ethernet-Ports und `Controller@CommPath` **nie übernehmen** |
+| Kodierung | `Module/EKey@State` | `<ns>:device:ekey`; `Disabled` → `ekey-disabled`, nicht an der Steuerung (dort steht in jedem echten Export `Disabled`, die Hauptversion bindet das Projekt) |
+| Add-On Instructions | `AddOnInstructionDefinition@Name`, `@Revision`, `@RevisionExtension`, `@Vendor` | als `library`, Version = `Revision`, `RevisionExtension` als `<ns>:aoi:revisionExtension`; quellgeschützte AOIs ohne Fixture, nicht gelesen |
 
 ### 5.3 Beckhoff TwinCAT 3: `twincat` (M6)
 
@@ -897,9 +901,9 @@ Die Adapter-Meilensteine M2 bis M8 und M14 folgen der festgelegten Reihenfolge: 
 
 | Umgebung | Repository / Pfad | Inhalt | Lizenz |
 |---|---|---|---|
-| L5X | `github.com/RockwellAutomation/ra-logix-cicd` | 1756-L85E, V36.11 | MIT |
-| L5X | `github.com/hutcheb/acd`, `resources/*.L5X` | AOI, 1756-EN2T | Apache-2.0 |
-| L5X | `github.com/Colt-H/L5X-Creator`, `github.com/reh3376/acd-l5x-tool-lib` | | MIT |
+| L5X | `github.com/RockwellAutomation/ra-logix-cicd`, `1-production-files/L5Xs/*.L5X` | 1756-L85E, V36.11; zwei AOI-Exporte (eingecheckt) | MIT |
+| L5X | `github.com/hutcheb/acd`, `resources/*.L5X` | V34.01, AOI, 1756-EN2T, Redundanz (eingecheckt) | Apache-2.0 |
+| L5X | `github.com/Colt-H/L5X-Creator`, `github.com/reh3376/acd-l5x-tool-lib` | generiert, keine Studio-5000-Exporte; nicht als Beleg genutzt (`docs/adapter-studio5000.md`) | MIT |
 | TIA-AML | `github.com/vformi/PLC.Commissioning.Lib`, `src/PLC.Commissioning.Lib.App/samples/sample_device.aml` | **TIA V17** (`WriterVersion 1700`), S7-1200 CPU 1214C `V4.5`, GSD-Gerät Leuze BCL248i | MIT (geprüft 29.10.2026) |
 | TIA-AML | `github.com/frattam-eng/openess_CIP`, `openess_CIP/CIP_cs_HardwareNetwork.aml` | **TIA V18**, S7-1500, vier ET 200SP mit passiven und firmwarebehafteten Modulen, zwei G120C, sieben IO-System-Links | keine → nur `_local` |
 | TIA-AML | `github.com/JBuschkind/Interoperabilit-tsprojekt`, `Testing-Files/TIA_Export.aml` u. a. | **TIA V21** (`WriterVersion 2100`), S7-1500 CPU 1511-1 PN `V2.8`, PM ohne Firmware-Attribut, Profilschiene mit `***` | keine → nur `_local` |

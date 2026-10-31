@@ -16,7 +16,7 @@ Eine SBOM allein erfüllt den Cyber Resilience Act nicht. Das Werkzeug bewertet 
 |---|---|---|
 | `validate` | vorhandene SBOM prüfen (Schema und TR-03183-2), Ergebnisdatei schreiben | **nutzbar** |
 | `build` | SBOM aus `machine.yml` und den SPS-Projekten erzeugen | folgt (M9) |
-| `inspect` | Rohinventar eines Adapters ausgeben | **nutzbar für `codesys`** (CODESYS V3.5, PLCopen XML); andere Adapter folgen (M5–M14) |
+| `inspect` | Rohinventar eines Adapters ausgeben | **nutzbar für `codesys`** (CODESYS V3.5, PLCopen XML) und **`studio5000`** (Rockwell, L5X); andere Adapter folgen (M6–M14) |
 | `report` | Prüfbericht als HTML oder Markdown | folgt (M10) |
 | `compare` | SBOM mit dem Ist-Stand aus dem Feld abgleichen | folgt (M11) |
 | `ids` | Kennungen gegen CSAF-Advisories prüfen | folgt (M12) |
@@ -159,7 +159,7 @@ Der Code im Lückenvermerk ist klein geschrieben mit Bindestrich (`hash-unavaila
 | `file-properties-unknown` | Unbekannt, ob ausführbar, Archiv oder strukturiert | Warnung | ausführbar, Archiv, strukturiert |
 | `program-source-missing` | Für das Anwenderprogramm ist kein Quellverzeichnis angegeben, kein Hash | Warnung | Hash |
 | `protected-block-unknown` | Geschützter Baustein ohne bekannten Lieferanten oder Version | Warnung | Ersteller, Version |
-| `ekey-disabled` | Rockwell: elektronische Kodierung aus, das Gerät im Feld kann abweichen | Warnung | – |
+| `ekey-disabled` | Rockwell: elektronische Kodierung eines Moduls aus (nicht an der Steuerung), das Gerät im Feld kann abweichen | Warnung | – |
 | `gsdml-not-found` | Die GSDML-Datei des Geräts liegt in keinem der angegebenen Verzeichnisse | Warnung | – |
 | `devdesc-not-found` | CODESYS: Zur Gerätekennung liegt keine oder mehr als eine Gerätebeschreibung in den angegebenen Verzeichnissen | Warnung | – |
 | `order-number-not-in-project` | Weder Projekt noch GSDML nennen eine Bestellnummer | Warnung | – |
@@ -241,6 +241,8 @@ Auf Windows-Agenten `bat` statt `sh`. `readJSON` stammt aus dem Plugin „Pipeli
 | `[DEVDESC_DIR_NOT_FOUND]` | Ein Verzeichnis aus `deviceDescriptions` fehlt | Pfad in `machine.yml` prüfen (relativ zur Konfigurationsdatei) |
 | `[NOT_DEVDESC]` | Eine `*.devdesc.xml` ist keine CODESYS-Gerätebeschreibung | Datei prüfen oder aus dem Verzeichnis entfernen |
 | `[CODESYS_PLC_NOT_FOUND]` | Die mit `plc` genannte Steuerung steht nicht im Export | Namen aus der Meldung oder aus `inspect` übernehmen |
+| `[NOT_L5X]` | Die Datei ist kein L5X-Export aus Studio 5000 | In Studio 5000 das Projekt mit „Speichern unter … L5X“ exportieren |
+| `[STUDIO5000_NOT_CONTROLLER]` | Der L5X-Export enthält nur einen Bestandteil (etwa eine AOI), nicht den ganzen Controller | Das ganze Projekt als L5X speichern, nicht einzelne Bausteine exportieren |
 
 ## 10. Projekt ansehen: `inspect`
 
@@ -248,7 +250,7 @@ Auf Windows-Agenten `bat` statt `sh`. `readJSON` stammt aus dem Plugin „Pipeli
 plc-sbom inspect <projektdatei> --adapter <id> [--gsdml <verzeichnis>]
 ```
 
-`inspect` gibt das Rohinventar eines Adapters als JSON auf der Konsole aus: was der Adapter in der Datei findet, unverändert und noch ohne Lückenregeln. Damit lässt sich prüfen, ob ein Export das Erwartete enthält, und später die `machine.yml` schreiben. In Version 0.1.0 geht das für den Adapter `codesys`; für die anderen endet der Aufruf mit Exit 2 und `[NOT_IMPLEMENTED]` und nennt den Meilenstein. `--gsdml` gilt nur für die TIA-Adapter.
+`inspect` gibt das Rohinventar eines Adapters als JSON auf der Konsole aus: was der Adapter in der Datei findet, unverändert und noch ohne Lückenregeln. Damit lässt sich prüfen, ob ein Export das Erwartete enthält, und später die `machine.yml` schreiben. In Version 0.1.0 geht das für die Adapter `codesys` und `studio5000`; für die anderen endet der Aufruf mit Exit 2 und `[NOT_IMPLEMENTED]` und nennt den Meilenstein. `--gsdml` gilt nur für die TIA-Adapter.
 
 Beispiel (gekürzt):
 
@@ -296,6 +298,38 @@ Beispiel (gekürzt):
 | `libraries[].effective` | die Referenz, die der Export als wirksam zeigt |
 | `project.projectLibraries` | Bibliotheken im POU-Pool |
 
+Beispiel für `studio5000` (gekürzt, aus einem echten Lauf):
+
+```text
+> plc-sbom inspect fixtures/studio5000/acd-ACDTestsWithAOI.L5X --adapter studio5000
+{
+  "format": 1,
+  "adapter": "studio5000",
+  "file": "fixtures/studio5000/acd-ACDTestsWithAOI.L5X",
+  "sha256": "89265a5ff85bc7bc14f7e86b0ae6ae2028b354a98cce1cd187fdaa2a35792096",
+  "project": {
+    "softwareRevision": "34.01",
+    "targetType": "Controller",
+    "exportDate": "Wed Jul 10 20:36:17 2024",
+    "controller": { "name": "ACDTests", "use": "Target", "processorType": "1756-L85E", "majorRev": "34", "minorRev": "11", "redundancyEnabled": false },
+    "modules": [
+      { "name": "Local", "catalogNumber": "1756-L85E", "vendor": "1", ..., "major": "34", "minor": "11", "parentModule": "Local", "ekey": "Disabled", "upstreamPortType": "ICP", "slot": 0 },
+      { "name": "ETH_MODULE", "catalogNumber": "1756-EN2T", "vendor": "1", ..., "major": "11", "minor": "1", "parentModule": "Local", "ekey": "CompatibleModule", "upstreamPortType": "ICP", "slot": 1 }
+    ],
+    "addOnInstructions": [ { "name": "AddOnInstruction", "revision": "1.7", "revisionExtension": "ExtendedText", "vendor": "ACD-TOOLS" } ]
+  }
+}
+```
+
+| Feld | Inhalt |
+|---|---|
+| `project.targetType` | `Controller` bei einem Export des ganzen Projekts; nur der ergibt eine Station |
+| `modules[].major`, `minor` | projektierte Revision des Moduls, in der SBOM die Firmware-Version als Soll |
+| `modules[].ekey` | elektronische Kodierung: `ExactMatch`, `CompatibleModule` oder `Disabled` |
+| `modules[].slot` | Steckplatz auf der Backplane; fehlt bei Modulen hinter einem Ethernet-Port |
+
+IP-Adressen der Ethernet-Ports liest das Werkzeug nicht, sie erscheinen auch in `inspect` nicht.
+
 ## 11. CODESYS V3.5
 
 Eingang ist der PLCopen-XML-Export des ganzen Projekts. Die `.project`-Datei ist binär und wird nicht gelesen. Den Export erzeugt man in CODESYS V3.5 über den PLCopen-XML-Export des Projekts und checkt ihn neben dem Projekt ein. Die Station erhält im Ergebnis die Property `<namespace>:adapter:source` = `v35`.
@@ -321,6 +355,20 @@ Als Hersteller einer Bibliothek gilt die Angabe in Klammern. CODESYS schreibt f�
 
 Alle gelesenen Stellen und Regeln: [docs/adapter-codesys.md](docs/adapter-codesys.md).
 
-## 12. Was folgt
+## 12. Rockwell Studio 5000
 
-Die nächsten Schritte nach Meilensteinplan (CLAUDE.md Abschnitt 12): M1 ist fachlich abgeschlossen; alle Prüfregeln mit ihrer TR-Stelle stehen in [docs/regeln-tr03183.md](docs/regeln-tr03183.md). Danach kommen die Adapter in dieser Reihenfolge: CODESYS (V3.5, V2.3, CODESYS 4), Rockwell Studio 5000, Beckhoff TwinCAT 3, Siemens TIA Portal über den AML-Export, zuletzt TIA Portal über Openness. Mit M9 erzeugt `build` die SBOM aus einer `machine.yml`; ab dann beschreibt diese Anleitung auch die Maschinenbeschreibung und die Adapter.
+Eingang ist der L5X-Export des ganzen Projekts (Studio 5000 Logix Designer: „Speichern unter … L5X“). Die `.ACD`-Datei ist binär und wird nicht gelesen. Ein Export einzelner Bestandteile, etwa einer Add-On Instruction, ergibt keine Station (`[STUDIO5000_NOT_CONTROLLER]`). Ein L5X enthält genau einen Controller; `plc` braucht dieser Adapter nicht.
+
+**Steuerung und Module.** Jedes Modul unter `Modules` wird ein Gerät, die Steuerung zuerst (das Modul `Local`). Die Firmware-Komponente heißt nach der Bestellnummer, etwa `1756-EN2T, Firmware`, weil der Export keinen Produktnamen führt. Ihre Version ist die projektierte Revision: an der Steuerung die Projektrevision (`36.11`), an den Modulen `Major.Minor` (`11.1`). Das ist ein Sollwert (`firmware:origin` = `projected`, Hinweis `firmware-projected-only`). Ein Modul ohne Revision bekommt `firmware-not-in-project`. Die Position steht als `<Parent>/<Steckplatz>` (`Local/1`), hinter einem Ethernet-Modul als `<Parent>/<Modulname>`. IP-Adressen kommen nie in die SBOM.
+
+**Kodierung.** Die elektronische Kodierung steht an jeder Firmware als `<namespace>:device:ekey`. Ist sie an einem Modul aus (`Disabled`), kann das Modul im Feld jede Firmware haben; das ergibt `ekey-disabled` (Warnung). An der Steuerung selbst steht in Studio-5000-Exporten immer `Disabled`, dort ist das kein Befund.
+
+**Hersteller.** Module mit der Herstellerkennung `1` bekommen den Hersteller `Rockwell Automation` mit `vendor:origin` = `assumed`, weil der Export nur die Kennung nennt. Andere Kennungen ergeben `supplier-unknown`; die Kennung steht als `<namespace>:vendorKey:VendorId` daneben. Ab M9 lässt sich der Hersteller über `vendorOverrides` in `machine.yml` erklären.
+
+**Add-On Instructions.** Jede AOI wird eine Komponente vom Typ `library` mit `<namespace>:software:kind` = `add-on-instruction`. Version ist die `Revision` (`1.7`), ein Revisionszusatz steht als `<namespace>:aoi:revisionExtension`. Der Hersteller ist die Angabe `Vendor` der AOI; fehlt sie, `supplier-unknown`.
+
+Alle gelesenen Stellen und Regeln: [docs/adapter-studio5000.md](docs/adapter-studio5000.md).
+
+## 13. Was folgt
+
+Die nächsten Schritte nach Meilensteinplan (CLAUDE.md Abschnitt 12): M1, M2 (CODESYS V3.5) und M5 (Rockwell Studio 5000) sind umgesetzt; alle Prüfregeln mit ihrer TR-Stelle stehen in [docs/regeln-tr03183.md](docs/regeln-tr03183.md). CODESYS V2.3 und CODESYS 4 (M3, M4) warten auf Demo-Projekte. Danach kommen Beckhoff TwinCAT 3, Siemens TIA Portal über den AML-Export, zuletzt TIA Portal über Openness. Mit M9 erzeugt `build` die SBOM aus einer `machine.yml`; ab dann beschreibt diese Anleitung auch die Maschinenbeschreibung.

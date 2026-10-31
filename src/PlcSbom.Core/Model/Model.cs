@@ -114,6 +114,9 @@ public sealed record Device
     /// <summary>Vendor keys such as GSDML, VendorId, ProductCode, RevisionNo.</summary>
     public IReadOnlyDictionary<string, string> VendorKeys { get; init; } = new Dictionary<string, string>();
 
+    /// <summary>Further facts from the source, written as &lt;ns&gt;:&lt;key&gt;, e.g. device:ekey.</summary>
+    public IReadOnlyDictionary<string, string> SourceProperties { get; init; } = new Dictionary<string, string>();
+
     public IReadOnlyList<Gap> Gaps { get; init; } = [];
 }
 

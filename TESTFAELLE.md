@@ -1,14 +1,14 @@
 # Testfälle: PLC SBOM Builder (`plc-sbom`)
 
-Stand: 31.10.2026, Version 0.1.0 (Meilensteine M1 und M2 abgeschlossen). Diese Datei beschreibt alle automatischen Testfälle, die Testläufe und ihre Ergebnisse. Die Bedienung des Werkzeugs steht in [ANLEITUNG.md](ANLEITUNG.md), Ziele und Regeln in [CLAUDE.md](CLAUDE.md).
+Stand: 31.10.2026, Version 0.1.0 (Meilensteine M1 und M2 abgeschlossen, M5 umgesetzt). Diese Datei beschreibt alle automatischen Testfälle, die Testläufe und ihre Ergebnisse. Die Bedienung des Werkzeugs steht in [ANLEITUNG.md](ANLEITUNG.md), Ziele und Regeln in [CLAUDE.md](CLAUDE.md).
 
 ## 1. Ergebnis
 
-**312 Testfälle, 312 bestanden, 0 fehlgeschlagen, 0 übersprungen.** Letzter Lauf am 31.10.2026, 23:10 Uhr, Laufzeit 0,61 s. `dotnet format --verify-no-changes` ohne Befund. Dazu die Gegenprüfung mit sbomqs ohne Abweichung (Abschnitt 6.1).
+**347 Testfälle, 347 bestanden, 0 fehlgeschlagen, 0 übersprungen.** Letzter Lauf am 31.10.2026, 23:36 Uhr, Laufzeit 0,93 s. `dotnet format --verify-no-changes` ohne Befund. Dazu die Gegenprüfung mit sbomqs ohne Abweichung (Abschnitt 6.1).
 
 | Testklasse | Datei | Testfälle | Bestanden | Prüfgegenstand |
 |---|---|---:|---:|---|
-| `CliAppTests` | [Cli/CliAppTests.cs](tests/PlcSbom.Tests/Cli/CliAppTests.cs) | 42 | 42 | Kommandozeile, Hilfe, Exit-Codes, Gerüst der Befehle |
+| `CliAppTests` | [Cli/CliAppTests.cs](tests/PlcSbom.Tests/Cli/CliAppTests.cs) | 41 | 41 | Kommandozeile, Hilfe, Exit-Codes, Gerüst der Befehle |
 | `ValidateCommandTests` | [Cli/ValidateCommandTests.cs](tests/PlcSbom.Tests/Cli/ValidateCommandTests.cs) | 11 | 11 | `plc-sbom validate` mit echten Dateien |
 | `SbomValidatorTests` | [Validation/SbomValidatorTests.cs](tests/PlcSbom.Tests/Validation/SbomValidatorTests.cs) | 74 | 74 | Schema und Regeln der BSI TR-03183-2 |
 | `GapRulesTests` | [Gaps/GapRulesTests.cs](tests/PlcSbom.Tests/Gaps/GapRulesTests.cs) | 28 | 28 | Lückenregeln am Modell, Lückenkatalog |
@@ -21,7 +21,9 @@ Stand: 31.10.2026, Version 0.1.0 (Meilensteine M1 und M2 abgeschlossen). Diese D
 | `PlcOpenReaderTests` | [Adapters/Codesys/PlcOpenReaderTests.cs](tests/PlcSbom.Tests/Adapters/Codesys/PlcOpenReaderTests.cs) | 15 | 15 | PLCopen-XML-Leser an echten Fixtures, sicheres XML |
 | `CodesysV35AdapterTests` | [Adapters/Codesys/CodesysV35AdapterTests.cs](tests/PlcSbom.Tests/Adapters/Codesys/CodesysV35AdapterTests.cs) | 28 | 28 | Adapter `codesys`/`v35`: Geräte, Bibliotheken, Gerätebeschreibungen, Lücken, Golden Files |
 | `DeviceDescriptionIndexTests` | [Adapters/Codesys/DeviceDescriptionIndexTests.cs](tests/PlcSbom.Tests/Adapters/Codesys/DeviceDescriptionIndexTests.cs) | 12 | 12 | CODESYS-Gerätebeschreibungen lesen und zuordnen |
-| `InspectCommandTests` | [Cli/InspectCommandTests.cs](tests/PlcSbom.Tests/Cli/InspectCommandTests.cs) | 5 | 5 | `plc-sbom inspect --adapter codesys` |
+| `InspectCommandTests` | [Cli/InspectCommandTests.cs](tests/PlcSbom.Tests/Cli/InspectCommandTests.cs) | 8 | 8 | `plc-sbom inspect --adapter codesys` und `--adapter studio5000` |
+| `L5xReaderTests` | [Adapters/Studio5000/L5xReaderTests.cs](tests/PlcSbom.Tests/Adapters/Studio5000/L5xReaderTests.cs) | 10 | 10 | L5X-Leser an den echten Exporten |
+| `Studio5000AdapterTests` | [Adapters/Studio5000/Studio5000AdapterTests.cs](tests/PlcSbom.Tests/Adapters/Studio5000/Studio5000AdapterTests.cs) | 23 | 23 | Adapter `studio5000`: Station, Firmware-Soll, Kodierung, Hersteller, AOIs, Golden Files, keine Netzdaten |
 | **Summe** | | **312** | **312** | |
 
 Bei parametrisierten Tests (xUnit `Theory`) zählt jeder Datensatz als eigener Testfall. Die Tabellen in Abschnitt 4 fassen sie in einer Zeile zusammen und nennen die Anzahl.
@@ -49,13 +51,15 @@ Der Testlauf nutzt Microsoft.Testing.Platform mit xunit.v3 (docs/entscheidungen.
 | Minimal-SBOM | [Samples/MinimalSbom.cs](tests/PlcSbom.Tests/Samples/MinimalSbom.cs) | Kleinstes CycloneDX-1.6-Dokument, das Schema und TR-Regeln besteht: logische Hauptkomponente „Maschine XY“ und eine vollständig beschriebene Anwendung `app`. Synthetisch. Jeder Validator-Test ändert genau eine Stelle |
 | CODESYS-Fixtures | [fixtures/codesys/v35/](fixtures/codesys/v35/), [fixtures/codesys/devdesc/](fixtures/codesys/devdesc/) | Drei echte PLCopen-XML-Exporte (robin V3.5 SP15, OSC-MQTT V3.5 SP4, ooip V3.5 SP20), zwei synthetische (zwei Steuerungen; Geräte mit Kennungen der Gerätebeschreibungen) und vier echte Gerätebeschreibungen; Herkunft in [fixtures/FIXTURES.md](fixtures/FIXTURES.md) |
 | Golden Files CODESYS | [golden/codesys-v35-robin.cdx.json](tests/PlcSbom.Tests/golden/codesys-v35-robin.cdx.json), [golden/codesys-v35-zwei-steuerungen.cdx.json](tests/PlcSbom.Tests/golden/codesys-v35-zwei-steuerungen.cdx.json), [golden/codesys-v35-zwei-steuerungen.inspect.json](tests/PlcSbom.Tests/golden/codesys-v35-zwei-steuerungen.inspect.json), [golden/codesys-v35-devdesc.cdx.json](tests/PlcSbom.Tests/golden/codesys-v35-devdesc.cdx.json) | SBOM aus robin, aus der Steuerung „Verpackung“ der synthetischen Datei und aus der Datei mit Gerätebeschreibungen, eingebettet in die Maschine des Handmodells; Rohinventar von `inspect` |
+| Studio-5000-Fixtures | [fixtures/studio5000/](fixtures/studio5000/) | Fünf echte L5X-Exporte (ra-logix-cicd: Controller 1756-L85E V36 und zwei AOI-Exporte; acd: Controller mit 1756-EN2T und AOI, Controller mit Redundanz) und ein synthetischer (Modulbaum mit entferntem Chassis, ausgeschalteter Kodierung, Fremdgerät, AOIs); Herkunft in [fixtures/FIXTURES.md](fixtures/FIXTURES.md) |
+| Golden Files Studio 5000 | [golden/studio5000-ra-l85e.cdx.json](tests/PlcSbom.Tests/golden/studio5000-ra-l85e.cdx.json), [golden/studio5000-acd-aoi.cdx.json](tests/PlcSbom.Tests/golden/studio5000-acd-aoi.cdx.json), [golden/studio5000-module-baum.cdx.json](tests/PlcSbom.Tests/golden/studio5000-module-baum.cdx.json), [golden/studio5000-module-baum.inspect.json](tests/PlcSbom.Tests/golden/studio5000-module-baum.inspect.json) | SBOM aus den beiden echten Controller-Exporten mit Modulen bzw. AOI und aus der synthetischen Datei, eingebettet in die Maschine des Handmodells; Rohinventar von `inspect` |
 | Golden File der Minimal-SBOM | [golden/minimal-synthetisch.cdx.json](tests/PlcSbom.Tests/golden/minimal-synthetisch.cdx.json) | Die Minimal-SBOM als Datei. Einzige Testdatei, in der Dateiname, Hash und Dateieigenschaften vorhanden sind; Eingang der Gegenprüfung mit sbomqs neben `hand-model.cdx.json` |
 
 ## 4. Testfälle
 
 Spalte „Ergebnis“: Ergebnis des letzten Laufs. „bestanden“ heißt, dass alle Zusicherungen des Testfalls zutrafen.
 
-### 4.1 Kommandozeile: `CliAppTests` (42)
+### 4.1 Kommandozeile: `CliAppTests` (41)
 
 | ID | Testfall | Prüft | Fälle | Ergebnis |
 |---|---|---|---:|---|
@@ -66,7 +70,7 @@ Spalte „Ergebnis“: Ergebnis des letzten Laufs. „bestanden“ heißt, dass 
 | CLI-05 | `Version_prints_the_tool_version` | `--version` gibt die Version im Format `x.y.z` aus, Exit 0 | 1 | bestanden |
 | CLI-06 | `No_command_is_a_usage_error` | Aufruf ohne Befehl: Exit 2 und Hinweis auf `plc-sbom --help` | 1 | bestanden |
 | CLI-07 | `Invalid_calls_end_with_exit_2` | Falsche Aufrufe enden mit Exit 2 und `[USAGE]`: unbekannter Befehl, fehlendes `--config` bzw. `--release`, `--report pdf`, unbekannte Option, `report --format pdf`, unbekannte Adapter-ID, fehlendes `--adapter`, `doctor --adapter twincat`, `validate` ohne Datei, `--timeout 0`, `--timeout zehn` | 12 | bestanden |
-| CLI-08 | `Commands_not_yet_built_name_their_milestone` | Noch nicht umgesetzte Befehle enden mit Exit 2 und `[NOT_IMPLEMENTED]` und nennen ihren Meilenstein: `build` M9, `report` M10, `compare` M11, `ids` M12, `doctor` M14, `inspect` für `studio5000` M5, `twincat` M6, `tia-aml` M7, `tia-portal` M14 | 9 | bestanden |
+| CLI-08 | `Commands_not_yet_built_name_their_milestone` | Noch nicht umgesetzte Befehle enden mit Exit 2 und `[NOT_IMPLEMENTED]` und nennen ihren Meilenstein: `build` M9, `report` M10, `compare` M11, `ids` M12, `doctor` M14, `inspect` für `twincat` M6, `tia-aml` M7, `tia-portal` M14 | 8 | bestanden |
 | CLI-09 | `Openness_commands_off_windows_are_an_environment_problem` | `export-aml`, `doctor --adapter tia-portal` und `doctor --adapter tia-portal --deep` außerhalb von Windows: Exit 3 und `[OPENNESS_WINDOWS_ONLY]` | 3 | bestanden |
 | CLI-10 | `Openness_commands_on_windows_pass_the_platform_check` | Auf Windows kommt `export-aml` an der Plattformprüfung vorbei und meldet Meilenstein M14 | 1 | bestanden |
 | CLI-11 | `Common_options_are_accepted_after_the_command` | `--verbose` und `--timeout` werden auch nach dem Befehl angenommen | 1 | bestanden |
@@ -342,7 +346,7 @@ Diese Tests sichern die Regel aus CLAUDE.md Abschnitt 14 ab, soweit sie sich mas
 | DD-06 | `Missing_directory_ends_with_exit_2` | `DEVDESC_DIR_NOT_FOUND` | 1 | bestanden |
 | DD-07 | `Other_xml_is_no_device_description` | `NOT_DEVDESC` | 1 | bestanden |
 
-### 4.13 Befehl `inspect`: `InspectCommandTests` (5)
+### 4.13 Befehl `inspect`: `InspectCommandTests` (8)
 
 | ID | Testfall | Prüft | Fälle | Ergebnis |
 |---|---|---|---:|---|
@@ -351,6 +355,43 @@ Diese Tests sichern die Regel aus CLAUDE.md Abschnitt 14 ab, soweit sie sich mas
 | IN-03 | `Missing_file_ends_with_exit_2` | `[SOURCE_NOT_FOUND]`, Exit 2 | 1 | bestanden |
 | IN-04 | `Non_plcopen_file_ends_with_exit_2` | `[NOT_PLCOPEN]`, Exit 2 | 1 | bestanden |
 | IN-05 | `Gsdml_is_refused_for_codesys` | `--gsdml` mit `codesys`: `[USAGE]`, Exit 2 | 1 | bestanden |
+| IN-06 | `Studio5000_inventory_matches_the_golden_file` | Rohinventar der synthetischen L5X-Datei byte-gleich mit dem Golden File, keine IP-Adresse in der Ausgabe | 1 | bestanden |
+| IN-07 | `Studio5000_component_export_can_be_inspected` | AOI-Export (WetBulbTemperature): Exit 0, `targetType` `AddOnInstructionDefinition` | 1 | bestanden |
+| IN-08 | `Non_l5x_file_ends_with_exit_2` | PLCopen-Datei mit `--adapter studio5000`: `[NOT_L5X]`, Exit 2 | 1 | bestanden |
+
+### 4.15 L5X-Leser: `L5xReaderTests` (10)
+
+| ID | Testfall | Prüft | Fälle | Ergebnis |
+|---|---|---|---:|---|
+| LX-01 | `Controller_export_header_and_controller` | ra-L85E: `SoftwareRevision` 36.00, `TargetType` Controller, Exportdatum, Controller 1756-L85E 36.11, keine AOI | 1 | bestanden |
+| LX-02 | `Controller_module_sits_in_slot_0_of_its_own_backplane` | Modul `Local` mit allen Attributen, `EKey` Disabled, Steckplatz 0 über den Port mit `Id = ParentModPortId` | 1 | bestanden |
+| LX-03 | `Module_in_the_chassis_has_its_slot_and_keying` | acd: 1756-EN2T 11.1 unter `Local`, `CompatibleModule`, Upstream-Port `ICP`, Steckplatz 1 | 1 | bestanden |
+| LX-04 | `Module_behind_ethernet_has_no_slot` | synthetisch: Upstream-Port Ethernet, kein Steckplatz, Adresse wird nicht gelesen | 1 | bestanden |
+| LX-05 | `Aoi_with_revision_extension_and_vendor` | acd: AOI 1.7, `ExtendedText`, `ACD-TOOLS` | 1 | bestanden |
+| LX-06 | `Aoi_export_has_a_context_controller` | beide AOI-Exporte: Controller mit `Use` Context, keine Module, Ziel-AOI mit Revision und Hersteller bzw. ohne | 2 | bestanden |
+| LX-07 | `Redundancy_flag_is_read` | acd: `RedundancyInfo Enabled="true"` | 1 | bestanden |
+| LX-08 | `Other_xml_is_not_an_l5x` | PLCopen-Datei: `NOT_L5X` | 1 | bestanden |
+| LX-09 | `Dtd_is_refused` | Datei mit DTD: `XML_INVALID` | 1 | bestanden |
+
+### 4.16 Adapter `studio5000`: `Studio5000AdapterTests` (23)
+
+| ID | Testfall | Prüft | Fälle | Ergebnis |
+|---|---|---|---:|---|
+| S5-01 | `Station_carries_adapter_hash_and_engineering_tool` | Adapter `studio5000`, SHA-256 der Datei, Werkzeug „Studio 5000 Logix Designer 36.00“, kein Exportzeitpunkt (ohne Zeitzone) | 1 | bestanden |
+| S5-02 | `Controller_firmware_is_the_project_revision` | Steuerung 1756-L85E, Position `Local/0`, Firmware 36.11 projected, Hersteller Rockwell Automation (`assumed`), Herstellerschlüssel, `device:ekey` Disabled ohne Lücke | 1 | bestanden |
+| S5-03 | `Module_in_the_chassis_has_slot_revision_and_keying` | 1756-EN2T: Position `Local/1`, Firmware 11.1 projected, `CompatibleModule`, keine Adapterlücke | 1 | bestanden |
+| S5-04 | `Controller_comes_first_then_its_modules_depth_first` | Reihenfolge und Positionen im Modulbaum, auch hinter Ethernet | 1 | bestanden |
+| S5-05 | `Disabled_keying_on_a_module_is_a_warning_gap` | E/A-Modul mit `Disabled`: `ekey-disabled` (Warnung) mit der projektierten Revision in der Meldung | 1 | bestanden |
+| S5-06 | `Other_vendor_id_gives_no_vendor_name` | Kennung 65000: kein Hersteller, `supplier-unknown` mit Kennung, Firmware trotzdem gelesen | 1 | bestanden |
+| S5-07 | `Module_without_revision_has_no_firmware` | ohne `Major`: keine Firmware, `not-in-project` | 1 | bestanden |
+| S5-08 | `Aois_become_add_on_instructions_with_revision` | AOI als `AddOnInstruction`, Version 1.7, Hersteller aus der Quelle, Revisionszusatz als Property | 1 | bestanden |
+| S5-09 | `Aoi_without_vendor_gets_supplier_unknown` | AOI ohne `Vendor` nach den Lückenregeln: `supplier-unknown` | 1 | bestanden |
+| S5-10 | `Component_export_is_refused` | beide AOI-Exporte: `STUDIO5000_NOT_CONTROLLER` | 2 | bestanden |
+| S5-11 | `Missing_file_ends_with_exit_2` | fehlende Datei: `SOURCE_NOT_FOUND` | 1 | bestanden |
+| S5-12 | `Sbom_matches_the_golden_file` | SBOM aus ra-L85E, acd und der synthetischen Datei byte-gleich mit den Golden Files | 3 | bestanden |
+| S5-13 | `Sbom_passes_schema_and_tr_rules_without_errors` | SBOM aus allen vier Controller-Exporten: Schema gültig, kein Fehler, zwei Läufe byte-gleich | 4 | bestanden |
+| S5-14 | `Sbom_contains_no_network_addresses` | IP-Adressen aus Ports und `CommPath` stehen in der Quelle, nicht in der SBOM | 3 | bestanden |
+| S5-15 | `Sbom_writes_rockwell_properties` | `device:ekey`, `vendor:origin` assumed, `vendorKey:ProductCode`, `aoi:revisionExtension`, bom-ref `…-aoi-…`, Lücke `ekey-disabled` | 1 | bestanden |
 
 ## 5. Testläufe
 
@@ -368,8 +409,9 @@ Alle Läufe lokal auf macOS 26.6.2 (arm64) mit .NET SDK 10.0.403, Ausgangsstand 
 | 7 | 31.10.2026, M2 | neue CODESYS-Tests | Build abgebrochen | Analyseregeln xUnit1051 (fehlendes `CancellationToken`) und xUnit2029 (`Assert.Empty` mit Filter) in den neuen Tests. Im Test behoben |
 | 8 | 31.10.2026, 22:56 | 292 Tests mit TRX-Bericht, Formatprüfung; Gegenprüfung mit sbomqs über die beiden CODESYS-Golden-Files | 292 bestanden, 0,55 s, Format ohne Befund; sbomqs: robin 36 gleich, 89 erklärt, 0 Abweichungen; zwei Steuerungen 36/59/0 | M2 |
 | 9 | 31.10.2026, CI-Fix | 292 Tests, gebaut wie in CI (`-c Release -p:ContinuousIntegrationBuild=true`), vorher und nachher | vorher 207 bestanden, 85 fehlgeschlagen; nachher 292 bestanden; Debug-Build ebenfalls 292, Format ohne Befund | Fehler in den Tests, nicht im Werkzeug: Pfadsuche über `[CallerFilePath]` durch `RepoPaths` ersetzt |
-| 10 | 31.10.2026, 23:10 | 312 Tests mit TRX-Bericht, Formatprüfung; neu: Leser für Gerätebeschreibungen (E-015) | 312 bestanden, 0,61 s, Format ohne Befund. Zwischenlauf: 2 Doku-Abgleiche fehlgeschlagen, weil `devdesc-not-found` noch nicht in ANLEITUNG.md und CLAUDE.md stand; Doku ergänzt | Grundlage dieser Datei |
+| 10 | 31.10.2026, 23:10 | 312 Tests mit TRX-Bericht, Formatprüfung; neu: Leser für Gerätebeschreibungen (E-015) | 312 bestanden, 0,61 s, Format ohne Befund. Zwischenlauf: 2 Doku-Abgleiche fehlgeschlagen, weil `devdesc-not-found` noch nicht in ANLEITUNG.md und CLAUDE.md stand; Doku ergänzt | Stand M2 |
 | 11 | 31.10.2026, 23:15, CI | GitHub Actions, Lauf 41247352670 auf Commit `37ce75b`: Build, 312 Tests, Format und Lizenzen auf `ubuntu-latest` und `windows-latest`, Rauchtest aus beiden Paketen, Gegenprüfung mit sbomqs über alle fünf Golden Files | alle Jobs grün; sbomqs ohne Abweichung (devdesc 33 gleich, 32 erklärt; robin 36/89; zwei Steuerungen 36/59; Hand-Modell 74/41; Minimal 20/5) | Abschluss M1 und M2; bestätigt die Pfadsuche aus Lauf 9 |
+| 12 | 31.10.2026, 23:36, M5 | 347 Tests mit TRX-Bericht, Formatprüfung; neu: L5X-Leser und Adapter `studio5000` (E-017); Gegenprüfung mit sbomqs v2.1.3 über alle acht Golden Files | 347 bestanden, 0,93 s, Format ohne Befund; sbomqs ohne Abweichung (ra-L85E 16 gleich, 9 erklärt; acd 25/20; Modulbaum 39/36; übrige wie Lauf 11). Zwischenstand: 4 Golden Files fehlten und wurden erzeugt und von Hand geprüft; das JSON-Feld `eKey` in `inspect` in `ekey` umbenannt | Grundlage dieser Datei |
 
 Die Tests selbst haben keinen Fehler im Werkzeug aufgedeckt, die Gegenprüfung in Lauf 5 zwei.
 
@@ -393,7 +435,7 @@ Die Meldung zu `--foo` kommt auf Englisch aus der Bibliothek System.CommandLine;
 - `cyclonedx-cli validate` als zweite, unabhängige Schemaprüfung: noch nicht eingerichtet.
 - Lauf auf Windows: nur in CI (`windows-latest`), nicht lokal.
 - Test, dass die Schemaprüfung ohne Netz auskommt: Das Schema ist eingebettet und fremde Verweise werden abgelehnt, ein eigener Test mit gesperrtem Netz fehlt.
-- Adapter außer `codesys` (Quelle `v35`), `inspect` für andere Adapter, `build`, `report`, `compare`, `ids` und der Openness-Worker: noch nicht umgesetzt; die Tests prüfen nur, dass sie mit `[NOT_IMPLEMENTED]` bzw. `[OPENNESS_WINDOWS_ONLY]` enden.
+- Adapter außer `codesys` (Quelle `v35`) und `studio5000`, `inspect` für andere Adapter, `build`, `report`, `compare`, `ids` und der Openness-Worker: noch nicht umgesetzt; die Tests prüfen nur, dass sie mit `[NOT_IMPLEMENTED]` bzw. `[OPENNESS_WINDOWS_ONLY]` enden.
 - Self-contained-Paket: Der Aufruf aus dem ausgepackten Paket läuft in CI als Rauchtest, nicht lokal.
 
 ### 6.1 Gegenprüfung mit sbomqs
@@ -402,8 +444,14 @@ Kein xUnit-Test, sondern [tools/crosscheck-sbomqs.cs](tools/crosscheck-sbomqs.cs
 
 | Datei | gleich, vorhanden | gleich, fehlt | erklärt | Abweichung |
 |---|---:|---:|---:|---:|
+| `codesys-v35-devdesc.cdx.json` | 33 | 0 | 32 | 0 |
+| `codesys-v35-robin.cdx.json` | 36 | 0 | 89 | 0 |
+| `codesys-v35-zwei-steuerungen.cdx.json` | 36 | 0 | 59 | 0 |
 | `hand-model.cdx.json` | 74 | 0 | 41 | 0 |
 | `minimal-synthetisch.cdx.json` | 20 | 0 | 5 | 0 |
+| `studio5000-acd-aoi.cdx.json` | 25 | 0 | 20 | 0 |
+| `studio5000-module-baum.cdx.json` | 39 | 0 | 36 | 0 |
+| `studio5000-ra-l85e.cdx.json` | 16 | 0 | 9 | 0 |
 
 Gegenprobe mit sechs absichtlich veränderten Kopien der Minimal-SBOM (nur lokal, nicht eingecheckt):
 
