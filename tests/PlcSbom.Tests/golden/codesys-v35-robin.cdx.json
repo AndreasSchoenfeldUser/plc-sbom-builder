@@ -1,0 +1,1084 @@
+{
+  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:1a02a05d-7584-5a0b-9e78-e462de8d242a",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-10-31T12:00:00Z",
+    "tools": {
+      "components": [
+        {
+          "type": "application",
+          "manufacturer": {
+            "name": "Comquent GmbH"
+          },
+          "name": "PLC SBOM Builder",
+          "version": "0.1.0"
+        },
+        {
+          "type": "application",
+          "name": "CODESYS",
+          "version": "V3.5 SP15"
+        }
+      ]
+    },
+    "manufacturer": {
+      "name": "Musterbau GmbH",
+      "contact": [
+        {
+          "email": "sbom@musterbau.example"
+        }
+      ]
+    },
+    "component": {
+      "bom-ref": "maschine-xy",
+      "type": "device",
+      "supplier": {
+        "name": "Musterbau GmbH"
+      },
+      "manufacturer": {
+        "name": "Musterbau GmbH",
+        "contact": [
+          {
+            "email": "sbom@musterbau.example"
+          }
+        ]
+      },
+      "name": "Maschine XY",
+      "version": "R2026.10",
+      "licenses": [
+        {
+          "expression": "LicenseRef-musterbau-proprietary",
+          "acknowledgement": "concluded"
+        }
+      ],
+      "properties": [
+        {
+          "name": "bsi:component:effectiveLicence",
+          "value": "LicenseRef-musterbau-proprietary"
+        },
+        {
+          "name": "plcsbom:git:commit",
+          "value": "a1b2c3d4e5f60718293a4b5c6d7e8f9012345678"
+        },
+        {
+          "name": "plcsbom:logicalComponent",
+          "value": "true"
+        }
+      ]
+    }
+  },
+  "components": [
+    {
+      "bom-ref": "verpackung-fw",
+      "type": "firmware",
+      "name": "Gerät 4102/0000 0005, Firmware",
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "plcsbom:adapter",
+          "value": "codesys"
+        },
+        {
+          "name": "plcsbom:adapter:source",
+          "value": "v35"
+        },
+        {
+          "name": "plcsbom:device:name",
+          "value": "Device"
+        },
+        {
+          "name": "plcsbom:device:type",
+          "value": "Gerät 4102/0000 0005"
+        },
+        {
+          "name": "plcsbom:firmware:origin",
+          "value": "unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "firmware-not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "order-number-not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "supplier-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "vendor-sbom-missing"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "codesys/robin-codesys_project.xml"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "acf12d77f7ad9ba162485e9c8d64545d97ab37e81f396507112917330af17f2d"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Verpackung"
+        },
+        {
+          "name": "plcsbom:vendorKey:DeviceDescriptionVersion",
+          "value": "3.5.15.0"
+        },
+        {
+          "name": "plcsbom:vendorKey:DeviceId",
+          "value": "0000 0005"
+        },
+        {
+          "name": "plcsbom:vendorKey:DeviceType",
+          "value": "4102"
+        }
+      ]
+    },
+    {
+      "bom-ref": "verpackung-lib-3slicense",
+      "type": "library",
+      "supplier": {
+        "name": "3S - Smart Software Solutions GmbH"
+      },
+      "manufacturer": {
+        "name": "3S - Smart Software Solutions GmbH"
+      },
+      "name": "3SLicense",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "codesys"
+        },
+        {
+          "name": "plcsbom:adapter:source",
+          "value": "v35"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "3S - Smart Software Solutions GmbH"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "#3SLicense"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "codesys/robin-codesys_project.xml"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "acf12d77f7ad9ba162485e9c8d64545d97ab37e81f396507112917330af17f2d"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Verpackung"
+        },
+        {
+          "name": "plcsbom:vendor:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:version:requested",
+          "value": "0.0.0.0"
+        }
+      ]
+    },
+    {
+      "bom-ref": "verpackung-lib-breakpoint-logging-functions",
+      "type": "library",
+      "supplier": {
+        "name": "3S - Smart Software Solutions GmbH"
+      },
+      "manufacturer": {
+        "name": "3S - Smart Software Solutions GmbH"
+      },
+      "name": "Breakpoint Logging Functions",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "codesys"
+        },
+        {
+          "name": "plcsbom:adapter:source",
+          "value": "v35"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "3S - Smart Software Solutions GmbH"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "#BreakpointLogging"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "codesys/robin-codesys_project.xml"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "acf12d77f7ad9ba162485e9c8d64545d97ab37e81f396507112917330af17f2d"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Verpackung"
+        },
+        {
+          "name": "plcsbom:vendor:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:version:requested",
+          "value": "3.5.5.0"
+        }
+      ]
+    },
+    {
+      "bom-ref": "verpackung-lib-caa-device-diagnosis",
+      "type": "library",
+      "supplier": {
+        "name": "CAA Technical Workgroup"
+      },
+      "manufacturer": {
+        "name": "CAA Technical Workgroup"
+      },
+      "name": "CAA Device Diagnosis",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "codesys"
+        },
+        {
+          "name": "plcsbom:adapter:source",
+          "value": "v35"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "CAA Technical Workgroup"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "#CAA Device Diagnosis"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "codesys/robin-codesys_project.xml"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "acf12d77f7ad9ba162485e9c8d64545d97ab37e81f396507112917330af17f2d"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Verpackung"
+        },
+        {
+          "name": "plcsbom:vendor:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:version:requested",
+          "value": "3.5.15.0"
+        }
+      ]
+    },
+    {
+      "bom-ref": "verpackung-lib-iostandard",
+      "type": "library",
+      "name": "IoStandard",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "codesys"
+        },
+        {
+          "name": "plcsbom:adapter:source",
+          "value": "v35"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "supplier-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "System"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "#IoStandard"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "codesys/robin-codesys_project.xml"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "acf12d77f7ad9ba162485e9c8d64545d97ab37e81f396507112917330af17f2d"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Verpackung"
+        },
+        {
+          "name": "plcsbom:version:requested",
+          "value": "3.5.15.0"
+        }
+      ]
+    },
+    {
+      "bom-ref": "verpackung-lib-robin",
+      "type": "library",
+      "supplier": {
+        "name": "INESC TEC"
+      },
+      "manufacturer": {
+        "name": "INESC TEC"
+      },
+      "name": "Robin",
+      "version": "0.1.2",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "codesys"
+        },
+        {
+          "name": "plcsbom:adapter:source",
+          "value": "v35"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "INESC TEC"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "Robin, 0.1.2 (INESC TEC)"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "fixed"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "codesys/robin-codesys_project.xml"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "acf12d77f7ad9ba162485e9c8d64545d97ab37e81f396507112917330af17f2d"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Verpackung"
+        },
+        {
+          "name": "plcsbom:vendor:origin",
+          "value": "source"
+        }
+      ]
+    },
+    {
+      "bom-ref": "verpackung-lib-sm3-basic",
+      "type": "library",
+      "supplier": {
+        "name": "3S - Smart Software Solutions GmbH"
+      },
+      "manufacturer": {
+        "name": "3S - Smart Software Solutions GmbH"
+      },
+      "name": "SM3_Basic",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "codesys"
+        },
+        {
+          "name": "plcsbom:adapter:source",
+          "value": "v35"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "3S - Smart Software Solutions GmbH"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "#SM3_Basic"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "codesys/robin-codesys_project.xml"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "acf12d77f7ad9ba162485e9c8d64545d97ab37e81f396507112917330af17f2d"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Verpackung"
+        },
+        {
+          "name": "plcsbom:vendor:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:version:requested",
+          "value": "4.5.1.0"
+        }
+      ]
+    },
+    {
+      "bom-ref": "verpackung-lib-sm3-cnc",
+      "type": "library",
+      "supplier": {
+        "name": "3S - Smart Software Solutions GmbH"
+      },
+      "manufacturer": {
+        "name": "3S - Smart Software Solutions GmbH"
+      },
+      "name": "SM3_CNC",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "codesys"
+        },
+        {
+          "name": "plcsbom:adapter:source",
+          "value": "v35"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "3S - Smart Software Solutions GmbH"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "#SM3_CNC"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "codesys/robin-codesys_project.xml"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "acf12d77f7ad9ba162485e9c8d64545d97ab37e81f396507112917330af17f2d"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Verpackung"
+        },
+        {
+          "name": "plcsbom:vendor:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:version:requested",
+          "value": "4.5.1.0"
+        }
+      ]
+    },
+    {
+      "bom-ref": "verpackung-lib-sm3-robotics",
+      "type": "library",
+      "supplier": {
+        "name": "3S - Smart Software Solutions GmbH"
+      },
+      "manufacturer": {
+        "name": "3S - Smart Software Solutions GmbH"
+      },
+      "name": "SM3_Robotics",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "codesys"
+        },
+        {
+          "name": "plcsbom:adapter:source",
+          "value": "v35"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "3S - Smart Software Solutions GmbH"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "#SM3_Robotics"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "codesys/robin-codesys_project.xml"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "acf12d77f7ad9ba162485e9c8d64545d97ab37e81f396507112917330af17f2d"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Verpackung"
+        },
+        {
+          "name": "plcsbom:vendor:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:version:requested",
+          "value": "4.5.1.0"
+        }
+      ]
+    },
+    {
+      "bom-ref": "verpackung-lib-sm3-robotics-visu",
+      "type": "library",
+      "supplier": {
+        "name": "3S - Smart Software Solutions GmbH"
+      },
+      "manufacturer": {
+        "name": "3S - Smart Software Solutions GmbH"
+      },
+      "name": "SM3_Robotics_Visu",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "codesys"
+        },
+        {
+          "name": "plcsbom:adapter:source",
+          "value": "v35"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "3S - Smart Software Solutions GmbH"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "#SM3_Robotics_Visu"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "codesys/robin-codesys_project.xml"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "acf12d77f7ad9ba162485e9c8d64545d97ab37e81f396507112917330af17f2d"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Verpackung"
+        },
+        {
+          "name": "plcsbom:vendor:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:version:requested",
+          "value": "4.5.1.0"
+        }
+      ]
+    },
+    {
+      "bom-ref": "verpackung-lib-sm3-transformation",
+      "type": "library",
+      "supplier": {
+        "name": "3S - Smart Software Solutions GmbH"
+      },
+      "manufacturer": {
+        "name": "3S - Smart Software Solutions GmbH"
+      },
+      "name": "SM3_Transformation",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "codesys"
+        },
+        {
+          "name": "plcsbom:adapter:source",
+          "value": "v35"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "3S - Smart Software Solutions GmbH"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "#SM3_Transformation"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "codesys/robin-codesys_project.xml"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "acf12d77f7ad9ba162485e9c8d64545d97ab37e81f396507112917330af17f2d"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Verpackung"
+        },
+        {
+          "name": "plcsbom:vendor:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:version:requested",
+          "value": "4.5.1.0"
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "maschine-xy",
+      "dependsOn": [
+        "verpackung-fw",
+        "verpackung-lib-3slicense",
+        "verpackung-lib-breakpoint-logging-functions",
+        "verpackung-lib-caa-device-diagnosis",
+        "verpackung-lib-iostandard",
+        "verpackung-lib-robin",
+        "verpackung-lib-sm3-basic",
+        "verpackung-lib-sm3-cnc",
+        "verpackung-lib-sm3-robotics",
+        "verpackung-lib-sm3-robotics-visu",
+        "verpackung-lib-sm3-transformation"
+      ]
+    },
+    {
+      "ref": "verpackung-fw",
+      "dependsOn": []
+    },
+    {
+      "ref": "verpackung-lib-3slicense",
+      "dependsOn": []
+    },
+    {
+      "ref": "verpackung-lib-breakpoint-logging-functions",
+      "dependsOn": []
+    },
+    {
+      "ref": "verpackung-lib-caa-device-diagnosis",
+      "dependsOn": []
+    },
+    {
+      "ref": "verpackung-lib-iostandard",
+      "dependsOn": []
+    },
+    {
+      "ref": "verpackung-lib-robin",
+      "dependsOn": []
+    },
+    {
+      "ref": "verpackung-lib-sm3-basic",
+      "dependsOn": []
+    },
+    {
+      "ref": "verpackung-lib-sm3-cnc",
+      "dependsOn": []
+    },
+    {
+      "ref": "verpackung-lib-sm3-robotics",
+      "dependsOn": []
+    },
+    {
+      "ref": "verpackung-lib-sm3-robotics-visu",
+      "dependsOn": []
+    },
+    {
+      "ref": "verpackung-lib-sm3-transformation",
+      "dependsOn": []
+    }
+  ],
+  "compositions": [
+    {
+      "aggregate": "complete",
+      "dependencies": [
+        "maschine-xy"
+      ]
+    },
+    {
+      "aggregate": "unknown",
+      "dependencies": [
+        "verpackung-fw",
+        "verpackung-lib-3slicense",
+        "verpackung-lib-breakpoint-logging-functions",
+        "verpackung-lib-caa-device-diagnosis",
+        "verpackung-lib-iostandard",
+        "verpackung-lib-robin",
+        "verpackung-lib-sm3-basic",
+        "verpackung-lib-sm3-cnc",
+        "verpackung-lib-sm3-robotics",
+        "verpackung-lib-sm3-robotics-visu",
+        "verpackung-lib-sm3-transformation"
+      ]
+    }
+  ]
+}

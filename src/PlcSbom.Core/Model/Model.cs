@@ -40,6 +40,9 @@ public sealed record Station
     /// <summary>Adapter id, see <see cref="AdapterIds"/>.</summary>
     public required string AdapterId { get; init; }
 
+    /// <summary>Source variant within the adapter, e.g. v35, v23, c4 for codesys. Written as &lt;ns&gt;:adapter:source.</summary>
+    public string? AdapterSource { get; init; }
+
     /// <summary>Source file relative to the repository, with '/'.</summary>
     public required string SourcePath { get; init; }
 
@@ -189,6 +192,9 @@ public sealed record SoftwareItem
 
     /// <summary>SHA-512 over the source code (TR 5.2.5, optional).</summary>
     public string? SourceSha512 { get; init; }
+
+    /// <summary>Further facts from the source, written as &lt;ns&gt;:&lt;key&gt;, e.g. library:placeholder.</summary>
+    public IReadOnlyDictionary<string, string> SourceProperties { get; init; } = new Dictionary<string, string>();
 
     public IReadOnlyList<Gap> Gaps { get; init; } = [];
 }

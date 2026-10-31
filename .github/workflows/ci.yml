@@ -99,3 +99,28 @@ jobs:
           name: ${{ env.PACKAGE }}
           path: dist/*
           if-no-files-found: error
+
+  # Cross-check of the own TR-03183-2 validator against sbomqs over all golden files
+  # (CLAUDE.md section 9, docs/entscheidungen.md E-010). A difference fails the job.
+  crosscheck:
+    runs-on: ubuntu-latest
+    env:
+      SBOMQS_VERSION: "2.1.3"
+      SBOMQS_SHA256: c96f07a6a27314c1c268af141af04f1c1b49e61400d7058f6419ca4f7f3bdd6b
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Install sbomqs
+        run: |
+          file="sbomqs_${SBOMQS_VERSION}_Linux_x86_64.tar.gz"
+          curl -fsSL -o "$RUNNER_TEMP/$file" \
+            "https://github.com/interlynk-io/sbomqs/releases/download/v${SBOMQS_VERSION}/$file"
+          echo "${SBOMQS_SHA256}  $RUNNER_TEMP/$file" | sha256sum -c -
+          mkdir -p "$RUNNER_TEMP/sbomqs"
+          tar -xzf "$RUNNER_TEMP/$file" -C "$RUNNER_TEMP/sbomqs"
+
+      - name: Cross-check with sbomqs
+        run: dotnet run tools/crosscheck-sbomqs.cs -- --sbomqs "$RUNNER_TEMP/sbomqs/sbomqs" --markdown "$GITHUB_STEP_SUMMARY"

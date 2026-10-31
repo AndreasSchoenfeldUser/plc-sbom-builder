@@ -1,22 +1,27 @@
 # Testfälle: PLC SBOM Builder (`plc-sbom`)
 
-Stand: 31.10.2026, Version 0.1.0 (Meilenstein M1 in Arbeit). Diese Datei beschreibt alle automatischen Testfälle, die Testläufe und ihre Ergebnisse. Die Bedienung des Werkzeugs steht in [ANLEITUNG.md](ANLEITUNG.md), Ziele und Regeln in [CLAUDE.md](CLAUDE.md).
+Stand: 31.10.2026, Version 0.1.0 (Meilenstein M1 fachlich abgeschlossen, M2 in Arbeit). Diese Datei beschreibt alle automatischen Testfälle, die Testläufe und ihre Ergebnisse. Die Bedienung des Werkzeugs steht in [ANLEITUNG.md](ANLEITUNG.md), Ziele und Regeln in [CLAUDE.md](CLAUDE.md).
 
 ## 1. Ergebnis
 
-**219 Testfälle, 219 bestanden, 0 fehlgeschlagen, 0 übersprungen.** Letzter Lauf am 31.10.2026, 22:25 Uhr, mit Laufzeit 1,08 s. `dotnet format --verify-no-changes` ohne Befund.
+**292 Testfälle, 292 bestanden, 0 fehlgeschlagen, 0 übersprungen.** Letzter Lauf am 31.10.2026, 22:56 Uhr, Laufzeit 0,55 s. `dotnet format --verify-no-changes` ohne Befund. Dazu die Gegenprüfung mit sbomqs ohne Abweichung (Abschnitt 6.1).
 
 | Testklasse | Datei | Testfälle | Bestanden | Prüfgegenstand |
 |---|---|---:|---:|---|
-| `CliAppTests` | [Cli/CliAppTests.cs](tests/PlcSbom.Tests/Cli/CliAppTests.cs) | 39 | 39 | Kommandozeile, Hilfe, Exit-Codes, Gerüst der Befehle |
+| `CliAppTests` | [Cli/CliAppTests.cs](tests/PlcSbom.Tests/Cli/CliAppTests.cs) | 42 | 42 | Kommandozeile, Hilfe, Exit-Codes, Gerüst der Befehle |
 | `ValidateCommandTests` | [Cli/ValidateCommandTests.cs](tests/PlcSbom.Tests/Cli/ValidateCommandTests.cs) | 11 | 11 | `plc-sbom validate` mit echten Dateien |
-| `SbomValidatorTests` | [Validation/SbomValidatorTests.cs](tests/PlcSbom.Tests/Validation/SbomValidatorTests.cs) | 61 | 61 | Schema und Regeln der BSI TR-03183-2 |
+| `SbomValidatorTests` | [Validation/SbomValidatorTests.cs](tests/PlcSbom.Tests/Validation/SbomValidatorTests.cs) | 74 | 74 | Schema und Regeln der BSI TR-03183-2 |
 | `GapRulesTests` | [Gaps/GapRulesTests.cs](tests/PlcSbom.Tests/Gaps/GapRulesTests.cs) | 28 | 28 | Lückenregeln am Modell, Lückenkatalog |
 | `CycloneDxWriterTests` | [Output/CycloneDxWriterTests.cs](tests/PlcSbom.Tests/Output/CycloneDxWriterTests.cs) | 20 | 20 | CycloneDX-Writer, Golden File, Determinismus |
 | `ResultFileTests` | [Output/ResultFileTests.cs](tests/PlcSbom.Tests/Output/ResultFileTests.cs) | 8 | 8 | Ergebnisdatei `<out>.result.json` |
 | `IdentifierTests` | [Output/IdentifierTests.cs](tests/PlcSbom.Tests/Output/IdentifierTests.cs) | 11 | 11 | UUIDv5, `bom-ref`, Pfad der Ergebnisdatei |
 | `DocsConsistencyTests` | [Docs/DocsConsistencyTests.cs](tests/PlcSbom.Tests/Docs/DocsConsistencyTests.cs) | 41 | 41 | Abgleich von ANLEITUNG.md, CLAUDE.md, README.md mit dem Code |
-| **Summe** | | **219** | **219** | |
+| `SampleFileTests` | [Samples/SampleFileTests.cs](tests/PlcSbom.Tests/Samples/SampleFileTests.cs) | 1 | 1 | Minimal-SBOM als Golden File für die Gegenprüfung |
+| `LibraryReferenceTests` | [Adapters/Codesys/LibraryReferenceTests.cs](tests/PlcSbom.Tests/Adapters/Codesys/LibraryReferenceTests.cs) | 14 | 14 | CODESYS-Bibliotheksangabe `Titel, Version (Hersteller)` |
+| `PlcOpenReaderTests` | [Adapters/Codesys/PlcOpenReaderTests.cs](tests/PlcSbom.Tests/Adapters/Codesys/PlcOpenReaderTests.cs) | 15 | 15 | PLCopen-XML-Leser an echten Fixtures, sicheres XML |
+| `CodesysV35AdapterTests` | [Adapters/Codesys/CodesysV35AdapterTests.cs](tests/PlcSbom.Tests/Adapters/Codesys/CodesysV35AdapterTests.cs) | 22 | 22 | Adapter `codesys`/`v35`: Geräte, Bibliotheken, Lücken, Golden Files |
+| `InspectCommandTests` | [Cli/InspectCommandTests.cs](tests/PlcSbom.Tests/Cli/InspectCommandTests.cs) | 5 | 5 | `plc-sbom inspect --adapter codesys` |
+| **Summe** | | **292** | **292** | |
 
 Bei parametrisierten Tests (xUnit `Theory`) zählt jeder Datensatz als eigener Testfall. Die Tabellen in Abschnitt 4 fassen sie in einer Zeile zusammen und nennen die Anzahl.
 
@@ -41,12 +46,15 @@ Der Testlauf nutzt Microsoft.Testing.Platform mit xunit.v3 (docs/entscheidungen.
 | Handmodell | [Samples/HandModel.cs](tests/PlcSbom.Tests/Samples/HandModel.cs) | Von Hand gebautes Modell der „Maschine XY“ mit zwei Stationen: PLC_1 (TIA AML: Profilschiene, CPU 1511-1 PN V2.8, PM 70W ohne Firmware, IM 155-6 PN HF, Bibliothek LGF, Anwenderprogramm) und Roboterzelle (TwinCAT: EK1100, Runtime ohne Version, Tc2_Standard mit Version `*`), dazu ein nicht zugeordnetes Panel. Gerätedaten nach den Fixtures aus CLAUDE.md Abschnitt 13, alles Übrige erfundene Testdaten |
 | Golden File | [golden/hand-model.cdx.json](tests/PlcSbom.Tests/golden/hand-model.cdx.json) | Erwartete SBOM aus dem Handmodell, byte-genau. 11 Komponenten, 2 Stationen, 0 Fehler, 9 Warnungen, 32 Hinweise |
 | Minimal-SBOM | [Samples/MinimalSbom.cs](tests/PlcSbom.Tests/Samples/MinimalSbom.cs) | Kleinstes CycloneDX-1.6-Dokument, das Schema und TR-Regeln besteht: logische Hauptkomponente „Maschine XY“ und eine vollständig beschriebene Anwendung `app`. Synthetisch. Jeder Validator-Test ändert genau eine Stelle |
+| CODESYS-Fixtures | [fixtures/codesys/v35/](fixtures/codesys/v35/) | Drei echte PLCopen-XML-Exporte (robin V3.5 SP15, OSC-MQTT V3.5 SP4, ooip V3.5 SP20) und ein synthetischer mit zwei Steuerungen; Herkunft in [fixtures/FIXTURES.md](fixtures/FIXTURES.md) |
+| Golden Files CODESYS | [golden/codesys-v35-robin.cdx.json](tests/PlcSbom.Tests/golden/codesys-v35-robin.cdx.json), [golden/codesys-v35-zwei-steuerungen.cdx.json](tests/PlcSbom.Tests/golden/codesys-v35-zwei-steuerungen.cdx.json), [golden/codesys-v35-zwei-steuerungen.inspect.json](tests/PlcSbom.Tests/golden/codesys-v35-zwei-steuerungen.inspect.json) | SBOM aus robin bzw. aus der Steuerung „Verpackung“ der synthetischen Datei, eingebettet in die Maschine des Handmodells; Rohinventar von `inspect` |
+| Golden File der Minimal-SBOM | [golden/minimal-synthetisch.cdx.json](tests/PlcSbom.Tests/golden/minimal-synthetisch.cdx.json) | Die Minimal-SBOM als Datei. Einzige Testdatei, in der Dateiname, Hash und Dateieigenschaften vorhanden sind; Eingang der Gegenprüfung mit sbomqs neben `hand-model.cdx.json` |
 
 ## 4. Testfälle
 
 Spalte „Ergebnis“: Ergebnis des letzten Laufs. „bestanden“ heißt, dass alle Zusicherungen des Testfalls zutrafen.
 
-### 4.1 Kommandozeile: `CliAppTests` (39)
+### 4.1 Kommandozeile: `CliAppTests` (42)
 
 | ID | Testfall | Prüft | Fälle | Ergebnis |
 |---|---|---|---:|---|
@@ -57,7 +65,7 @@ Spalte „Ergebnis“: Ergebnis des letzten Laufs. „bestanden“ heißt, dass 
 | CLI-05 | `Version_prints_the_tool_version` | `--version` gibt die Version im Format `x.y.z` aus, Exit 0 | 1 | bestanden |
 | CLI-06 | `No_command_is_a_usage_error` | Aufruf ohne Befehl: Exit 2 und Hinweis auf `plc-sbom --help` | 1 | bestanden |
 | CLI-07 | `Invalid_calls_end_with_exit_2` | Falsche Aufrufe enden mit Exit 2 und `[USAGE]`: unbekannter Befehl, fehlendes `--config` bzw. `--release`, `--report pdf`, unbekannte Option, `report --format pdf`, unbekannte Adapter-ID, fehlendes `--adapter`, `doctor --adapter twincat`, `validate` ohne Datei, `--timeout 0`, `--timeout zehn` | 12 | bestanden |
-| CLI-08 | `Commands_not_yet_built_name_their_milestone` | Noch nicht umgesetzte Befehle enden mit Exit 2 und `[NOT_IMPLEMENTED]` und nennen ihren Meilenstein: `build` M9, `report` M10, `compare` M11, `ids` M12, `inspect` M2, `doctor` M14 | 6 | bestanden |
+| CLI-08 | `Commands_not_yet_built_name_their_milestone` | Noch nicht umgesetzte Befehle enden mit Exit 2 und `[NOT_IMPLEMENTED]` und nennen ihren Meilenstein: `build` M9, `report` M10, `compare` M11, `ids` M12, `doctor` M14, `inspect` für `studio5000` M5, `twincat` M6, `tia-aml` M7, `tia-portal` M14 | 9 | bestanden |
 | CLI-09 | `Openness_commands_off_windows_are_an_environment_problem` | `export-aml`, `doctor --adapter tia-portal` und `doctor --adapter tia-portal --deep` außerhalb von Windows: Exit 3 und `[OPENNESS_WINDOWS_ONLY]` | 3 | bestanden |
 | CLI-10 | `Openness_commands_on_windows_pass_the_platform_check` | Auf Windows kommt `export-aml` an der Plattformprüfung vorbei und meldet Meilenstein M14 | 1 | bestanden |
 | CLI-11 | `Common_options_are_accepted_after_the_command` | `--verbose` und `--timeout` werden auch nach dem Befehl angenommen | 1 | bestanden |
@@ -82,7 +90,7 @@ Jeder Testfall legt ein eigenes temporäres Verzeichnis an, ruft die Kommandozei
 | VAL-09 | `Missing_file_is_a_usage_error_without_result_file` | nicht vorhandene Datei | Exit 2, `[SBOM_NOT_FOUND]` auf stderr, nichts auf stdout, keine Ergebnisdatei | 1 | bestanden |
 | VAL-10 | `Same_input_gives_the_same_result_file` | Golden File, zweimal | Beide Ergebnisdateien sind byte-gleich | 1 | bestanden |
 
-### 4.3 Validator: `SbomValidatorTests` (61)
+### 4.3 Validator: `SbomValidatorTests` (74)
 
 Grundlage ist die Minimal-SBOM. Ohne Änderung ergibt sie nur den Hinweis `LOGICAL_COMPONENT`. Jeder Testfall ändert eine Stelle und prüft die erwartete Meldung.
 
@@ -119,6 +127,9 @@ Grundlage ist die Minimal-SBOM. Ohne Änderung ergibt sie nur den Hinweis `LOGIC
 | SV-17 | `Component_creator_without_contact_is_missing` | Hersteller ohne E-Mail und URL | Fehler `CREATOR_MISSING` | 1 | bestanden |
 | SV-18 | `Declared_licence_is_not_a_distribution_licence` | Lizenz mit `acknowledgement` = `declared` | Fehler `DISTRIBUTION_LICENCE_MISSING` | 1 | bestanden |
 | SV-19 | `Concluded_licence_expression_is_a_distribution_licence` | SPDX-Ausdruck `MIT OR Apache-2.0` mit `concluded` | keine Meldung | 1 | bestanden |
+| SV-48 | `Licence_expressions_of_spdx_identifiers_and_licence_refs_are_valid` | `LicenseRef-siemens-proprietary`, Ausdruck mit Klammern und `LicenseRef-…`, `… WITH Classpath-exception-2.0`, `mit` in Kleinbuchstaben, `DocumentRef-…:LicenseRef-…` | keine Meldung | 5 | bestanden |
+| SV-49 | `Free_text_as_licence_expression_is_invalid` | `Proprietär`, `Siemens Software License`, `MIT OR Hausrecht`, `LicenseRef-` ohne Namen | Fehler `DISTRIBUTION_LICENCE_INVALID` an `app` mit Feld `distributionLicence` | 4 | bestanden |
+| SV-50 | `Licence_name_counts_only_as_licence_ref` | `license.name` = `Proprietär` bzw. `LicenseRef-musterbau-proprietary` | Fehler `DISTRIBUTION_LICENCE_INVALID` nur beim Freitext; nie `DISTRIBUTION_LICENCE_MISSING` | 2 | bestanden |
 | SV-20 | `Sha256_alone_is_not_the_required_hash` | nur SHA-256 statt SHA-512 | Fehler `HASH_MISSING` | 1 | bestanden |
 | SV-21 | `Hash_outside_a_distribution_reference_does_not_count` | Referenztyp `website` statt `distribution` | Fehler `HASH_MISSING` | 1 | bestanden |
 | SV-22 | `Bsi_property_with_wrong_value_is_invalid` | `bsi:component:executable` = `yes` | Fehler `BSI_PROPERTY_INVALID` | 1 | bestanden |
@@ -137,6 +148,8 @@ Grundlage ist die Minimal-SBOM. Ohne Änderung ergibt sie nur den Hinweis `LOGIC
 | SV-30 | `Every_component_needs_a_dependency_entry` | Eintrag von `app` in `dependencies` entfernt | Fehler `DEPENDENCIES_MISSING` an `app` | 1 | bestanden |
 | SV-31 | `Every_component_needs_a_completeness` | `app` fehlt in `compositions` | Fehler `COMPLETENESS_MISSING` an `app` | 1 | bestanden |
 | SV-32 | `Composition_without_aggregate_does_not_state_completeness` | `aggregate` entfernt | zwei Fehler `COMPLETENESS_MISSING` | 1 | bestanden |
+| SV-51 | `Component_not_reachable_from_the_primary_component_is_an_error` | Maschine hängt von nichts ab | Fehler `COMPONENT_UNREACHABLE` an `app` mit Feld `dependencyGraph` | 1 | bestanden |
+| SV-52 | `Component_reachable_over_another_component_is_fine` | zusätzliche Bibliothek, erreichbar über `app` | keine Meldung | 1 | bestanden |
 
 **Lückenvermerke**
 
@@ -259,6 +272,68 @@ Diese Tests sichern die Regel aus CLAUDE.md Abschnitt 14 ab, soweit sie sich mas
 | DOC-03 | `Anleitung_lists_no_gap_code_the_tool_does_not_know` | ANLEITUNG.md nennt keinen Lückencode, den das Werkzeug nicht kennt | 1 | bestanden |
 | DOC-04 | `User_docs_state_the_tool_version` | ANLEITUNG.md und README.md nennen die aktuelle Version (0.1.0) | 2 | bestanden |
 
+### 4.9 Beispieldateien: `SampleFileTests` (1)
+
+| ID | Testfall | Prüft | Fälle | Ergebnis |
+|---|---|---|---:|---|
+| SF-01 | `Minimal_sbom_matches_its_golden_file` | Die Minimal-SBOM aus `MinimalSbom.cs` ist byte-gleich mit `golden/minimal-synthetisch.cdx.json` | 1 | bestanden |
+
+### 4.10 CODESYS-Bibliotheksangabe: `LibraryReferenceTests` (14)
+
+| ID | Testfall | Prüft | Fälle | Ergebnis |
+|---|---|---|---:|---|
+| LR-01 | `Parses_title_version_and_company` | Sechs Angaben aus den Fixtures und eine mit Komma im Titel werden in Titel, Version und Hersteller zerlegt und unverändert wieder zusammengesetzt | 7 | bestanden |
+| LR-02 | `Rejects_text_that_does_not_follow_the_pattern` | `null`, leer, `Kaputt`, `#SM3_Basic`, ohne Hersteller, ohne Version ergeben keine Angabe | 6 | bestanden |
+| LR-03 | `Star_means_newest_installed_version` | `*` gilt als „neueste installierte Version“ | 1 | bestanden |
+
+### 4.11 PLCopen-XML-Leser: `PlcOpenReaderTests` (15)
+
+| ID | Testfall | Prüft | Fälle | Ergebnis |
+|---|---|---|---:|---|
+| PO-01 | `Reads_file_and_content_header` | Produkt, Produktversion, Exportzeit, Projektname und -version aus robin, OSC-MQTT, ooip; `companyName` ist überall leer | 3 | bestanden |
+| PO-02 | `Reads_the_device_identification` | Gerätename, `Type`, `Id`, `Version` und Anwendung aus robin und ooip | 2 | bestanden |
+| PO-03 | `Configuration_without_device_data_is_no_device` | Der Achspool in robin ist kein Gerät | 1 | bestanden |
+| PO-04 | `Library_project_has_no_device_and_libraries_in_the_pou_pool` | OSC-MQTT: kein Gerät, 11 feste Bibliotheken im POU-Pool, eine mit `*` | 1 | bestanden |
+| PO-05 | `Placeholder_without_redirection_keeps_the_default_resolution` | robin: 10 Bibliotheken, `#SM3_Basic` mit Auflösung `default` | 1 | bestanden |
+| PO-06 | `Direct_reference_is_fixed` | `Robin, 0.1.2 (INESC TEC)` ist fest aufgelöst | 1 | bestanden |
+| PO-07 | `Redirection_in_the_same_library_manager_wins_over_the_default` | ooip: `#Standard` mit Standard `*` und Umleitung auf 3.5.18.0 | 1 | bestanden |
+| PO-08 | `Two_controllers_with_nested_device_and_pou_pool` | synthetisch: zwei Steuerungen, untergeordnetes Gerät, zwei Anwendungen, POU-Pool | 1 | bestanden |
+| PO-09 | `Not_plcopen_ends_with_exit_2` | AML statt PLCopen: `NOT_PLCOPEN`, Exit 2 | 1 | bestanden |
+| PO-10 | `Invalid_xml_ends_with_exit_2` | abgeschnittenes XML und Text: `XML_INVALID` | 2 | bestanden |
+| PO-11 | `Dtd_is_refused` | Datei mit DTD und externer Entität wird abgelehnt, nichts wird aufgelöst | 1 | bestanden |
+
+### 4.12 Adapter `codesys`, Quelle `v35`: `CodesysV35AdapterTests` (22)
+
+| ID | Testfall | Prüft | Fälle | Ergebnis |
+|---|---|---|---:|---|
+| CV-01 | `Station_carries_adapter_source_hash_and_engineering_tool` | Adapter `codesys`, Quelle `v35`, SHA-256 der Datei, Werkzeug „CODESYS V3.5 SP15“, kein Exportzeitpunkt (ohne Zeitzone) | 1 | bestanden |
+| CV-02 | `Device_description_version_is_not_the_firmware` | Gerät ohne Firmware, `firmware:origin` unknown, Version der Gerätebeschreibung als Herstellerschlüssel, drei Lücken | 1 | bestanden |
+| CV-03 | `Placeholder_with_default_resolution_only_is_unresolved` | `#SM3_Basic`: Version nicht aufgelöst, `version-unresolved` mit Grund | 1 | bestanden |
+| CV-04 | `Direct_reference_has_a_resolved_version` | `Robin 0.1.2` aufgelöst, ohne Adapterlücke | 1 | bestanden |
+| CV-05 | `Redirected_placeholder_has_a_resolved_version` | ooip: `Standard 3.5.18.0` aufgelöst | 1 | bestanden |
+| CV-06 | `Star_version_is_unresolved` | `*` ergibt `version-unresolved` | 1 | bestanden |
+| CV-07 | `Company_system_is_no_vendor` | Hersteller `System` wird nicht übernommen, `supplier-unknown` | 1 | bestanden |
+| CV-08 | `Library_project_gives_a_station_without_devices` | OSC-MQTT: Station ohne Geräte, 11 Bibliotheken, 2 mit `*` | 1 | bestanden |
+| CV-09 | `Several_controllers_need_plc` | Zwei Steuerungen ohne `plc`: `CODESYS_PLC_REQUIRED` mit Namen | 1 | bestanden |
+| CV-10 | `Unknown_plc_lists_the_devices_found` | Unbekanntes `plc`: `CODESYS_PLC_NOT_FOUND` mit Liste | 1 | bestanden |
+| CV-11 | `Plc_selects_the_controller_its_sub_devices_and_libraries` | Steuerung, untergeordnetes Gerät mit Position, Bibliotheken aus POU-Pool und beiden Anwendungen ohne Dubletten | 1 | bestanden |
+| CV-12 | `Other_controller_gets_only_its_own_libraries` | Zweite Steuerung erhält nur POU-Pool und eigene Anwendung | 1 | bestanden |
+| CV-13 | `Reference_off_pattern_is_kept_with_a_gap` | `Kaputt` bleibt als Bibliothek ohne Version und Hersteller, mit Lücke | 1 | bestanden |
+| CV-14 | `Missing_file_ends_with_exit_2` | fehlende Datei: `SOURCE_NOT_FOUND` | 1 | bestanden |
+| CV-15 | `Sbom_matches_the_golden_file` | SBOM aus robin und aus „Verpackung“ byte-gleich mit den Golden Files | 2 | bestanden |
+| CV-16 | `Sbom_passes_schema_and_tr_rules_without_errors` | SBOM aus allen vier Fixtures (synthetisch mit beiden Steuerungen): Schema gültig, kein Fehler, zwei Läufe byte-gleich | 5 | bestanden |
+| CV-17 | `Sbom_writes_codesys_properties` | `adapter:source`, `firmware:origin` unknown, `vendorKey:DeviceDescriptionVersion`, `library:resolution`; Version der Gerätebeschreibung nie als Version | 1 | bestanden |
+
+### 4.13 Befehl `inspect`: `InspectCommandTests` (5)
+
+| ID | Testfall | Prüft | Fälle | Ergebnis |
+|---|---|---|---:|---|
+| IN-01 | `Codesys_export_gives_the_raw_inventory_as_json` | robin: Exit 0, JSON mit Adapter, Quelle, SHA-256, Gerät und Auflösung | 1 | bestanden |
+| IN-02 | `Inventory_matches_the_golden_file` | Rohinventar der synthetischen Datei byte-gleich mit dem Golden File | 1 | bestanden |
+| IN-03 | `Missing_file_ends_with_exit_2` | `[SOURCE_NOT_FOUND]`, Exit 2 | 1 | bestanden |
+| IN-04 | `Non_plcopen_file_ends_with_exit_2` | `[NOT_PLCOPEN]`, Exit 2 | 1 | bestanden |
+| IN-05 | `Gsdml_is_refused_for_codesys` | `--gsdml` mit `codesys`: `[USAGE]`, Exit 2 | 1 | bestanden |
+
 ## 5. Testläufe
 
 Alle Läufe lokal auf macOS 26.6.2 (arm64) mit .NET SDK 10.0.403, Ausgangsstand Commit `914bc98` plus die neuen, noch nicht committeten Testdateien.
@@ -269,9 +344,13 @@ Alle Läufe lokal auf macOS 26.6.2 (arm64) mit .NET SDK 10.0.403, Ausgangsstand 
 | 1 | 31.10.2026 | 219 Tests | Build abgebrochen | Analyseregel xUnit1051: Ein Dateizugriff im Test übergab kein `TestContext.Current.CancellationToken`. Im Test ergänzt |
 | 2 | 31.10.2026 | 219 Tests | 218 bestanden, 1 fehlgeschlagen | `Validation_is_deterministic` verglich Meldungen als Records; deren Feldliste wird nur als Referenz verglichen. Fehler im Test, nicht im Werkzeug. Vergleich auf Inhalt umgestellt |
 | 3 | 31.10.2026 | 219 Tests, Formatprüfung | 219 bestanden, Format ohne Befund | – |
-| 4 | 31.10.2026, 22:25 | 219 Tests mit TRX-Bericht | 219 bestanden, 1,08 s | Grundlage dieser Datei |
+| 4 | 31.10.2026, 22:25 | 219 Tests mit TRX-Bericht | 219 bestanden, 1,08 s | Stand vor dem Abschluss von M1 |
+| 5 | 31.10.2026, ab 22:40 | Gegenprüfung mit sbomqs an veränderten Kopien der Minimal-SBOM | 2 Abweichungen | Validator akzeptierte Lizenz als Freitext und eine verwaiste Komponente. Fehler im Werkzeug; Regeln `DISTRIBUTION_LICENCE_INVALID` und `COMPONENT_UNREACHABLE` ergänzt (SV-48 bis SV-52) |
+| 6 | 31.10.2026, 22:54 | 233 Tests, Formatprüfung, Gegenprüfung über beide Golden Files | 233 bestanden, Format ohne Befund, keine Abweichung | Stand M1 |
+| 7 | 31.10.2026, M2 | neue CODESYS-Tests | Build abgebrochen | Analyseregeln xUnit1051 (fehlendes `CancellationToken`) und xUnit2029 (`Assert.Empty` mit Filter) in den neuen Tests. Im Test behoben |
+| 8 | 31.10.2026, 22:56 | 292 Tests mit TRX-Bericht, Formatprüfung; Gegenprüfung mit sbomqs über die beiden CODESYS-Golden-Files | 292 bestanden, 0,55 s, Format ohne Befund; sbomqs: robin 36 gleich, 89 erklärt, 0 Abweichungen; zwei Steuerungen 36/59/0 | Grundlage dieser Datei |
 
-In keinem Lauf hat ein Test einen Fehler im Werkzeug aufgedeckt.
+Die Tests selbst haben keinen Fehler im Werkzeug aufgedeckt, die Gegenprüfung in Lauf 5 zwei.
 
 ### 5.1 Manuelle Prüfläufe mit der Kommandozeile
 
@@ -290,8 +369,29 @@ Die Meldung zu `--foo` kommt auf Englisch aus der Bibliothek System.CommandLine;
 
 ## 6. Nicht abgedeckt
 
-- Gegenprüfung mit `sbomqs compliance --bsi` und `cyclonedx-cli validate`: für M1 vorgesehen, noch nicht eingerichtet.
+- `cyclonedx-cli validate` als zweite, unabhängige Schemaprüfung: noch nicht eingerichtet.
+- CI ist rot: Die Tests finden CLAUDE.md, ANLEITUNG.md und die Golden Files über `[CallerFilePath]`; in CI wird dieser Pfad beim Bauen auf `/_/` umgeschrieben. Lokal betrifft das nicht.
 - Lauf auf Windows: nur in CI (`windows-latest`), nicht lokal.
 - Test, dass die Schemaprüfung ohne Netz auskommt: Das Schema ist eingebettet und fremde Verweise werden abgelehnt, ein eigener Test mit gesperrtem Netz fehlt.
 - Adapter, `build`, `report`, `compare`, `ids`, `inspect` und der Openness-Worker: noch nicht umgesetzt; die Tests prüfen nur, dass sie mit `[NOT_IMPLEMENTED]` bzw. `[OPENNESS_WINDOWS_ONLY]` enden.
 - Self-contained-Paket: Der Aufruf aus dem ausgepackten Paket läuft in CI als Rauchtest, nicht lokal.
+
+### 6.1 Gegenprüfung mit sbomqs
+
+Kein xUnit-Test, sondern [tools/crosscheck-sbomqs.cs](tools/crosscheck-sbomqs.cs), in CI im Job `crosscheck`. Methode und Feldzuordnung: [docs/regeln-tr03183.md](docs/regeln-tr03183.md) Abschnitt 10, Begründung: docs/entscheidungen.md E-010. Lauf am 31.10.2026 lokal mit sbomqs v2.1.3 (Darwin arm64, Prüfsumme gegen `checksums.txt` des Releases geprüft):
+
+| Datei | gleich, vorhanden | gleich, fehlt | erklärt | Abweichung |
+|---|---:|---:|---:|---:|
+| `hand-model.cdx.json` | 74 | 0 | 41 | 0 |
+| `minimal-synthetisch.cdx.json` | 20 | 0 | 5 | 0 |
+
+Gegenprobe mit sechs absichtlich veränderten Kopien der Minimal-SBOM (nur lokal, nicht eingecheckt):
+
+| Veränderung | Ergebnis |
+|---|---|
+| Dateiname entfernt | gleich, fehlt (`FILENAME_MISSING`) |
+| Lizenz-ID, die es bei SPDX nicht gibt | gleich, fehlt (`SCHEMA_INVALID`) |
+| Lizenz als Freitext in `license.name` | gleich, fehlt (`DISTRIBUTION_LICENCE_INVALID`); vor Lauf 5 Abweichung |
+| Maschine ohne Abhängigkeiten | gleich, fehlt (`COMPONENT_UNREACHABLE`); vor Lauf 5 Abweichung |
+| Hash unter `distribution-intake` | Abweichung, bekannt: Validator folgt TR-Tabelle 9 |
+| SPDX-Ausdruck `MIT OR Apache-2.0` | gleich, vorhanden |

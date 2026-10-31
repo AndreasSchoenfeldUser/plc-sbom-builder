@@ -16,7 +16,7 @@ Eine SBOM allein erfüllt den Cyber Resilience Act nicht. Das Werkzeug bewertet 
 |---|---|---|
 | `validate` | vorhandene SBOM prüfen (Schema und TR-03183-2), Ergebnisdatei schreiben | **nutzbar** |
 | `build` | SBOM aus `machine.yml` und den SPS-Projekten erzeugen | folgt (M9) |
-| `inspect` | Rohinventar eines Adapters ausgeben | folgt (ab M2) |
+| `inspect` | Rohinventar eines Adapters ausgeben | **nutzbar für `codesys`** (CODESYS V3.5, PLCopen XML); andere Adapter folgen (M5–M14) |
 | `report` | Prüfbericht als HTML oder Markdown | folgt (M10) |
 | `compare` | SBOM mit dem Ist-Stand aus dem Feld abgleichen | folgt (M11) |
 | `ids` | Kennungen gegen CSAF-Advisories prüfen | folgt (M12) |
@@ -97,7 +97,7 @@ Jede Meldung beginnt mit einem stabilen Code in eckigen Klammern, danach die `bo
 | Ersteller | `manufacturer` mit E-Mail oder URL | `CREATOR_MISSING` |
 | Version | `version` | `VERSION_MISSING` |
 | Dateiname | Property `bsi:component:filename` | `FILENAME_MISSING` |
-| Distributionslizenz | `licenses[]` mit `acknowledgement: concluded` | `DISTRIBUTION_LICENCE_MISSING` |
+| Distributionslizenz | `licenses[]` mit `acknowledgement: concluded`, als SPDX-Kennung, SPDX-Ausdruck oder `LicenseRef-…` | `DISTRIBUTION_LICENCE_MISSING`; Freitext statt Kennung: `DISTRIBUTION_LICENCE_INVALID` |
 | Hash der ausgelieferten Form | `externalReferences[type=distribution].hashes[alg=SHA-512]` | `HASH_MISSING` |
 | ausführbar | Property `bsi:component:executable` (`executable` / `non-executable`) | `EXECUTABLE_PROPERTY_MISSING` |
 | Archiv | Property `bsi:component:archive` (`archive` / `no archive`) | `ARCHIVE_PROPERTY_MISSING` |
@@ -105,7 +105,7 @@ Jede Meldung beginnt mit einem stabilen Code in eckigen Klammern, danach die `bo
 | Abhängigkeiten | Eintrag in `dependencies`, auch leer | `DEPENDENCIES_MISSING` |
 | Vollständigkeit der Abhängigkeiten | Komponente in `compositions[]` mit `aggregate` | `COMPLETENESS_MISSING` |
 
-Weitere Fehler: `BOM_REF_MISSING`, `BOM_REF_DUPLICATE`, `DEPENDENCY_REF_UNKNOWN` (Abhängigkeit auf eine `bom-ref`, die es nicht gibt), `BSI_PROPERTY_DUPLICATE`, `BSI_PROPERTY_INVALID` (unzulässiger Wert).
+Weitere Fehler: `BOM_REF_MISSING`, `BOM_REF_DUPLICATE`, `DEPENDENCY_REF_UNKNOWN` (Abhängigkeit auf eine `bom-ref`, die es nicht gibt), `COMPONENT_UNREACHABLE` (keine Kette von Abhängigkeiten führt von der Hauptkomponente zu dieser Komponente, TR Abschnitt 5.1), `BSI_PROPERTY_DUPLICATE`, `BSI_PROPERTY_INVALID` (unzulässiger Wert).
 
 Weitere Warnungen: `EFFECTIVE_LICENCE_SPELLING` (Schreibweise `effectiveLicense` aus dem TR-PDF statt `effectiveLicence` aus der BSI-Taxonomie), `ASSOCIATED_LICENCES_DEPRECATED`, `GAP_UNKNOWN` (unbekannter Lückencode).
 
@@ -163,7 +163,7 @@ Der Code im Lückenvermerk ist klein geschrieben mit Bindestrich (`hash-unavaila
 | `gsdml-not-found` | Die GSDML-Datei des Geräts liegt in keinem der angegebenen Verzeichnisse | Warnung | – |
 | `order-number-not-in-project` | Weder Projekt noch GSDML nennen eine Bestellnummer | Warnung | – |
 
-Die Begründung je Code mit der TR-Stelle kommt in `docs/regeln-tr03183.md` (folgt mit M1).
+Die Begründung je Code mit der TR-Stelle steht in [docs/regeln-tr03183.md](docs/regeln-tr03183.md) Abschnitt 7.
 
 ## 7. Ergebnisdatei
 
@@ -233,7 +233,89 @@ Auf Windows-Agenten `bat` statt `sh`. `readJSON` stammt aus dem Plugin „Pipeli
 | `[NOT_IMPLEMENTED]` | Befehl folgt in einem späteren Meilenstein | Abschnitt 2 |
 | `[OPENNESS_WINDOWS_ONLY]` | `export-aml` oder `doctor --adapter tia-portal` außerhalb von Windows | Schritt auf einem Windows-Agenten mit TIA Portal V21 ausführen |
 | `[USAGE]` | Option fehlt oder ist unbekannt | `plc-sbom <befehl> --help` |
+| `[SOURCE_NOT_FOUND]` | Die Projektdatei bzw. der Export fehlt | Pfad prüfen; Export eingecheckt? |
+| `[XML_INVALID]` | Die Datei ist kein gültiges XML oder enthält eine DTD | Export neu erzeugen; DTDs werden aus Sicherheitsgründen nie gelesen |
+| `[NOT_PLCOPEN]` | Die Datei ist kein PLCopen-XML-Export | In CODESYS V3.5 das ganze Projekt als PLCopen XML exportieren |
+| `[CODESYS_PLC_REQUIRED]` | Der Export enthält mehrere Steuerungen | Steuerung mit `plc` wählen (ab M9 in `machine.yml`) |
+| `[CODESYS_PLC_NOT_FOUND]` | Die mit `plc` genannte Steuerung steht nicht im Export | Namen aus der Meldung oder aus `inspect` übernehmen |
 
-## 10. Was folgt
+## 10. Projekt ansehen: `inspect`
 
-Die nächsten Schritte nach Meilensteinplan (CLAUDE.md Abschnitt 12): M1 wird mit `docs/regeln-tr03183.md` und der Gegenprüfung durch `sbomqs --bsi` abgeschlossen. Danach kommen die Adapter in dieser Reihenfolge: CODESYS (V3.5, V2.3, CODESYS 4), Rockwell Studio 5000, Beckhoff TwinCAT 3, Siemens TIA Portal über den AML-Export, zuletzt TIA Portal über Openness. Mit M9 erzeugt `build` die SBOM aus einer `machine.yml`; ab dann beschreibt diese Anleitung auch die Maschinenbeschreibung und die Adapter.
+```text
+plc-sbom inspect <projektdatei> --adapter <id> [--gsdml <verzeichnis>]
+```
+
+`inspect` gibt das Rohinventar eines Adapters als JSON auf der Konsole aus: was der Adapter in der Datei findet, unverändert und noch ohne Lückenregeln. Damit lässt sich prüfen, ob ein Export das Erwartete enthält, und später die `machine.yml` schreiben. In Version 0.1.0 geht das für den Adapter `codesys`; für die anderen endet der Aufruf mit Exit 2 und `[NOT_IMPLEMENTED]` und nennt den Meilenstein. `--gsdml` gilt nur für die TIA-Adapter.
+
+Beispiel (gekürzt):
+
+```text
+> plc-sbom inspect fixtures/codesys/v35/ooip-script-engine-example.xml --adapter codesys
+{
+  "format": 1,
+  "adapter": "codesys",
+  "source": "v35",
+  "file": "fixtures/codesys/v35/ooip-script-engine-example.xml",
+  "sha256": "ec3146e46c5ad8cc7275f376d2e557080a6f4b7cbfb72b01b75511a8d3e48de8",
+  "project": {
+    "productName": "CODESYS",
+    "productVersion": "CODESYS V3.5 SP20 Patch 1",
+    "creationDateTime": "2025-05-27T13:20:07.2176472",
+    "projectName": "Script Engine Example.project",
+    "devices": [
+      {
+        "name": "Device",
+        "type": "4097",
+        "id": "0000 000a",
+        "version": "3.5.20.10",
+        "applications": [
+          {
+            "name": "Application",
+            "libraries": [
+              {
+                "reference": "#Standard",
+                "namespace": "Standard",
+                "placeholder": "Standard",
+                "defaultResolution": "Standard, * (System)",
+                "redirection": "Standard, 3.5.18.0 (System)",
+                "systemLibrary": false,
+                "resolution": "redirection",
+                "effective": "Standard, 3.5.18.0 (System)",
+                ...
+```
+
+| Feld | Inhalt |
+|---|---|
+| `sha256` | SHA-256 der gelesenen Datei |
+| `project.devices` | Steuerungen (oberste Ebene) mit `children` (untergeordnete Geräte) und `applications` |
+| `version` am Gerät | Version der **Gerätebeschreibung**, nicht die Firmware |
+| `libraries[].resolution` | `fixed` (direkte Referenz), `redirection` (Platzhalter im Projekt umgeleitet), `default` (nur Standardauflösung), `none` |
+| `libraries[].effective` | die Referenz, die der Export als wirksam zeigt |
+| `project.projectLibraries` | Bibliotheken im POU-Pool |
+
+## 11. CODESYS V3.5
+
+Eingang ist der PLCopen-XML-Export des ganzen Projekts. Die `.project`-Datei ist binär und wird nicht gelesen. Den Export erzeugt man in CODESYS V3.5 über den PLCopen-XML-Export des Projekts und checkt ihn neben dem Projekt ein. Die Station erhält im Ergebnis die Property `<namespace>:adapter:source` = `v35`.
+
+**Steuerung.** Jede Konfiguration der obersten Ebene mit Gerätedaten ist eine Steuerung. Enthält der Export mehrere, wählt `plc` eine aus (ab M9 in `machine.yml`), sonst endet der Lauf mit Exit 2.
+
+**Gerät.** Der Export nennt nur die Kennung der Gerätebeschreibung (`Type`, `Id`, `Version`), keinen Produktnamen, Hersteller oder Bestellnummer. In der SBOM heißt die Firmware-Komponente deshalb etwa `Gerät 4102/0000 0005, Firmware`, ohne Version und mit `firmware:origin` = `unknown`. Die Version der Gerätebeschreibung steht als `<namespace>:vendorKey:DeviceDescriptionVersion` daneben. Lücken: `firmware-not-in-project` (Hinweis), `order-number-not-in-project` und `supplier-unknown` (Warnungen).
+
+**Bibliotheken.** Gelesen werden die Bibliotheken jeder Anwendung der Steuerung und die des POU-Pools.
+
+| Im Export | Version in der SBOM | Lücke |
+|---|---|---|
+| direkte Referenz, z. B. `Robin, 0.1.2 (INESC TEC)` | `0.1.2` | – |
+| Platzhalter mit Umleitung im Projekt | Version der Umleitung | – |
+| Platzhalter nur mit Standardauflösung, z. B. `#SM3_Basic` → `SM3_Basic, 4.5.1.0 (…)` | keine; `4.5.1.0` steht als `<namespace>:version:requested` | `version-unresolved` (Warnung) |
+| Version `*` | keine; `*` als `<namespace>:version:requested` | `version-unresolved` (Warnung) |
+
+Platzhalter ohne Umleitung gelten als nicht aufgelöst, weil in CODESYS die Gerätebeschreibung eine andere Version festlegen kann und das nicht im Export steht. Wer feste Versionen in der SBOM will, leitet die Platzhalter im Bibliotheksverwalter des Projekts um oder referenziert die Bibliothek direkt.
+
+Als Hersteller einer Bibliothek gilt die Angabe in Klammern. CODESYS schreibt für Bibliotheken der eigenen Installation `System`; das ist keine Organisation, deshalb bleibt der Hersteller dort leer (`supplier-unknown`), der Wert steht in `<namespace>:library:company`.
+
+Alle gelesenen Stellen und Regeln: [docs/adapter-codesys.md](docs/adapter-codesys.md).
+
+## 12. Was folgt
+
+Die nächsten Schritte nach Meilensteinplan (CLAUDE.md Abschnitt 12): M1 ist fachlich abgeschlossen; alle Prüfregeln mit ihrer TR-Stelle stehen in [docs/regeln-tr03183.md](docs/regeln-tr03183.md). Danach kommen die Adapter in dieser Reihenfolge: CODESYS (V3.5, V2.3, CODESYS 4), Rockwell Studio 5000, Beckhoff TwinCAT 3, Siemens TIA Portal über den AML-Export, zuletzt TIA Portal über Openness. Mit M9 erzeugt `build` die SBOM aus einer `machine.yml`; ab dann beschreibt diese Anleitung auch die Maschinenbeschreibung und die Adapter.

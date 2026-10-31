@@ -1,0 +1,156 @@
+{
+  "format": 1,
+  "adapter": "codesys",
+  "source": "v35",
+  "file": "fixtures/codesys/v35/zwei-steuerungen-synthetisch.xml",
+  "sha256": "cd4e2ec5115e6e0ad97b504ea9c31dd6297771da2edd8d0b4fd2346b346e5bde",
+  "project": {
+    "productName": "CODESYS",
+    "productVersion": "CODESYS V3.5 SP21",
+    "creationDateTime": "2026-10-31T10:00:00.0000000",
+    "projectName": "Zwei Steuerungen",
+    "projectVersion": "1.0.0.0",
+    "devices": [
+      {
+        "name": "Verpackung",
+        "type": "4096",
+        "id": "0000 0001",
+        "version": "3.5.21.0",
+        "applications": [
+          {
+            "name": "Application",
+            "libraries": [
+              {
+                "reference": "#Standard",
+                "namespace": "Standard",
+                "placeholder": "Standard",
+                "defaultResolution": "Standard, * (System)",
+                "redirection": "Standard, 3.5.21.0 (System)",
+                "systemLibrary": false,
+                "resolution": "redirection",
+                "effective": "Standard, 3.5.21.0 (System)",
+                "parsed": {
+                  "title": "Standard",
+                  "version": "3.5.21.0",
+                  "company": "System"
+                }
+              },
+              {
+                "reference": "#IoStandard",
+                "namespace": "IoStandard",
+                "placeholder": "IoStandard",
+                "defaultResolution": "IoStandard, 3.5.21.0 (System)",
+                "systemLibrary": true,
+                "resolution": "default",
+                "effective": "IoStandard, 3.5.21.0 (System)",
+                "parsed": {
+                  "title": "IoStandard",
+                  "version": "3.5.21.0",
+                  "company": "System"
+                }
+              },
+              {
+                "reference": "Util, 3.5.17.0 (System)",
+                "namespace": "Util",
+                "systemLibrary": false,
+                "resolution": "fixed",
+                "effective": "Util, 3.5.17.0 (System)",
+                "parsed": {
+                  "title": "Util",
+                  "version": "3.5.17.0",
+                  "company": "System"
+                }
+              },
+              {
+                "reference": "Kaputt",
+                "namespace": "Kaputt",
+                "systemLibrary": false,
+                "resolution": "fixed",
+                "effective": "Kaputt"
+              }
+            ]
+          },
+          {
+            "name": "Diagnose",
+            "libraries": [
+              {
+                "reference": "Util, 3.5.17.0 (System)",
+                "namespace": "Util",
+                "systemLibrary": false,
+                "resolution": "fixed",
+                "effective": "Util, 3.5.17.0 (System)",
+                "parsed": {
+                  "title": "Util",
+                  "version": "3.5.17.0",
+                  "company": "System"
+                }
+              },
+              {
+                "reference": "Comquent Diagnose, 1.2.0.0 (Comquent GmbH)",
+                "namespace": "CQD",
+                "systemLibrary": false,
+                "resolution": "fixed",
+                "effective": "Comquent Diagnose, 1.2.0.0 (Comquent GmbH)",
+                "parsed": {
+                  "title": "Comquent Diagnose",
+                  "version": "1.2.0.0",
+                  "company": "Comquent GmbH"
+                }
+              }
+            ]
+          }
+        ],
+        "children": [
+          {
+            "name": "Feldbus_Koppler",
+            "type": "65",
+            "id": "synthetisch_0001",
+            "version": "1.0.0.0",
+            "applications": [],
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Handling",
+        "type": "4096",
+        "id": "0000 0002",
+        "version": "3.5.21.0",
+        "applications": [
+          {
+            "name": "Application",
+            "libraries": [
+              {
+                "reference": "Util, 3.5.18.0 (System)",
+                "namespace": "Util",
+                "systemLibrary": false,
+                "resolution": "fixed",
+                "effective": "Util, 3.5.18.0 (System)",
+                "parsed": {
+                  "title": "Util",
+                  "version": "3.5.18.0",
+                  "company": "System"
+                }
+              }
+            ]
+          }
+        ],
+        "children": []
+      }
+    ],
+    "projectLibraries": [
+      {
+        "reference": "CAA Types Extern, 3.5.3.0 (CAA Technical Workgroup)",
+        "namespace": "CAA",
+        "systemLibrary": false,
+        "resolution": "fixed",
+        "effective": "CAA Types Extern, 3.5.3.0 (CAA Technical Workgroup)",
+        "parsed": {
+          "title": "CAA Types Extern",
+          "version": "3.5.3.0",
+          "company": "CAA Technical Workgroup"
+        }
+      }
+    ]
+  }
+}

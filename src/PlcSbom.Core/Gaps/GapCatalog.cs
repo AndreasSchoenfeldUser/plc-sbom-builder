@@ -27,6 +27,9 @@ public static class TrField
     public const string Filename = "filename";
     public const string Dependencies = "dependencies";
     public const string DependencyCompleteness = "dependencyCompleteness";
+
+    /// <summary>Every component lies on a path from the primary component (TR 5.1).</summary>
+    public const string DependencyGraph = "dependencyGraph";
     public const string DistributionLicence = "distributionLicence";
     public const string Hash = "hash";
     public const string Executable = "executable";

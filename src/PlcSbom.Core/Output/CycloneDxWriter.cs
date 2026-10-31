@@ -249,7 +249,11 @@ public static class CycloneDxWriter
         p.Add($"{ns}:device:position", device.Position);
         p.Add($"{ns}:device:classification", device.Classification);
         p.Add($"{ns}:firmware:version", device.Firmware);
-        p.Add($"{ns}:firmware:origin", device.Firmware is null ? "not-in-project" : FirmwareOriginText(device.FirmwareOrigin));
+        // Without a version, "projected" or "as-found" would contradict itself; "unknown" stays: the source
+        // states a version that is not the firmware (e.g. CODESYS device description).
+        p.Add($"{ns}:firmware:origin", device.Firmware is null && device.FirmwareOrigin is FirmwareOrigin.Projected or FirmwareOrigin.AsFound
+            ? "not-in-project"
+            : FirmwareOriginText(device.FirmwareOrigin));
         foreach (var (key, value) in device.VendorKeys)
         {
             p.Add($"{ns}:vendorKey:{key}", value);
@@ -279,6 +283,10 @@ public static class CycloneDxWriter
         if (!item.VersionResolved)
         {
             p.Add($"{ns}:version:requested", item.Version);
+        }
+        foreach (var (key, value) in item.SourceProperties)
+        {
+            p.Add($"{ns}:{key}", value);
         }
         p.AddRange(GapProperties(item.Gaps, ns));
 
@@ -312,6 +320,7 @@ public static class CycloneDxWriter
             return;
         }
         p.Add($"{ns}:adapter", station.AdapterId);
+        p.Add($"{ns}:adapter:source", station.AdapterSource);
         p.Add($"{ns}:station", station.Name);
         p.Add($"{ns}:source", station.SourcePath);
         p.Add($"{ns}:source:sha256", station.SourceSha256);

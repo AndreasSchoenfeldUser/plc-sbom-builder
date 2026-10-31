@@ -249,6 +249,55 @@ public sealed class SbomValidatorTests
         Assert.Empty(WithoutLogical(await Validate(bom)));
     }
 
+    [Theory]
+    [InlineData("LicenseRef-siemens-proprietary")]
+    [InlineData("(MIT OR Apache-2.0) AND LicenseRef-musterbau-proprietary")]
+    [InlineData("GPL-2.0-or-later WITH Classpath-exception-2.0")]
+    [InlineData("mit")]
+    [InlineData("DocumentRef-lieferant:LicenseRef-firmware")]
+    public async Task Licence_expressions_of_spdx_identifiers_and_licence_refs_are_valid(string expression)
+    {
+        var bom = Create();
+        App(bom)["licenses"] = new JsonArray(new JsonObject { ["expression"] = expression, ["acknowledgement"] = "concluded" });
+
+        Assert.Empty(WithoutLogical(await Validate(bom)));
+    }
+
+    [Theory]
+    [InlineData("Proprietär")]
+    [InlineData("Siemens Software License")]
+    [InlineData("MIT OR Hausrecht")]
+    [InlineData("LicenseRef-")]
+    public async Task Free_text_as_licence_expression_is_invalid(string expression)
+    {
+        var bom = Create();
+        App(bom)["licenses"] = new JsonArray(new JsonObject { ["expression"] = expression, ["acknowledgement"] = "concluded" });
+
+        var report = await Validate(bom);
+
+        Assert.Equal([(Severity.Error, "DISTRIBUTION_LICENCE_INVALID")], WithoutLogical(report));
+        var finding = Assert.Single(report.Findings, f => f.Code == "DISTRIBUTION_LICENCE_INVALID");
+        Assert.Equal(AppRef, finding.ComponentRef);
+        Assert.Equal([TrField.DistributionLicence], finding.Fields);
+    }
+
+    [Theory]
+    [InlineData("Proprietär", true)]
+    [InlineData("LicenseRef-musterbau-proprietary", false)]
+    public async Task Licence_name_counts_only_as_licence_ref(string licenceName, bool invalid)
+    {
+        var bom = Create();
+        App(bom)["licenses"] = new JsonArray(new JsonObject
+        {
+            ["license"] = new JsonObject { ["name"] = licenceName, ["acknowledgement"] = "concluded" },
+        });
+
+        var codes = WithoutLogical(await Validate(bom));
+
+        Assert.Equal(invalid, codes.Contains((Severity.Error, "DISTRIBUTION_LICENCE_INVALID")));
+        Assert.DoesNotContain((Severity.Error, "DISTRIBUTION_LICENCE_MISSING"), codes);
+    }
+
     [Fact]
     public async Task Sha256_alone_is_not_the_required_hash()
     {
@@ -355,6 +404,34 @@ public sealed class SbomValidatorTests
 
         var finding = Assert.Single((await Validate(bom)).Findings, f => f.Code == "DEPENDENCY_REF_UNKNOWN");
         Assert.Contains("gibt-es-nicht", finding.Message);
+    }
+
+    [Fact]
+    public async Task Component_not_reachable_from_the_primary_component_is_an_error()
+    {
+        var bom = Create();
+        bom["dependencies"]![0]!["dependsOn"] = new JsonArray();
+
+        var report = await Validate(bom);
+
+        var finding = Assert.Single(report.Findings, f => f.Code == "COMPONENT_UNREACHABLE");
+        Assert.Equal(Severity.Error, finding.Severity);
+        Assert.Equal(AppRef, finding.ComponentRef);
+        Assert.Equal([TrField.DependencyGraph], finding.Fields);
+    }
+
+    [Fact]
+    public async Task Component_reachable_over_another_component_is_fine()
+    {
+        var bom = Create();
+        var lib = App(bom).DeepClone().AsObject();
+        lib["bom-ref"] = "lib";
+        bom["components"]!.AsArray().Add(lib);
+        bom["dependencies"]![1]!["dependsOn"]!.AsArray().Add("lib");
+        bom["dependencies"]!.AsArray().Add(new JsonObject { ["ref"] = "lib", ["dependsOn"] = new JsonArray() });
+        bom["compositions"]![0]!["dependencies"]!.AsArray().Add("lib");
+
+        Assert.Empty(WithoutLogical(await Validate(bom)));
     }
 
     [Fact]

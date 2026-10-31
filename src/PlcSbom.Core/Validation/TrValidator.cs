@@ -1,5 +1,6 @@
 using System.Text.Json.Nodes;
 using PlcSbom.Core.Gaps;
+using PlcSbom.Core.Output;
 
 namespace PlcSbom.Core.Validation;
 
@@ -64,7 +65,78 @@ public static class TrValidator
         {
             CheckComponent(component, dependencies, completeness, findings);
         }
+        CheckReachability(bom, components, findings);
         return findings;
+    }
+
+    /// <summary>
+    /// TR 5.1: dependencies are resolved recursively from the primary component, so every component lies
+    /// on a path from it. Edges are "dependsOn" and nesting (a contained component is a dependency, TR 3.2.7).
+    /// </summary>
+    private static void CheckReachability(JsonObject bom, List<JsonObject> components, List<Finding> findings)
+    {
+        if (bom["metadata"]?["component"] is not JsonObject primary || Text(primary["bom-ref"]) is not { } root)
+        {
+            return;
+        }
+        var edges = new Dictionary<string, List<string>>(StringComparer.Ordinal);
+        void Edge(string from, string to)
+        {
+            if (!edges.TryGetValue(from, out var targets))
+            {
+                edges[from] = targets = [];
+            }
+            targets.Add(to);
+        }
+        foreach (var entry in (bom["dependencies"] as JsonArray ?? []).OfType<JsonObject>())
+        {
+            if (Text(entry["ref"]) is { } source)
+            {
+                foreach (var target in (entry["dependsOn"] as JsonArray ?? []).Select(Text).OfType<string>())
+                {
+                    Edge(source, target);
+                }
+            }
+        }
+        void Nest(JsonObject parent)
+        {
+            foreach (var child in (parent["components"] as JsonArray ?? []).OfType<JsonObject>())
+            {
+                if (Text(parent["bom-ref"]) is { } from && Text(child["bom-ref"]) is { } to)
+                {
+                    Edge(from, to);
+                }
+                Nest(child);
+            }
+        }
+        Nest(primary);
+        foreach (var top in (bom["components"] as JsonArray ?? []).OfType<JsonObject>())
+        {
+            Nest(top);
+        }
+
+        var reachable = new HashSet<string>(StringComparer.Ordinal) { root };
+        var queue = new Queue<string>([root]);
+        while (queue.TryDequeue(out var current))
+        {
+            foreach (var next in edges.GetValueOrDefault(current) ?? [])
+            {
+                if (reachable.Add(next))
+                {
+                    queue.Enqueue(next);
+                }
+            }
+        }
+
+        foreach (var component in components)
+        {
+            if (Text(component["bom-ref"]) is { } bomRef && !reachable.Contains(bomRef))
+            {
+                findings.Add(new(Severity.Error, "COMPONENT_UNREACHABLE",
+                    $"{bomRef}: Die Komponente ist von der Hauptkomponente aus über „dependencies“ nicht erreichbar. TR-03183-2 Abschnitt 5.1 verlangt die Auflösung der Abhängigkeiten von der Hauptkomponente aus; eine Abhängigkeitsliste auf dem Weg dorthin fehlt oder ist unvollständig.",
+                    bomRef, Text(component["name"]), [TrField.DependencyGraph]));
+            }
+        }
     }
 
     private static void CheckDocument(JsonObject bom, List<Finding> findings)
@@ -135,9 +207,16 @@ public static class TrValidator
         {
             findings.Add(new(Severity.Error, "BSI_PROPERTY_DUPLICATE", $"{label}: bsi:component:filename kommt mehrfach vor.", bomRef, name, [TrField.Filename]));
         }
-        if (!HasConcludedLicence(c))
+        var concluded = ConcludedLicences(c);
+        if (concluded.Count == 0)
         {
             missing.Add(TrField.DistributionLicence);
+        }
+        foreach (var licence in concluded.Where(l => !l.Valid))
+        {
+            findings.Add(new(Severity.Error, "DISTRIBUTION_LICENCE_INVALID",
+                $"{label}: Die Distributionslizenz „{licence.Text}“ ist weder eine SPDX-Kennung noch ein SPDX-Ausdruck noch eine Kennung LicenseRef-… (TR-03183-2 Abschnitt 6.1).",
+                bomRef, name, [TrField.DistributionLicence]));
         }
         if (!HasDistributionSha512(c))
         {
@@ -287,13 +366,34 @@ public static class TrValidator
         && ((entity["url"] as JsonArray ?? []).Select(Text).Any(u => !string.IsNullOrWhiteSpace(u))
             || (entity["contact"] as JsonArray ?? []).OfType<JsonObject>().Any(c => !string.IsNullOrWhiteSpace(Text(c["email"]))));
 
-    /// <summary>Distribution licence: licenses[] with acknowledgement "concluded" (TR mapping table 9).</summary>
-    private static bool HasConcludedLicence(JsonObject c) =>
-        (c["licenses"] as JsonArray ?? []).OfType<JsonObject>().Any(entry =>
-            (Text(entry["expression"]) is not null && Text(entry["acknowledgement"]) == "concluded")
-            || (entry["license"] is JsonObject license
-                && (Text(license["id"]) ?? Text(license["name"])) is not null
-                && Text(license["acknowledgement"]) == "concluded"));
+    /// <summary>
+    /// Distribution licences: licenses[] with acknowledgement "concluded" (TR mapping table 9). Valid per
+    /// TR 6.1: license.id (SPDX list, enforced by the schema), license.name only as LicenseRef-…, or an
+    /// SPDX expression of such identifiers.
+    /// </summary>
+    private static List<(string Text, bool Valid)> ConcludedLicences(JsonObject c)
+    {
+        var result = new List<(string, bool)>();
+        foreach (var entry in (c["licenses"] as JsonArray ?? []).OfType<JsonObject>())
+        {
+            if (Text(entry["expression"]) is { } expression && Text(entry["acknowledgement"]) == "concluded")
+            {
+                result.Add((expression, SpdxLicense.IsValidExpression(expression)));
+            }
+            else if (entry["license"] is JsonObject license && Text(license["acknowledgement"]) == "concluded")
+            {
+                if (Text(license["id"]) is { } id)
+                {
+                    result.Add((id, true));
+                }
+                else if (Text(license["name"]) is { } licenceName)
+                {
+                    result.Add((licenceName, SpdxLicense.IsValidIdentifier(licenceName)));
+                }
+            }
+        }
+        return result;
+    }
 
     /// <summary>Hash of the deployable form: externalReferences[type=distribution].hashes[alg=SHA-512].</summary>
     private static bool HasDistributionSha512(JsonObject c) =>

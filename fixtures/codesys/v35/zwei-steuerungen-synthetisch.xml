@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Synthetic (Comquent), modelled on robin-codesys_project.xml and ooip-script-engine-example.xml.
+     Covers what the real exports do not: two controllers in one project, a sub-device nested under a
+     controller, libraries in the POU pool next to application libraries, a library reference that
+     does not follow "Title, Version (Company)". Every element and attribute has a real counterpart
+     in the other fixtures, see fixtures/FIXTURES.md. -->
+<project xmlns="http://www.plcopen.org/xml/tc6_0200">
+  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP21" creationDateTime="2026-10-31T10:00:00.0000000" />
+  <contentHeader name="Zwei Steuerungen" version="1.0.0.0" modificationDateTime="2026-10-31T09:59:00.0000000" organization="Comquent GmbH" author="synthetisch">
+    <addData>
+      <data name="http://www.3s-software.com/plcopenxml/projectinformation" handleUnknown="implementation">
+        <ProjectInformation />
+      </data>
+    </addData>
+  </contentHeader>
+  <types>
+    <dataTypes />
+    <pous />
+  </types>
+  <instances>
+    <configurations>
+      <configuration name="Verpackung">
+        <resource name="Application">
+          <addData>
+            <data name="http://www.3s-software.com/plcopenxml/libraries" handleUnknown="implementation">
+              <Libraries>
+                <Library Name="#Standard" Namespace="Standard" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="false" LinkAllContent="false" DefaultResolution="Standard, * (System)" />
+                <Library Name="#IoStandard" Namespace="IoStandard" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="true" DefaultResolution="IoStandard, 3.5.21.0 (System)" />
+                <Library Name="Util, 3.5.17.0 (System)" Namespace="Util" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="false" LinkAllContent="false" />
+                <Library Name="Kaputt" Namespace="Kaputt" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="false" LinkAllContent="false" />
+                <PlaceholderRedirections>
+                  <PlaceholderRedirection Placeholder="Standard" Redirection="Standard, 3.5.21.0 (System)" />
+                </PlaceholderRedirections>
+                <addData />
+              </Libraries>
+            </data>
+          </addData>
+        </resource>
+        <resource name="Diagnose">
+          <addData>
+            <data name="http://www.3s-software.com/plcopenxml/libraries" handleUnknown="implementation">
+              <Libraries>
+                <Library Name="Util, 3.5.17.0 (System)" Namespace="Util" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="false" LinkAllContent="false" />
+                <Library Name="Comquent Diagnose, 1.2.0.0 (Comquent GmbH)" Namespace="CQD" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="false" LinkAllContent="false" />
+                <addData />
+              </Libraries>
+            </data>
+          </addData>
+        </resource>
+        <addData>
+          <data name="Device" handleUnknown="discard">
+            <Device xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="">
+              <DeviceType>
+                <DeviceIdentification>
+                  <Type>4096</Type>
+                  <Id>0000 0001</Id>
+                  <Version>3.5.21.0</Version>
+                </DeviceIdentification>
+                <DeviceParameterSet />
+              </DeviceType>
+            </Device>
+          </data>
+          <data name="configurations" handleUnknown="discard">
+            <configurations>
+              <configuration name="Feldbus_Koppler">
+                <addData>
+                  <data name="Device" handleUnknown="discard">
+                    <Device xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="">
+                      <DeviceType>
+                        <DeviceIdentification>
+                          <Type>65</Type>
+                          <Id>synthetisch_0001</Id>
+                          <Version>1.0.0.0</Version>
+                        </DeviceIdentification>
+                        <DeviceParameterSet />
+                      </DeviceType>
+                    </Device>
+                  </data>
+                </addData>
+              </configuration>
+              <configuration name="Achspool">
+                <addData>
+                  <data name="ExplicitConnector" handleUnknown="discard">
+                    <ExplicitConnector connectorID="1" />
+                  </data>
+                </addData>
+              </configuration>
+            </configurations>
+          </data>
+        </addData>
+      </configuration>
+      <configuration name="Handling">
+        <resource name="Application">
+          <addData>
+            <data name="http://www.3s-software.com/plcopenxml/libraries" handleUnknown="implementation">
+              <Libraries>
+                <Library Name="Util, 3.5.18.0 (System)" Namespace="Util" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="false" LinkAllContent="false" />
+                <addData />
+              </Libraries>
+            </data>
+          </addData>
+        </resource>
+        <addData>
+          <data name="Device" handleUnknown="discard">
+            <Device xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="">
+              <DeviceType>
+                <DeviceIdentification>
+                  <Type>4096</Type>
+                  <Id>0000 0002</Id>
+                  <Version>3.5.21.0</Version>
+                </DeviceIdentification>
+                <DeviceParameterSet />
+              </DeviceType>
+            </Device>
+          </data>
+        </addData>
+      </configuration>
+    </configurations>
+  </instances>
+  <addData>
+    <data name="http://www.3s-software.com/plcopenxml/libraries" handleUnknown="implementation">
+      <Libraries>
+        <Library Name="CAA Types Extern, 3.5.3.0 (CAA Technical Workgroup)" Namespace="CAA" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="false" LinkAllContent="false" />
+      </Libraries>
+    </data>
+  </addData>
+</project>

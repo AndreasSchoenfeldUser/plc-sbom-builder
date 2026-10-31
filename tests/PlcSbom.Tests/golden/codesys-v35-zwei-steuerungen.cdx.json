@@ -1,0 +1,762 @@
+{
+  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:1a02a05d-7584-5a0b-9e78-e462de8d242a",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-10-31T12:00:00Z",
+    "tools": {
+      "components": [
+        {
+          "type": "application",
+          "manufacturer": {
+            "name": "Comquent GmbH"
+          },
+          "name": "PLC SBOM Builder",
+          "version": "0.1.0"
+        },
+        {
+          "type": "application",
+          "name": "CODESYS",
+          "version": "V3.5 SP21"
+        }
+      ]
+    },
+    "manufacturer": {
+      "name": "Musterbau GmbH",
+      "contact": [
+        {
+          "email": "sbom@musterbau.example"
+        }
+      ]
+    },
+    "component": {
+      "bom-ref": "maschine-xy",
+      "type": "device",
+      "supplier": {
+        "name": "Musterbau GmbH"
+      },
+      "manufacturer": {
+        "name": "Musterbau GmbH",
+        "contact": [
+          {
+            "email": "sbom@musterbau.example"
+          }
+        ]
+      },
+      "name": "Maschine XY",
+      "version": "R2026.10",
+      "licenses": [
+        {
+          "expression": "LicenseRef-musterbau-proprietary",
+          "acknowledgement": "concluded"
+        }
+      ],
+      "properties": [
+        {
+          "name": "bsi:component:effectiveLicence",
+          "value": "LicenseRef-musterbau-proprietary"
+        },
+        {
+          "name": "plcsbom:git:commit",
+          "value": "a1b2c3d4e5f60718293a4b5c6d7e8f9012345678"
+        },
+        {
+          "name": "plcsbom:logicalComponent",
+          "value": "true"
+        }
+      ]
+    }
+  },
+  "components": [
+    {
+      "bom-ref": "verpackung-fw",
+      "type": "firmware",
+      "name": "Gerät 4096/0000 0001, Firmware",
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "plcsbom:adapter",
+          "value": "codesys"
+        },
+        {
+          "name": "plcsbom:adapter:source",
+          "value": "v35"
+        },
+        {
+          "name": "plcsbom:device:name",
+          "value": "Verpackung"
+        },
+        {
+          "name": "plcsbom:device:type",
+          "value": "Gerät 4096/0000 0001"
+        },
+        {
+          "name": "plcsbom:firmware:origin",
+          "value": "unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "firmware-not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "order-number-not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "supplier-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "vendor-sbom-missing"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "codesys/zwei-steuerungen-synthetisch.xml"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "cd4e2ec5115e6e0ad97b504ea9c31dd6297771da2edd8d0b4fd2346b346e5bde"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Verpackung"
+        },
+        {
+          "name": "plcsbom:vendorKey:DeviceDescriptionVersion",
+          "value": "3.5.21.0"
+        },
+        {
+          "name": "plcsbom:vendorKey:DeviceId",
+          "value": "0000 0001"
+        },
+        {
+          "name": "plcsbom:vendorKey:DeviceType",
+          "value": "4096"
+        }
+      ]
+    },
+    {
+      "bom-ref": "verpackung-fw-feldbus-koppler",
+      "type": "firmware",
+      "name": "Gerät 65/synthetisch_0001, Firmware",
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "plcsbom:adapter",
+          "value": "codesys"
+        },
+        {
+          "name": "plcsbom:adapter:source",
+          "value": "v35"
+        },
+        {
+          "name": "plcsbom:device:name",
+          "value": "Feldbus_Koppler"
+        },
+        {
+          "name": "plcsbom:device:position",
+          "value": "Feldbus_Koppler"
+        },
+        {
+          "name": "plcsbom:device:type",
+          "value": "Gerät 65/synthetisch_0001"
+        },
+        {
+          "name": "plcsbom:firmware:origin",
+          "value": "unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "firmware-not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "order-number-not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "supplier-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "vendor-sbom-missing"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "codesys/zwei-steuerungen-synthetisch.xml"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "cd4e2ec5115e6e0ad97b504ea9c31dd6297771da2edd8d0b4fd2346b346e5bde"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Verpackung"
+        },
+        {
+          "name": "plcsbom:vendorKey:DeviceDescriptionVersion",
+          "value": "1.0.0.0"
+        },
+        {
+          "name": "plcsbom:vendorKey:DeviceId",
+          "value": "synthetisch_0001"
+        },
+        {
+          "name": "plcsbom:vendorKey:DeviceType",
+          "value": "65"
+        }
+      ]
+    },
+    {
+      "bom-ref": "verpackung-lib-caa-types-extern",
+      "type": "library",
+      "supplier": {
+        "name": "CAA Technical Workgroup"
+      },
+      "manufacturer": {
+        "name": "CAA Technical Workgroup"
+      },
+      "name": "CAA Types Extern",
+      "version": "3.5.3.0",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "codesys"
+        },
+        {
+          "name": "plcsbom:adapter:source",
+          "value": "v35"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "CAA Technical Workgroup"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "CAA Types Extern, 3.5.3.0 (CAA Technical Workgroup)"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "fixed"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "codesys/zwei-steuerungen-synthetisch.xml"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "cd4e2ec5115e6e0ad97b504ea9c31dd6297771da2edd8d0b4fd2346b346e5bde"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Verpackung"
+        },
+        {
+          "name": "plcsbom:vendor:origin",
+          "value": "source"
+        }
+      ]
+    },
+    {
+      "bom-ref": "verpackung-lib-comquent-diagnose",
+      "type": "library",
+      "supplier": {
+        "name": "Comquent GmbH"
+      },
+      "manufacturer": {
+        "name": "Comquent GmbH"
+      },
+      "name": "Comquent Diagnose",
+      "version": "1.2.0.0",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "codesys"
+        },
+        {
+          "name": "plcsbom:adapter:source",
+          "value": "v35"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "Comquent GmbH"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "Comquent Diagnose, 1.2.0.0 (Comquent GmbH)"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "fixed"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "codesys/zwei-steuerungen-synthetisch.xml"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "cd4e2ec5115e6e0ad97b504ea9c31dd6297771da2edd8d0b4fd2346b346e5bde"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Verpackung"
+        },
+        {
+          "name": "plcsbom:vendor:origin",
+          "value": "source"
+        }
+      ]
+    },
+    {
+      "bom-ref": "verpackung-lib-iostandard",
+      "type": "library",
+      "name": "IoStandard",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "codesys"
+        },
+        {
+          "name": "plcsbom:adapter:source",
+          "value": "v35"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "supplier-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "System"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "#IoStandard"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "codesys/zwei-steuerungen-synthetisch.xml"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "cd4e2ec5115e6e0ad97b504ea9c31dd6297771da2edd8d0b4fd2346b346e5bde"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Verpackung"
+        },
+        {
+          "name": "plcsbom:version:requested",
+          "value": "3.5.21.0"
+        }
+      ]
+    },
+    {
+      "bom-ref": "verpackung-lib-kaputt",
+      "type": "library",
+      "name": "Kaputt",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "codesys"
+        },
+        {
+          "name": "plcsbom:adapter:source",
+          "value": "v35"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "supplier-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "Kaputt"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "fixed"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "codesys/zwei-steuerungen-synthetisch.xml"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "cd4e2ec5115e6e0ad97b504ea9c31dd6297771da2edd8d0b4fd2346b346e5bde"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Verpackung"
+        }
+      ]
+    },
+    {
+      "bom-ref": "verpackung-lib-standard",
+      "type": "library",
+      "name": "Standard",
+      "version": "3.5.21.0",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "codesys"
+        },
+        {
+          "name": "plcsbom:adapter:source",
+          "value": "v35"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "supplier-unknown"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "System"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "#Standard"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "redirection"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "codesys/zwei-steuerungen-synthetisch.xml"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "cd4e2ec5115e6e0ad97b504ea9c31dd6297771da2edd8d0b4fd2346b346e5bde"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Verpackung"
+        }
+      ]
+    },
+    {
+      "bom-ref": "verpackung-lib-util",
+      "type": "library",
+      "name": "Util",
+      "version": "3.5.17.0",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "codesys"
+        },
+        {
+          "name": "plcsbom:adapter:source",
+          "value": "v35"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "supplier-unknown"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "System"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "Util, 3.5.17.0 (System)"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "fixed"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "codesys/zwei-steuerungen-synthetisch.xml"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "cd4e2ec5115e6e0ad97b504ea9c31dd6297771da2edd8d0b4fd2346b346e5bde"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Verpackung"
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "maschine-xy",
+      "dependsOn": [
+        "verpackung-fw",
+        "verpackung-fw-feldbus-koppler",
+        "verpackung-lib-caa-types-extern",
+        "verpackung-lib-comquent-diagnose",
+        "verpackung-lib-iostandard",
+        "verpackung-lib-kaputt",
+        "verpackung-lib-standard",
+        "verpackung-lib-util"
+      ]
+    },
+    {
+      "ref": "verpackung-fw",
+      "dependsOn": []
+    },
+    {
+      "ref": "verpackung-fw-feldbus-koppler",
+      "dependsOn": []
+    },
+    {
+      "ref": "verpackung-lib-caa-types-extern",
+      "dependsOn": []
+    },
+    {
+      "ref": "verpackung-lib-comquent-diagnose",
+      "dependsOn": []
+    },
+    {
+      "ref": "verpackung-lib-iostandard",
+      "dependsOn": []
+    },
+    {
+      "ref": "verpackung-lib-kaputt",
+      "dependsOn": []
+    },
+    {
+      "ref": "verpackung-lib-standard",
+      "dependsOn": []
+    },
+    {
+      "ref": "verpackung-lib-util",
+      "dependsOn": []
+    }
+  ],
+  "compositions": [
+    {
+      "aggregate": "complete",
+      "dependencies": [
+        "maschine-xy"
+      ]
+    },
+    {
+      "aggregate": "unknown",
+      "dependencies": [
+        "verpackung-fw",
+        "verpackung-fw-feldbus-koppler",
+        "verpackung-lib-caa-types-extern",
+        "verpackung-lib-comquent-diagnose",
+        "verpackung-lib-iostandard",
+        "verpackung-lib-kaputt",
+        "verpackung-lib-standard",
+        "verpackung-lib-util"
+      ]
+    }
+  ]
+}

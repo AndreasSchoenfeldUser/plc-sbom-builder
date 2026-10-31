@@ -6,13 +6,14 @@ Die Bedienung (Befehle, Ausgaben, Lückencodes, Einsatz in der Pipeline) beschre
 
 ## Stand
 
-Stand 31.10.2026, Version 0.1.0: Das Gerüst (M0) steht, M1 ist in Arbeit. `plc-sbom validate` ist nutzbar: Es prüft eine SBOM gegen das eingebettete Schema CycloneDX 1.6 und die Regeln der BSI TR-03183-2 und schreibt die Ergebnisdatei. Alle anderen Befehle sind mit ihren Optionen angelegt; ein Aufruf endet mit Exit 2 und `[NOT_IMPLEMENTED]` und nennt den Meilenstein, der den Befehl umsetzt. Die Beispiele unten beschreiben das Zielbild aus CLAUDE.md.
+Stand 31.10.2026, Version 0.1.0: Das Gerüst (M0) steht, M1 ist fachlich abgeschlossen. `plc-sbom validate` ist nutzbar: Es prüft eine SBOM gegen das eingebettete Schema CycloneDX 1.6 und die Regeln der BSI TR-03183-2 und schreibt die Ergebnisdatei. Welche Regel woher kommt, steht in [docs/regeln-tr03183.md](docs/regeln-tr03183.md); in CI prüft sbomqs den Validator gegen. Mit M2 liest der Adapter `codesys` PLCopen-XML-Exporte aus CODESYS V3.5; `plc-sbom inspect <export.xml> --adapter codesys` zeigt das Rohinventar (Steuerungen, Geräte, Bibliotheken mit Auflösung). Alle anderen Befehle sind mit ihren Optionen angelegt; ein Aufruf endet mit Exit 2 und `[NOT_IMPLEMENTED]` und nennt den Meilenstein, der den Befehl umsetzt. Die Beispiele unten beschreiben das Zielbild aus CLAUDE.md.
 
 | Meilenstein | Inhalt | Stand |
 |---|---|---|
 | M0 | Gerüst: Solution, CLI-Skelett, Exit-Codes, CI-Matrix, Pakete | erledigt |
-| M1 | Modell, CycloneDX-Writer, Validator (Schema und TR-Regeln) | in Arbeit: Modell, Writer, Validator und `validate` fertig; offen sind `docs/regeln-tr03183.md`, Entscheidung Variante A/B, Gegenprüfung mit `sbomqs --bsi` |
-| M2–M4 | Adapter `codesys` (V3.5, V2.3, CODESYS 4) | offen, V2.3 und CODESYS 4 brauchen Comquent-Demo-Projekte |
+| M1 | Modell, CycloneDX-Writer, Validator (Schema und TR-Regeln) | fachlich fertig: Modell, Writer (Variante B, E-007), Validator, `validate`, `docs/regeln-tr03183.md`, Gegenprüfung mit sbomqs ohne Abweichung (E-010); offen ist eine grüne CI, weil die Tests dort Repository-Dateien nicht finden |
+| M2 | Adapter `codesys`, Quelle `v35` (CODESYS V3.5, PLCopen XML) | in Arbeit: Adapter, `inspect --adapter codesys`, Feldtabelle [docs/adapter-codesys.md](docs/adapter-codesys.md), drei echte Fixtures und Golden Files fertig; offen ist die grüne CI auf ubuntu und windows |
+| M3, M4 | Adapter `codesys`, Quellen `v23` (CODESYS V2.3) und `c4` (CODESYS 4) | offen, brauchen Comquent-Demo-Projekte |
 | M5 | Adapter `studio5000` (Rockwell) | offen |
 | M6 | Adapter `twincat` (Beckhoff) | offen |
 | M7, M8 | Adapter `tia-aml` (TIA V17–V21, AML-Export), GSDML-Leser | offen |
@@ -98,9 +99,10 @@ dotnet build PlcSbom.sln
 dotnet test                                     # Microsoft.Testing.Platform, siehe docs/entscheidungen.md E-002
 dotnet format PlcSbom.sln --verify-no-changes
 dotnet run tools/check-licenses.cs              # Lizenzen aller Pakete; mit -- --write neue THIRD-PARTY-NOTICES.md
+dotnet run tools/crosscheck-sbomqs.cs -- --sbomqs <pfad>   # Validator gegen sbomqs v2.1.3 über alle Golden Files
 ```
 
-Alle Testfälle mit Testläufen und Ergebnissen beschreibt [TESTFAELLE.md](TESTFAELLE.md) (Stand 31.10.2026: 219 Tests, alle bestanden).
+Alle Testfälle mit Testläufen und Ergebnissen beschreibt [TESTFAELLE.md](TESTFAELLE.md) (Stand 31.10.2026: 292 Tests, alle bestanden). Die Gegenprüfung mit sbomqs und ihr Ergebnis beschreibt [docs/regeln-tr03183.md](docs/regeln-tr03183.md) Abschnitt 10.
 
 Paket für eine Plattform (self-contained, eine Datei):
 

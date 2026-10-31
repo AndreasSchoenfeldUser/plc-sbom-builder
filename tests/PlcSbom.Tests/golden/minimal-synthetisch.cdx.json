@@ -1,0 +1,122 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:3e671687-395b-41f5-a30f-a58921a69b79",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-10-31T12:00:00Z",
+    "manufacturer": {
+      "name": "Musterbau GmbH",
+      "contact": [
+        {
+          "email": "sbom@musterbau.example"
+        }
+      ]
+    },
+    "component": {
+      "type": "device",
+      "bom-ref": "maschine",
+      "name": "Maschine XY",
+      "version": "R2026.10",
+      "manufacturer": {
+        "name": "Musterbau GmbH",
+        "contact": [
+          {
+            "email": "sbom@musterbau.example"
+          }
+        ]
+      },
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT",
+            "acknowledgement": "concluded"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "plcsbom:logicalComponent",
+          "value": "true"
+        }
+      ]
+    }
+  },
+  "components": [
+    {
+      "type": "application",
+      "bom-ref": "app",
+      "name": "Anwenderprogramm",
+      "version": "1.0.0",
+      "manufacturer": {
+        "name": "Musterbau GmbH",
+        "url": [
+          "https://musterbau.example"
+        ]
+      },
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT",
+            "acknowledgement": "concluded"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "type": "distribution",
+          "url": "https://musterbau.example/app.bin",
+          "hashes": [
+            {
+              "alg": "SHA-512",
+              "content": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            }
+          ]
+        }
+      ],
+      "properties": [
+        {
+          "name": "bsi:component:filename",
+          "value": "app.bin"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:archive",
+          "value": "no archive"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "PLC_1"
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "maschine",
+      "dependsOn": [
+        "app"
+      ]
+    },
+    {
+      "ref": "app",
+      "dependsOn": []
+    }
+  ],
+  "compositions": [
+    {
+      "aggregate": "complete",
+      "dependencies": [
+        "maschine",
+        "app"
+      ]
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 # CLAUDE.md: PLC SBOM Builder (`plc-sbom`), Prototyp
 
-> Stand: 31.10.2026 (Meilensteine und CODESYS V2.3/4 ergänzt; übrige Fakten Stand 29.10.2026). Grundlage: Produktseite comquent.de/produkte/plc-sbom-builder (Quelltext `src/app/produkte/inhalte.ts` im Website-Repository), der Entwurf `plc-sbom-builder-claude.md` mit der Recherche vom 25.10.2026, das Comquent-Whitepaper „SBOM für SPS-Projekte mit TIA Portal V21“, die Siemens-Openness-Skills (V21) und drei öffentliche AML-Exporte aus TIA V17, V18 und V21 (geprüft am 29.10.2026). Recherchefakten mit Datum 25.10.2026 sind nicht erneut geprüft; Versionen und Normstände vor der Nutzung nachsehen.
+> Stand: 31.10.2026 (Meilensteine und CODESYS V2.3/4 ergänzt; M1-Entscheidungen E-007 bis E-011 und TR-Regeln in `docs/regeln-tr03183.md` nachgetragen; übrige Fakten Stand 29.10.2026). Grundlage: Produktseite comquent.de/produkte/plc-sbom-builder (Quelltext `src/app/produkte/inhalte.ts` im Website-Repository), der Entwurf `plc-sbom-builder-claude.md` mit der Recherche vom 25.10.2026, das Comquent-Whitepaper „SBOM für SPS-Projekte mit TIA Portal V21“, die Siemens-Openness-Skills (V21) und drei öffentliche AML-Exporte aus TIA V17, V18 und V21 (geprüft am 29.10.2026). Recherchefakten mit Datum 25.10.2026 sind nicht erneut geprüft; Versionen und Normstände vor der Nutzung nachsehen.
 > Produkt der Comquent GmbH (Industrial DevOps, Puchheim). Schwesterwerkzeuge: `plc-build` (../plc-build-tool), `plc-git-bridge` (../plc-git-bridge).
 
 ## 0. Start
@@ -121,13 +121,13 @@ Jenkins / GitLab / Azure
 |---|---|---|
 | Sprache | C# / **.NET 10** (LTS), `global.json` mit `10.0.100`, `rollForward: latestFeature` | Wie die Schwesterwerkzeuge. .NET 8 endet am 10.11.2026. |
 | Worker | C#, **.NET Framework 4.8**, SDK-Projektformat | Vorgabe von TIA Openness V21 |
-| CycloneDX | NuGet `CycloneDX.Core` (Stand 25.10.2026: 12.1.2, Apache-2.0) | Modell, Serialisierung, Schema-Validierung für 1.6 |
+| CycloneDX | eigener Writer mit `System.Text.Json`; Schemaprüfung mit NuGet `NJsonSchema` 11.6.1 (MIT) gegen das eingebettete Schema CycloneDX 1.6.2 | `CycloneDX.Core` verworfen: Abhängigkeit JsonSchema.Net steht unter einer kostenpflichtigen EULA (E-008) |
 | CLI | `System.CommandLine` | Unterbefehle, Hilfe, Exit-Codes |
 | Konfiguration | `YamlDotNet` | `machine.yml` je Maschine |
 | JSON | `System.Text.Json` | Feld-Dateien, Worker-Protokoll, Ergebnisdatei |
 | XML | `System.Xml.Linq` mit sicheren `XmlReaderSettings` | L5X, AML, GSDML, tsproj/xti, plcproj, PLCopen XML |
 | Tests | xUnit v3, Golden Files | Determinismus prüfbar |
-| Gegenprüfung | `sbomqs` (Interlynk, `compliance --bsi`) und `cyclonedx-cli validate`, nur in CI | Unabhängige Prüfung des eigenen Validators |
+| Gegenprüfung | `sbomqs` v2.1.3 (Interlynk, `compliance --bsi-v21`) als feldweiser Abgleich mit `tools/crosscheck-sbomqs.cs` (E-010), nur in CI; `cyclonedx-cli validate` folgt | Unabhängige Prüfung des eigenen Validators |
 | CI | GitHub Actions, Matrix `ubuntu-latest` + `windows-latest` | Plattformneutralität belegen |
 
 Versionen vor dem ersten `dotnet add package` auf nuget.org prüfen und zentral in `Directory.Packages.props` festhalten. Versionen der Schwesterprojekte als Ausgangspunkt (`../plc-git-bridge/Directory.Packages.props`). `Directory.Build.props` wie dort: `Nullable`, `TreatWarningsAsErrors`, `InvariantGlobalization`.
@@ -228,7 +228,7 @@ record Gap(string Code, string ComponentRef, string Message);
 
 Ausgabe: **CycloneDX 1.6 JSON**, Dateiname nach Vorgabe `sbom-maschine.cdx.json`.
 
-Offene Entscheidung für M1, mit `sbomqs --bsi` als Schiedsrichter, festzuhalten in `docs/entscheidungen.md`:
+Entschieden für M1: **Variante B** (`docs/entscheidungen.md` E-007). Die beiden Varianten zur Erinnerung:
 
 - **Variante A, verschachtelt:** Station und Gerät als Komponenten vom Typ `device`, Firmware darunter. Lesbar, aber jede `device`-Komponente bräuchte BSI-Pflicht-Properties, die für Hardware keinen Sinn ergeben.
 - **Variante B, Software-flach (Vorzug):** Nur Software-Komponenten (`firmware`, `application`, `library`). Gerät und Station als Properties an der Firmware, Struktur über `dependencies`. Deckt sich mit der CRA-Definition und mit dem Beispiel auf der Produktseite.
@@ -271,6 +271,7 @@ Beispiel der Produktseite (verkürzt, Zielbild):
 | Property | Inhalt |
 |---|---|
 | `<ns>:adapter` | `studio5000`, `twincat`, `tia-aml`, `codesys`, `tia-portal` |
+| `<ns>:adapter:source` | Quellvariante des Adapters, bei `codesys` `v35`, `v23`, `c4` |
 | `<ns>:station` | Stationsname |
 | `<ns>:device:vendor` | Hersteller |
 | `<ns>:device:vendor:origin` | `source`, `gsdml`, `declared`, `assumed` |
@@ -285,6 +286,8 @@ Beispiel der Produktseite (verkürzt, Zielbild):
 | `<ns>:vendorKey:<name>` | Herstellerschlüssel wie `GSDML`, `VendorId`, `DeviceId`, `ProductCode`, `RevisionNo` |
 | `<ns>:gsdml:softwareRelease` | `SoftwareRelease` aus der GSDML; beschreibt die GSDML, **nicht** die Firmware |
 | `<ns>:library` | Bibliothek eines Bibliothekstyps |
+| `<ns>:library:reference`, `<ns>:library:resolution`, `<ns>:library:company` | CODESYS: Referenz wie im Export (`#SM3_Basic`), Auflösung (`fixed`, `redirection`, `default`, `none`), Herstellerangabe der Referenz |
+| `<ns>:version:requested` | angefragte, nicht aufgelöste Version (`*`, Standardauflösung eines Platzhalters) |
 | `<ns>:gap` | Lückencode, mehrfach möglich |
 | `<ns>:source` | Quelldatei relativ zum Repository |
 | `<ns>:source:sha256` | SHA-256 der Quelldatei |
@@ -340,13 +343,16 @@ Für alle drei gilt: Die Version einer Gerätebeschreibung oder Zielsystemdatei 
 
 #### 5.1.1 CODESYS V3.5: Quelle `v35` (M2)
 
-Eingang: PLCopen-XML-Export des ganzen Projekts (die `.project`-Datei ist binär).
+Eingang: PLCopen-XML-Export des ganzen Projekts (die `.project`-Datei ist binär). Umgesetzt mit M2; vollständige Feldtabelle, Regeln und Fixtures in `docs/adapter-codesys.md`.
 
 | Datum | Quelle | Hinweis |
 |---|---|---|
-| Gerät | `addData` → `Device/DeviceIdentification` (Type, Id, Version) | Version ist die der **Gerätebeschreibung**, nicht die Firmware → `firmware:origin = unknown` |
-| Bibliotheken | `addData` → `…/plcopenxml/libraries`, `DefaultResolution` („SM3_Basic, 4.5.1.0 (3S - Smart Software Solutions GmbH)“) | Auflösung von Platzhaltern hängt vom installierten Repository ab |
-| Engineering-Version | `fileHeader@productVersion` | in `metadata.tools` |
+| Steuerung | Konfiguration der obersten Ebene mit `addData` → `Device/DeviceType/DeviceIdentification` (Type, Id, Version) | Version ist die der **Gerätebeschreibung**, nicht die Firmware → `firmware:origin = unknown`, als `<ns>:vendorKey:DeviceDescriptionVersion`. Kein Produktname, Hersteller, Bestellnummer im Export → Typname `Gerät <Type>/<Id>`, Lücken `order-number-not-in-project`, `supplier-unknown` (E-014) |
+| Untergeordnete Geräte | verschachtelte Konfigurationen mit Gerätedaten unter `data[@name="configurations"]` | bisher nur synthetisch belegt |
+| Bibliotheken | `…/plcopenxml/libraries` je Anwendung (`resource`) und im POU-Pool; `Library@Name`, `@DefaultResolution`, `PlaceholderRedirection` | feste Version nur bei direkter Referenz oder Umleitung; Platzhalter nur mit Standardauflösung und `*` → `version-unresolved`, Standardversion als `<ns>:version:requested` (E-012). Hersteller `System` ist kein Hersteller (E-013) |
+| Engineering-Version | `fileHeader@productName`, `@productVersion` | in `metadata.tools` („CODESYS“, „V3.5 SP15“) |
+
+Mehrere Steuerungen in einem Export: `plc` in `machine.yml` wählt eine über den Konfigurationsnamen, sonst Exit 2 (`CODESYS_PLC_REQUIRED`).
 
 Nach dem Prototyp: CODESYS-Scripting mit `--noUI --runscript` (`get_device_identification()`, `librarymanager.references` mit `effective_resolution`), dann kommen Bibliotheken direkt aus dem Bibliotheksverwalter, wie die Produktseite es beschreibt.
 
@@ -716,6 +722,7 @@ stations:
     adapter: codesys
     source: v35                           # v35 | v23 | c4
     path: codesys/Verpackung.xml          # PLCopen-XML-Export
+    plc: Verpackung                       # Gerätename im Projekt; Pflicht bei mehreren Steuerungen im Export
     program: codesys/Verpackung
 
   - name: PLC_1
@@ -797,18 +804,18 @@ Eingang im Prototyp sind Dateien, keine Geräte:
 
 ## 9. TR-03183-2 v2.1.0: Regeln im Validator
 
-Vor der Umsetzung das PDF selbst lesen (Link in Abschnitt 15) und `docs/regeln-tr03183.md` als Tabelle anlegen: TR-Feld → CycloneDX-Pfad → Quelle im Werkzeug → Verhalten bei Lücke → Schwere. Die folgende Liste ist der Stand der Recherche, nicht der Normtext.
+Verbindlich ist `docs/regeln-tr03183.md` (angelegt mit M1 nach dem PDF v2.1.0, abgerufen 31.10.2026): TR-Feld → CycloneDX-Pfad → Quelle im Werkzeug → Verhalten bei Lücke → Schwere. Die folgende Liste ist der Stand der Recherche und bleibt als Überblick.
 
 - **SBOM:** Ersteller (E-Mail, sonst URL), Zeitstempel.
 - **Je Komponente:** Ersteller, Name, Version, Dateiname, Abhängigkeiten mit Angabe der Vollständigkeit, Distributionslizenzen, SHA-512 der ausgelieferten Form, `executable`, `archive`, `structured`.
 - **MUSS, falls vorhanden:** SBOM-URI, Quellcode-URI, URI der ausgelieferten Form, andere Kennungen (CPE, PURL), Originallizenzen.
-- **Properties** nach Taxonomie `BSI-Bund/tr-03183-cyclonedx-property-taxonomy` (v0.1.2): `bsi:component:executable`, `bsi:component:archive`, `bsi:component:structured`, `bsi:component:filename`, `bsi:component:effectiveLicence`. Das TR-PDF schreibt `effectiveLicense`, die Taxonomie `effectiveLicence`. Die Taxonomie gilt; Abweichung in `docs/entscheidungen.md` vermerken.
-- **Hash:** `externalReferences[type=distribution].hashes[alg=SHA-512]`. Nach TR §3.2.1 entfallen Hash und Dateiname, wenn sie durch die Art der Zusammensetzung nicht verfügbar sind. Im PDF prüfen, wie genau das für Hersteller-Firmware gilt; das Werkzeug lässt den Hash dann weg und setzt `hash-unavailable`.
+- **Properties** nach Taxonomie `BSI-Bund/tr-03183-cyclonedx-property-taxonomy` (v0.1.2): `bsi:component:executable`, `bsi:component:archive`, `bsi:component:structured`, `bsi:component:filename`, `bsi:component:effectiveLicence`. Das TR-PDF schreibt `effectiveLicense`, die Taxonomie `effectiveLicence`. Die Taxonomie gilt (E-009). Die Taxonomie verlangt `effectiveLicence` genau einmal je Komponente, die TR führt die effektive Lizenz als optional; der Validator folgt der TR (E-009, offen).
+- **Hash:** `externalReferences[type=distribution].hashes[alg=SHA-512]`. Nach TR §3.2.1 entfallen Hash und Dateiname, wenn sie durch die Art der Zusammensetzung nicht verfügbar sind. Für Hersteller-Firmware und das Anwenderprogramm legt das Werkzeug das als nicht verfügbar aus, lässt Hash und Dateiname weg und setzt `hash-unavailable` und `filename-unavailable` als Hinweis. Das ist eine Auslegung, kein Wortlaut (E-011, offen).
 - **Firmware** gilt als `executable` und `unstructured` (TR §8.1.6/8.1.7).
 - **Hardware** regelt die TR nicht.
 - Eine SBOM je Softwareversion; rekursiv bis zur ersten Komponente außerhalb des eigenen Lieferumfangs.
 
-Der eigene Validator ist die Laufzeitprüfung, Schema eingebettet (offline). In CI läuft zusätzlich `sbomqs compliance --bsi` über alle Golden Files. Weichen beide ab, gilt das als Fehler im eigenen Validator, bis das Gegenteil belegt ist.
+Der eigene Validator ist die Laufzeitprüfung, Schema eingebettet (offline). In CI läuft zusätzlich `sbomqs compliance --bsi-v21` über alle Golden Files, verglichen je Komponente und Pflichtfeld mit `tools/crosscheck-sbomqs.cs` (E-010; sbomqs vergibt Punkte und kennt keine Lückenvermerke). Weichen beide ab, gilt das als Fehler im eigenen Validator, bis das Gegenteil belegt ist.
 
 ## 10. Pipeline
 
@@ -862,7 +869,7 @@ Jeder Meilenstein endet mit grünen Tests auf ubuntu und windows, `dotnet format
 | # | Inhalt | Fertig, wenn |
 |---|---|---|
 | M0 | Gerüst: Solution, `global.json`, CLI-Skelett mit allen Befehlen und Exit-Codes, CI-Matrix, Single-File-Pakete für win-x64 und linux-x64, Lizenzprüfung der Abhängigkeiten, `.gitignore`, `fixtures/FIXTURES.md` | `plc-sbom --help` läuft aus dem CI-Paket auf beiden Plattformen |
-| M1 | Modell, CycloneDX-Writer, Validator (Schema + TR-Regeln), Ergebnisdatei, Entscheidung Variante A/B, `docs/regeln-tr03183.md` | Hand gebautes Modell ergibt eine SBOM, die der eigene Validator **und** `sbomqs --bsi` akzeptieren |
+| M1 | Modell, CycloneDX-Writer, Validator (Schema + TR-Regeln), Ergebnisdatei, Entscheidung Variante A/B, `docs/regeln-tr03183.md` | Hand gebautes Modell ergibt eine SBOM, die der eigene Validator **und** `sbomqs --bsi` akzeptieren (E-010: Validator ohne Fehler, feldweiser Abgleich ohne Abweichung) |
 | M2 | Adapter `codesys`, Quelle `v35` (CODESYS V3.5, PLCopen XML) | Gerät und Bibliotheken aus PLCopen-Fixture, Golden File, Lücken korrekt |
 | M3 | Adapter `codesys`, Quelle `v23` (CODESYS V2.3): M3a Spike zum Eingangsformat (5.1.2), M3b Adapter | ADR mit gewähltem Weg; Golden File aus dem Comquent-V2.3-Demo |
 | M4 | Adapter `codesys`, Quelle `c4` (CODESYS 4): M4a Spike zu Projektablage und Kommandozeile (5.1.3), M4b Adapter | ADR mit gewähltem Weg; Golden File aus dem Comquent-Demo; unbekannte CODESYS-4-Version ergibt Warnung |
@@ -897,8 +904,9 @@ Die Adapter-Meilensteine M2 bis M8 und M14 folgen der festgelegten Reihenfolge: 
 | TwinCAT | `github.com/RWTH-EBC/AixOCAT`, `Examples/HeatPumpTestBenchControl` | | MIT |
 | TwinCAT | `github.com/Roald87/TcBlack`, `github.com/Inxton/TcOpen`, `github.com/Beckhoff/ADS` (`PLC-TestProject`) | | MIT |
 | TwinCAT | `github.com/Beckhoff-USA-Community/SPT_V4_Samples` | | 0BSD |
-| CODESYS V3.5 | `github.com/ScalABLE40/robin`, `robin_updater/cfg/codesys_project.xml` | | Apache-2.0 |
-| CODESYS V3.5 | `github.com/kmpm/OSC-MQTT` (Apache-2.0), `github.com/stefandreyer/I2C-Multiplex` (`*.devdesc.xml`, MIT) | | |
+| CODESYS V3.5 | `github.com/ScalABLE40/robin`, `robin_updater/cfg/codesys_project.xml` | V3.5 SP15, Platzhalter mit Standardauflösung (eingecheckt) | Apache-2.0 |
+| CODESYS V3.5 | `github.com/Jake1510/ooip-tutorial-library`, `examples/scripting/Python Scripting/Script Engine Example.xml` | V3.5 SP20, `PlaceholderRedirection` (eingecheckt) | MIT |
+| CODESYS V3.5 | `github.com/kmpm/OSC-MQTT` (Apache-2.0, Bibliotheksprojekt, eingecheckt), `github.com/stefandreyer/I2C-Multiplex` (`*.devdesc.xml`, MIT, noch nicht genutzt) | | |
 | CODESYS V2.3 | **Comquent-Demo-Projekt** (von Comquent zu liefern) | `.pro` plus alle Exporte, die V2.3 anbietet (`.exp`, PLCopen XML falls vorhanden); Steuerung, E/A-Konfiguration mit einem Feldbusgerät, zwei Bibliotheken samt `.lib`-Dateien | Comquent-eigen |
 | CODESYS 4 | **Comquent-Demo-Projekt** (von Comquent zu liefern) | Projektablage gespeichert mit zwei aufeinanderfolgenden CODESYS-4-Versionen; Gerät, E/A, zwei Bibliotheken | Comquent-eigen |
 | Feld (S7 Web-API) | `github.com/siemens/simatic-s7-webserver-api` (v3.3.92) | | MIT |
@@ -923,7 +931,7 @@ Solange die Comquent-Demo-Projekte fehlen, M7 mit der V17-Fixture beginnen, M3 u
   - Die Seite nennt CODESYS V3.5; der Adapter deckt zusätzlich CODESYS V2.3 und CODESYS 4 ab (V2.3 und 4 nach Spike).
 - **Sicherheit:** keine Lizenzdateien, keine Hersteller-DLLs, keine Kundenprojekte, keine Zugangsdaten im Repository. `.gitignore` wie in `../plc-build-tool/.gitignore`, ergänzt um `build/`, `fixtures/_local/`. Secrets nie loggen.
 - **Sprache:** Code, Bezeichner, Commit-Nachrichten Englisch; Doku, Meldungen und Berichte Deutsch (Zielgruppe DACH).
-- **Abhängigkeiten** klein halten: .NET 10, `CycloneDX.Core`, `System.CommandLine`, `YamlDotNet`, `System.Text.Json`. Jede neue Abhängigkeit mit Lizenz in `docs/entscheidungen.md`.
+- **Abhängigkeiten** klein halten: .NET 10, `NJsonSchema` (statt `CycloneDX.Core`, E-008), `System.CommandLine`, `YamlDotNet`, `System.Text.Json`. Jede neue Abhängigkeit mit Lizenz in `docs/entscheidungen.md`.
 - Nichts nach außen pushen oder veröffentlichen ohne ausdrückliche Anweisung.
 
 ## 15. Quellen
