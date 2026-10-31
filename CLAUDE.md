@@ -274,7 +274,7 @@ Beispiel der Produktseite (verkürzt, Zielbild):
 | `<ns>:adapter:source` | Quellvariante des Adapters, bei `codesys` `v35`, `v23`, `c4` |
 | `<ns>:station` | Stationsname |
 | `<ns>:device:vendor` | Hersteller |
-| `<ns>:device:vendor:origin` | `source`, `gsdml`, `declared`, `assumed` |
+| `<ns>:device:vendor:origin` | `source`, `gsdml`, `devdesc`, `declared`, `assumed` |
 | `<ns>:device:orderNumber` | Bestell- bzw. Katalognummer, unverändert aus der Quelle |
 | `<ns>:device:orderNumber:pattern` | `true`, wenn die Quelle Platzhalter enthält (`6ES7 590-1***0-0AA0`) |
 | `<ns>:device:type` | Typname aus der Quelle |
@@ -314,7 +314,8 @@ Beispiel der Produktseite (verkürzt, Zielbild):
 | `vendor-sbom-missing` | Für eine Firmware liegt keine Hersteller-SBOM vor | Hinweis |
 | `protected-block-unknown` | Geschützter Baustein ohne bekannten Lieferanten oder Version | Warnung |
 | `gsdml-not-found` | GSDML-Datei aus dem `TypeIdentifier` liegt in keinem `gsdml`-Verzeichnis | Warnung |
-| `order-number-not-in-project` | Gerät ohne Bestellnummer in Projekt und GSDML | Warnung |
+| `devdesc-not-found` | CODESYS: zur Gerätekennung keine oder mehrere Gerätebeschreibungen in den `deviceDescriptions`-Verzeichnissen | Warnung |
+| `order-number-not-in-project` | Gerät ohne Bestellnummer in Projekt, GSDML bzw. Gerätebeschreibung | Warnung |
 | `supplier-unknown` | Hersteller nicht ermittelbar | Warnung |
 | `device-unassigned` | Gerät gehört zu keiner Station (kein IO-System, nicht in `devices`) | Hinweis |
 | `program-not-read` | Quelle enthält keine Bausteine (`tia-aml`); geschützte Bausteine unbekannt | Hinweis |
@@ -348,6 +349,7 @@ Eingang: PLCopen-XML-Export des ganzen Projekts (die `.project`-Datei ist binär
 | Datum | Quelle | Hinweis |
 |---|---|---|
 | Steuerung | Konfiguration der obersten Ebene mit `addData` → `Device/DeviceType/DeviceIdentification` (Type, Id, Version) | Version ist die der **Gerätebeschreibung**, nicht die Firmware → `firmware:origin = unknown`, als `<ns>:vendorKey:DeviceDescriptionVersion`. Kein Produktname, Hersteller, Bestellnummer im Export → Typname `Gerät <Type>/<Id>`, Lücken `order-number-not-in-project`, `supplier-unknown` (E-014) |
+| Name, Hersteller, Bestellnummer | `*.devdesc.xml` aus `deviceDescriptions`: `Device/DeviceIdentification` (exakt Type, Id, Version) → `DeviceInfo/Name`, `/Vendor`, `/OrderNumber` | nur bei genau einer passenden Datei; `vendor:origin = devdesc`, Dateiname und SHA-256 als `vendorKey`. Bestellnummer `-` gilt als fehlend. Keine oder mehrere Dateien → `devdesc-not-found` (E-015) |
 | Untergeordnete Geräte | verschachtelte Konfigurationen mit Gerätedaten unter `data[@name="configurations"]` | bisher nur synthetisch belegt |
 | Bibliotheken | `…/plcopenxml/libraries` je Anwendung (`resource`) und im POU-Pool; `Library@Name`, `@DefaultResolution`, `PlaceholderRedirection` | feste Version nur bei direkter Referenz oder Umleitung; Platzhalter nur mit Standardauflösung und `*` → `version-unresolved`, Standardversion als `<ns>:version:requested` (E-012). Hersteller `System` ist kein Hersteller (E-013) |
 | Engineering-Version | `fileHeader@productName`, `@productVersion` | in `metadata.tools` („CODESYS“, „V3.5 SP15“) |
@@ -711,6 +713,7 @@ machine:
 namespace: firma                          # eigener Property-Namespace, Vorgabe plcsbom
 
 gsdml: [gsdml/]                           # Verzeichnisse mit GSDML-Dateien
+deviceDescriptions: [codesys/devdesc/]    # Verzeichnisse mit CODESYS-Gerätebeschreibungen (*.devdesc.xml)
 passiveOrderNumbers: ["6EP1*"]            # Geräte ohne Firmware-Attribut bewusst als passiv erklären
 vendorOverrides:                          # Muster auf Bestellnummer → Hersteller
   "3RK*": Siemens AG
@@ -906,7 +909,7 @@ Die Adapter-Meilensteine M2 bis M8 und M14 folgen der festgelegten Reihenfolge: 
 | TwinCAT | `github.com/Beckhoff-USA-Community/SPT_V4_Samples` | | 0BSD |
 | CODESYS V3.5 | `github.com/ScalABLE40/robin`, `robin_updater/cfg/codesys_project.xml` | V3.5 SP15, Platzhalter mit Standardauflösung (eingecheckt) | Apache-2.0 |
 | CODESYS V3.5 | `github.com/Jake1510/ooip-tutorial-library`, `examples/scripting/Python Scripting/Script Engine Example.xml` | V3.5 SP20, `PlaceholderRedirection` (eingecheckt) | MIT |
-| CODESYS V3.5 | `github.com/kmpm/OSC-MQTT` (Apache-2.0, Bibliotheksprojekt, eingecheckt), `github.com/stefandreyer/I2C-Multiplex` (`*.devdesc.xml`, MIT, noch nicht genutzt) | | |
+| CODESYS V3.5 | `github.com/kmpm/OSC-MQTT` (Apache-2.0, Bibliotheksprojekt, eingecheckt), `github.com/stefandreyer/I2C-Multiplex` (`*.devdesc.xml`, MIT, vier Dateien eingecheckt; Bestellnummer überall `-`, zwei Kennungen doppelt) | | |
 | CODESYS V2.3 | **Comquent-Demo-Projekt** (von Comquent zu liefern) | `.pro` plus alle Exporte, die V2.3 anbietet (`.exp`, PLCopen XML falls vorhanden); Steuerung, E/A-Konfiguration mit einem Feldbusgerät, zwei Bibliotheken samt `.lib`-Dateien | Comquent-eigen |
 | CODESYS 4 | **Comquent-Demo-Projekt** (von Comquent zu liefern) | Projektablage gespeichert mit zwei aufeinanderfolgenden CODESYS-4-Versionen; Gerät, E/A, zwei Bibliotheken | Comquent-eigen |
 | Feld (S7 Web-API) | `github.com/siemens/simatic-s7-webserver-api` (v3.3.92) | | MIT |

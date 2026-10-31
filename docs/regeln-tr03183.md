@@ -102,7 +102,8 @@ Spalte „erklärt“: das Pflichtfeld aus Abschnitt 3, dessen Fehlen der Code e
 | `vendor-sbom-missing` | Hinweis | – | Lückenregeln: jede Firmware, bis eine Hersteller-SBOM zugeordnet ist (M9) | 5.1: Die Firmware gehört zum Lieferumfang, ihre Bestandteile kennt nur der Hersteller. Die Abhängigkeiten der Firmware sind deshalb `unknown`; das ist eine zulässige Angabe der Vollständigkeit. |
 | `protected-block-unknown` | Warnung | Ersteller, Version | Adapter `tia-portal` (M14) | 5.2.2 Ersteller und Version. |
 | `gsdml-not-found` | Warnung | – | Adapter `tia-aml` (M8) | Ohne GSDML fehlen Hersteller und Bestellnummer; die Pflichtfeld-Lücke selbst trägt `supplier-unknown`. |
-| `order-number-not-in-project` | Warnung | – | Adapter `tia-aml` (M8) | Kein TR-Pflichtfeld. Die Bestellnummer ist der Schlüssel für CSAF-Advisories (CLAUDE.md Abschnitt 6). |
+| `devdesc-not-found` | Warnung | – | Adapter `codesys`, Quelle `v35`, wenn `deviceDescriptions` gesetzt ist (E-015) | Kein TR-Feld. Ohne eindeutige Gerätebeschreibung fehlen Hersteller und Produktname; die Pflichtfeld-Lücke selbst trägt `supplier-unknown`. |
+| `order-number-not-in-project` | Warnung | – | Adapter `tia-aml` (M8), `codesys` (M2) | Kein TR-Pflichtfeld. Die Bestellnummer ist der Schlüssel für CSAF-Advisories (CLAUDE.md Abschnitt 6). |
 | `supplier-unknown` | Warnung | Ersteller | Lückenregeln: kein Hersteller bekannt | 5.2.2 Ersteller. |
 | `creator-contact-unknown` | Warnung | Ersteller | Lückenregeln: Hersteller ohne E-Mail und URL | 5.2.2: E-Mail-Adresse, sonst URL. |
 | `device-unassigned` | Hinweis | – | Lückenregeln: Gerät ohne Station | Kein TR-Feld. Die Firmware hängt direkt an der Maschine. |

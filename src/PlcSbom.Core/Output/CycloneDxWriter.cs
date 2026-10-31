@@ -341,6 +341,7 @@ public static class CycloneDxWriter
     {
         ValueOrigin.Source => "source",
         ValueOrigin.Gsdml => "gsdml",
+        ValueOrigin.DeviceDescription => "devdesc",
         ValueOrigin.Declared => "declared",
         ValueOrigin.Assumed => "assumed",
         _ => throw new ArgumentOutOfRangeException(nameof(origin), origin, null),

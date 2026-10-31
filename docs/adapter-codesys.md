@@ -14,6 +14,8 @@ Eingang ist der PLCopen-XML-Export des ganzen Projekts (Namespace `http://www.pl
 | `fixtures/codesys/v35/ooip-script-engine-example.xml` | V3.5 SP20 Patch 1 | ein Gerät, Platzhalter mit `PlaceholderRedirection`, Standardauflösung mit `*` | MIT |
 | `fixtures/codesys/v35/osc-mqtt-OSC_MQTT.xml` | V3.5 SP4 Patch 1 | Bibliotheksprojekt ohne Gerät, Bibliotheken im POU-Pool, zwei Referenzen mit `*` | Apache-2.0 |
 | `fixtures/codesys/v35/zwei-steuerungen-synthetisch.xml` | synthetisch | zwei Steuerungen, untergeordnetes Gerät, zwei Anwendungen je Gerät, POU-Pool, Referenz außerhalb des Musters | Comquent |
+| `fixtures/codesys/v35/devdesc-geraete-synthetisch.xml` | synthetisch | untergeordnete Geräte mit den Kennungen der Gerätebeschreibungen: ein eindeutiger, ein mehrdeutiger, ein nicht vorhandener Treffer | Comquent |
+| `fixtures/codesys/devdesc/*.devdesc.xml` | Gerätebeschreibungen | `TCA9548`, `PCF8575IN`, `SSD1306`, `TSL2561`; `PCF8575IN` und `SSD1306` mit gleicher Kennung, Bestellnummer überall `-` | MIT |
 
 Herkunft und Commits in `fixtures/FIXTURES.md`.
 
@@ -38,7 +40,19 @@ Herkunft und Commits in `fixtures/FIXTURES.md`.
 | Umleitung | `Libraries/PlaceholderRedirections/PlaceholderRedirection@Placeholder`, `@Redirection` | ooip | feste Version |
 | Namensraum, Systembibliothek | `Library@Namespace`, `@SystemLibrary` | allen | nur in `inspect` |
 
-Nicht gelesen: Bausteine, Variablen, Tasks, Geräteparameter (`HostParameterSet`, `DeviceParameterSet`), `ObjectId`, `ProjectStructure`.
+**Gerätebeschreibungen** (`*.devdesc.xml`, Schema `DeviceDescription-1.0`, nur wenn `deviceDescriptions` gesetzt ist):
+
+| Datum | Stelle | Belegt in | Verwendung |
+|---|---|---|---|
+| Kennung | `DeviceDescription/Device/DeviceIdentification/Type`, `/Id`, `/Version` | allen vier | Zuordnung zum Gerät, exakt; `Id` ohne Groß-/Kleinschreibung |
+| Produktname | `Device/DeviceInfo/Name` | allen vier | Typname, Komponentenname `<Name>, Firmware` |
+| Hersteller | `Device/DeviceInfo/Vendor` | allen vier | `supplier`, `vendor:origin = devdesc` |
+| Bestellnummer | `Device/DeviceInfo/OrderNumber` | allen vier (immer `-`) | `<ns>:device:orderNumber`; `-` gilt als fehlend |
+| Datei | Pfad und SHA-256 | – | `<ns>:vendorKey:devdescFile`, `<ns>:vendorKey:devdescSha256` |
+
+Nicht gelesen aus der Gerätebeschreibung: `DeviceInfo/Description` (in `TSL2561.devdesc.xml` steht dort „PCA9555 Port expander“, also nicht verlässlich), Parameter, Connectoren, `RequiredLib`.
+
+Nicht gelesen aus dem Export: Bausteine, Variablen, Tasks, Geräteparameter (`HostParameterSet`, `DeviceParameterSet`), `ObjectId`, `ProjectStructure`.
 
 ### 1.3 Regeln
 
@@ -47,6 +61,8 @@ Nicht gelesen: Bausteine, Variablen, Tasks, Geräteparameter (`HostParameterSet`
 - Typname `Gerät <Type>/<Id>`, Komponentenname `Gerät 4102/0000 0005, Firmware`. Eine Zuordnung der Kennung zu einem Produkt ist nicht belegt. Dieselbe Kennung `4102/0000 0005` steht in zwei Exporten mit verschiedenen Gerätebeschreibungen (V3.5 SP15 und ein Raspberry-Pi-Gerät, `fixtures/_local/`).
 - Lücken je Gerät: `firmware-not-in-project` (Hinweis, Meldung nennt die Version der Gerätebeschreibung), `order-number-not-in-project` (Warnung), `supplier-unknown` (Warnung).
 - `<ns>:firmware:origin = unknown`, keine Firmware-Version.
+
+**Gerätebeschreibung.** Mit `deviceDescriptions` sucht der Adapter je Gerät die Gerätebeschreibung mit gleicher Kennung (Type, Id, Version). Nur bei genau einem Treffer übernimmt er Produktname, Hersteller und Bestellnummer, dann entfallen `supplier-unknown` und, falls eine Bestellnummer da ist, `order-number-not-in-project`. Mehrere Treffer sind keine Seltenheit: In den Fixtures teilen sich `PCF8575IN` und `SSD1306` dieselbe Kennung. Dann und ohne Treffer: `devdesc-not-found` (Warnung) mit den Dateinamen, Gerät wie ohne Gerätebeschreibung. Die Firmware bleibt in jedem Fall unbekannt. Ein fehlendes Verzeichnis (`DEVDESC_DIR_NOT_FOUND`) und eine Datei, die keine Gerätebeschreibung ist (`NOT_DEVDESC`), enden mit Exit 2.
 
 **Steuerung wählen.** Jede Konfiguration der obersten Ebene mit Gerätedaten ist eine Steuerung. Eine Station ist eine Steuerung mit ihren untergeordneten Geräten. `plc` wählt die Steuerung über den Konfigurationsnamen. Enthält der Export genau eine Steuerung, darf `plc` fehlen; bei mehreren ohne `plc` endet der Lauf mit Exit 2 (`CODESYS_PLC_REQUIRED`), ein unbekannter Name ebenso (`CODESYS_PLC_NOT_FOUND`). Ein Export ohne Gerät (Bibliotheksprojekt) ergibt eine Station ohne Geräte.
 
@@ -83,5 +99,6 @@ Begründung für Platzhalter ohne Umleitung: In CODESYS löst zuerst eine Umleit
 ### 1.5 Offen
 
 - **Untergeordnete Geräte im Gesamtexport** (Feldbus, E/A) sind nur synthetisch belegt. Die Verschachtelung folgt dem Achspool in robin und einem Export je Objekt aus `arwie/controlOS_demo` (ohne Lizenz, nur in `fixtures/_local/`). Mit dem Comquent-Demo-Projekt prüfen.
-- **Gerätebeschreibungen** (`*.devdesc.xml`) nennen Name, Hersteller und Bestellnummer eines Geräts zur Kennung aus `DeviceIdentification`. Ein Leser analog zu GSDML (Verzeichnisse in `machine.yml`) würde `supplier-unknown` und `order-number-not-in-project` schließen. Fixture dafür: `stefandreyer/I2C-Multiplex` (MIT). Nicht Teil von M2, Vorschlag in E-014.
+- **Gerätebeschreibungen von Industriegeräten**: Die Fixtures sind Beschreibungen für I²C-Bausteine eines Einzelentwicklers, alle ohne Bestellnummer. Mit dem Comquent-Demo-Projekt die Gerätebeschreibung einer echten Steuerung und eines Feldbusgeräts prüfen, vor allem ob `OrderNumber` dort gefüllt ist.
+- **`inspect` mit Gerätebeschreibungen**: `inspect` zeigt das Rohinventar ohne Zuordnung. Eine Option analog zu `--gsdml` ist nicht umgesetzt.
 - **Effektive Bibliotheksversion**: nur über CODESYS-Scripting (`effective_resolution`), nach dem Prototyp.

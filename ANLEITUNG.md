@@ -161,6 +161,7 @@ Der Code im Lückenvermerk ist klein geschrieben mit Bindestrich (`hash-unavaila
 | `protected-block-unknown` | Geschützter Baustein ohne bekannten Lieferanten oder Version | Warnung | Ersteller, Version |
 | `ekey-disabled` | Rockwell: elektronische Kodierung aus, das Gerät im Feld kann abweichen | Warnung | – |
 | `gsdml-not-found` | Die GSDML-Datei des Geräts liegt in keinem der angegebenen Verzeichnisse | Warnung | – |
+| `devdesc-not-found` | CODESYS: Zur Gerätekennung liegt keine oder mehr als eine Gerätebeschreibung in den angegebenen Verzeichnissen | Warnung | – |
 | `order-number-not-in-project` | Weder Projekt noch GSDML nennen eine Bestellnummer | Warnung | – |
 
 Die Begründung je Code mit der TR-Stelle steht in [docs/regeln-tr03183.md](docs/regeln-tr03183.md) Abschnitt 7.
@@ -237,6 +238,8 @@ Auf Windows-Agenten `bat` statt `sh`. `readJSON` stammt aus dem Plugin „Pipeli
 | `[XML_INVALID]` | Die Datei ist kein gültiges XML oder enthält eine DTD | Export neu erzeugen; DTDs werden aus Sicherheitsgründen nie gelesen |
 | `[NOT_PLCOPEN]` | Die Datei ist kein PLCopen-XML-Export | In CODESYS V3.5 das ganze Projekt als PLCopen XML exportieren |
 | `[CODESYS_PLC_REQUIRED]` | Der Export enthält mehrere Steuerungen | Steuerung mit `plc` wählen (ab M9 in `machine.yml`) |
+| `[DEVDESC_DIR_NOT_FOUND]` | Ein Verzeichnis aus `deviceDescriptions` fehlt | Pfad in `machine.yml` prüfen (relativ zur Konfigurationsdatei) |
+| `[NOT_DEVDESC]` | Eine `*.devdesc.xml` ist keine CODESYS-Gerätebeschreibung | Datei prüfen oder aus dem Verzeichnis entfernen |
 | `[CODESYS_PLC_NOT_FOUND]` | Die mit `plc` genannte Steuerung steht nicht im Export | Namen aus der Meldung oder aus `inspect` übernehmen |
 
 ## 10. Projekt ansehen: `inspect`
@@ -300,6 +303,8 @@ Eingang ist der PLCopen-XML-Export des ganzen Projekts. Die `.project`-Datei ist
 **Steuerung.** Jede Konfiguration der obersten Ebene mit Gerätedaten ist eine Steuerung. Enthält der Export mehrere, wählt `plc` eine aus (ab M9 in `machine.yml`), sonst endet der Lauf mit Exit 2.
 
 **Gerät.** Der Export nennt nur die Kennung der Gerätebeschreibung (`Type`, `Id`, `Version`), keinen Produktnamen, Hersteller oder Bestellnummer. In der SBOM heißt die Firmware-Komponente deshalb etwa `Gerät 4102/0000 0005, Firmware`, ohne Version und mit `firmware:origin` = `unknown`. Die Version der Gerätebeschreibung steht als `<namespace>:vendorKey:DeviceDescriptionVersion` daneben. Lücken: `firmware-not-in-project` (Hinweis), `order-number-not-in-project` und `supplier-unknown` (Warnungen).
+
+**Gerätebeschreibungen.** Liegen die Gerätebeschreibungen (`*.devdesc.xml`) im Repository, nennt man ihre Verzeichnisse unter `deviceDescriptions` (ab M9 in `machine.yml`). Passt genau eine Datei zur Kennung des Geräts (Type, Id und Version), übernimmt das Werkzeug daraus Produktname, Hersteller und Bestellnummer; die Komponente heißt dann etwa `TCA9548, Firmware`, der Hersteller trägt `vendor:origin` = `devdesc`, Dateiname und SHA-256 der Gerätebeschreibung stehen als `vendorKey`. Passt keine oder passen mehrere Dateien, übernimmt es nichts und vermerkt `devdesc-not-found` (Warnung). Eine Bestellnummer `-` gilt als nicht angegeben. Auch mit Gerätebeschreibung bleibt die Firmware-Version unbekannt.
 
 **Bibliotheken.** Gelesen werden die Bibliotheken jeder Anwendung der Steuerung und die des POU-Pools.
 

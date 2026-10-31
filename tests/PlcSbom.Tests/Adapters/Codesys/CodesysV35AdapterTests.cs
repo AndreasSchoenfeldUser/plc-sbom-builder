@@ -1,5 +1,6 @@
 using System.Text;
 using PlcSbom.Core;
+using PlcSbom.Core.Adapters.Codesys;
 using PlcSbom.Core.Adapters.Codesys.V35;
 using PlcSbom.Core.Gaps;
 using PlcSbom.Core.Model;
@@ -15,6 +16,15 @@ public sealed class CodesysV35AdapterTests
     private const string Osc = "codesys/v35/osc-mqtt-OSC_MQTT.xml";
     private const string Ooip = "codesys/v35/ooip-script-engine-example.xml";
     private const string Synthetic = "codesys/v35/zwei-steuerungen-synthetisch.xml";
+    private const string WithDevdesc = "codesys/v35/devdesc-geraete-synthetisch.xml";
+
+    private static Station ReadWithDescriptions() =>
+        CodesysV35Adapter.Read(Fixtures.PathOf(WithDevdesc), new CodesysStationOptions
+        {
+            StationName = "Pruefstand",
+            SourcePath = "codesys/devdesc-geraete-synthetisch.xml",
+            DeviceDescriptions = DeviceDescriptionIndex.Load([(Fixtures.PathOf("codesys/devdesc"), "codesys/devdesc")]),
+        });
 
     private static Station Read(string fixture, string? plc = null, string station = "Verpackung") =>
         CodesysV35Adapter.Read(Fixtures.PathOf(fixture), new CodesysStationOptions
@@ -198,6 +208,66 @@ public sealed class CodesysV35AdapterTests
         var ex = Assert.Throws<UsageException>(() => Read("codesys/v35/gibt-es-nicht.xml"));
 
         Assert.Equal("SOURCE_NOT_FOUND", ex.Code);
+    }
+
+    [Fact]
+    public void Unique_device_description_gives_name_and_vendor()
+    {
+        var mux = ReadWithDescriptions().Devices.Single(d => d.DeviceName == "I2C_Mux");
+
+        Assert.Equal("TCA9548", mux.TypeName);
+        Assert.Equal("Stefan Dreyer", mux.Vendor!.Name);
+        Assert.Equal(ValueOrigin.DeviceDescription, mux.VendorOrigin);
+        Assert.Null(mux.OrderNumber);
+        Assert.Equal("codesys/devdesc/TCA9548.devdesc.xml", mux.VendorKeys["devdescFile"]);
+        Assert.Equal("44f0cccba60ddb56bd5d1623ff903411b44f41aa9bfa03cf419acfbef0345c8f", mux.VendorKeys["devdescSha256"]);
+        Assert.Equal([GapCatalog.FirmwareNotInProject, GapCatalog.OrderNumberNotInProject], mux.Gaps.Select(g => g.Code));
+        Assert.Contains("TCA9548.devdesc.xml", mux.Gaps[1].Message);
+    }
+
+    [Fact]
+    public void Ambiguous_device_description_is_not_used()
+    {
+        var expander = ReadWithDescriptions().Devices.Single(d => d.DeviceName == "Expander");
+
+        Assert.Equal("Gerät 500/ffff 0007", expander.TypeName);
+        Assert.Null(expander.Vendor);
+        Assert.False(expander.VendorKeys.ContainsKey("devdescFile"));
+        var gap = expander.Gaps.Single(g => g.Code == GapCatalog.DevdescNotFound);
+        Assert.Contains("PCF8575IN.devdesc.xml", gap.Message);
+        Assert.Contains("SSD1306.devdesc.xml", gap.Message);
+        Assert.Contains(expander.Gaps, g => g.Code == GapCatalog.SupplierUnknown);
+    }
+
+    [Theory]
+    [InlineData("Lichtsensor")] // description exists only in another version
+    [InlineData("Steuerung")]
+    public void Missing_device_description_is_a_gap(string device)
+    {
+        var d = ReadWithDescriptions().Devices.Single(x => x.DeviceName == device);
+
+        Assert.Null(d.Vendor);
+        Assert.Equal(
+            [GapCatalog.FirmwareNotInProject, GapCatalog.DevdescNotFound, GapCatalog.OrderNumberNotInProject, GapCatalog.SupplierUnknown],
+            d.Gaps.Select(g => g.Code));
+    }
+
+    [Fact]
+    public void Without_configured_descriptions_there_is_no_devdesc_gap()
+    {
+        Assert.DoesNotContain(Read(WithDevdesc).Devices.SelectMany(d => d.Gaps), g => g.Code == GapCatalog.DevdescNotFound);
+    }
+
+    [Fact]
+    public async Task Sbom_with_device_descriptions_matches_the_golden_file_and_passes()
+    {
+        var bytes = Sbom(ReadWithDescriptions());
+
+        Golden.AssertMatches("codesys-v35-devdesc.cdx.json", bytes);
+        var report = await SbomValidator.ValidateAsync(Encoding.UTF8.GetString(bytes));
+        Assert.True(report.SchemaValid);
+        Assert.DoesNotContain(report.Findings, f => f.Severity == Severity.Error);
+        Assert.Contains("\"value\": \"devdesc\"", Encoding.UTF8.GetString(bytes));
     }
 
     [Theory]

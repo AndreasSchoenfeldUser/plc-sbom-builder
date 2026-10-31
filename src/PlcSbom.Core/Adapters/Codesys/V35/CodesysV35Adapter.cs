@@ -15,6 +15,9 @@ public sealed record CodesysStationOptions
 
     /// <summary>Device name of the controller in the project; required if the export holds several.</summary>
     public string? Plc { get; init; }
+
+    /// <summary>Device descriptions from machine.yml "deviceDescriptions" (E-015); null if none are configured.</summary>
+    public DeviceDescriptionIndex? DeviceDescriptions { get; init; }
 }
 
 /// <summary>
@@ -57,7 +60,7 @@ public static class CodesysV35Adapter
         var devices = new List<Device>();
         if (controller is not null)
         {
-            AddDevices(devices, controller, position: null, isController: true);
+            AddDevices(devices, controller, position: null, isController: true, options.DeviceDescriptions);
         }
 
         // Libraries of the POU pool apply to every device; those of the applications only to their device.
@@ -107,16 +110,16 @@ public static class CodesysV35Adapter
         };
     }
 
-    private static void AddDevices(List<Device> target, PlcOpenDevice device, string? position, bool isController)
+    private static void AddDevices(List<Device> target, PlcOpenDevice device, string? position, bool isController, DeviceDescriptionIndex? descriptions)
     {
-        target.Add(ToDevice(device, position, isController));
+        target.Add(ToDevice(device, position, isController, descriptions));
         foreach (var child in device.Children)
         {
-            AddDevices(target, child, position is null ? child.Name : $"{position}/{child.Name}", isController: false);
+            AddDevices(target, child, position is null ? child.Name : $"{position}/{child.Name}", isController: false, descriptions);
         }
     }
 
-    private static Device ToDevice(PlcOpenDevice device, string? position, bool isController)
+    private static Device ToDevice(PlcOpenDevice device, string? position, bool isController, DeviceDescriptionIndex? descriptions)
     {
         var keys = new SortedDictionary<string, string>(StringComparer.Ordinal);
         AddKey(keys, "DeviceType", device.Type);
@@ -128,14 +131,44 @@ public static class CodesysV35Adapter
             new(GapCatalog.FirmwareNotInProject, device.Version is null
                 ? "Der PLCopen-Export führt keine Firmware-Version für dieses Gerät."
                 : $"Der PLCopen-Export führt keine Firmware-Version. Die Version {device.Version} in DeviceIdentification gehört zur Gerätebeschreibung, nicht zur Firmware."),
-            new(GapCatalog.OrderNumberNotInProject, "Der PLCopen-Export nennt für Geräte keine Bestellnummer."),
-            new(GapCatalog.SupplierUnknown, "Der PLCopen-Export nennt für Geräte keinen Hersteller."),
         };
+
+        // The export names neither product, vendor nor order number; a device description may (E-015).
+        var match = descriptions?.Find(device.Type, device.Id, device.Version);
+        var found = match?.Found;
+        if (match is not null && found is null)
+        {
+            var identification = $"{device.Type}/{device.Id}, Version {device.Version}";
+            gaps.Add(new Gap(GapCatalog.DevdescNotFound, match.IsAmbiguous
+                ? $"Zur Kennung {identification} passen mehrere Gerätebeschreibungen ({string.Join(", ", match.Candidates.Select(c => c.File))}). Keine wird übernommen."
+                : $"Zur Kennung {identification} liegt keine Gerätebeschreibung in den Verzeichnissen aus „deviceDescriptions“."));
+        }
+        if (found is not null)
+        {
+            keys["devdescFile"] = found.File;
+            keys["devdescSha256"] = found.Sha256;
+        }
+
+        if (found?.OrderNumber is null)
+        {
+            gaps.Add(new Gap(GapCatalog.OrderNumberNotInProject, found is null
+                ? "Der PLCopen-Export nennt für Geräte keine Bestellnummer."
+                : $"Weder PLCopen-Export noch Gerätebeschreibung {found.File} nennen eine Bestellnummer."));
+        }
+        if (found?.Vendor is null)
+        {
+            gaps.Add(new Gap(GapCatalog.SupplierUnknown, found is null
+                ? "Der PLCopen-Export nennt für Geräte keinen Hersteller."
+                : $"Weder PLCopen-Export noch Gerätebeschreibung {found.File} nennen einen Hersteller."));
+        }
 
         return new Device
         {
-            // The export has no product name, only the identification of the device description.
-            TypeName = $"Gerät {device.Type ?? "?"}/{device.Id ?? "?"}",
+            // Without a description the export has no product name, only the identification.
+            TypeName = found?.Name ?? $"Gerät {device.Type ?? "?"}/{device.Id ?? "?"}",
+            Vendor = found?.Vendor is { } vendor ? new Party(vendor) : null,
+            VendorOrigin = found?.Vendor is not null ? ValueOrigin.DeviceDescription : ValueOrigin.Source,
+            OrderNumber = found?.OrderNumber,
             DeviceName = device.Name,
             Position = position,
             IsController = isController,

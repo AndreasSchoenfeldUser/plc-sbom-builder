@@ -140,6 +140,9 @@ public enum ValueOrigin
     /// <summary>Looked up in a GSDML file.</summary>
     Gsdml,
 
+    /// <summary>Looked up in a CODESYS device description (*.devdesc.xml).</summary>
+    DeviceDescription,
+
     /// <summary>Declared by the user in machine.yml.</summary>
     Declared,
 

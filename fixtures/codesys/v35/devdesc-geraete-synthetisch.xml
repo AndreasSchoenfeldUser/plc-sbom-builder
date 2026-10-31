@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Synthetic (Comquent), modelled on robin-codesys_project.xml. Sub-devices use the identifications of
+     the real device descriptions in fixtures/codesys/devdesc/ (stefandreyer/I2C-Multiplex):
+     I2C_Mux     500/FFFF 0001/1.0.1.1 -> TCA9548.devdesc.xml (unique)
+     Expander    500/FFFF 0007/1.0.1.1 -> PCF8575IN and SSD1306 (ambiguous)
+     Lichtsensor 500/FFFF 0006/1.0.0.0 -> TSL2561 exists only as 1.0.1.1 (not found)
+     The controller has no description in that directory. -->
+<project xmlns="http://www.plcopen.org/xml/tc6_0200">
+  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP21" creationDateTime="2026-10-31T10:00:00.0000000" />
+  <contentHeader name="Geraetebeschreibungen" version="1.0.0.0" modificationDateTime="2026-10-31T09:59:00.0000000" organization="Comquent GmbH" author="synthetisch" />
+  <types>
+    <dataTypes />
+    <pous />
+  </types>
+  <instances>
+    <configurations>
+      <configuration name="Steuerung">
+        <resource name="Application">
+          <addData>
+            <data name="http://www.3s-software.com/plcopenxml/libraries" handleUnknown="implementation">
+              <Libraries>
+                <Library Name="Raspberry I2C MUX, 1.0.1.1 (Stefan Dreyer)" Namespace="I2C_MUX" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="false" LinkAllContent="false" />
+                <addData />
+              </Libraries>
+            </data>
+          </addData>
+        </resource>
+        <addData>
+          <data name="Device" handleUnknown="discard">
+            <Device xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="">
+              <DeviceType>
+                <DeviceIdentification>
+                  <Type>4096</Type>
+                  <Id>0000 0001</Id>
+                  <Version>3.5.21.0</Version>
+                </DeviceIdentification>
+                <DeviceParameterSet />
+              </DeviceType>
+            </Device>
+          </data>
+          <data name="configurations" handleUnknown="discard">
+            <configurations>
+              <configuration name="I2C_Mux">
+                <addData>
+                  <data name="Device" handleUnknown="discard">
+                    <Device xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="">
+                      <DeviceType>
+                        <DeviceIdentification>
+                          <Type>500</Type>
+                          <Id>FFFF 0001</Id>
+                          <Version>1.0.1.1</Version>
+                        </DeviceIdentification>
+                        <DeviceParameterSet />
+                      </DeviceType>
+                    </Device>
+                  </data>
+                </addData>
+              </configuration>
+              <configuration name="Expander">
+                <addData>
+                  <data name="Device" handleUnknown="discard">
+                    <Device xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="">
+                      <DeviceType>
+                        <DeviceIdentification>
+                          <Type>500</Type>
+                          <Id>ffff 0007</Id>
+                          <Version>1.0.1.1</Version>
+                        </DeviceIdentification>
+                        <DeviceParameterSet />
+                      </DeviceType>
+                    </Device>
+                  </data>
+                </addData>
+              </configuration>
+              <configuration name="Lichtsensor">
+                <addData>
+                  <data name="Device" handleUnknown="discard">
+                    <Device xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="">
+                      <DeviceType>
+                        <DeviceIdentification>
+                          <Type>500</Type>
+                          <Id>FFFF 0006</Id>
+                          <Version>1.0.0.0</Version>
+                        </DeviceIdentification>
+                        <DeviceParameterSet />
+                      </DeviceType>
+                    </Device>
+                  </data>
+                </addData>
+              </configuration>
+            </configurations>
+          </data>
+        </addData>
+      </configuration>
+    </configurations>
+  </instances>
+</project>

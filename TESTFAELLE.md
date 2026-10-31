@@ -4,7 +4,7 @@ Stand: 31.10.2026, Version 0.1.0 (Meilenstein M1 fachlich abgeschlossen, M2 in A
 
 ## 1. Ergebnis
 
-**292 Testfälle, 292 bestanden, 0 fehlgeschlagen, 0 übersprungen.** Letzter Lauf am 31.10.2026, 22:56 Uhr, Laufzeit 0,55 s. `dotnet format --verify-no-changes` ohne Befund. Dazu die Gegenprüfung mit sbomqs ohne Abweichung (Abschnitt 6.1).
+**312 Testfälle, 312 bestanden, 0 fehlgeschlagen, 0 übersprungen.** Letzter Lauf am 31.10.2026, 23:10 Uhr, Laufzeit 0,61 s. `dotnet format --verify-no-changes` ohne Befund. Dazu die Gegenprüfung mit sbomqs ohne Abweichung (Abschnitt 6.1).
 
 | Testklasse | Datei | Testfälle | Bestanden | Prüfgegenstand |
 |---|---|---:|---:|---|
@@ -15,13 +15,14 @@ Stand: 31.10.2026, Version 0.1.0 (Meilenstein M1 fachlich abgeschlossen, M2 in A
 | `CycloneDxWriterTests` | [Output/CycloneDxWriterTests.cs](tests/PlcSbom.Tests/Output/CycloneDxWriterTests.cs) | 20 | 20 | CycloneDX-Writer, Golden File, Determinismus |
 | `ResultFileTests` | [Output/ResultFileTests.cs](tests/PlcSbom.Tests/Output/ResultFileTests.cs) | 8 | 8 | Ergebnisdatei `<out>.result.json` |
 | `IdentifierTests` | [Output/IdentifierTests.cs](tests/PlcSbom.Tests/Output/IdentifierTests.cs) | 11 | 11 | UUIDv5, `bom-ref`, Pfad der Ergebnisdatei |
-| `DocsConsistencyTests` | [Docs/DocsConsistencyTests.cs](tests/PlcSbom.Tests/Docs/DocsConsistencyTests.cs) | 41 | 41 | Abgleich von ANLEITUNG.md, CLAUDE.md, README.md mit dem Code |
+| `DocsConsistencyTests` | [Docs/DocsConsistencyTests.cs](tests/PlcSbom.Tests/Docs/DocsConsistencyTests.cs) | 43 | 43 | Abgleich von ANLEITUNG.md, CLAUDE.md, README.md mit dem Code |
 | `SampleFileTests` | [Samples/SampleFileTests.cs](tests/PlcSbom.Tests/Samples/SampleFileTests.cs) | 1 | 1 | Minimal-SBOM als Golden File für die Gegenprüfung |
 | `LibraryReferenceTests` | [Adapters/Codesys/LibraryReferenceTests.cs](tests/PlcSbom.Tests/Adapters/Codesys/LibraryReferenceTests.cs) | 14 | 14 | CODESYS-Bibliotheksangabe `Titel, Version (Hersteller)` |
 | `PlcOpenReaderTests` | [Adapters/Codesys/PlcOpenReaderTests.cs](tests/PlcSbom.Tests/Adapters/Codesys/PlcOpenReaderTests.cs) | 15 | 15 | PLCopen-XML-Leser an echten Fixtures, sicheres XML |
-| `CodesysV35AdapterTests` | [Adapters/Codesys/CodesysV35AdapterTests.cs](tests/PlcSbom.Tests/Adapters/Codesys/CodesysV35AdapterTests.cs) | 22 | 22 | Adapter `codesys`/`v35`: Geräte, Bibliotheken, Lücken, Golden Files |
+| `CodesysV35AdapterTests` | [Adapters/Codesys/CodesysV35AdapterTests.cs](tests/PlcSbom.Tests/Adapters/Codesys/CodesysV35AdapterTests.cs) | 28 | 28 | Adapter `codesys`/`v35`: Geräte, Bibliotheken, Gerätebeschreibungen, Lücken, Golden Files |
+| `DeviceDescriptionIndexTests` | [Adapters/Codesys/DeviceDescriptionIndexTests.cs](tests/PlcSbom.Tests/Adapters/Codesys/DeviceDescriptionIndexTests.cs) | 12 | 12 | CODESYS-Gerätebeschreibungen lesen und zuordnen |
 | `InspectCommandTests` | [Cli/InspectCommandTests.cs](tests/PlcSbom.Tests/Cli/InspectCommandTests.cs) | 5 | 5 | `plc-sbom inspect --adapter codesys` |
-| **Summe** | | **292** | **292** | |
+| **Summe** | | **312** | **312** | |
 
 Bei parametrisierten Tests (xUnit `Theory`) zählt jeder Datensatz als eigener Testfall. Die Tabellen in Abschnitt 4 fassen sie in einer Zeile zusammen und nennen die Anzahl.
 
@@ -46,8 +47,8 @@ Der Testlauf nutzt Microsoft.Testing.Platform mit xunit.v3 (docs/entscheidungen.
 | Handmodell | [Samples/HandModel.cs](tests/PlcSbom.Tests/Samples/HandModel.cs) | Von Hand gebautes Modell der „Maschine XY“ mit zwei Stationen: PLC_1 (TIA AML: Profilschiene, CPU 1511-1 PN V2.8, PM 70W ohne Firmware, IM 155-6 PN HF, Bibliothek LGF, Anwenderprogramm) und Roboterzelle (TwinCAT: EK1100, Runtime ohne Version, Tc2_Standard mit Version `*`), dazu ein nicht zugeordnetes Panel. Gerätedaten nach den Fixtures aus CLAUDE.md Abschnitt 13, alles Übrige erfundene Testdaten |
 | Golden File | [golden/hand-model.cdx.json](tests/PlcSbom.Tests/golden/hand-model.cdx.json) | Erwartete SBOM aus dem Handmodell, byte-genau. 11 Komponenten, 2 Stationen, 0 Fehler, 9 Warnungen, 32 Hinweise |
 | Minimal-SBOM | [Samples/MinimalSbom.cs](tests/PlcSbom.Tests/Samples/MinimalSbom.cs) | Kleinstes CycloneDX-1.6-Dokument, das Schema und TR-Regeln besteht: logische Hauptkomponente „Maschine XY“ und eine vollständig beschriebene Anwendung `app`. Synthetisch. Jeder Validator-Test ändert genau eine Stelle |
-| CODESYS-Fixtures | [fixtures/codesys/v35/](fixtures/codesys/v35/) | Drei echte PLCopen-XML-Exporte (robin V3.5 SP15, OSC-MQTT V3.5 SP4, ooip V3.5 SP20) und ein synthetischer mit zwei Steuerungen; Herkunft in [fixtures/FIXTURES.md](fixtures/FIXTURES.md) |
-| Golden Files CODESYS | [golden/codesys-v35-robin.cdx.json](tests/PlcSbom.Tests/golden/codesys-v35-robin.cdx.json), [golden/codesys-v35-zwei-steuerungen.cdx.json](tests/PlcSbom.Tests/golden/codesys-v35-zwei-steuerungen.cdx.json), [golden/codesys-v35-zwei-steuerungen.inspect.json](tests/PlcSbom.Tests/golden/codesys-v35-zwei-steuerungen.inspect.json) | SBOM aus robin bzw. aus der Steuerung „Verpackung“ der synthetischen Datei, eingebettet in die Maschine des Handmodells; Rohinventar von `inspect` |
+| CODESYS-Fixtures | [fixtures/codesys/v35/](fixtures/codesys/v35/), [fixtures/codesys/devdesc/](fixtures/codesys/devdesc/) | Drei echte PLCopen-XML-Exporte (robin V3.5 SP15, OSC-MQTT V3.5 SP4, ooip V3.5 SP20), zwei synthetische (zwei Steuerungen; Geräte mit Kennungen der Gerätebeschreibungen) und vier echte Gerätebeschreibungen; Herkunft in [fixtures/FIXTURES.md](fixtures/FIXTURES.md) |
+| Golden Files CODESYS | [golden/codesys-v35-robin.cdx.json](tests/PlcSbom.Tests/golden/codesys-v35-robin.cdx.json), [golden/codesys-v35-zwei-steuerungen.cdx.json](tests/PlcSbom.Tests/golden/codesys-v35-zwei-steuerungen.cdx.json), [golden/codesys-v35-zwei-steuerungen.inspect.json](tests/PlcSbom.Tests/golden/codesys-v35-zwei-steuerungen.inspect.json), [golden/codesys-v35-devdesc.cdx.json](tests/PlcSbom.Tests/golden/codesys-v35-devdesc.cdx.json) | SBOM aus robin, aus der Steuerung „Verpackung“ der synthetischen Datei und aus der Datei mit Gerätebeschreibungen, eingebettet in die Maschine des Handmodells; Rohinventar von `inspect` |
 | Golden File der Minimal-SBOM | [golden/minimal-synthetisch.cdx.json](tests/PlcSbom.Tests/golden/minimal-synthetisch.cdx.json) | Die Minimal-SBOM als Datei. Einzige Testdatei, in der Dateiname, Hash und Dateieigenschaften vorhanden sind; Eingang der Gegenprüfung mit sbomqs neben `hand-model.cdx.json` |
 
 ## 4. Testfälle
@@ -261,7 +262,7 @@ Eingabe ist ein fester Prüfbericht mit einem Fehler, zwei Warnungen und zwei Hi
 | ID-03 | `Registry_makes_refs_unique_in_call_order` | Doppelte `bom-ref` werden in Aufrufreihenfolge eindeutig gemacht | 1 | bestanden |
 | ID-04 | `Result_file_sits_next_to_the_sbom` | `sbom-maschine.cdx.json` → `sbom-maschine.result.json`, `x.json` → `x.result.json`, `x.sbom` → `x.sbom.result.json` | 3 | bestanden |
 
-### 4.8 Doku-Abgleich: `DocsConsistencyTests` (41)
+### 4.8 Doku-Abgleich: `DocsConsistencyTests` (43)
 
 Diese Tests sichern die Regel aus CLAUDE.md Abschnitt 14 ab, soweit sie sich maschinell prüfen lässt. Fehlt nach einer Änderung im Code ein Lückencode in der Doku, schlägt der Build fehl.
 
@@ -302,7 +303,7 @@ Diese Tests sichern die Regel aus CLAUDE.md Abschnitt 14 ab, soweit sie sich mas
 | PO-10 | `Invalid_xml_ends_with_exit_2` | abgeschnittenes XML und Text: `XML_INVALID` | 2 | bestanden |
 | PO-11 | `Dtd_is_refused` | Datei mit DTD und externer Entität wird abgelehnt, nichts wird aufgelöst | 1 | bestanden |
 
-### 4.12 Adapter `codesys`, Quelle `v35`: `CodesysV35AdapterTests` (22)
+### 4.12 Adapter `codesys`, Quelle `v35`: `CodesysV35AdapterTests` (28)
 
 | ID | Testfall | Prüft | Fälle | Ergebnis |
 |---|---|---|---:|---|
@@ -323,6 +324,23 @@ Diese Tests sichern die Regel aus CLAUDE.md Abschnitt 14 ab, soweit sie sich mas
 | CV-15 | `Sbom_matches_the_golden_file` | SBOM aus robin und aus „Verpackung“ byte-gleich mit den Golden Files | 2 | bestanden |
 | CV-16 | `Sbom_passes_schema_and_tr_rules_without_errors` | SBOM aus allen vier Fixtures (synthetisch mit beiden Steuerungen): Schema gültig, kein Fehler, zwei Läufe byte-gleich | 5 | bestanden |
 | CV-17 | `Sbom_writes_codesys_properties` | `adapter:source`, `firmware:origin` unknown, `vendorKey:DeviceDescriptionVersion`, `library:resolution`; Version der Gerätebeschreibung nie als Version | 1 | bestanden |
+| CV-18 | `Unique_device_description_gives_name_and_vendor` | `I2C_Mux` → `TCA9548`, Hersteller „Stefan Dreyer“ mit Herkunft `devdesc`, Datei und SHA-256 als Herstellerschlüssel, keine Bestellnummer (`-`) | 1 | bestanden |
+| CV-19 | `Ambiguous_device_description_is_not_used` | `Expander` passt auf `PCF8575IN` und `SSD1306`: nichts übernommen, `devdesc-not-found` nennt beide Dateien | 1 | bestanden |
+| CV-20 | `Missing_device_description_is_a_gap` | `Lichtsensor` (andere Version) und die Steuerung: `devdesc-not-found` und die Lücken wie ohne Gerätebeschreibung | 2 | bestanden |
+| CV-21 | `Without_configured_descriptions_there_is_no_devdesc_gap` | ohne `deviceDescriptions` keine `devdesc-not-found` | 1 | bestanden |
+| CV-22 | `Sbom_with_device_descriptions_matches_the_golden_file_and_passes` | SBOM byte-gleich mit `golden/codesys-v35-devdesc.cdx.json`, Schema gültig, kein Fehler, `vendor:origin` = `devdesc` | 1 | bestanden |
+
+### 4.14 CODESYS-Gerätebeschreibungen: `DeviceDescriptionIndexTests` (12)
+
+| ID | Testfall | Prüft | Fälle | Ergebnis |
+|---|---|---|---:|---|
+| DD-01 | `Reads_identification_name_and_vendor` | Kennung, Name, Hersteller aus allen vier Fixtures; `-` als Bestellnummer ergibt keine | 4 | bestanden |
+| DD-02 | `Load_reads_all_files_sorted_with_repository_paths` | alle Dateien sortiert, Pfade relativ zum Repository | 1 | bestanden |
+| DD-03 | `Unique_identification_is_found_case_insensitive_in_the_id` | `ffff 0001` findet `TCA9548` | 1 | bestanden |
+| DD-04 | `Shared_identification_is_ambiguous` | `500/FFFF 0007/1.0.1.1` ist mehrdeutig (`PCF8575IN`, `SSD1306`) | 1 | bestanden |
+| DD-05 | `Other_identification_is_not_found` | andere Version, andere Kennung, fehlender Type | 3 | bestanden |
+| DD-06 | `Missing_directory_ends_with_exit_2` | `DEVDESC_DIR_NOT_FOUND` | 1 | bestanden |
+| DD-07 | `Other_xml_is_no_device_description` | `NOT_DEVDESC` | 1 | bestanden |
 
 ### 4.13 Befehl `inspect`: `InspectCommandTests` (5)
 
@@ -350,6 +368,7 @@ Alle Läufe lokal auf macOS 26.6.2 (arm64) mit .NET SDK 10.0.403, Ausgangsstand 
 | 7 | 31.10.2026, M2 | neue CODESYS-Tests | Build abgebrochen | Analyseregeln xUnit1051 (fehlendes `CancellationToken`) und xUnit2029 (`Assert.Empty` mit Filter) in den neuen Tests. Im Test behoben |
 | 8 | 31.10.2026, 22:56 | 292 Tests mit TRX-Bericht, Formatprüfung; Gegenprüfung mit sbomqs über die beiden CODESYS-Golden-Files | 292 bestanden, 0,55 s, Format ohne Befund; sbomqs: robin 36 gleich, 89 erklärt, 0 Abweichungen; zwei Steuerungen 36/59/0 | M2 |
 | 9 | 31.10.2026, CI-Fix | 292 Tests, gebaut wie in CI (`-c Release -p:ContinuousIntegrationBuild=true`), vorher und nachher | vorher 207 bestanden, 85 fehlgeschlagen; nachher 292 bestanden; Debug-Build ebenfalls 292, Format ohne Befund | Fehler in den Tests, nicht im Werkzeug: Pfadsuche über `[CallerFilePath]` durch `RepoPaths` ersetzt |
+| 10 | 31.10.2026, 23:10 | 312 Tests mit TRX-Bericht, Formatprüfung; neu: Leser für Gerätebeschreibungen (E-015) | 312 bestanden, 0,61 s, Format ohne Befund. Zwischenlauf: 2 Doku-Abgleiche fehlgeschlagen, weil `devdesc-not-found` noch nicht in ANLEITUNG.md und CLAUDE.md stand; Doku ergänzt | Grundlage dieser Datei |
 
 Die Tests selbst haben keinen Fehler im Werkzeug aufgedeckt, die Gegenprüfung in Lauf 5 zwei.
 

@@ -120,4 +120,17 @@ Das .NET-10-SDK legt neue Solutions als `.slnx` an. CLAUDE.md nennt `PlcSbom.sln
 
 **Entscheidung.** Typname `Gerät <Type>/<Id>`, Kennung und Version der Gerätebeschreibung als `<ns>:vendorKey:DeviceType`, `DeviceId`, `DeviceDescriptionVersion`. Lücken `firmware-not-in-project`, `order-number-not-in-project`, `supplier-unknown`; `firmware:origin = unknown`. Der Writer schreibt `firmware:origin = unknown` jetzt auch ohne Firmware-Version (vorher immer `not-in-project`); Golden File `hand-model.cdx.json` bleibt unverändert. Die Quellvariante steht als `<ns>:adapter:source` (`v35`) an jeder Komponente der Station.
 
-**Folgen.** Vorschlag, offen zur Entscheidung: ein Leser für CODESYS-Gerätebeschreibungen (`*.devdesc.xml`) analog zum GSDML-Leser, mit Verzeichnissen in `machine.yml`. Er würde Hersteller, Produktname und Bestellnummer aus der Gerätebeschreibung holen (`vendor:origin = gsdml` entsprechend als eigener Wert). Fixture: `stefandreyer/I2C-Multiplex` (MIT). Bis dahin trägt jedes CODESYS-Gerät zwei Warnungen.
+**Folgen.** Der Leser für Gerätebeschreibungen ist mit E-015 umgesetzt. Ursprünglicher Vorschlag: ein Leser für CODESYS-Gerätebeschreibungen (`*.devdesc.xml`) analog zum GSDML-Leser, mit Verzeichnissen in `machine.yml`. Er würde Hersteller, Produktname und Bestellnummer aus der Gerätebeschreibung holen (`vendor:origin = gsdml` entsprechend als eigener Wert). Fixture: `stefandreyer/I2C-Multiplex` (MIT). Bis dahin trägt jedes CODESYS-Gerät zwei Warnungen.
+
+## E-015: Leser für CODESYS-Gerätebeschreibungen (31.10.2026)
+
+**Kontext.** E-014: Der PLCopen-Export nennt zu Geräten nur die Kennung der Gerätebeschreibung. Die Gerätebeschreibung selbst (`*.devdesc.xml`) nennt Produktname, Hersteller und Bestellnummer. Vom Anwender freigegeben am 31.10.2026. Fixtures: vier Dateien aus `stefandreyer/I2C-Multiplex` (MIT). Befunde an allen 13 Dateien dieses Repositorys: Bestellnummer überall `-`; zwei Kennungen kommen doppelt vor (`500/FFFF 0007/1.0.1.1` bei `PCF8575IN` und `SSD1306`, `500/FFFF 0010/1.0.1.1` bei `PCA9685` und `4channelDimmer`); das Feld `Description` ist in einer Datei falsch.
+
+**Entscheidung.**
+- Neuer Schlüssel `deviceDescriptions` in `machine.yml` (Liste von Verzeichnissen, wie `gsdml`), ausgewertet ab M9. Gelesen werden alle `*.devdesc.xml` darunter, sortiert.
+- Zuordnung exakt über Type, Id (ohne Groß-/Kleinschreibung, die Fixtures schreiben Hex teils klein) und Version. Andere Versionen derselben Kennung werden nicht genommen, weil Name, Hersteller oder Bestellnummer sich zwischen Versionen ändern können.
+- Nur bei genau einem Treffer: Produktname, Hersteller (`vendor:origin = devdesc`, neuer Wert von `ValueOrigin`), Bestellnummer. Dateiname und SHA-256 der Gerätebeschreibung als `vendorKey`. `-` als Bestellnummer gilt als fehlend.
+- Kein oder mehrere Treffer: neuer Lückencode `devdesc-not-found` (Warnung, erklärt kein TR-Feld), Gerät wie ohne Gerätebeschreibung.
+- Die Version der Gerätebeschreibung bleibt die der Beschreibung, nie die Firmware.
+
+**Folgen.** Ist `deviceDescriptions` nicht gesetzt, ändert sich nichts gegenüber E-014. Mit vollständigen Gerätebeschreibungen entfällt `supplier-unknown` am Gerät, `order-number-not-in-project` nur, wenn die Beschreibung eine Bestellnummer hat. Offen: Prüfung an Gerätebeschreibungen echter Industriegeräte (Comquent-Demo-Projekt).

@@ -60,6 +60,7 @@ public static class GapCatalog
     public const string VendorSbomMissing = "vendor-sbom-missing";
     public const string ProtectedBlockUnknown = "protected-block-unknown";
     public const string GsdmlNotFound = "gsdml-not-found";
+    public const string DevdescNotFound = "devdesc-not-found";
     public const string OrderNumberNotInProject = "order-number-not-in-project";
     public const string SupplierUnknown = "supplier-unknown";
     public const string CreatorContactUnknown = "creator-contact-unknown";
@@ -82,6 +83,7 @@ public static class GapCatalog
         new(VendorSbomMissing, Severity.Note, [], "Für diese Firmware liegt keine SBOM des Herstellers vor."),
         new(ProtectedBlockUnknown, Severity.Warning, [TrField.Creator, TrField.Version], "Geschützter Baustein ohne bekannten Lieferanten oder Version."),
         new(GsdmlNotFound, Severity.Warning, [], "Die GSDML-Datei des Geräts liegt in keinem der Verzeichnisse aus „gsdml“."),
+        new(DevdescNotFound, Severity.Warning, [], "Zur Kennung des Geräts liegt keine eindeutige CODESYS-Gerätebeschreibung in den Verzeichnissen aus „deviceDescriptions“."),
         new(OrderNumberNotInProject, Severity.Warning, [], "Weder Projekt noch GSDML nennen eine Bestellnummer."),
         new(SupplierUnknown, Severity.Warning, [TrField.Creator], "Der Hersteller ist nicht ermittelbar."),
         new(CreatorContactUnknown, Severity.Warning, [TrField.Creator], "Für den Hersteller ist weder E-Mail-Adresse noch URL bekannt."),

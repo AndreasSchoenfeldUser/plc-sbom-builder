@@ -12,7 +12,7 @@ Stand 31.10.2026, Version 0.1.0: Das Gerüst (M0) steht, M1 ist fachlich abgesch
 |---|---|---|
 | M0 | Gerüst: Solution, CLI-Skelett, Exit-Codes, CI-Matrix, Pakete | erledigt |
 | M1 | Modell, CycloneDX-Writer, Validator (Schema und TR-Regeln) | fachlich fertig: Modell, Writer (Variante B, E-007), Validator, `validate`, `docs/regeln-tr03183.md`, Gegenprüfung mit sbomqs ohne Abweichung (E-010); Ursache der roten CI (Pfade der Testdateien) behoben, Bestätigung durch einen CI-Lauf steht aus |
-| M2 | Adapter `codesys`, Quelle `v35` (CODESYS V3.5, PLCopen XML) | in Arbeit: Adapter, `inspect --adapter codesys`, Feldtabelle [docs/adapter-codesys.md](docs/adapter-codesys.md), drei echte Fixtures und Golden Files fertig; offen ist die Bestätigung durch einen CI-Lauf auf ubuntu und windows |
+| M2 | Adapter `codesys`, Quelle `v35` (CODESYS V3.5, PLCopen XML) | in Arbeit: Adapter, `inspect --adapter codesys`, Leser für CODESYS-Gerätebeschreibungen (E-015), Feldtabelle [docs/adapter-codesys.md](docs/adapter-codesys.md), echte Fixtures und Golden Files fertig; offen ist die Bestätigung durch einen CI-Lauf auf ubuntu und windows |
 | M3, M4 | Adapter `codesys`, Quellen `v23` (CODESYS V2.3) und `c4` (CODESYS 4) | offen, brauchen Comquent-Demo-Projekte |
 | M5 | Adapter `studio5000` (Rockwell) | offen |
 | M6 | Adapter `twincat` (Beckhoff) | offen |
@@ -102,7 +102,7 @@ dotnet run tools/check-licenses.cs              # Lizenzen aller Pakete; mit -- 
 dotnet run tools/crosscheck-sbomqs.cs -- --sbomqs <pfad>   # Validator gegen sbomqs v2.1.3 über alle Golden Files
 ```
 
-Alle Testfälle mit Testläufen und Ergebnissen beschreibt [TESTFAELLE.md](TESTFAELLE.md) (Stand 31.10.2026: 292 Tests, alle bestanden). Die Gegenprüfung mit sbomqs und ihr Ergebnis beschreibt [docs/regeln-tr03183.md](docs/regeln-tr03183.md) Abschnitt 10.
+Alle Testfälle mit Testläufen und Ergebnissen beschreibt [TESTFAELLE.md](TESTFAELLE.md) (Stand 31.10.2026: 312 Tests, alle bestanden). Die Gegenprüfung mit sbomqs und ihr Ergebnis beschreibt [docs/regeln-tr03183.md](docs/regeln-tr03183.md) Abschnitt 10.
 
 Paket für eine Plattform (self-contained, eine Datei):
 
