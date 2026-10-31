@@ -16,7 +16,7 @@ Eine SBOM allein erfüllt den Cyber Resilience Act nicht. Das Werkzeug bewertet 
 |---|---|---|
 | `validate` | vorhandene SBOM prüfen (Schema und TR-03183-2), Ergebnisdatei schreiben | **nutzbar** |
 | `build` | SBOM aus `machine.yml` und den SPS-Projekten erzeugen | folgt (M9) |
-| `inspect` | Rohinventar eines Adapters ausgeben | **nutzbar für `codesys`** (CODESYS V3.5, PLCopen XML) und **`studio5000`** (Rockwell, L5X); andere Adapter folgen (M6–M14) |
+| `inspect` | Rohinventar eines Adapters ausgeben | **nutzbar für `codesys`** (CODESYS V3.5, PLCopen XML), **`studio5000`** (Rockwell, L5X) und **`twincat`** (Beckhoff TwinCAT 3); andere Adapter folgen (M7–M14) |
 | `report` | Prüfbericht als HTML oder Markdown | folgt (M10) |
 | `compare` | SBOM mit dem Ist-Stand aus dem Feld abgleichen | folgt (M11) |
 | `ids` | Kennungen gegen CSAF-Advisories prüfen | folgt (M12) |
@@ -149,6 +149,7 @@ Der Code im Lückenvermerk ist klein geschrieben mit Bindestrich (`hash-unavaila
 | `filename-unavailable` | Die Komponente liegt nicht als Datei vor | Hinweis | Dateiname |
 | `vendor-sbom-missing` | Für diese Firmware liegt keine Hersteller-SBOM vor | Hinweis | – |
 | `device-unassigned` | Das Gerät gehört zu keiner Station | Hinweis | – |
+| `devices-not-read` | Die Quelle enthält Geräte, die der Adapter nicht ausliest (TwinCAT: PROFINET-Geräte, E/A in eigener Datei); sie fehlen in der SBOM | Warnung | – |
 | `program-not-read` | Die Quelle enthält keine Bausteine, geschützte Bausteine sind unbekannt | Hinweis | – |
 | `version-unresolved` | Die Quelle nennt nur einen Platzhalter, z. B. Bibliotheksversion `*` | Warnung | Version |
 | `runtime-version-unknown` | Die Version der Laufzeit steht nicht im Projekt (TwinCAT) | Warnung | Version |
@@ -242,6 +243,9 @@ Auf Windows-Agenten `bat` statt `sh`. `readJSON` stammt aus dem Plugin „Pipeli
 | `[NOT_DEVDESC]` | Eine `*.devdesc.xml` ist keine CODESYS-Gerätebeschreibung | Datei prüfen oder aus dem Verzeichnis entfernen |
 | `[CODESYS_PLC_NOT_FOUND]` | Die mit `plc` genannte Steuerung steht nicht im Export | Namen aus der Meldung oder aus `inspect` übernehmen |
 | `[NOT_L5X]` | Die Datei ist kein L5X-Export aus Studio 5000 | In Studio 5000 das Projekt mit „Speichern unter … L5X“ exportieren |
+| `[NOT_TSPROJ]` | Die Datei ist keine TwinCAT-3-Projektdatei | Die `.tsproj`-Datei des Projekts angeben, nicht die `.sln` oder `.plcproj` |
+| `[TWINCAT_FILE_NOT_FOUND]` | Eine `.plcproj` oder `_Config/PLC/*.xti`, auf die das Projekt verweist, fehlt | Datei einchecken; der Pfad steht in der Meldung |
+| `[TWINCAT_PLCPROJ_MISSING]` | Ein SPS-Projekt im `.tsproj` nennt keine `.plcproj` | Projekt in TwinCAT öffnen und speichern |
 | `[STUDIO5000_NOT_CONTROLLER]` | Der L5X-Export enthält nur einen Bestandteil (etwa eine AOI), nicht den ganzen Controller | Das ganze Projekt als L5X speichern, nicht einzelne Bausteine exportieren |
 
 ## 10. Projekt ansehen: `inspect`
@@ -250,7 +254,7 @@ Auf Windows-Agenten `bat` statt `sh`. `readJSON` stammt aus dem Plugin „Pipeli
 plc-sbom inspect <projektdatei> --adapter <id> [--gsdml <verzeichnis>]
 ```
 
-`inspect` gibt das Rohinventar eines Adapters als JSON auf der Konsole aus: was der Adapter in der Datei findet, unverändert und noch ohne Lückenregeln. Damit lässt sich prüfen, ob ein Export das Erwartete enthält, und später die `machine.yml` schreiben. In Version 0.1.0 geht das für die Adapter `codesys` und `studio5000`; für die anderen endet der Aufruf mit Exit 2 und `[NOT_IMPLEMENTED]` und nennt den Meilenstein. `--gsdml` gilt nur für die TIA-Adapter.
+`inspect` gibt das Rohinventar eines Adapters als JSON auf der Konsole aus: was der Adapter in der Datei findet, unverändert und noch ohne Lückenregeln. Damit lässt sich prüfen, ob ein Export das Erwartete enthält, und später die `machine.yml` schreiben. In Version 0.1.0 geht das für die Adapter `codesys`, `studio5000` und `twincat`; für die anderen endet der Aufruf mit Exit 2 und `[NOT_IMPLEMENTED]` und nennt den Meilenstein. `--gsdml` gilt nur für die TIA-Adapter.
 
 Beispiel (gekürzt):
 
@@ -330,6 +334,59 @@ Beispiel für `studio5000` (gekürzt, aus einem echten Lauf):
 
 IP-Adressen der Ethernet-Ports liest das Werkzeug nicht, sie erscheinen auch in `inspect` nicht.
 
+Beispiel für `twincat` (gekürzt, aus einem echten Lauf):
+
+```text
+> plc-sbom inspect "fixtures/twincat/spt-ethercat-diagnostics/SPT EtherCAT Diagnostics.tsproj" --adapter twincat
+{
+  "format": 1,
+  "adapter": "twincat",
+  "file": "fixtures/twincat/spt-ethercat-diagnostics/SPT EtherCAT Diagnostics.tsproj",
+  "sha256": "225630ab0ee3d008e41fc7923e922dfdf8b8e5b652a36a5f0582e518d9984813",
+  "project": {
+    "tcVersion": "3.1.4026.24",
+    "ioDevices": [
+      {
+        "name": "Device 1 (EtherCAT)",
+        "devType": "111",
+        "disabled": false,
+        "boxes": [
+          {
+            "id": "1",
+            "name": "Term 1 (EK1100)",
+            "fieldbus": "EtherCAT",
+            "vendorId": "#x00000002",
+            "productCode": "#x044c2c52",
+            "revisionNo": "#x00120000",
+            "desc": "EK1100",
+            "type": "EK1100 EtherCAT Coupler (2A E-Bus)",
+            "children": [ { "id": "2", "name": "Term 2 (EL6910)", ... }, { "id": "9", "name": "Term 9 (EL9011)", ... } ]
+          }
+        ]
+      }
+    ],
+    "plcProjects": [
+      {
+        "name": "EtherCatDiagnosticsSample",
+        "file": "EtherCatDiagnosticsSample/EtherCatDiagnosticsSample.plcproj",
+        "programVersion": "3.1.4026.24",
+        "libraries": [ { "kind": "placeholder", ... }, ... ]
+      }
+    ]
+  }
+}
+```
+
+| Feld | Inhalt |
+|---|---|
+| `tcVersion` | Version der Engineering-Umgebung (XAE), nicht der Laufzeit |
+| `ioDevices[].disabled` | E/A-Gerät im Projekt deaktiviert |
+| `boxes[].fieldbus` | `EtherCAT` oder `Profinet`; nur EtherCAT-Teilnehmer kommen in die SBOM |
+| `boxes[].revisionNo` | Revision aus der Gerätebeschreibung (ESI), nicht die Firmware |
+| `libraries[].kind` | `placeholder` (`PlaceholderReference`), `direct` (`LibraryReference`), `resolutionOnly` (`PlaceholderResolution` ohne eigenen Platzhalter) |
+
+AMS-Net-IDs, IP-Adressen und der Beckhoff Identification Code (BIC) erscheinen auch in `inspect` nicht.
+
 ## 11. CODESYS V3.5
 
 Eingang ist der PLCopen-XML-Export des ganzen Projekts. Die `.project`-Datei ist binär und wird nicht gelesen. Den Export erzeugt man in CODESYS V3.5 über den PLCopen-XML-Export des Projekts und checkt ihn neben dem Projekt ein. Die Station erhält im Ergebnis die Property `<namespace>:adapter:source` = `v35`.
@@ -369,6 +426,33 @@ Eingang ist der L5X-Export des ganzen Projekts (Studio 5000 Logix Designer: „S
 
 Alle gelesenen Stellen und Regeln: [docs/adapter-studio5000.md](docs/adapter-studio5000.md).
 
-## 13. Was folgt
+## 13. Beckhoff TwinCAT 3
 
-Die nächsten Schritte nach Meilensteinplan (CLAUDE.md Abschnitt 12): M1, M2 (CODESYS V3.5) und M5 (Rockwell Studio 5000) sind umgesetzt; alle Prüfregeln mit ihrer TR-Stelle stehen in [docs/regeln-tr03183.md](docs/regeln-tr03183.md). CODESYS V2.3 und CODESYS 4 (M3, M4) warten auf Demo-Projekte. Danach kommen Beckhoff TwinCAT 3, Siemens TIA Portal über den AML-Export, zuletzt TIA Portal über Openness. Mit M9 erzeugt `build` die SBOM aus einer `machine.yml`; ab dann beschreibt diese Anleitung auch die Maschinenbeschreibung.
+Eingang ist die `.tsproj`-Datei des Projekts. Das Werkzeug folgt von dort den SPS-Projekten (`.plcproj`), auch wenn sie als eigene Datei unter `_Config/PLC/` abgelegt sind. Beides muss im Repository liegen; fehlt eine verwiesene Datei, endet der Lauf mit `[TWINCAT_FILE_NOT_FOUND]`. Ein Projekt ist eine Station; `plc` braucht dieser Adapter nicht.
+
+**EtherCAT-Teilnehmer.** Jeder Koppler und jede Klemme wird eine Firmware-Komponente, benannt nach der Kurzbezeichnung, etwa `EL3204-0200, Firmware`. Das Projekt führt weder Firmware noch Bestellnummer: Jede Komponente trägt `firmware-not-in-project` (Hinweis) und `order-number-not-in-project` (Warnung). Bestimmt ist das Gerät über `<namespace>:vendorKey:VendorId`, `ProductCode` und `RevisionNo` (Hex als `0x…`). `RevisionNo` ist die Revision aus der Gerätebeschreibung, nicht die Firmware. Die Position steht als `<E/A-Gerät>/<Box-Id>/…`, etwa `Device 1 (EtherCAT)/1/3`.
+
+**Hersteller.** Teilnehmer mit der EtherCAT-Herstellerkennung `0x00000002` bekommen `Beckhoff Automation GmbH & Co. KG` mit `vendor:origin` = `assumed`. Andere Kennungen ergeben `supplier-unknown`; ab M9 hilft `vendorOverrides`.
+
+**Deaktivierte Geräte.** Ist ein E/A-Gerät im Projekt deaktiviert, bleiben seine Teilnehmer in der SBOM und tragen `<namespace>:device:disabled` = `true`.
+
+**Nicht gelesene Geräte.** PROFINET-Geräte und E/A-Geräte, deren Konfiguration in einer eigenen Datei liegt, liest diese Version nicht. Das Werkzeug nennt sie in der Lücke `devices-not-read` (Warnung), damit sie nicht unbemerkt fehlen.
+
+**Laufzeit.** Die SBOM enthält die Komponente `TwinCAT 3 Runtime` von Beckhoff, ohne Version (`runtime-version-unknown`, Warnung). Im Projekt steht nur die Version der Engineering-Umgebung; sie erscheint in `metadata.tools` als `TwinCAT XAE`.
+
+**Bibliotheken.** Gelesen werden alle Bibliotheken aller SPS-Projekte, gleiche einmal.
+
+| In der `.plcproj` | Version in der SBOM | Lücke |
+|---|---|---|
+| Platzhalter mit fester Auflösung (`PlaceholderResolution`), z. B. `TcoCore, 0.6.0.913 (Vortex.Library)` | `0.6.0.913` | – |
+| direkte Referenz (`LibraryReference`) mit Version | diese Version | – |
+| Version `*` oder `newest` | keine; `*` bzw. `newest` als `<namespace>:version:requested` | `version-unresolved` (Warnung) |
+| Platzhalter nur mit Standardauflösung, z. B. `VisuElems, 3.5.6.10 (System)` | keine; `3.5.6.10` als `<namespace>:version:requested` | `version-unresolved` (Warnung) |
+
+Wer feste Versionen in der SBOM will, setzt im Bibliotheksverwalter des SPS-Projekts für die Platzhalter eine feste Auflösung. Hersteller `System` (in jeder Schreibweise) ist keine Organisation, dort bleibt der Hersteller leer (`supplier-unknown`).
+
+Alle gelesenen Stellen und Regeln: [docs/adapter-twincat.md](docs/adapter-twincat.md).
+
+## 14. Was folgt
+
+Die nächsten Schritte nach Meilensteinplan (CLAUDE.md Abschnitt 12): M1, M2 (CODESYS V3.5), M5 (Rockwell Studio 5000) und M6 (Beckhoff TwinCAT 3) sind umgesetzt; alle Prüfregeln mit ihrer TR-Stelle stehen in [docs/regeln-tr03183.md](docs/regeln-tr03183.md). CODESYS V2.3 und CODESYS 4 (M3, M4) warten auf Demo-Projekte. Danach kommen Siemens TIA Portal über den AML-Export, zuletzt TIA Portal über Openness. Mit M9 erzeugt `build` die SBOM aus einer `machine.yml`; ab dann beschreibt diese Anleitung auch die Maschinenbeschreibung.

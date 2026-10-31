@@ -1,28 +1,30 @@
 # Testfälle: PLC SBOM Builder (`plc-sbom`)
 
-Stand: 31.10.2026, Version 0.1.0 (Meilensteine M1 und M2 abgeschlossen, M5 umgesetzt). Diese Datei beschreibt alle automatischen Testfälle, die Testläufe und ihre Ergebnisse. Die Bedienung des Werkzeugs steht in [ANLEITUNG.md](ANLEITUNG.md), Ziele und Regeln in [CLAUDE.md](CLAUDE.md).
+Stand: 31.10.2026, Version 0.1.0 (Meilensteine M1 und M2 abgeschlossen, M5 und M6 umgesetzt). Diese Datei beschreibt alle automatischen Testfälle, die Testläufe und ihre Ergebnisse. Die Bedienung des Werkzeugs steht in [ANLEITUNG.md](ANLEITUNG.md), Ziele und Regeln in [CLAUDE.md](CLAUDE.md).
 
 ## 1. Ergebnis
 
-**347 Testfälle, 347 bestanden, 0 fehlgeschlagen, 0 übersprungen.** Letzter Lauf am 31.10.2026, 23:36 Uhr, Laufzeit 0,93 s. `dotnet format --verify-no-changes` ohne Befund. Dazu die Gegenprüfung mit sbomqs ohne Abweichung (Abschnitt 6.1).
+**398 Testfälle, 398 bestanden, 0 fehlgeschlagen, 0 übersprungen.** Letzter Lauf am 01.11.2026, 00:22 Uhr, Laufzeit 0,95 s. `dotnet format --verify-no-changes` ohne Befund. Dazu die Gegenprüfung mit sbomqs ohne Abweichung (Abschnitt 6.1).
 
 | Testklasse | Datei | Testfälle | Bestanden | Prüfgegenstand |
 |---|---|---:|---:|---|
-| `CliAppTests` | [Cli/CliAppTests.cs](tests/PlcSbom.Tests/Cli/CliAppTests.cs) | 41 | 41 | Kommandozeile, Hilfe, Exit-Codes, Gerüst der Befehle |
+| `CliAppTests` | [Cli/CliAppTests.cs](tests/PlcSbom.Tests/Cli/CliAppTests.cs) | 40 | 40 | Kommandozeile, Hilfe, Exit-Codes, Gerüst der Befehle |
 | `ValidateCommandTests` | [Cli/ValidateCommandTests.cs](tests/PlcSbom.Tests/Cli/ValidateCommandTests.cs) | 11 | 11 | `plc-sbom validate` mit echten Dateien |
 | `SbomValidatorTests` | [Validation/SbomValidatorTests.cs](tests/PlcSbom.Tests/Validation/SbomValidatorTests.cs) | 74 | 74 | Schema und Regeln der BSI TR-03183-2 |
 | `GapRulesTests` | [Gaps/GapRulesTests.cs](tests/PlcSbom.Tests/Gaps/GapRulesTests.cs) | 28 | 28 | Lückenregeln am Modell, Lückenkatalog |
-| `CycloneDxWriterTests` | [Output/CycloneDxWriterTests.cs](tests/PlcSbom.Tests/Output/CycloneDxWriterTests.cs) | 20 | 20 | CycloneDX-Writer, Golden File, Determinismus |
+| `CycloneDxWriterTests` | [Output/CycloneDxWriterTests.cs](tests/PlcSbom.Tests/Output/CycloneDxWriterTests.cs) | 21 | 21 | CycloneDX-Writer, Golden File, Determinismus |
 | `ResultFileTests` | [Output/ResultFileTests.cs](tests/PlcSbom.Tests/Output/ResultFileTests.cs) | 8 | 8 | Ergebnisdatei `<out>.result.json` |
 | `IdentifierTests` | [Output/IdentifierTests.cs](tests/PlcSbom.Tests/Output/IdentifierTests.cs) | 11 | 11 | UUIDv5, `bom-ref`, Pfad der Ergebnisdatei |
-| `DocsConsistencyTests` | [Docs/DocsConsistencyTests.cs](tests/PlcSbom.Tests/Docs/DocsConsistencyTests.cs) | 43 | 43 | Abgleich von ANLEITUNG.md, CLAUDE.md, README.md mit dem Code |
+| `DocsConsistencyTests` | [Docs/DocsConsistencyTests.cs](tests/PlcSbom.Tests/Docs/DocsConsistencyTests.cs) | 45 | 45 | Abgleich von ANLEITUNG.md, CLAUDE.md, README.md mit dem Code |
 | `SampleFileTests` | [Samples/SampleFileTests.cs](tests/PlcSbom.Tests/Samples/SampleFileTests.cs) | 1 | 1 | Minimal-SBOM als Golden File für die Gegenprüfung |
 | `LibraryReferenceTests` | [Adapters/Codesys/LibraryReferenceTests.cs](tests/PlcSbom.Tests/Adapters/Codesys/LibraryReferenceTests.cs) | 14 | 14 | CODESYS-Bibliotheksangabe `Titel, Version (Hersteller)` |
 | `PlcOpenReaderTests` | [Adapters/Codesys/PlcOpenReaderTests.cs](tests/PlcSbom.Tests/Adapters/Codesys/PlcOpenReaderTests.cs) | 15 | 15 | PLCopen-XML-Leser an echten Fixtures, sicheres XML |
 | `CodesysV35AdapterTests` | [Adapters/Codesys/CodesysV35AdapterTests.cs](tests/PlcSbom.Tests/Adapters/Codesys/CodesysV35AdapterTests.cs) | 28 | 28 | Adapter `codesys`/`v35`: Geräte, Bibliotheken, Gerätebeschreibungen, Lücken, Golden Files |
 | `DeviceDescriptionIndexTests` | [Adapters/Codesys/DeviceDescriptionIndexTests.cs](tests/PlcSbom.Tests/Adapters/Codesys/DeviceDescriptionIndexTests.cs) | 12 | 12 | CODESYS-Gerätebeschreibungen lesen und zuordnen |
-| `InspectCommandTests` | [Cli/InspectCommandTests.cs](tests/PlcSbom.Tests/Cli/InspectCommandTests.cs) | 8 | 8 | `plc-sbom inspect --adapter codesys` und `--adapter studio5000` |
+| `InspectCommandTests` | [Cli/InspectCommandTests.cs](tests/PlcSbom.Tests/Cli/InspectCommandTests.cs) | 10 | 10 | `plc-sbom inspect` für `codesys`, `studio5000` und `twincat` |
 | `L5xReaderTests` | [Adapters/Studio5000/L5xReaderTests.cs](tests/PlcSbom.Tests/Adapters/Studio5000/L5xReaderTests.cs) | 10 | 10 | L5X-Leser an den echten Exporten |
+| `TwinCatReaderTests` | [Adapters/TwinCat/TwinCatReaderTests.cs](tests/PlcSbom.Tests/Adapters/TwinCat/TwinCatReaderTests.cs) | 10 | 10 | Leser für `.tsproj`, `_Config/PLC/*.xti` und `.plcproj` an den echten Projekten |
+| `TwinCatAdapterTests` | [Adapters/TwinCat/TwinCatAdapterTests.cs](tests/PlcSbom.Tests/Adapters/TwinCat/TwinCatAdapterTests.cs) | 37 | 37 | Adapter `twincat`: EtherCAT-Teilnehmer, Hersteller, deaktivierte Geräte, Laufzeit, Bibliotheken, nicht gelesene Geräte, Golden Files, keine Netzdaten |
 | `Studio5000AdapterTests` | [Adapters/Studio5000/Studio5000AdapterTests.cs](tests/PlcSbom.Tests/Adapters/Studio5000/Studio5000AdapterTests.cs) | 23 | 23 | Adapter `studio5000`: Station, Firmware-Soll, Kodierung, Hersteller, AOIs, Golden Files, keine Netzdaten |
 | **Summe** | | **312** | **312** | |
 
@@ -53,13 +55,15 @@ Der Testlauf nutzt Microsoft.Testing.Platform mit xunit.v3 (docs/entscheidungen.
 | Golden Files CODESYS | [golden/codesys-v35-robin.cdx.json](tests/PlcSbom.Tests/golden/codesys-v35-robin.cdx.json), [golden/codesys-v35-zwei-steuerungen.cdx.json](tests/PlcSbom.Tests/golden/codesys-v35-zwei-steuerungen.cdx.json), [golden/codesys-v35-zwei-steuerungen.inspect.json](tests/PlcSbom.Tests/golden/codesys-v35-zwei-steuerungen.inspect.json), [golden/codesys-v35-devdesc.cdx.json](tests/PlcSbom.Tests/golden/codesys-v35-devdesc.cdx.json) | SBOM aus robin, aus der Steuerung „Verpackung“ der synthetischen Datei und aus der Datei mit Gerätebeschreibungen, eingebettet in die Maschine des Handmodells; Rohinventar von `inspect` |
 | Studio-5000-Fixtures | [fixtures/studio5000/](fixtures/studio5000/) | Fünf echte L5X-Exporte (ra-logix-cicd: Controller 1756-L85E V36 und zwei AOI-Exporte; acd: Controller mit 1756-EN2T und AOI, Controller mit Redundanz) und ein synthetischer (Modulbaum mit entferntem Chassis, ausgeschalteter Kodierung, Fremdgerät, AOIs); Herkunft in [fixtures/FIXTURES.md](fixtures/FIXTURES.md) |
 | Golden Files Studio 5000 | [golden/studio5000-ra-l85e.cdx.json](tests/PlcSbom.Tests/golden/studio5000-ra-l85e.cdx.json), [golden/studio5000-acd-aoi.cdx.json](tests/PlcSbom.Tests/golden/studio5000-acd-aoi.cdx.json), [golden/studio5000-module-baum.cdx.json](tests/PlcSbom.Tests/golden/studio5000-module-baum.cdx.json), [golden/studio5000-module-baum.inspect.json](tests/PlcSbom.Tests/golden/studio5000-module-baum.inspect.json) | SBOM aus den beiden echten Controller-Exporten mit Modulen bzw. AOI und aus der synthetischen Datei, eingebettet in die Maschine des Handmodells; Rohinventar von `inspect` |
+| TwinCAT-Fixtures | [fixtures/twincat/](fixtures/twincat/) | Vier echte Projekte (AixOCAT HeatPump: zehn EtherCAT-Teilnehmer, deaktivierter Master; SPT EtherCAT Diagnostics: SPS-Projekt über `_Config/PLC/*.xti`; TcOpen Cognex: PROFINET-Geräte; TcOpen Core: drei SPS-Projekte, `LibraryReference`) und ein synthetisches (Fremdgerät, ausgelagertes E/A-Gerät, feste Versionen); Herkunft in [fixtures/FIXTURES.md](fixtures/FIXTURES.md) |
+| Golden Files TwinCAT | [golden/twincat-*.cdx.json](tests/PlcSbom.Tests/golden/), [golden/twincat-spt-ethercat-diagnostics.inspect.json](tests/PlcSbom.Tests/golden/twincat-spt-ethercat-diagnostics.inspect.json) | SBOM aus allen fünf Projekten, eingebettet in die Maschine des Handmodells; Rohinventar von `inspect` |
 | Golden File der Minimal-SBOM | [golden/minimal-synthetisch.cdx.json](tests/PlcSbom.Tests/golden/minimal-synthetisch.cdx.json) | Die Minimal-SBOM als Datei. Einzige Testdatei, in der Dateiname, Hash und Dateieigenschaften vorhanden sind; Eingang der Gegenprüfung mit sbomqs neben `hand-model.cdx.json` |
 
 ## 4. Testfälle
 
 Spalte „Ergebnis“: Ergebnis des letzten Laufs. „bestanden“ heißt, dass alle Zusicherungen des Testfalls zutrafen.
 
-### 4.1 Kommandozeile: `CliAppTests` (41)
+### 4.1 Kommandozeile: `CliAppTests` (40)
 
 | ID | Testfall | Prüft | Fälle | Ergebnis |
 |---|---|---|---:|---|
@@ -70,7 +74,7 @@ Spalte „Ergebnis“: Ergebnis des letzten Laufs. „bestanden“ heißt, dass 
 | CLI-05 | `Version_prints_the_tool_version` | `--version` gibt die Version im Format `x.y.z` aus, Exit 0 | 1 | bestanden |
 | CLI-06 | `No_command_is_a_usage_error` | Aufruf ohne Befehl: Exit 2 und Hinweis auf `plc-sbom --help` | 1 | bestanden |
 | CLI-07 | `Invalid_calls_end_with_exit_2` | Falsche Aufrufe enden mit Exit 2 und `[USAGE]`: unbekannter Befehl, fehlendes `--config` bzw. `--release`, `--report pdf`, unbekannte Option, `report --format pdf`, unbekannte Adapter-ID, fehlendes `--adapter`, `doctor --adapter twincat`, `validate` ohne Datei, `--timeout 0`, `--timeout zehn` | 12 | bestanden |
-| CLI-08 | `Commands_not_yet_built_name_their_milestone` | Noch nicht umgesetzte Befehle enden mit Exit 2 und `[NOT_IMPLEMENTED]` und nennen ihren Meilenstein: `build` M9, `report` M10, `compare` M11, `ids` M12, `doctor` M14, `inspect` für `twincat` M6, `tia-aml` M7, `tia-portal` M14 | 8 | bestanden |
+| CLI-08 | `Commands_not_yet_built_name_their_milestone` | Noch nicht umgesetzte Befehle enden mit Exit 2 und `[NOT_IMPLEMENTED]` und nennen ihren Meilenstein: `build` M9, `report` M10, `compare` M11, `ids` M12, `doctor` M14, `inspect` für `tia-aml` M7, `tia-portal` M14 | 7 | bestanden |
 | CLI-09 | `Openness_commands_off_windows_are_an_environment_problem` | `export-aml`, `doctor --adapter tia-portal` und `doctor --adapter tia-portal --deep` außerhalb von Windows: Exit 3 und `[OPENNESS_WINDOWS_ONLY]` | 3 | bestanden |
 | CLI-10 | `Openness_commands_on_windows_pass_the_platform_check` | Auf Windows kommt `export-aml` an der Plattformprüfung vorbei und meldet Meilenstein M14 | 1 | bestanden |
 | CLI-11 | `Common_options_are_accepted_after_the_command` | `--verbose` und `--timeout` werden auch nach dem Befehl angenommen | 1 | bestanden |
@@ -217,7 +221,7 @@ Die Lückenregeln setzen die Lücken, die aus dem Modell allein folgen, unabhän
 | GR-23 | `Severities_follow_section_4_4` | Schwere nach CLAUDE.md 4.4: `hash-unavailable`, `firmware-not-in-project`, `device-unassigned` Hinweis; `version-unresolved`, `libraries-not-read` Warnung | 5 | bestanden |
 | GR-24 | `Unknown_code_is_not_found` | Unbekannter Code wird im Katalog nicht gefunden | 1 | bestanden |
 
-### 4.5 CycloneDX-Writer: `CycloneDxWriterTests` (20)
+### 4.5 CycloneDX-Writer: `CycloneDxWriterTests` (21)
 
 Eingabe ist das Handmodell nach Anwendung der Lückenregeln, Zeitstempel fest auf 31.10.2026 12:00 UTC.
 
@@ -241,6 +245,7 @@ Eingabe ist das Handmodell nach Anwendung der Lückenregeln, Zeitstempel fest au
 | W-16 | `A_hash_without_uri_is_a_model_error` | Hash ohne zugehörige URI ist ein Modellfehler | 1 | bestanden |
 | W-17 | `Distribution_and_original_licence_are_written_as_two_licences` | Distributionslizenz als `concluded`, Originallizenz als `declared` | 1 | bestanden |
 | W-18 | `Network_data_never_reaches_the_sbom` | Keine IP-Adresse in der Ausgabe (Leitplanke Netzdaten) | 1 | bestanden |
+| W-19 | `Station_gap_without_program_and_controller_goes_to_the_machine` | Stationslücke einer Station ohne Anwenderprogramm und Steuerung (TwinCAT vor M9) steht an der Maschine, an keiner Komponente; schlug vor dem Fix in Lauf 14 fehl | 1 | bestanden |
 
 ### 4.6 Ergebnisdatei: `ResultFileTests` (8)
 
@@ -266,14 +271,14 @@ Eingabe ist ein fester Prüfbericht mit einem Fehler, zwei Warnungen und zwei Hi
 | ID-03 | `Registry_makes_refs_unique_in_call_order` | Doppelte `bom-ref` werden in Aufrufreihenfolge eindeutig gemacht | 1 | bestanden |
 | ID-04 | `Result_file_sits_next_to_the_sbom` | `sbom-maschine.cdx.json` → `sbom-maschine.result.json`, `x.json` → `x.result.json`, `x.sbom` → `x.sbom.result.json` | 3 | bestanden |
 
-### 4.8 Doku-Abgleich: `DocsConsistencyTests` (43)
+### 4.8 Doku-Abgleich: `DocsConsistencyTests` (45)
 
 Diese Tests sichern die Regel aus CLAUDE.md Abschnitt 14 ab, soweit sie sich maschinell prüfen lässt. Fehlt nach einer Änderung im Code ein Lückencode in der Doku, schlägt der Build fehl.
 
 | ID | Testfall | Prüft | Fälle | Ergebnis |
 |---|---|---|---:|---|
-| DOC-01 | `Anleitung_lists_every_gap_code_with_its_severity` | Jeder der 19 Lückencodes steht genau einmal in der Tabelle von ANLEITUNG.md, mit derselben Schwere wie im Code | 19 | bestanden |
-| DOC-02 | `Claude_md_lists_every_gap_code` | Jeder der 19 Lückencodes steht in einer Tabelle von CLAUDE.md | 19 | bestanden |
+| DOC-01 | `Anleitung_lists_every_gap_code_with_its_severity` | Jeder der 21 Lückencodes steht genau einmal in der Tabelle von ANLEITUNG.md, mit derselben Schwere wie im Code | 21 | bestanden |
+| DOC-02 | `Claude_md_lists_every_gap_code` | Jeder der 21 Lückencodes steht in einer Tabelle von CLAUDE.md | 21 | bestanden |
 | DOC-03 | `Anleitung_lists_no_gap_code_the_tool_does_not_know` | ANLEITUNG.md nennt keinen Lückencode, den das Werkzeug nicht kennt | 1 | bestanden |
 | DOC-04 | `User_docs_state_the_tool_version` | ANLEITUNG.md und README.md nennen die aktuelle Version (0.1.0) | 2 | bestanden |
 
@@ -346,7 +351,7 @@ Diese Tests sichern die Regel aus CLAUDE.md Abschnitt 14 ab, soweit sie sich mas
 | DD-06 | `Missing_directory_ends_with_exit_2` | `DEVDESC_DIR_NOT_FOUND` | 1 | bestanden |
 | DD-07 | `Other_xml_is_no_device_description` | `NOT_DEVDESC` | 1 | bestanden |
 
-### 4.13 Befehl `inspect`: `InspectCommandTests` (8)
+### 4.13 Befehl `inspect`: `InspectCommandTests` (10)
 
 | ID | Testfall | Prüft | Fälle | Ergebnis |
 |---|---|---|---:|---|
@@ -358,6 +363,8 @@ Diese Tests sichern die Regel aus CLAUDE.md Abschnitt 14 ab, soweit sie sich mas
 | IN-06 | `Studio5000_inventory_matches_the_golden_file` | Rohinventar der synthetischen L5X-Datei byte-gleich mit dem Golden File, keine IP-Adresse in der Ausgabe | 1 | bestanden |
 | IN-07 | `Studio5000_component_export_can_be_inspected` | AOI-Export (WetBulbTemperature): Exit 0, `targetType` `AddOnInstructionDefinition` | 1 | bestanden |
 | IN-08 | `Non_l5x_file_ends_with_exit_2` | PLCopen-Datei mit `--adapter studio5000`: `[NOT_L5X]`, Exit 2 | 1 | bestanden |
+| IN-09 | `Twincat_inventory_matches_the_golden_file` | Rohinventar von SPT EtherCAT Diagnostics byte-gleich mit dem Golden File, keine AMS-Net-ID in der Ausgabe | 1 | bestanden |
+| IN-10 | `Non_tsproj_file_ends_with_exit_2` | PLCopen-Datei mit `--adapter twincat`: `[NOT_TSPROJ]`, Exit 2 | 1 | bestanden |
 
 ### 4.15 L5X-Leser: `L5xReaderTests` (10)
 
@@ -393,6 +400,48 @@ Diese Tests sichern die Regel aus CLAUDE.md Abschnitt 14 ab, soweit sie sich mas
 | S5-14 | `Sbom_contains_no_network_addresses` | IP-Adressen aus Ports und `CommPath` stehen in der Quelle, nicht in der SBOM | 3 | bestanden |
 | S5-15 | `Sbom_writes_rockwell_properties` | `device:ekey`, `vendor:origin` assumed, `vendorKey:ProductCode`, `aoi:revisionExtension`, bom-ref `…-aoi-…`, Lücke `ekey-disabled` | 1 | bestanden |
 
+### 4.17 TwinCAT-Leser: `TwinCatReaderTests` (10)
+
+| ID | Testfall | Prüft | Fälle | Ergebnis |
+|---|---|---|---:|---|
+| TR-01 | `Ethercat_tree_with_identity_and_disabled_master` | AixOCAT: TcVersion, deaktivierter Master, EK1100 mit neun Klemmen, Kennung und Beschreibung | 1 | bestanden |
+| TR-02 | `Plc_project_with_placeholders_is_read` | AixOCAT: SPS-Projekt mit Pfad und Programmversion, 14 Platzhalter, `system_visuinputs` vollständig | 1 | bestanden |
+| TR-03 | `Plc_project_via_independent_file_in_config_folder` | SPT: SPS-Projekt über `_Config/PLC/*.xti`, 16 Bibliotheken, EL9011 ohne `RevisionNo` | 1 | bestanden |
+| TR-04 | `Profinet_boxes_have_no_ethercat_identity` | TcOpen Cognex: PROFINET-Boxen ohne EtherCAT-Kennung | 1 | bestanden |
+| TR-05 | `Direct_references_resolutions_and_several_plc_projects` | TcOpen Core: drei SPS-Projekte, `LibraryReference`, Auflösung zu Platzhalter und ohne Platzhalter | 1 | bestanden |
+| TR-06 | `Device_in_own_file_is_kept_as_reference` | synthetisch: `Device@File` ohne Inhalt | 1 | bestanden |
+| TR-07 | `Other_xml_is_not_a_tsproj` | PLCopen-Datei: `NOT_TSPROJ` | 1 | bestanden |
+| TR-08 | `Missing_plc_project_ends_with_exit_2` | fehlende `.plcproj`: `TWINCAT_FILE_NOT_FOUND` mit Pfad | 1 | bestanden |
+| TR-09 | `Missing_independent_plc_file_ends_with_exit_2` | fehlende `_Config/PLC/*.xti`: `TWINCAT_FILE_NOT_FOUND` mit Pfad | 1 | bestanden |
+| TR-10 | `Dtd_is_refused` | Datei mit DTD: `XML_INVALID` | 1 | bestanden |
+
+### 4.18 Adapter `twincat`: `TwinCatAdapterTests` (37)
+
+| ID | Testfall | Prüft | Fälle | Ergebnis |
+|---|---|---|---:|---|
+| TC-01 | `Station_carries_adapter_hash_and_xae_version` | Adapter `twincat`, SHA-256, Werkzeug „TwinCAT XAE 3.1.4022.4“, keine Stationslücke | 1 | bestanden |
+| TC-02 | `Terminals_have_ethercat_identity_and_no_firmware` | EL3204-0200: Typname, keine Bestellnummer, keine Firmware, Position `Device 1 (EtherCAT)/1/3`, Kennung in Hex, zwei Lücken mit RevisionNo und CoE 0x100A in der Meldung | 1 | bestanden |
+| TC-03 | `Vendor_id_2_is_beckhoff_assumed` | Hersteller Beckhoff mit Herkunft `assumed` | 1 | bestanden |
+| TC-04 | `Disabled_master_marks_its_terminals` | deaktivierter Master: alle Teilnehmer mit `device:disabled`; aktiver Master ohne | 1 | bestanden |
+| TC-05 | `Other_vendor_id_gives_no_vendor_name` | IndraDrive mit `0x00000024`: kein Hersteller, `supplier-unknown` mit Kennung | 1 | bestanden |
+| TC-06 | `Terminal_without_revision_has_no_revision_key` | EL9011: kein `RevisionNo`-Schlüssel, Meldung ohne Revision | 1 | bestanden |
+| TC-07 | `Runtime_is_assumed_and_has_no_version` | „TwinCAT 3 Runtime“ ohne Version, Herkunft `assumed`, `runtime-version-unknown` nennt XAE | 1 | bestanden |
+| TC-08 | `Star_placeholder_is_unresolved` | `Tc2_Standard, *`: nicht aufgelöst, Auflösung `default` | 1 | bestanden |
+| TC-09 | `Default_resolution_with_version_is_unresolved` | `VisuElems 3.5.6.10` nur als Standardauflösung: nicht aufgelöst | 1 | bestanden |
+| TC-10 | `Company_system_is_no_vendor_in_any_case` | `System` und `system` sind kein Hersteller | 2 | bestanden |
+| TC-11 | `Placeholder_resolution_with_version_is_resolved` | TcoCore 0.6.0.913 über `PlaceholderResolution`: aufgelöst, Auflösung `redirection` | 1 | bestanden |
+| TC-12 | `Direct_reference_newest_and_star_placeholder_are_one_component` | `Tc2_EtherCAT` als `newest` und `*`: eine Komponente | 1 | bestanden |
+| TC-13 | `Resolution_without_reference_is_an_indirect_library` | `Tc2_Utilities 3.3.47.0`: Auflösung `indirect` | 1 | bestanden |
+| TC-14 | `Direct_reference_with_version_is_resolved` | `LibraryReference` mit Version: aufgelöst, Hersteller aus `Include` | 1 | bestanden |
+| TC-15 | `Libraries_of_all_plc_projects_appear_once` | drei SPS-Projekte, jede Bibliothek einmal | 1 | bestanden |
+| TC-16 | `Profinet_devices_and_external_io_are_a_station_gap` | PROFINET-Geräte und `Device@File`: `devices-not-read` (Warnung) mit Namen | 1 | bestanden |
+| TC-17 | `Missing_file_ends_with_exit_2` | fehlende Datei: `SOURCE_NOT_FOUND` | 1 | bestanden |
+| TC-18 | `Hex_values_are_normalised` | `#x…` → `0x…` klein, andere Werte unverändert | 3 | bestanden |
+| TC-19 | `Sbom_matches_the_golden_file` | SBOM aus allen fünf Projekten byte-gleich mit den Golden Files | 5 | bestanden |
+| TC-20 | `Sbom_passes_schema_and_tr_rules_without_errors` | Schema gültig, kein Fehler, zwei Läufe byte-gleich | 5 | bestanden |
+| TC-21 | `Sbom_contains_no_network_data` | AMS-Net-IDs, `TargetNetId` und BIC stehen in der Quelle, nicht in der SBOM | 5 | bestanden |
+| TC-22 | `Sbom_writes_twincat_properties` | `vendorKey:RevisionNo`, `device:disabled`, `firmware:origin` not-in-project, bom-ref `…-rt`, Lücke `runtime-version-unknown` | 1 | bestanden |
+
 ## 5. Testläufe
 
 Alle Läufe lokal auf macOS 26.6.2 (arm64) mit .NET SDK 10.0.403, Ausgangsstand Commit `914bc98` plus die neuen, noch nicht committeten Testdateien.
@@ -412,7 +461,9 @@ Alle Läufe lokal auf macOS 26.6.2 (arm64) mit .NET SDK 10.0.403, Ausgangsstand 
 | 10 | 31.10.2026, 23:10 | 312 Tests mit TRX-Bericht, Formatprüfung; neu: Leser für Gerätebeschreibungen (E-015) | 312 bestanden, 0,61 s, Format ohne Befund. Zwischenlauf: 2 Doku-Abgleiche fehlgeschlagen, weil `devdesc-not-found` noch nicht in ANLEITUNG.md und CLAUDE.md stand; Doku ergänzt | Stand M2 |
 | 11 | 31.10.2026, 23:15, CI | GitHub Actions, Lauf 41247352670 auf Commit `37ce75b`: Build, 312 Tests, Format und Lizenzen auf `ubuntu-latest` und `windows-latest`, Rauchtest aus beiden Paketen, Gegenprüfung mit sbomqs über alle fünf Golden Files | alle Jobs grün; sbomqs ohne Abweichung (devdesc 33 gleich, 32 erklärt; robin 36/89; zwei Steuerungen 36/59; Hand-Modell 74/41; Minimal 20/5) | Abschluss M1 und M2; bestätigt die Pfadsuche aus Lauf 9 |
 | 12 | 31.10.2026, 23:36, M5 | 347 Tests mit TRX-Bericht, Formatprüfung; neu: L5X-Leser und Adapter `studio5000` (E-017); Gegenprüfung mit sbomqs v2.1.3 über alle acht Golden Files | 347 bestanden, 0,93 s, Format ohne Befund; Tabelle der Gegenprüfung ohne Abweichung (ra-L85E 16 gleich, 9 erklärt; acd 25/20; Modulbaum 39/36; übrige wie Lauf 11), der Abgleich endete aber mit Exit 1; beim Ablesen übersehen, siehe Lauf 13. Zwischenstand: 4 Golden Files fehlten und wurden erzeugt und von Hand geprüft; das JSON-Feld `eKey` in `inspect` in `ekey` umbenannt | M5 |
-| 13 | 01.11.2026, CI und lokal | CI-Lauf 41250633501 auf Commit `d92b7cd`: Build und Tests auf ubuntu und windows grün, Job `crosscheck` rot. Danach Gegenprüfung lokal mit sbomqs v2.1.3, Exit-Code geprüft | Fehler im Abgleichwerkzeug, nicht im Validator: Die beiden baugleichen 1756-EN2T der synthetischen Datei haben bei sbomqs dieselbe Kennung, der Abgleich brach dort mit „Abgleich nicht eindeutig“ ab und ließ die Einträge aus der Tabelle weg. Behoben in `tools/crosscheck-sbomqs.cs`: Eintrag gegen jede Komponente mit dieser Kennung prüfen, zählen nur bei gleicher Bewertung. Danach Exit 0, Modulbaum 51 gleich, 44 erklärt, 0 Abweichungen; Gegenprobe mit einer Kopie, in der nur einer der beiden EN2T keinen Hersteller hat: Exit 1 mit „Abgleich nicht eindeutig“ | Grundlage dieser Datei |
+| 13 | 01.11.2026, CI und lokal | CI-Lauf 41250633501 auf Commit `d92b7cd`: Build und Tests auf ubuntu und windows grün, Job `crosscheck` rot. Danach Gegenprüfung lokal mit sbomqs v2.1.3, Exit-Code geprüft | Fehler im Abgleichwerkzeug, nicht im Validator: Die beiden baugleichen 1756-EN2T der synthetischen Datei haben bei sbomqs dieselbe Kennung, der Abgleich brach dort mit „Abgleich nicht eindeutig“ ab und ließ die Einträge aus der Tabelle weg. Behoben in `tools/crosscheck-sbomqs.cs`: Eintrag gegen jede Komponente mit dieser Kennung prüfen, zählen nur bei gleicher Bewertung. Danach Exit 0, Modulbaum 51 gleich, 44 erklärt, 0 Abweichungen; Gegenprobe mit einer Kopie, in der nur einer der beiden EN2T keinen Hersteller hat: Exit 1 mit „Abgleich nicht eindeutig“ | M5-Fix |
+| 14 | 01.11.2026, 00:22, M6 | 398 Tests mit TRX-Bericht, Formatprüfung; neu: TwinCAT-Leser und Adapter `twincat` (E-018), Lückencode `devices-not-read`; Gegenprüfung mit sbomqs v2.1.3 über alle 13 Golden Files, Exit-Code geprüft | 398 bestanden, 0,95 s, Format ohne Befund; sbomqs Exit 0, keine Abweichung (HeatPump 90 gleich, 175 erklärt; SPT 59/156; Cognex 36/79; Core 28/67; synthetisch 37/58). Zwischenstände: Konstante `Core` kollidierte mit dem Namensraum (Test umbenannt); die Stationslücke `devices-not-read` fehlte in der SBOM, weil der Writer Stationslücken ohne Programm und Steuerung verwarf. Fehler im Werkzeug, behoben, Test W-19 | Grundlage dieser Datei |
+| 15 | 01.11.2026, CI | GitHub Actions, Lauf 41251063889 auf Commit `6dac068` (M5 mit Abgleich-Fix): Build, Tests, Format und Lizenzen auf ubuntu und windows, Paket-Rauchtest, `crosscheck` | alle Jobs grün | bestätigt M5 |
 
 Die Tests selbst haben keinen Fehler im Werkzeug aufgedeckt, die Gegenprüfung in Lauf 5 zwei.
 
@@ -436,7 +487,7 @@ Die Meldung zu `--foo` kommt auf Englisch aus der Bibliothek System.CommandLine;
 - `cyclonedx-cli validate` als zweite, unabhängige Schemaprüfung: noch nicht eingerichtet.
 - Lauf auf Windows: nur in CI (`windows-latest`), nicht lokal.
 - Test, dass die Schemaprüfung ohne Netz auskommt: Das Schema ist eingebettet und fremde Verweise werden abgelehnt, ein eigener Test mit gesperrtem Netz fehlt.
-- Adapter außer `codesys` (Quelle `v35`) und `studio5000`, `inspect` für andere Adapter, `build`, `report`, `compare`, `ids` und der Openness-Worker: noch nicht umgesetzt; die Tests prüfen nur, dass sie mit `[NOT_IMPLEMENTED]` bzw. `[OPENNESS_WINDOWS_ONLY]` enden.
+- Adapter `tia-aml` und `tia-portal`, `inspect` für diese, `build`, `report`, `compare`, `ids` und der Openness-Worker: noch nicht umgesetzt; die Tests prüfen nur, dass sie mit `[NOT_IMPLEMENTED]` bzw. `[OPENNESS_WINDOWS_ONLY]` enden.
 - Self-contained-Paket: Der Aufruf aus dem ausgepackten Paket läuft in CI als Rauchtest, nicht lokal.
 
 ### 6.1 Gegenprüfung mit sbomqs
@@ -453,6 +504,11 @@ Kein xUnit-Test, sondern [tools/crosscheck-sbomqs.cs](tools/crosscheck-sbomqs.cs
 | `studio5000-acd-aoi.cdx.json` | 25 | 0 | 20 | 0 |
 | `studio5000-module-baum.cdx.json` | 51 | 0 | 44 | 0 |
 | `studio5000-ra-l85e.cdx.json` | 16 | 0 | 9 | 0 |
+| `twincat-aixocat-heatpump.cdx.json` | 90 | 0 | 175 | 0 |
+| `twincat-spt-ethercat-diagnostics.cdx.json` | 59 | 0 | 156 | 0 |
+| `twincat-tcopen-cognex.cdx.json` | 36 | 0 | 79 | 0 |
+| `twincat-tcopen-core.cdx.json` | 28 | 0 | 67 | 0 |
+| `twincat-zelle-synthetisch.cdx.json` | 37 | 0 | 58 | 0 |
 
 Gegenprobe mit sechs absichtlich veränderten Kopien der Minimal-SBOM (nur lokal, nicht eingecheckt):
 

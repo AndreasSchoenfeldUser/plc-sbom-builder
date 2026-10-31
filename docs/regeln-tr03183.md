@@ -94,7 +94,7 @@ Spalte „erklärt“: das Pflichtfeld aus Abschnitt 3, dessen Fehlen der Code e
 | `hash-unavailable` | Hinweis | Hash | Lückenregeln: jede Firmware; Software ohne SHA-512 der ausgelieferten Form | 3.2.1: Angaben, die wegen der Art der Zusammensetzung nicht verfügbar sind, entfallen, auch Hash und Dateiname. Hersteller-Firmware steckt im Gerät und erreicht das Werkzeug nie als Datei; ein SPS-Programm hat kein stabiles Binärartefakt (CLAUDE.md 5.6). Auslegung, siehe E-011. |
 | `filename-unavailable` | Hinweis | Dateiname | wie `hash-unavailable` | 3.2.1 wie oben. |
 | `version-unresolved` | Warnung | Version | Lückenregeln: Version fehlt oder ist ein Platzhalter (`*`, „neueste installierte“) | 5.2.2 Version; 3.2.1 verlangt für ausgelieferte Komponenten die genaue Version. Beim Übersetzen gab es eine feste Version, die Quelle nennt sie nicht. |
-| `runtime-version-unknown` | Warnung | Version | Lückenregeln: Laufzeit ohne Version | 5.2.2 Version. TwinCAT führt nur die XAE-Version im Projekt. |
+| `runtime-version-unknown` | Warnung | Version | Lückenregeln: Laufzeit ohne Version; Adapter `twincat` (M6) | 5.2.2 Version. TwinCAT führt nur die XAE-Version im Projekt. |
 | `libraries-not-read` | Warnung | – | Adapter `tia-aml` (M7) | 5.2.2 Abhängigkeiten, 5.1. Das Programm wird `incomplete` gekennzeichnet; Bibliotheken sind eingebundene Fremdkomponenten (3.2.1, kompilierter Code). |
 | `program-not-read` | Hinweis | – | Adapter `tia-aml` (M7) | 5.2.2 Vollständigkeit: Das Programm wird `incomplete` gekennzeichnet, wie die TR es für unvollständige Aufzählungen vorsieht. |
 | `ekey-disabled` | Warnung | – | Adapter `studio5000` (M5), nur an Modulen außer der Steuerung (E-017) | Kein TR-Feld. Das Gerät im Feld kann vom projektierten abweichen; der Soll-Stand ist dann wenig belastbar. |
@@ -103,10 +103,11 @@ Spalte „erklärt“: das Pflichtfeld aus Abschnitt 3, dessen Fehlen der Code e
 | `protected-block-unknown` | Warnung | Ersteller, Version | Adapter `tia-portal` (M14) | 5.2.2 Ersteller und Version. |
 | `gsdml-not-found` | Warnung | – | Adapter `tia-aml` (M8) | Ohne GSDML fehlen Hersteller und Bestellnummer; die Pflichtfeld-Lücke selbst trägt `supplier-unknown`. |
 | `devdesc-not-found` | Warnung | – | Adapter `codesys`, Quelle `v35`, wenn `deviceDescriptions` gesetzt ist (E-015) | Kein TR-Feld. Ohne eindeutige Gerätebeschreibung fehlen Hersteller und Produktname; die Pflichtfeld-Lücke selbst trägt `supplier-unknown`. |
-| `order-number-not-in-project` | Warnung | – | Adapter `tia-aml` (M8), `codesys` (M2), `studio5000` (M5, Modul ohne `CatalogNumber`) | Kein TR-Pflichtfeld. Die Bestellnummer ist der Schlüssel für CSAF-Advisories (CLAUDE.md Abschnitt 6). |
+| `order-number-not-in-project` | Warnung | – | Adapter `tia-aml` (M8), `codesys` (M2), `studio5000` (M5, Modul ohne `CatalogNumber`), `twincat` (M6, jeder EtherCAT-Teilnehmer, E-018) | Kein TR-Pflichtfeld. Die Bestellnummer ist der Schlüssel für CSAF-Advisories (CLAUDE.md Abschnitt 6). |
 | `supplier-unknown` | Warnung | Ersteller | Lückenregeln: kein Hersteller bekannt | 5.2.2 Ersteller. |
 | `creator-contact-unknown` | Warnung | Ersteller | Lückenregeln: Hersteller ohne E-Mail und URL | 5.2.2: E-Mail-Adresse, sonst URL. |
 | `device-unassigned` | Hinweis | – | Lückenregeln: Gerät ohne Station | Kein TR-Feld. Die Firmware hängt direkt an der Maschine. |
+| `devices-not-read` | Warnung | – | Adapter `twincat` (M6): PROFINET-Boxen, E/A-Gerät in eigener Datei (E-018) | Kein TR-Feld. Die Firmware dieser Geräte fehlt in der SBOM; 5.1 verlangt die Komponenten bis zur ersten außerhalb des eigenen Lieferumfangs. Warnung, damit ein Release-Build die Lücke nicht übersieht. |
 | `program-source-missing` | Warnung | Hash | Lückenregeln: Anwenderprogramm ohne `program` in `machine.yml` | Ohne Quellverzeichnis gibt es nicht einmal den Hash über die Quellen (Abschnitt 9). |
 | `file-properties-unknown` | Warnung | ausführbar, Archiv, strukturiert | Lückenregeln: Software ohne Angabe der Dateieigenschaften | 5.2.2. |
 

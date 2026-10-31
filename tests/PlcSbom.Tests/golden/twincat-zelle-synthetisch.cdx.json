@@ -1,0 +1,812 @@
+{
+  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:1a02a05d-7584-5a0b-9e78-e462de8d242a",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-10-31T12:00:00Z",
+    "tools": {
+      "components": [
+        {
+          "type": "application",
+          "manufacturer": {
+            "name": "Comquent GmbH"
+          },
+          "name": "PLC SBOM Builder",
+          "version": "0.1.0"
+        },
+        {
+          "type": "application",
+          "name": "TwinCAT XAE",
+          "version": "3.1.4026.24"
+        }
+      ]
+    },
+    "manufacturer": {
+      "name": "Musterbau GmbH",
+      "contact": [
+        {
+          "email": "sbom@musterbau.example"
+        }
+      ]
+    },
+    "component": {
+      "bom-ref": "maschine-xy",
+      "type": "device",
+      "supplier": {
+        "name": "Musterbau GmbH"
+      },
+      "manufacturer": {
+        "name": "Musterbau GmbH",
+        "contact": [
+          {
+            "email": "sbom@musterbau.example"
+          }
+        ]
+      },
+      "name": "Maschine XY",
+      "version": "R2026.10",
+      "licenses": [
+        {
+          "expression": "LicenseRef-musterbau-proprietary",
+          "acknowledgement": "concluded"
+        }
+      ],
+      "properties": [
+        {
+          "name": "bsi:component:effectiveLicence",
+          "value": "LicenseRef-musterbau-proprietary"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "devices-not-read"
+        },
+        {
+          "name": "plcsbom:git:commit",
+          "value": "a1b2c3d4e5f60718293a4b5c6d7e8f9012345678"
+        },
+        {
+          "name": "plcsbom:logicalComponent",
+          "value": "true"
+        }
+      ]
+    }
+  },
+  "components": [
+    {
+      "bom-ref": "roboterzelle-fw-device-1-ethercat-1",
+      "type": "firmware",
+      "supplier": {
+        "name": "Beckhoff Automation GmbH & Co. KG"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation GmbH & Co. KG"
+      },
+      "name": "EK1100, Firmware",
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:device:name",
+          "value": "Term 1 (EK1100)"
+        },
+        {
+          "name": "plcsbom:device:position",
+          "value": "Device 1 (EtherCAT)/1"
+        },
+        {
+          "name": "plcsbom:device:type",
+          "value": "EK1100"
+        },
+        {
+          "name": "plcsbom:device:vendor",
+          "value": "Beckhoff Automation GmbH & Co. KG"
+        },
+        {
+          "name": "plcsbom:device:vendor:origin",
+          "value": "assumed"
+        },
+        {
+          "name": "plcsbom:firmware:origin",
+          "value": "not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "firmware-not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "order-number-not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "vendor-sbom-missing"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/zelle-synthetisch.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "2b9a79ba1ed077fca06b655bf5e0bf93e1087d5502e926b11747afe4ee305123"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:vendorKey:ProductCode",
+          "value": "0x044c2c52"
+        },
+        {
+          "name": "plcsbom:vendorKey:RevisionNo",
+          "value": "0x00120000"
+        },
+        {
+          "name": "plcsbom:vendorKey:VendorId",
+          "value": "0x00000002"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-fw-device-1-ethercat-1-2",
+      "type": "firmware",
+      "supplier": {
+        "name": "Beckhoff Automation GmbH & Co. KG"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation GmbH & Co. KG"
+      },
+      "name": "EL1008, Firmware",
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:device:name",
+          "value": "Term 2 (EL1008)"
+        },
+        {
+          "name": "plcsbom:device:position",
+          "value": "Device 1 (EtherCAT)/1/2"
+        },
+        {
+          "name": "plcsbom:device:type",
+          "value": "EL1008"
+        },
+        {
+          "name": "plcsbom:device:vendor",
+          "value": "Beckhoff Automation GmbH & Co. KG"
+        },
+        {
+          "name": "plcsbom:device:vendor:origin",
+          "value": "assumed"
+        },
+        {
+          "name": "plcsbom:firmware:origin",
+          "value": "not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "firmware-not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "order-number-not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "vendor-sbom-missing"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/zelle-synthetisch.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "2b9a79ba1ed077fca06b655bf5e0bf93e1087d5502e926b11747afe4ee305123"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:vendorKey:ProductCode",
+          "value": "0x03f03052"
+        },
+        {
+          "name": "plcsbom:vendorKey:RevisionNo",
+          "value": "0x00120000"
+        },
+        {
+          "name": "plcsbom:vendorKey:VendorId",
+          "value": "0x00000002"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-fw-device-1-ethercat-3",
+      "type": "firmware",
+      "name": "IndraDrive MPB20, Firmware",
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:device:name",
+          "value": "Drive 3 (IndraDrive MPB20)"
+        },
+        {
+          "name": "plcsbom:device:position",
+          "value": "Device 1 (EtherCAT)/3"
+        },
+        {
+          "name": "plcsbom:device:type",
+          "value": "IndraDrive MPB20"
+        },
+        {
+          "name": "plcsbom:firmware:origin",
+          "value": "not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "firmware-not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "order-number-not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "supplier-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "vendor-sbom-missing"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/zelle-synthetisch.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "2b9a79ba1ed077fca06b655bf5e0bf93e1087d5502e926b11747afe4ee305123"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:vendorKey:ProductCode",
+          "value": "0x00242804"
+        },
+        {
+          "name": "plcsbom:vendorKey:RevisionNo",
+          "value": "0x00000003"
+        },
+        {
+          "name": "plcsbom:vendorKey:VendorId",
+          "value": "0x00000024"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-comquent-zelle",
+      "type": "library",
+      "supplier": {
+        "name": "Comquent GmbH"
+      },
+      "manufacturer": {
+        "name": "Comquent GmbH"
+      },
+      "name": "Comquent_Zelle",
+      "version": "1.4.0.0",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "Comquent GmbH"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "Comquent_Zelle,1.4.0.0,Comquent GmbH"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "fixed"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/zelle-synthetisch.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "2b9a79ba1ed077fca06b655bf5e0bf93e1087d5502e926b11747afe4ee305123"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:vendor:origin",
+          "value": "source"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-tc2-mc2",
+      "type": "library",
+      "supplier": {
+        "name": "Beckhoff Automation GmbH"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation GmbH"
+      },
+      "name": "Tc2_MC2",
+      "version": "3.3.52.0",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "Beckhoff Automation GmbH"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "Tc2_MC2"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "redirection"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/zelle-synthetisch.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "2b9a79ba1ed077fca06b655bf5e0bf93e1087d5502e926b11747afe4ee305123"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:vendor:origin",
+          "value": "source"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-tc2-standard",
+      "type": "library",
+      "supplier": {
+        "name": "Beckhoff Automation GmbH"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation GmbH"
+      },
+      "name": "Tc2_Standard",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "Beckhoff Automation GmbH"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "Tc2_Standard"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/zelle-synthetisch.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "2b9a79ba1ed077fca06b655bf5e0bf93e1087d5502e926b11747afe4ee305123"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:vendor:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:version:requested",
+          "value": "*"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-visuinputs",
+      "type": "library",
+      "name": "visuinputs",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "supplier-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "system"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "system_visuinputs"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/zelle-synthetisch.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "2b9a79ba1ed077fca06b655bf5e0bf93e1087d5502e926b11747afe4ee305123"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:version:requested",
+          "value": "3.5.6.0"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-rt",
+      "type": "application",
+      "supplier": {
+        "name": "Beckhoff Automation GmbH & Co. KG"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation GmbH & Co. KG"
+      },
+      "name": "TwinCAT 3 Runtime",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "runtime-version-unknown"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "assumed"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "runtime"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/zelle-synthetisch.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "2b9a79ba1ed077fca06b655bf5e0bf93e1087d5502e926b11747afe4ee305123"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:vendor:origin",
+          "value": "assumed"
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "maschine-xy",
+      "dependsOn": [
+        "roboterzelle-fw-device-1-ethercat-1",
+        "roboterzelle-fw-device-1-ethercat-1-2",
+        "roboterzelle-fw-device-1-ethercat-3",
+        "roboterzelle-lib-comquent-zelle",
+        "roboterzelle-lib-tc2-mc2",
+        "roboterzelle-lib-tc2-standard",
+        "roboterzelle-lib-visuinputs",
+        "roboterzelle-rt"
+      ]
+    },
+    {
+      "ref": "roboterzelle-fw-device-1-ethercat-1",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-fw-device-1-ethercat-1-2",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-fw-device-1-ethercat-3",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-comquent-zelle",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-tc2-mc2",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-tc2-standard",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-visuinputs",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-rt",
+      "dependsOn": []
+    }
+  ],
+  "compositions": [
+    {
+      "aggregate": "complete",
+      "dependencies": [
+        "maschine-xy"
+      ]
+    },
+    {
+      "aggregate": "unknown",
+      "dependencies": [
+        "roboterzelle-fw-device-1-ethercat-1",
+        "roboterzelle-fw-device-1-ethercat-1-2",
+        "roboterzelle-fw-device-1-ethercat-3",
+        "roboterzelle-lib-comquent-zelle",
+        "roboterzelle-lib-tc2-mc2",
+        "roboterzelle-lib-tc2-standard",
+        "roboterzelle-lib-visuinputs",
+        "roboterzelle-rt"
+      ]
+    }
+  ]
+}

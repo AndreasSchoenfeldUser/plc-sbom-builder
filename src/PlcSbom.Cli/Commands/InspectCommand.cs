@@ -5,6 +5,7 @@ using System.Text.Json.Serialization;
 using PlcSbom.Core;
 using PlcSbom.Core.Adapters.Codesys.V35;
 using PlcSbom.Core.Adapters.Studio5000;
+using PlcSbom.Core.Adapters.TwinCat;
 
 namespace PlcSbom.Cli.Commands;
 
@@ -25,7 +26,6 @@ public static class InspectCommand
     /// <summary>Milestone of each adapter whose inspect is not built yet.</summary>
     private static readonly Dictionary<string, string> Pending = new(StringComparer.Ordinal)
     {
-        [AdapterIds.TwinCat] = "M6",
         [AdapterIds.TiaAml] = "M7",
         [AdapterIds.TiaPortal] = "M14",
     };
@@ -44,7 +44,21 @@ public static class InspectCommand
         }
 
         string json;
-        if (adapter == AdapterIds.Studio5000)
+        if (adapter == AdapterIds.TwinCat)
+        {
+            if (!File.Exists(path))
+            {
+                throw new UsageException("SOURCE_NOT_FOUND", $"Die Quelldatei {path} gibt es nicht.");
+            }
+            var content = await File.ReadAllBytesAsync(path).ConfigureAwait(false);
+            json = JsonSerializer.Serialize(new TwinCatInventory(
+                Format: 1,
+                Adapter: AdapterIds.TwinCat,
+                File: path,
+                Sha256: Convert.ToHexStringLower(SHA256.HashData(content)),
+                Project: TwinCatReader.Read(path, content, path)), Json);
+        }
+        else if (adapter == AdapterIds.Studio5000)
         {
             var content = Studio5000Adapter.ReadFile(path);
             json = JsonSerializer.Serialize(new Studio5000Inventory(
@@ -72,4 +86,6 @@ public static class InspectCommand
     private sealed record CodesysInventory(int Format, string Adapter, string Source, string File, string Sha256, PlcOpenProject Project);
 
     private sealed record Studio5000Inventory(int Format, string Adapter, string File, string Sha256, L5xProject Project);
+
+    private sealed record TwinCatInventory(int Format, string Adapter, string File, string Sha256, TwinCatProject Project);
 }

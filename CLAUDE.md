@@ -1,6 +1,6 @@
 # CLAUDE.md: PLC SBOM Builder (`plc-sbom`), Prototyp
 
-> Stand: 31.10.2026 (Meilensteine und CODESYS V2.3/4 ergänzt; M1-Entscheidungen E-007 bis E-011 und TR-Regeln in `docs/regeln-tr03183.md` nachgetragen; M1, M2 und M5 umgesetzt, M3/M4 zurückgestellt (E-016); übrige Fakten Stand 29.10.2026). Grundlage: Produktseite comquent.de/produkte/plc-sbom-builder (Quelltext `src/app/produkte/inhalte.ts` im Website-Repository), der Entwurf `plc-sbom-builder-claude.md` mit der Recherche vom 25.10.2026, das Comquent-Whitepaper „SBOM für SPS-Projekte mit TIA Portal V21“, die Siemens-Openness-Skills (V21) und drei öffentliche AML-Exporte aus TIA V17, V18 und V21 (geprüft am 29.10.2026). Recherchefakten mit Datum 25.10.2026 sind nicht erneut geprüft; Versionen und Normstände vor der Nutzung nachsehen.
+> Stand: 31.10.2026 (Meilensteine und CODESYS V2.3/4 ergänzt; M1-Entscheidungen E-007 bis E-011 und TR-Regeln in `docs/regeln-tr03183.md` nachgetragen; M1, M2, M5 und M6 umgesetzt, M3/M4 zurückgestellt (E-016); übrige Fakten Stand 29.10.2026). Grundlage: Produktseite comquent.de/produkte/plc-sbom-builder (Quelltext `src/app/produkte/inhalte.ts` im Website-Repository), der Entwurf `plc-sbom-builder-claude.md` mit der Recherche vom 25.10.2026, das Comquent-Whitepaper „SBOM für SPS-Projekte mit TIA Portal V21“, die Siemens-Openness-Skills (V21) und drei öffentliche AML-Exporte aus TIA V17, V18 und V21 (geprüft am 29.10.2026). Recherchefakten mit Datum 25.10.2026 sind nicht erneut geprüft; Versionen und Normstände vor der Nutzung nachsehen.
 > Produkt der Comquent GmbH (Industrial DevOps, Puchheim). Schwesterwerkzeuge: `plc-build` (../plc-build-tool), `plc-git-bridge` (../plc-git-bridge).
 
 ## 0. Start
@@ -282,12 +282,13 @@ Beispiel der Produktseite (verkürzt, Zielbild):
 | `<ns>:device:position` | Pfad aus Station, Rack, Steckplatz |
 | `<ns>:device:classification` | `CPU`, `HeadModule` usw., soweit die Quelle es liefert |
 | `<ns>:device:ekey` | Rockwell: elektronische Kodierung des Moduls (`ExactMatch`, `CompatibleModule`, `Disabled`) |
+| `<ns>:device:disabled` | `true`, wenn das Gerät im Projekt deaktiviert ist (TwinCAT: E/A-Gerät `Disabled="true"`) |
 | `<ns>:firmware:version` | Firmware-Stand wie in der Quelle |
 | `<ns>:firmware:origin` | `projected`, `as-found`, `not-in-project`, `unknown` |
 | `<ns>:vendorKey:<name>` | Herstellerschlüssel wie `GSDML`, `VendorId`, `DeviceId`, `ProductCode`, `RevisionNo` |
 | `<ns>:gsdml:softwareRelease` | `SoftwareRelease` aus der GSDML; beschreibt die GSDML, **nicht** die Firmware |
 | `<ns>:library` | Bibliothek eines Bibliothekstyps |
-| `<ns>:library:reference`, `<ns>:library:resolution`, `<ns>:library:company` | CODESYS: Referenz wie im Export (`#SM3_Basic`), Auflösung (`fixed`, `redirection`, `default`, `none`), Herstellerangabe der Referenz |
+| `<ns>:library:reference`, `<ns>:library:resolution`, `<ns>:library:company` | CODESYS und TwinCAT: Referenz wie im Export (`#SM3_Basic`, `Tc2_Standard`), Auflösung (`fixed`, `redirection`, `default`, `none`, bei TwinCAT zusätzlich `indirect`), Herstellerangabe der Referenz |
 | `<ns>:aoi:revisionExtension` | Rockwell: `RevisionExtension` einer Add-On Instruction, nicht Teil der Version |
 | `<ns>:version:requested` | angefragte, nicht aufgelöste Version (`*`, Standardauflösung eines Platzhalters) |
 | `<ns>:gap` | Lückencode, mehrfach möglich |
@@ -320,6 +321,7 @@ Beispiel der Produktseite (verkürzt, Zielbild):
 | `order-number-not-in-project` | Gerät ohne Bestellnummer in Projekt, GSDML bzw. Gerätebeschreibung | Warnung |
 | `supplier-unknown` | Hersteller nicht ermittelbar | Warnung |
 | `device-unassigned` | Gerät gehört zu keiner Station (kein IO-System, nicht in `devices`) | Hinweis |
+| `devices-not-read` | Quelle enthält Geräte, die der Adapter nicht ausliest (TwinCAT: PROFINET-Boxen, E/A-Gerät in eigener Datei) | Warnung |
 | `program-not-read` | Quelle enthält keine Bausteine (`tia-aml`); geschützte Bausteine unbekannt | Hinweis |
 
 Vollständigkeit zusätzlich über `compositions[].aggregate` (`incomplete`, `unknown`), wie TR §8.2 es für die Vollständigkeit der Abhängigkeiten vorsieht.
@@ -413,15 +415,19 @@ Eingang: vollständiger L5X-Export (Studio 5000 „Speichern unter … L5X“), 
 
 ### 5.3 Beckhoff TwinCAT 3: `twincat` (M6)
 
-Eingang: `.tsproj` (oder `.xti`-Dateien) plus `.plcproj` je SPS-Projekt. Ohne Start der Umgebung.
+Eingang: `.tsproj` plus die `.plcproj` je SPS-Projekt, auf die sie verweist (direkt über `PrjFilePath` oder über `_Config/PLC/<File>.xti`). Ohne Start der Umgebung. Eine Datei ohne Wurzel `TcSmProject` endet mit Exit 2 (`NOT_TSPROJ`), eine fehlende verwiesene Datei ebenso (`TWINCAT_FILE_NOT_FOUND`). `plc` entfällt. Umgesetzt mit M6; vollständige Feldtabelle, Regeln und Fixtures in `docs/adapter-twincat.md`, Entscheidungen E-018.
 
 | Datum | Quelle | Hinweis |
 |---|---|---|
-| EtherCAT-Teilnehmer | `Box`-Elemente mit `EtherCAT@VendorId`, `@ProductCode`, `@RevisionNo`, Typname (z. B. `EK1100`) | Hex-Werte (`#x00000002`) normalisieren |
-| Firmware der Klemmen | **nicht im Projekt** | `firmware-not-in-project`; Ist-Stand nur aus dem Feld (CoE 0x100A) |
-| XAE-Version | `TcSmProject@TcVersion` | Engineering-Version, **nicht** Runtime; Runtime → `runtime-version-unknown` |
-| Bibliotheken | `.plcproj`: `PlaceholderReference/DefaultResolution` („Tc2_Standard, * (Beckhoff Automation GmbH)“), feste Version in `PlaceholderResolution/Resolution` | `*` → `version-unresolved` |
-| Antriebe | teils `ProductRevision` (z. B. `AX5203-0000-0214`) | nur übernehmen, wenn vorhanden |
+| EtherCAT-Teilnehmer | `Box`-Elemente rekursiv mit `EtherCAT@VendorId`, `@ProductCode`, `@RevisionNo`, `@Desc` (Kurzbezeichnung, z. B. `EK1100`) | Hex-Werte (`#x00000002`) als `0x00000002` in `vendorKey`; Typname = `Desc`; Position `<Gerät>/<Box-Id>/…`; `VendorId 0x00000002` → `Beckhoff Automation GmbH & Co. KG` mit `vendor:origin = assumed`, andere `supplier-unknown` |
+| Bestellnummer | **nicht im Projekt** | `Desc` ist nicht die Bestellnummer (EK1200 ↔ EK1200-5000) → `order-number-not-in-project` |
+| Firmware der Klemmen | **nicht im Projekt** | `firmware-not-in-project`; `RevisionNo` ist die ESI-Revision; Ist-Stand nur aus dem Feld (CoE 0x100A) |
+| Deaktivierte Geräte | `Device@Disabled` | Teilnehmer bleiben in der SBOM mit `<ns>:device:disabled = true` |
+| Andere Feldbusse, ausgelagerte E/A | `Box/Profinet`, `Device@File` | nicht gelesen → `devices-not-read` an der Station |
+| XAE-Version | `TcSmProject@TcVersion` | Engineering-Version „TwinCAT XAE“, **nicht** Runtime; Komponente „TwinCAT 3 Runtime“ (`assumed`) ohne Version → `runtime-version-unknown` |
+| Bibliotheken | `.plcproj`: `PlaceholderReference/DefaultResolution` („Tc2_Standard, * (Beckhoff Automation GmbH)“), feste Version in `PlaceholderResolution/Resolution`, `LibraryReference@Include` („Tc2_EtherCAT,newest,Beckhoff Automation GmbH“) | `*`, `newest` und Standardauflösung allein → `version-unresolved` (wie E-012); Hersteller `System` ist keiner (E-013) |
+| Netzdaten | `AmsNetId`, `TargetNetId`, `EtherCatAddr`, `BIC`, `Profinet@IPAdd` | **nie übernehmen** |
+| Antriebe | `ProductRevision` | in keiner Fixture belegt, nicht gelesen |
 
 ### 5.4 Siemens TIA Portal V17–V21, AML-Export: `tia-aml` (M7, M8)
 
@@ -908,9 +914,9 @@ Die Adapter-Meilensteine M2 bis M8 und M14 folgen der festgelegten Reihenfolge: 
 | TIA-AML | `github.com/frattam-eng/openess_CIP`, `openess_CIP/CIP_cs_HardwareNetwork.aml` | **TIA V18**, S7-1500, vier ET 200SP mit passiven und firmwarebehafteten Modulen, zwei G120C, sieben IO-System-Links | keine → nur `_local` |
 | TIA-AML | `github.com/JBuschkind/Interoperabilit-tsprojekt`, `Testing-Files/TIA_Export.aml` u. a. | **TIA V21** (`WriterVersion 2100`), S7-1500 CPU 1511-1 PN `V2.8`, PM ohne Firmware-Attribut, Profilschiene mit `***` | keine → nur `_local` |
 | TIA-AML, GSDML | **Comquent-Demo-Projekt** (von Comquent zu liefern) | TIA V21, S7-1500, ET 200SP, ein GSD-Gerät mit weitergabefähiger GSDML, ein Antrieb, ein HMI-Panel, eine LGF-Instanz, ein know-how-geschützter Baustein; als `.zap21` für M14 und als AML-Export für M7/M8 | Comquent-eigen |
-| TwinCAT | `github.com/RWTH-EBC/AixOCAT`, `Examples/HeatPumpTestBenchControl` | | MIT |
-| TwinCAT | `github.com/Roald87/TcBlack`, `github.com/Inxton/TcOpen`, `github.com/Beckhoff/ADS` (`PLC-TestProject`) | | MIT |
-| TwinCAT | `github.com/Beckhoff-USA-Community/SPT_V4_Samples` | | 0BSD |
+| TwinCAT | `github.com/RWTH-EBC/AixOCAT`, `Examples/HeatPumpTestBenchControl` | TwinCAT 3.1.4022, zehn EtherCAT-Teilnehmer, deaktivierter Master (eingecheckt) | MIT |
+| TwinCAT | `github.com/Inxton/TcOpen` (`TcoCognexVision`, `TcoCore`, eingecheckt), `github.com/Roald87/TcBlack`, `github.com/Beckhoff/ADS` (`PLC-TestProject`) | PROFINET-Geräte, `LibraryReference`, mehrere SPS-Projekte | MIT |
+| TwinCAT | `github.com/Beckhoff-USA-Community/SPT_V4_Samples` (`SPT EtherCAT Diagnostics`, eingecheckt) | SPS-Projekt über `_Config/PLC/*.xti` | 0BSD |
 | CODESYS V3.5 | `github.com/ScalABLE40/robin`, `robin_updater/cfg/codesys_project.xml` | V3.5 SP15, Platzhalter mit Standardauflösung (eingecheckt) | Apache-2.0 |
 | CODESYS V3.5 | `github.com/Jake1510/ooip-tutorial-library`, `examples/scripting/Python Scripting/Script Engine Example.xml` | V3.5 SP20, `PlaceholderRedirection` (eingecheckt) | MIT |
 | CODESYS V3.5 | `github.com/kmpm/OSC-MQTT` (Apache-2.0, Bibliotheksprojekt, eingecheckt), `github.com/stefandreyer/I2C-Multiplex` (`*.devdesc.xml`, MIT, vier Dateien eingecheckt; Bestellnummer überall `-`, zwei Kennungen doppelt) | | |

@@ -30,6 +30,27 @@ public sealed class CycloneDxWriterTests
     }
 
     [Fact]
+    public void Station_gap_without_program_and_controller_goes_to_the_machine()
+    {
+        // A TwinCAT station before M9: devices without controller flag, a library, no program.
+        var station = new Station
+        {
+            Name = "Zelle",
+            AdapterId = "twincat",
+            SourcePath = "z.tsproj",
+            Devices = [new Device { TypeName = "EK1100" }],
+            Software = [new SoftwareItem { Kind = SoftwareKind.Library, Name = "Tc2_Standard", Version = "1.0" }],
+            Gaps = [new Gap(GapCatalog.DevicesNotRead, "x")],
+        };
+        var machine = HandModel.Create() with { Stations = [station], UnassignedDevices = [] };
+
+        var bom = Parse(CycloneDxWriter.Write(GapRules.Apply(machine), Options));
+
+        Assert.Contains(("plcsbom:gap", "devices-not-read"), Props(bom["metadata"]!["component"]!.AsObject()));
+        Assert.DoesNotContain(("plcsbom:gap", "devices-not-read"), bom["components"]!.AsArray().OfType<JsonObject>().SelectMany(Props));
+    }
+
+    [Fact]
     public void Output_is_byte_identical_across_runs()
     {
         Assert.Equal(WriteHandModel(), WriteHandModel());

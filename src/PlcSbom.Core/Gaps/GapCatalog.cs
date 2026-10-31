@@ -65,6 +65,7 @@ public static class GapCatalog
     public const string SupplierUnknown = "supplier-unknown";
     public const string CreatorContactUnknown = "creator-contact-unknown";
     public const string DeviceUnassigned = "device-unassigned";
+    public const string DevicesNotRead = "devices-not-read";
     public const string ProgramNotRead = "program-not-read";
     public const string ProgramSourceMissing = "program-source-missing";
     public const string FilePropertiesUnknown = "file-properties-unknown";
@@ -88,6 +89,7 @@ public static class GapCatalog
         new(SupplierUnknown, Severity.Warning, [TrField.Creator], "Der Hersteller ist nicht ermittelbar."),
         new(CreatorContactUnknown, Severity.Warning, [TrField.Creator], "Für den Hersteller ist weder E-Mail-Adresse noch URL bekannt."),
         new(DeviceUnassigned, Severity.Note, [], "Das Gerät gehört zu keiner Station."),
+        new(DevicesNotRead, Severity.Warning, [], "Die Quelle enthält Geräte, die der Adapter nicht ausliest; sie fehlen in der SBOM."),
         new(ProgramNotRead, Severity.Note, [], "Die Quelle enthält keine Bausteine, geschützte Bausteine sind unbekannt."),
         new(ProgramSourceMissing, Severity.Warning, [TrField.Hash], "Für das Anwenderprogramm ist kein Quellverzeichnis angegeben, es gibt keinen Hash."),
         new(FilePropertiesUnknown, Severity.Warning, [TrField.Executable, TrField.Archive, TrField.Structured], "Ob die Komponente ausführbar, ein Archiv oder strukturiert ist, ist nicht bekannt."),

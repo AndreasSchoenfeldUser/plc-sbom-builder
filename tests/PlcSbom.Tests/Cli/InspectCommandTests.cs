@@ -72,6 +72,29 @@ public sealed class InspectCommandTests
     }
 
     [Fact]
+    public async Task Twincat_inventory_matches_the_golden_file()
+    {
+        var fixture = Fixtures.PathOf("twincat/spt-ethercat-diagnostics/SPT EtherCAT Diagnostics.tsproj");
+
+        var (exit, output, error) = await Run("inspect", fixture, "--adapter", "twincat");
+
+        Assert.Equal(ExitCodes.Ok, exit);
+        Assert.Equal("", error);
+        Assert.DoesNotContain("192.168.8.100", output); // AmsNetId, TargetNetId never leave the reader
+        var normalized = output.Replace(fixture.Replace("\\", "\\\\"), "fixtures/twincat/spt-ethercat-diagnostics/SPT EtherCAT Diagnostics.tsproj");
+        Golden.AssertMatches("twincat-spt-ethercat-diagnostics.inspect.json", Encoding.UTF8.GetBytes(normalized));
+    }
+
+    [Fact]
+    public async Task Non_tsproj_file_ends_with_exit_2()
+    {
+        var (exit, _, error) = await Run("inspect", Fixtures.PathOf("codesys/v35/robin-codesys_project.xml"), "--adapter", "twincat");
+
+        Assert.Equal(ExitCodes.Usage, exit);
+        Assert.StartsWith("[NOT_TSPROJ] ", error);
+    }
+
+    [Fact]
     public async Task Non_l5x_file_ends_with_exit_2()
     {
         var (exit, _, error) = await Run("inspect", Fixtures.PathOf("codesys/v35/robin-codesys_project.xml"), "--adapter", "studio5000");

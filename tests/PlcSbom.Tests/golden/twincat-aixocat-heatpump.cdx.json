@@ -1,0 +1,2433 @@
+{
+  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:1a02a05d-7584-5a0b-9e78-e462de8d242a",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-10-31T12:00:00Z",
+    "tools": {
+      "components": [
+        {
+          "type": "application",
+          "manufacturer": {
+            "name": "Comquent GmbH"
+          },
+          "name": "PLC SBOM Builder",
+          "version": "0.1.0"
+        },
+        {
+          "type": "application",
+          "name": "TwinCAT XAE",
+          "version": "3.1.4022.4"
+        }
+      ]
+    },
+    "manufacturer": {
+      "name": "Musterbau GmbH",
+      "contact": [
+        {
+          "email": "sbom@musterbau.example"
+        }
+      ]
+    },
+    "component": {
+      "bom-ref": "maschine-xy",
+      "type": "device",
+      "supplier": {
+        "name": "Musterbau GmbH"
+      },
+      "manufacturer": {
+        "name": "Musterbau GmbH",
+        "contact": [
+          {
+            "email": "sbom@musterbau.example"
+          }
+        ]
+      },
+      "name": "Maschine XY",
+      "version": "R2026.10",
+      "licenses": [
+        {
+          "expression": "LicenseRef-musterbau-proprietary",
+          "acknowledgement": "concluded"
+        }
+      ],
+      "properties": [
+        {
+          "name": "bsi:component:effectiveLicence",
+          "value": "LicenseRef-musterbau-proprietary"
+        },
+        {
+          "name": "plcsbom:git:commit",
+          "value": "a1b2c3d4e5f60718293a4b5c6d7e8f9012345678"
+        },
+        {
+          "name": "plcsbom:logicalComponent",
+          "value": "true"
+        }
+      ]
+    }
+  },
+  "components": [
+    {
+      "bom-ref": "roboterzelle-fw-device-1-ethercat-1",
+      "type": "firmware",
+      "supplier": {
+        "name": "Beckhoff Automation GmbH & Co. KG"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation GmbH & Co. KG"
+      },
+      "name": "EK1100, Firmware",
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:device:disabled",
+          "value": "true"
+        },
+        {
+          "name": "plcsbom:device:name",
+          "value": "Coupler (EK1100)"
+        },
+        {
+          "name": "plcsbom:device:position",
+          "value": "Device 1 (EtherCAT)/1"
+        },
+        {
+          "name": "plcsbom:device:type",
+          "value": "EK1100"
+        },
+        {
+          "name": "plcsbom:device:vendor",
+          "value": "Beckhoff Automation GmbH & Co. KG"
+        },
+        {
+          "name": "plcsbom:device:vendor:origin",
+          "value": "assumed"
+        },
+        {
+          "name": "plcsbom:firmware:origin",
+          "value": "not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "firmware-not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "order-number-not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "vendor-sbom-missing"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:vendorKey:ProductCode",
+          "value": "0x044c2c52"
+        },
+        {
+          "name": "plcsbom:vendorKey:RevisionNo",
+          "value": "0x00120000"
+        },
+        {
+          "name": "plcsbom:vendorKey:VendorId",
+          "value": "0x00000002"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-fw-device-1-ethercat-1-10",
+      "type": "firmware",
+      "supplier": {
+        "name": "Beckhoff Automation GmbH & Co. KG"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation GmbH & Co. KG"
+      },
+      "name": "EL3214, Firmware",
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:device:disabled",
+          "value": "true"
+        },
+        {
+          "name": "plcsbom:device:name",
+          "value": "InpTempSens3wire (EL3214)"
+        },
+        {
+          "name": "plcsbom:device:position",
+          "value": "Device 1 (EtherCAT)/1/10"
+        },
+        {
+          "name": "plcsbom:device:type",
+          "value": "EL3214"
+        },
+        {
+          "name": "plcsbom:device:vendor",
+          "value": "Beckhoff Automation GmbH & Co. KG"
+        },
+        {
+          "name": "plcsbom:device:vendor:origin",
+          "value": "assumed"
+        },
+        {
+          "name": "plcsbom:firmware:origin",
+          "value": "not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "firmware-not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "order-number-not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "vendor-sbom-missing"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:vendorKey:ProductCode",
+          "value": "0x0c8e3052"
+        },
+        {
+          "name": "plcsbom:vendorKey:RevisionNo",
+          "value": "0x00110000"
+        },
+        {
+          "name": "plcsbom:vendorKey:VendorId",
+          "value": "0x00000002"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-fw-device-1-ethercat-1-2",
+      "type": "firmware",
+      "supplier": {
+        "name": "Beckhoff Automation GmbH & Co. KG"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation GmbH & Co. KG"
+      },
+      "name": "EL3064, Firmware",
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:device:disabled",
+          "value": "true"
+        },
+        {
+          "name": "plcsbom:device:name",
+          "value": "InpPressSens (EL3064)"
+        },
+        {
+          "name": "plcsbom:device:position",
+          "value": "Device 1 (EtherCAT)/1/2"
+        },
+        {
+          "name": "plcsbom:device:type",
+          "value": "EL3064"
+        },
+        {
+          "name": "plcsbom:device:vendor",
+          "value": "Beckhoff Automation GmbH & Co. KG"
+        },
+        {
+          "name": "plcsbom:device:vendor:origin",
+          "value": "assumed"
+        },
+        {
+          "name": "plcsbom:firmware:origin",
+          "value": "not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "firmware-not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "order-number-not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "vendor-sbom-missing"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:vendorKey:ProductCode",
+          "value": "0x0bf83052"
+        },
+        {
+          "name": "plcsbom:vendorKey:RevisionNo",
+          "value": "0x00140000"
+        },
+        {
+          "name": "plcsbom:vendorKey:VendorId",
+          "value": "0x00000002"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-fw-device-1-ethercat-1-3",
+      "type": "firmware",
+      "supplier": {
+        "name": "Beckhoff Automation GmbH & Co. KG"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation GmbH & Co. KG"
+      },
+      "name": "EL3204-0200, Firmware",
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:device:disabled",
+          "value": "true"
+        },
+        {
+          "name": "plcsbom:device:name",
+          "value": "InpTempSens1 (EL3204-0200)"
+        },
+        {
+          "name": "plcsbom:device:position",
+          "value": "Device 1 (EtherCAT)/1/3"
+        },
+        {
+          "name": "plcsbom:device:type",
+          "value": "EL3204-0200"
+        },
+        {
+          "name": "plcsbom:device:vendor",
+          "value": "Beckhoff Automation GmbH & Co. KG"
+        },
+        {
+          "name": "plcsbom:device:vendor:origin",
+          "value": "assumed"
+        },
+        {
+          "name": "plcsbom:firmware:origin",
+          "value": "not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "firmware-not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "order-number-not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "vendor-sbom-missing"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:vendorKey:ProductCode",
+          "value": "0x0c843052"
+        },
+        {
+          "name": "plcsbom:vendorKey:RevisionNo",
+          "value": "0x001200c8"
+        },
+        {
+          "name": "plcsbom:vendorKey:VendorId",
+          "value": "0x00000002"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-fw-device-1-ethercat-1-4",
+      "type": "firmware",
+      "supplier": {
+        "name": "Beckhoff Automation GmbH & Co. KG"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation GmbH & Co. KG"
+      },
+      "name": "EL3204-0200, Firmware",
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:device:disabled",
+          "value": "true"
+        },
+        {
+          "name": "plcsbom:device:name",
+          "value": "InpTempSens2 (EL3204-0200)"
+        },
+        {
+          "name": "plcsbom:device:position",
+          "value": "Device 1 (EtherCAT)/1/4"
+        },
+        {
+          "name": "plcsbom:device:type",
+          "value": "EL3204-0200"
+        },
+        {
+          "name": "plcsbom:device:vendor",
+          "value": "Beckhoff Automation GmbH & Co. KG"
+        },
+        {
+          "name": "plcsbom:device:vendor:origin",
+          "value": "assumed"
+        },
+        {
+          "name": "plcsbom:firmware:origin",
+          "value": "not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "firmware-not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "order-number-not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "vendor-sbom-missing"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:vendorKey:ProductCode",
+          "value": "0x0c843052"
+        },
+        {
+          "name": "plcsbom:vendorKey:RevisionNo",
+          "value": "0x001200c8"
+        },
+        {
+          "name": "plcsbom:vendorKey:VendorId",
+          "value": "0x00000002"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-fw-device-1-ethercat-1-5",
+      "type": "firmware",
+      "supplier": {
+        "name": "Beckhoff Automation GmbH & Co. KG"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation GmbH & Co. KG"
+      },
+      "name": "EL3204-0200, Firmware",
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:device:disabled",
+          "value": "true"
+        },
+        {
+          "name": "plcsbom:device:name",
+          "value": "InpTempSens3 (EL3204-0200)"
+        },
+        {
+          "name": "plcsbom:device:position",
+          "value": "Device 1 (EtherCAT)/1/5"
+        },
+        {
+          "name": "plcsbom:device:type",
+          "value": "EL3204-0200"
+        },
+        {
+          "name": "plcsbom:device:vendor",
+          "value": "Beckhoff Automation GmbH & Co. KG"
+        },
+        {
+          "name": "plcsbom:device:vendor:origin",
+          "value": "assumed"
+        },
+        {
+          "name": "plcsbom:firmware:origin",
+          "value": "not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "firmware-not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "order-number-not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "vendor-sbom-missing"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:vendorKey:ProductCode",
+          "value": "0x0c843052"
+        },
+        {
+          "name": "plcsbom:vendorKey:RevisionNo",
+          "value": "0x001200c8"
+        },
+        {
+          "name": "plcsbom:vendorKey:VendorId",
+          "value": "0x00000002"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-fw-device-1-ethercat-1-6",
+      "type": "firmware",
+      "supplier": {
+        "name": "Beckhoff Automation GmbH & Co. KG"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation GmbH & Co. KG"
+      },
+      "name": "EL3403-0010, Firmware",
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:device:disabled",
+          "value": "true"
+        },
+        {
+          "name": "plcsbom:device:name",
+          "value": "InpPowMeas (EL3403-0010)"
+        },
+        {
+          "name": "plcsbom:device:position",
+          "value": "Device 1 (EtherCAT)/1/6"
+        },
+        {
+          "name": "plcsbom:device:type",
+          "value": "EL3403-0010"
+        },
+        {
+          "name": "plcsbom:device:vendor",
+          "value": "Beckhoff Automation GmbH & Co. KG"
+        },
+        {
+          "name": "plcsbom:device:vendor:origin",
+          "value": "assumed"
+        },
+        {
+          "name": "plcsbom:firmware:origin",
+          "value": "not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "firmware-not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "order-number-not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "vendor-sbom-missing"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:vendorKey:ProductCode",
+          "value": "0x0d4b3052"
+        },
+        {
+          "name": "plcsbom:vendorKey:RevisionNo",
+          "value": "0x0018000a"
+        },
+        {
+          "name": "plcsbom:vendorKey:VendorId",
+          "value": "0x00000002"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-fw-device-1-ethercat-1-7",
+      "type": "firmware",
+      "supplier": {
+        "name": "Beckhoff Automation GmbH & Co. KG"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation GmbH & Co. KG"
+      },
+      "name": "EL4004, Firmware",
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:device:disabled",
+          "value": "true"
+        },
+        {
+          "name": "plcsbom:device:name",
+          "value": "AnalogOutp (EL4004)"
+        },
+        {
+          "name": "plcsbom:device:position",
+          "value": "Device 1 (EtherCAT)/1/7"
+        },
+        {
+          "name": "plcsbom:device:type",
+          "value": "EL4004"
+        },
+        {
+          "name": "plcsbom:device:vendor",
+          "value": "Beckhoff Automation GmbH & Co. KG"
+        },
+        {
+          "name": "plcsbom:device:vendor:origin",
+          "value": "assumed"
+        },
+        {
+          "name": "plcsbom:firmware:origin",
+          "value": "not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "firmware-not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "order-number-not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "vendor-sbom-missing"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:vendorKey:ProductCode",
+          "value": "0x0fa43052"
+        },
+        {
+          "name": "plcsbom:vendorKey:RevisionNo",
+          "value": "0x00140000"
+        },
+        {
+          "name": "plcsbom:vendorKey:VendorId",
+          "value": "0x00000002"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-fw-device-1-ethercat-1-8",
+      "type": "firmware",
+      "supplier": {
+        "name": "Beckhoff Automation GmbH & Co. KG"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation GmbH & Co. KG"
+      },
+      "name": "EL2652, Firmware",
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:device:disabled",
+          "value": "true"
+        },
+        {
+          "name": "plcsbom:device:name",
+          "value": "OutpSwitchValv (EL2652)"
+        },
+        {
+          "name": "plcsbom:device:position",
+          "value": "Device 1 (EtherCAT)/1/8"
+        },
+        {
+          "name": "plcsbom:device:type",
+          "value": "EL2652"
+        },
+        {
+          "name": "plcsbom:device:vendor",
+          "value": "Beckhoff Automation GmbH & Co. KG"
+        },
+        {
+          "name": "plcsbom:device:vendor:origin",
+          "value": "assumed"
+        },
+        {
+          "name": "plcsbom:firmware:origin",
+          "value": "not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "firmware-not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "order-number-not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "vendor-sbom-missing"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:vendorKey:ProductCode",
+          "value": "0x0a5c3052"
+        },
+        {
+          "name": "plcsbom:vendorKey:RevisionNo",
+          "value": "0x00120000"
+        },
+        {
+          "name": "plcsbom:vendorKey:VendorId",
+          "value": "0x00000002"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-fw-device-1-ethercat-1-9",
+      "type": "firmware",
+      "supplier": {
+        "name": "Beckhoff Automation GmbH & Co. KG"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation GmbH & Co. KG"
+      },
+      "name": "EL2622, Firmware",
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:device:disabled",
+          "value": "true"
+        },
+        {
+          "name": "plcsbom:device:name",
+          "value": "OutpCont (EL2622)"
+        },
+        {
+          "name": "plcsbom:device:position",
+          "value": "Device 1 (EtherCAT)/1/9"
+        },
+        {
+          "name": "plcsbom:device:type",
+          "value": "EL2622"
+        },
+        {
+          "name": "plcsbom:device:vendor",
+          "value": "Beckhoff Automation GmbH & Co. KG"
+        },
+        {
+          "name": "plcsbom:device:vendor:origin",
+          "value": "assumed"
+        },
+        {
+          "name": "plcsbom:firmware:origin",
+          "value": "not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "firmware-not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "order-number-not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "vendor-sbom-missing"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:vendorKey:ProductCode",
+          "value": "0x0a3e3052"
+        },
+        {
+          "name": "plcsbom:vendorKey:RevisionNo",
+          "value": "0x00120000"
+        },
+        {
+          "name": "plcsbom:vendorKey:VendorId",
+          "value": "0x00000002"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-tc2-standard",
+      "type": "library",
+      "supplier": {
+        "name": "Beckhoff Automation GmbH"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation GmbH"
+      },
+      "name": "Tc2_Standard",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "Beckhoff Automation GmbH"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "Tc2_Standard"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:vendor:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:version:requested",
+          "value": "*"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-tc2-system",
+      "type": "library",
+      "supplier": {
+        "name": "Beckhoff Automation GmbH"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation GmbH"
+      },
+      "name": "Tc2_System",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "Beckhoff Automation GmbH"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "Tc2_System"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:vendor:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:version:requested",
+          "value": "*"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-tc2-utilities",
+      "type": "library",
+      "supplier": {
+        "name": "Beckhoff Automation GmbH"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation GmbH"
+      },
+      "name": "Tc2_Utilities",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "Beckhoff Automation GmbH"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "Tc2_Utilities"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:vendor:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:version:requested",
+          "value": "*"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-tc3-module",
+      "type": "library",
+      "supplier": {
+        "name": "Beckhoff Automation GmbH"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation GmbH"
+      },
+      "name": "Tc3_Module",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "Beckhoff Automation GmbH"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "Tc3_Module"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:vendor:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:version:requested",
+          "value": "*"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-visudialogs",
+      "type": "library",
+      "name": "VisuDialogs",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "supplier-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "System"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "VisuDialogs"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:version:requested",
+          "value": "*"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-visuelem3dpath",
+      "type": "library",
+      "name": "VisuElem3DPath",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "supplier-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "System"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "System_VisuElem3DPath"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:version:requested",
+          "value": "3.5.6.0"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-visuelemmeter",
+      "type": "library",
+      "name": "VisuElemMeter",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "supplier-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "System"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "System_VisuElemMeter"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:version:requested",
+          "value": "3.5.6.0"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-visuelems",
+      "type": "library",
+      "name": "VisuElems",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "supplier-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "System"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "System_VisuElems"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:version:requested",
+          "value": "3.5.6.10"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-visuelemsdatetime",
+      "type": "library",
+      "name": "VisuElemsDateTime",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "supplier-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "System"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "System_VisuElemsDateTime"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:version:requested",
+          "value": "3.5.6.0"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-visuelemsspecialcontrols",
+      "type": "library",
+      "name": "VisuElemsSpecialControls",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "supplier-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "System"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "System_VisuElemsSpecialControls"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:version:requested",
+          "value": "3.5.6.0"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-visuelemswincontrols",
+      "type": "library",
+      "name": "VisuElemsWinControls",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "supplier-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "System"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "System_VisuElemsWinControls"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:version:requested",
+          "value": "3.5.6.0"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-visuelemtexteditor",
+      "type": "library",
+      "name": "VisuElemTextEditor",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "supplier-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "System"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "System_VisuElemTextEditor"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:version:requested",
+          "value": "3.5.6.0"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-visuinputs",
+      "type": "library",
+      "name": "visuinputs",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "supplier-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "system"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "system_visuinputs"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:version:requested",
+          "value": "3.5.6.0"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-visunativecontrol",
+      "type": "library",
+      "name": "VisuNativeControl",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "supplier-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "System"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "System_VisuNativeControl"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:version:requested",
+          "value": "3.5.6.0"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-rt",
+      "type": "application",
+      "supplier": {
+        "name": "Beckhoff Automation GmbH & Co. KG"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation GmbH & Co. KG"
+      },
+      "name": "TwinCAT 3 Runtime",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "runtime-version-unknown"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "assumed"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "runtime"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:vendor:origin",
+          "value": "assumed"
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "maschine-xy",
+      "dependsOn": [
+        "roboterzelle-fw-device-1-ethercat-1",
+        "roboterzelle-fw-device-1-ethercat-1-10",
+        "roboterzelle-fw-device-1-ethercat-1-2",
+        "roboterzelle-fw-device-1-ethercat-1-3",
+        "roboterzelle-fw-device-1-ethercat-1-4",
+        "roboterzelle-fw-device-1-ethercat-1-5",
+        "roboterzelle-fw-device-1-ethercat-1-6",
+        "roboterzelle-fw-device-1-ethercat-1-7",
+        "roboterzelle-fw-device-1-ethercat-1-8",
+        "roboterzelle-fw-device-1-ethercat-1-9",
+        "roboterzelle-lib-tc2-standard",
+        "roboterzelle-lib-tc2-system",
+        "roboterzelle-lib-tc2-utilities",
+        "roboterzelle-lib-tc3-module",
+        "roboterzelle-lib-visudialogs",
+        "roboterzelle-lib-visuelem3dpath",
+        "roboterzelle-lib-visuelemmeter",
+        "roboterzelle-lib-visuelems",
+        "roboterzelle-lib-visuelemsdatetime",
+        "roboterzelle-lib-visuelemsspecialcontrols",
+        "roboterzelle-lib-visuelemswincontrols",
+        "roboterzelle-lib-visuelemtexteditor",
+        "roboterzelle-lib-visuinputs",
+        "roboterzelle-lib-visunativecontrol",
+        "roboterzelle-rt"
+      ]
+    },
+    {
+      "ref": "roboterzelle-fw-device-1-ethercat-1",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-fw-device-1-ethercat-1-10",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-fw-device-1-ethercat-1-2",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-fw-device-1-ethercat-1-3",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-fw-device-1-ethercat-1-4",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-fw-device-1-ethercat-1-5",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-fw-device-1-ethercat-1-6",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-fw-device-1-ethercat-1-7",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-fw-device-1-ethercat-1-8",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-fw-device-1-ethercat-1-9",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-tc2-standard",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-tc2-system",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-tc2-utilities",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-tc3-module",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-visudialogs",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-visuelem3dpath",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-visuelemmeter",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-visuelems",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-visuelemsdatetime",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-visuelemsspecialcontrols",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-visuelemswincontrols",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-visuelemtexteditor",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-visuinputs",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-visunativecontrol",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-rt",
+      "dependsOn": []
+    }
+  ],
+  "compositions": [
+    {
+      "aggregate": "complete",
+      "dependencies": [
+        "maschine-xy"
+      ]
+    },
+    {
+      "aggregate": "unknown",
+      "dependencies": [
+        "roboterzelle-fw-device-1-ethercat-1",
+        "roboterzelle-fw-device-1-ethercat-1-10",
+        "roboterzelle-fw-device-1-ethercat-1-2",
+        "roboterzelle-fw-device-1-ethercat-1-3",
+        "roboterzelle-fw-device-1-ethercat-1-4",
+        "roboterzelle-fw-device-1-ethercat-1-5",
+        "roboterzelle-fw-device-1-ethercat-1-6",
+        "roboterzelle-fw-device-1-ethercat-1-7",
+        "roboterzelle-fw-device-1-ethercat-1-8",
+        "roboterzelle-fw-device-1-ethercat-1-9",
+        "roboterzelle-lib-tc2-standard",
+        "roboterzelle-lib-tc2-system",
+        "roboterzelle-lib-tc2-utilities",
+        "roboterzelle-lib-tc3-module",
+        "roboterzelle-lib-visudialogs",
+        "roboterzelle-lib-visuelem3dpath",
+        "roboterzelle-lib-visuelemmeter",
+        "roboterzelle-lib-visuelems",
+        "roboterzelle-lib-visuelemsdatetime",
+        "roboterzelle-lib-visuelemsspecialcontrols",
+        "roboterzelle-lib-visuelemswincontrols",
+        "roboterzelle-lib-visuelemtexteditor",
+        "roboterzelle-lib-visuinputs",
+        "roboterzelle-lib-visunativecontrol",
+        "roboterzelle-rt"
+      ]
+    }
+  ]
+}

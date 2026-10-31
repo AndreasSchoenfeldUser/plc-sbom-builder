@@ -1,0 +1,910 @@
+{
+  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:1a02a05d-7584-5a0b-9e78-e462de8d242a",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-10-31T12:00:00Z",
+    "tools": {
+      "components": [
+        {
+          "type": "application",
+          "manufacturer": {
+            "name": "Comquent GmbH"
+          },
+          "name": "PLC SBOM Builder",
+          "version": "0.1.0"
+        },
+        {
+          "type": "application",
+          "name": "TwinCAT XAE",
+          "version": "3.1.4024.55"
+        }
+      ]
+    },
+    "manufacturer": {
+      "name": "Musterbau GmbH",
+      "contact": [
+        {
+          "email": "sbom@musterbau.example"
+        }
+      ]
+    },
+    "component": {
+      "bom-ref": "maschine-xy",
+      "type": "device",
+      "supplier": {
+        "name": "Musterbau GmbH"
+      },
+      "manufacturer": {
+        "name": "Musterbau GmbH",
+        "contact": [
+          {
+            "email": "sbom@musterbau.example"
+          }
+        ]
+      },
+      "name": "Maschine XY",
+      "version": "R2026.10",
+      "licenses": [
+        {
+          "expression": "LicenseRef-musterbau-proprietary",
+          "acknowledgement": "concluded"
+        }
+      ],
+      "properties": [
+        {
+          "name": "bsi:component:effectiveLicence",
+          "value": "LicenseRef-musterbau-proprietary"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "devices-not-read"
+        },
+        {
+          "name": "plcsbom:git:commit",
+          "value": "a1b2c3d4e5f60718293a4b5c6d7e8f9012345678"
+        },
+        {
+          "name": "plcsbom:logicalComponent",
+          "value": "true"
+        }
+      ]
+    }
+  },
+  "components": [
+    {
+      "bom-ref": "roboterzelle-lib-tc2-standard",
+      "type": "library",
+      "supplier": {
+        "name": "Beckhoff Automation GmbH"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation GmbH"
+      },
+      "name": "Tc2_Standard",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "Beckhoff Automation GmbH"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "Tc2_Standard"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/XAETcoCognexVision.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "c487bb8d5189bc8f423fa7702b5d69735f33cc328667966f8a66763c64018eda"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:vendor:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:version:requested",
+          "value": "*"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-tc2-system",
+      "type": "library",
+      "supplier": {
+        "name": "Beckhoff Automation GmbH"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation GmbH"
+      },
+      "name": "Tc2_System",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "Beckhoff Automation GmbH"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "Tc2_System"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/XAETcoCognexVision.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "c487bb8d5189bc8f423fa7702b5d69735f33cc328667966f8a66763c64018eda"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:vendor:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:version:requested",
+          "value": "*"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-tc3-module",
+      "type": "library",
+      "supplier": {
+        "name": "Beckhoff Automation GmbH"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation GmbH"
+      },
+      "name": "Tc3_Module",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "Beckhoff Automation GmbH"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "Tc3_Module"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/XAETcoCognexVision.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "c487bb8d5189bc8f423fa7702b5d69735f33cc328667966f8a66763c64018eda"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:vendor:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:version:requested",
+          "value": "*"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-tcoabstractions",
+      "type": "library",
+      "supplier": {
+        "name": "Vortex.Library"
+      },
+      "manufacturer": {
+        "name": "Vortex.Library"
+      },
+      "name": "TcoAbstractions",
+      "version": "0.6.0.913",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "Vortex.Library"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "TcoAbstractions"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "redirection"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/XAETcoCognexVision.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "c487bb8d5189bc8f423fa7702b5d69735f33cc328667966f8a66763c64018eda"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:vendor:origin",
+          "value": "source"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-tcocognexvision",
+      "type": "library",
+      "supplier": {
+        "name": "Vortex.Library"
+      },
+      "manufacturer": {
+        "name": "Vortex.Library"
+      },
+      "name": "TcoCognexVision",
+      "version": "0.6.0.913",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "Vortex.Library"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "TcoCognexVision"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "redirection"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/XAETcoCognexVision.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "c487bb8d5189bc8f423fa7702b5d69735f33cc328667966f8a66763c64018eda"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:vendor:origin",
+          "value": "source"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-tcocore",
+      "type": "library",
+      "supplier": {
+        "name": "Vortex.Library"
+      },
+      "manufacturer": {
+        "name": "Vortex.Library"
+      },
+      "name": "TcoCore",
+      "version": "0.6.0.913",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "Vortex.Library"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "TcoCore"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "redirection"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/XAETcoCognexVision.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "c487bb8d5189bc8f423fa7702b5d69735f33cc328667966f8a66763c64018eda"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:vendor:origin",
+          "value": "source"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-tcoinspectors",
+      "type": "library",
+      "supplier": {
+        "name": "Vortex.Library"
+      },
+      "manufacturer": {
+        "name": "Vortex.Library"
+      },
+      "name": "TcoInspectors",
+      "version": "0.6.0.913",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "Vortex.Library"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "TcoInspectors"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "redirection"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/XAETcoCognexVision.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "c487bb8d5189bc8f423fa7702b5d69735f33cc328667966f8a66763c64018eda"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:vendor:origin",
+          "value": "source"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-tcoio",
+      "type": "library",
+      "supplier": {
+        "name": "Vortex.Library"
+      },
+      "manufacturer": {
+        "name": "Vortex.Library"
+      },
+      "name": "TcoIo",
+      "version": "0.6.0.913",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "Vortex.Library"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "TcoIo"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "redirection"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/XAETcoCognexVision.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "c487bb8d5189bc8f423fa7702b5d69735f33cc328667966f8a66763c64018eda"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:vendor:origin",
+          "value": "source"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-tcoutilities",
+      "type": "library",
+      "supplier": {
+        "name": "Vortex.Library"
+      },
+      "manufacturer": {
+        "name": "Vortex.Library"
+      },
+      "name": "TcoUtilities",
+      "version": "0.6.0.913",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "Vortex.Library"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "TcoUtilities"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "redirection"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/XAETcoCognexVision.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "c487bb8d5189bc8f423fa7702b5d69735f33cc328667966f8a66763c64018eda"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:vendor:origin",
+          "value": "source"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-rt",
+      "type": "application",
+      "supplier": {
+        "name": "Beckhoff Automation GmbH & Co. KG"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation GmbH & Co. KG"
+      },
+      "name": "TwinCAT 3 Runtime",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "runtime-version-unknown"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "assumed"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "runtime"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/XAETcoCognexVision.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "c487bb8d5189bc8f423fa7702b5d69735f33cc328667966f8a66763c64018eda"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:vendor:origin",
+          "value": "assumed"
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "maschine-xy",
+      "dependsOn": [
+        "roboterzelle-lib-tc2-standard",
+        "roboterzelle-lib-tc2-system",
+        "roboterzelle-lib-tc3-module",
+        "roboterzelle-lib-tcoabstractions",
+        "roboterzelle-lib-tcocognexvision",
+        "roboterzelle-lib-tcocore",
+        "roboterzelle-lib-tcoinspectors",
+        "roboterzelle-lib-tcoio",
+        "roboterzelle-lib-tcoutilities",
+        "roboterzelle-rt"
+      ]
+    },
+    {
+      "ref": "roboterzelle-lib-tc2-standard",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-tc2-system",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-tc3-module",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-tcoabstractions",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-tcocognexvision",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-tcocore",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-tcoinspectors",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-tcoio",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-tcoutilities",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-rt",
+      "dependsOn": []
+    }
+  ],
+  "compositions": [
+    {
+      "aggregate": "complete",
+      "dependencies": [
+        "maschine-xy"
+      ]
+    },
+    {
+      "aggregate": "unknown",
+      "dependencies": [
+        "roboterzelle-lib-tc2-standard",
+        "roboterzelle-lib-tc2-system",
+        "roboterzelle-lib-tc3-module",
+        "roboterzelle-lib-tcoabstractions",
+        "roboterzelle-lib-tcocognexvision",
+        "roboterzelle-lib-tcocore",
+        "roboterzelle-lib-tcoinspectors",
+        "roboterzelle-lib-tcoio",
+        "roboterzelle-lib-tcoutilities",
+        "roboterzelle-rt"
+      ]
+    }
+  ]
+}

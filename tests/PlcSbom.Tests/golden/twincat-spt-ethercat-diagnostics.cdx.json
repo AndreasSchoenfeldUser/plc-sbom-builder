@@ -1,0 +1,1816 @@
+{
+  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:1a02a05d-7584-5a0b-9e78-e462de8d242a",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-10-31T12:00:00Z",
+    "tools": {
+      "components": [
+        {
+          "type": "application",
+          "manufacturer": {
+            "name": "Comquent GmbH"
+          },
+          "name": "PLC SBOM Builder",
+          "version": "0.1.0"
+        },
+        {
+          "type": "application",
+          "name": "TwinCAT XAE",
+          "version": "3.1.4026.24"
+        }
+      ]
+    },
+    "manufacturer": {
+      "name": "Musterbau GmbH",
+      "contact": [
+        {
+          "email": "sbom@musterbau.example"
+        }
+      ]
+    },
+    "component": {
+      "bom-ref": "maschine-xy",
+      "type": "device",
+      "supplier": {
+        "name": "Musterbau GmbH"
+      },
+      "manufacturer": {
+        "name": "Musterbau GmbH",
+        "contact": [
+          {
+            "email": "sbom@musterbau.example"
+          }
+        ]
+      },
+      "name": "Maschine XY",
+      "version": "R2026.10",
+      "licenses": [
+        {
+          "expression": "LicenseRef-musterbau-proprietary",
+          "acknowledgement": "concluded"
+        }
+      ],
+      "properties": [
+        {
+          "name": "bsi:component:effectiveLicence",
+          "value": "LicenseRef-musterbau-proprietary"
+        },
+        {
+          "name": "plcsbom:git:commit",
+          "value": "a1b2c3d4e5f60718293a4b5c6d7e8f9012345678"
+        },
+        {
+          "name": "plcsbom:logicalComponent",
+          "value": "true"
+        }
+      ]
+    }
+  },
+  "components": [
+    {
+      "bom-ref": "roboterzelle-fw-device-1-ethercat-1",
+      "type": "firmware",
+      "supplier": {
+        "name": "Beckhoff Automation GmbH & Co. KG"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation GmbH & Co. KG"
+      },
+      "name": "EK1100, Firmware",
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:device:name",
+          "value": "Term 1 (EK1100)"
+        },
+        {
+          "name": "plcsbom:device:position",
+          "value": "Device 1 (EtherCAT)/1"
+        },
+        {
+          "name": "plcsbom:device:type",
+          "value": "EK1100"
+        },
+        {
+          "name": "plcsbom:device:vendor",
+          "value": "Beckhoff Automation GmbH & Co. KG"
+        },
+        {
+          "name": "plcsbom:device:vendor:origin",
+          "value": "assumed"
+        },
+        {
+          "name": "plcsbom:firmware:origin",
+          "value": "not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "firmware-not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "order-number-not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "vendor-sbom-missing"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/SPT EtherCAT Diagnostics.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "225630ab0ee3d008e41fc7923e922dfdf8b8e5b652a36a5f0582e518d9984813"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:vendorKey:ProductCode",
+          "value": "0x044c2c52"
+        },
+        {
+          "name": "plcsbom:vendorKey:RevisionNo",
+          "value": "0x00120000"
+        },
+        {
+          "name": "plcsbom:vendorKey:VendorId",
+          "value": "0x00000002"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-fw-device-1-ethercat-1-2",
+      "type": "firmware",
+      "supplier": {
+        "name": "Beckhoff Automation GmbH & Co. KG"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation GmbH & Co. KG"
+      },
+      "name": "EL6910, Firmware",
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:device:name",
+          "value": "Term 2 (EL6910)"
+        },
+        {
+          "name": "plcsbom:device:position",
+          "value": "Device 1 (EtherCAT)/1/2"
+        },
+        {
+          "name": "plcsbom:device:type",
+          "value": "EL6910"
+        },
+        {
+          "name": "plcsbom:device:vendor",
+          "value": "Beckhoff Automation GmbH & Co. KG"
+        },
+        {
+          "name": "plcsbom:device:vendor:origin",
+          "value": "assumed"
+        },
+        {
+          "name": "plcsbom:firmware:origin",
+          "value": "not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "firmware-not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "order-number-not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "vendor-sbom-missing"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/SPT EtherCAT Diagnostics.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "225630ab0ee3d008e41fc7923e922dfdf8b8e5b652a36a5f0582e518d9984813"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:vendorKey:ProductCode",
+          "value": "0x1afe3052"
+        },
+        {
+          "name": "plcsbom:vendorKey:RevisionNo",
+          "value": "0x00150000"
+        },
+        {
+          "name": "plcsbom:vendorKey:VendorId",
+          "value": "0x00000002"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-fw-device-1-ethercat-1-9",
+      "type": "firmware",
+      "supplier": {
+        "name": "Beckhoff Automation GmbH & Co. KG"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation GmbH & Co. KG"
+      },
+      "name": "EL9011, Firmware",
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:device:name",
+          "value": "Term 9 (EL9011)"
+        },
+        {
+          "name": "plcsbom:device:position",
+          "value": "Device 1 (EtherCAT)/1/9"
+        },
+        {
+          "name": "plcsbom:device:type",
+          "value": "EL9011"
+        },
+        {
+          "name": "plcsbom:device:vendor",
+          "value": "Beckhoff Automation GmbH & Co. KG"
+        },
+        {
+          "name": "plcsbom:device:vendor:origin",
+          "value": "assumed"
+        },
+        {
+          "name": "plcsbom:firmware:origin",
+          "value": "not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "firmware-not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "order-number-not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "vendor-sbom-missing"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/SPT EtherCAT Diagnostics.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "225630ab0ee3d008e41fc7923e922dfdf8b8e5b652a36a5f0582e518d9984813"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:vendorKey:ProductCode",
+          "value": "0x23333050"
+        },
+        {
+          "name": "plcsbom:vendorKey:VendorId",
+          "value": "0x00000002"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-spt-base-types",
+      "type": "library",
+      "supplier": {
+        "name": "Beckhoff Automation LLC"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation LLC"
+      },
+      "name": "SPT Base Types",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "Beckhoff Automation LLC"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "SPT Base Types"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/SPT EtherCAT Diagnostics.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "225630ab0ee3d008e41fc7923e922dfdf8b8e5b652a36a5f0582e518d9984813"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:vendor:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:version:requested",
+          "value": "*"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-spt-ethercat",
+      "type": "library",
+      "supplier": {
+        "name": "Beckhoff Automation LLC"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation LLC"
+      },
+      "name": "SPT EtherCat",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "Beckhoff Automation LLC"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "SPT EtherCat"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/SPT EtherCAT Diagnostics.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "225630ab0ee3d008e41fc7923e922dfdf8b8e5b652a36a5f0582e518d9984813"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:vendor:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:version:requested",
+          "value": "*"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-spt-event-logger",
+      "type": "library",
+      "supplier": {
+        "name": "Beckhoff Automation LLC"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation LLC"
+      },
+      "name": "SPT Event Logger",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "Beckhoff Automation LLC"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "SPT Event Logger"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/SPT EtherCAT Diagnostics.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "225630ab0ee3d008e41fc7923e922dfdf8b8e5b652a36a5f0582e518d9984813"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:vendor:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:version:requested",
+          "value": "*"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-tc2-ethercat",
+      "type": "library",
+      "supplier": {
+        "name": "Beckhoff Automation GmbH"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation GmbH"
+      },
+      "name": "Tc2_EtherCAT",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "Beckhoff Automation GmbH"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "Tc2_EtherCAT"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/SPT EtherCAT Diagnostics.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "225630ab0ee3d008e41fc7923e922dfdf8b8e5b652a36a5f0582e518d9984813"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:vendor:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:version:requested",
+          "value": "*"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-tc2-standard",
+      "type": "library",
+      "supplier": {
+        "name": "Beckhoff Automation GmbH"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation GmbH"
+      },
+      "name": "Tc2_Standard",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "Beckhoff Automation GmbH"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "Tc2_Standard"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/SPT EtherCAT Diagnostics.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "225630ab0ee3d008e41fc7923e922dfdf8b8e5b652a36a5f0582e518d9984813"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:vendor:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:version:requested",
+          "value": "*"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-tc2-system",
+      "type": "library",
+      "supplier": {
+        "name": "Beckhoff Automation GmbH"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation GmbH"
+      },
+      "name": "Tc2_System",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "Beckhoff Automation GmbH"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "Tc2_System"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/SPT EtherCAT Diagnostics.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "225630ab0ee3d008e41fc7923e922dfdf8b8e5b652a36a5f0582e518d9984813"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:vendor:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:version:requested",
+          "value": "*"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-tc3-eventlogger",
+      "type": "library",
+      "supplier": {
+        "name": "Beckhoff Automation GmbH"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation GmbH"
+      },
+      "name": "Tc3_EventLogger",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "Beckhoff Automation GmbH"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "Tc3_EventLogger"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/SPT EtherCAT Diagnostics.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "225630ab0ee3d008e41fc7923e922dfdf8b8e5b652a36a5f0582e518d9984813"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:vendor:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:version:requested",
+          "value": "*"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-tc3-module",
+      "type": "library",
+      "supplier": {
+        "name": "Beckhoff Automation GmbH"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation GmbH"
+      },
+      "name": "Tc3_Module",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "Beckhoff Automation GmbH"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "Tc3_Module"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/SPT EtherCAT Diagnostics.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "225630ab0ee3d008e41fc7923e922dfdf8b8e5b652a36a5f0582e518d9984813"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:vendor:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:version:requested",
+          "value": "*"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-tc3-packml-v3",
+      "type": "library",
+      "supplier": {
+        "name": "Beckhoff Automation GmbH"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation GmbH"
+      },
+      "name": "Tc3_PackML_V3",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "Beckhoff Automation GmbH"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "Tc3_PackML_V3"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/SPT EtherCAT Diagnostics.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "225630ab0ee3d008e41fc7923e922dfdf8b8e5b652a36a5f0582e518d9984813"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:vendor:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:version:requested",
+          "value": "*"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-visuelemmeter",
+      "type": "library",
+      "name": "VisuElemMeter",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "supplier-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "System"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "System_VisuElemMeter"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/SPT EtherCAT Diagnostics.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "225630ab0ee3d008e41fc7923e922dfdf8b8e5b652a36a5f0582e518d9984813"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:version:requested",
+          "value": "4.7.0.0"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-visuelems",
+      "type": "library",
+      "name": "VisuElems",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "supplier-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "System"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "System_VisuElems"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/SPT EtherCAT Diagnostics.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "225630ab0ee3d008e41fc7923e922dfdf8b8e5b652a36a5f0582e518d9984813"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:version:requested",
+          "value": "4.8.0.0"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-visuelemsspecialcontrols",
+      "type": "library",
+      "name": "VisuElemsSpecialControls",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "supplier-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "System"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "System_VisuElemsSpecialControls"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/SPT EtherCAT Diagnostics.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "225630ab0ee3d008e41fc7923e922dfdf8b8e5b652a36a5f0582e518d9984813"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:version:requested",
+          "value": "4.7.0.0"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-visuelemswincontrols",
+      "type": "library",
+      "name": "VisuElemsWinControls",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "supplier-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "System"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "System_VisuElemsWinControls"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/SPT EtherCAT Diagnostics.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "225630ab0ee3d008e41fc7923e922dfdf8b8e5b652a36a5f0582e518d9984813"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:version:requested",
+          "value": "4.8.0.0"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-visuelemtexteditor",
+      "type": "library",
+      "name": "VisuElemTextEditor",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "supplier-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "System"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "System_VisuElemTextEditor"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/SPT EtherCAT Diagnostics.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "225630ab0ee3d008e41fc7923e922dfdf8b8e5b652a36a5f0582e518d9984813"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:version:requested",
+          "value": "4.8.0.0"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-visuinputs",
+      "type": "library",
+      "name": "VisuInputs",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "supplier-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "System"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "System_VisuInputs"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/SPT EtherCAT Diagnostics.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "225630ab0ee3d008e41fc7923e922dfdf8b8e5b652a36a5f0582e518d9984813"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:version:requested",
+          "value": "4.7.0.0"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-visunativecontrol",
+      "type": "library",
+      "name": "VisuNativeControl",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "supplier-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "plcsbom:library:company",
+          "value": "System"
+        },
+        {
+          "name": "plcsbom:library:reference",
+          "value": "System_VisuNativeControl"
+        },
+        {
+          "name": "plcsbom:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "source"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/SPT EtherCAT Diagnostics.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "225630ab0ee3d008e41fc7923e922dfdf8b8e5b652a36a5f0582e518d9984813"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:version:requested",
+          "value": "4.8.0.0"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-rt",
+      "type": "application",
+      "supplier": {
+        "name": "Beckhoff Automation GmbH & Co. KG"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation GmbH & Co. KG"
+      },
+      "name": "TwinCAT 3 Runtime",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "runtime-version-unknown"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "assumed"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "runtime"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "twincat/SPT EtherCAT Diagnostics.tsproj"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "225630ab0ee3d008e41fc7923e922dfdf8b8e5b652a36a5f0582e518d9984813"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "plcsbom:vendor:origin",
+          "value": "assumed"
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "maschine-xy",
+      "dependsOn": [
+        "roboterzelle-fw-device-1-ethercat-1",
+        "roboterzelle-fw-device-1-ethercat-1-2",
+        "roboterzelle-fw-device-1-ethercat-1-9",
+        "roboterzelle-lib-spt-base-types",
+        "roboterzelle-lib-spt-ethercat",
+        "roboterzelle-lib-spt-event-logger",
+        "roboterzelle-lib-tc2-ethercat",
+        "roboterzelle-lib-tc2-standard",
+        "roboterzelle-lib-tc2-system",
+        "roboterzelle-lib-tc3-eventlogger",
+        "roboterzelle-lib-tc3-module",
+        "roboterzelle-lib-tc3-packml-v3",
+        "roboterzelle-lib-visuelemmeter",
+        "roboterzelle-lib-visuelems",
+        "roboterzelle-lib-visuelemsspecialcontrols",
+        "roboterzelle-lib-visuelemswincontrols",
+        "roboterzelle-lib-visuelemtexteditor",
+        "roboterzelle-lib-visuinputs",
+        "roboterzelle-lib-visunativecontrol",
+        "roboterzelle-rt"
+      ]
+    },
+    {
+      "ref": "roboterzelle-fw-device-1-ethercat-1",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-fw-device-1-ethercat-1-2",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-fw-device-1-ethercat-1-9",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-spt-base-types",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-spt-ethercat",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-spt-event-logger",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-tc2-ethercat",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-tc2-standard",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-tc2-system",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-tc3-eventlogger",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-tc3-module",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-tc3-packml-v3",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-visuelemmeter",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-visuelems",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-visuelemsspecialcontrols",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-visuelemswincontrols",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-visuelemtexteditor",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-visuinputs",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-visunativecontrol",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-rt",
+      "dependsOn": []
+    }
+  ],
+  "compositions": [
+    {
+      "aggregate": "complete",
+      "dependencies": [
+        "maschine-xy"
+      ]
+    },
+    {
+      "aggregate": "unknown",
+      "dependencies": [
+        "roboterzelle-fw-device-1-ethercat-1",
+        "roboterzelle-fw-device-1-ethercat-1-2",
+        "roboterzelle-fw-device-1-ethercat-1-9",
+        "roboterzelle-lib-spt-base-types",
+        "roboterzelle-lib-spt-ethercat",
+        "roboterzelle-lib-spt-event-logger",
+        "roboterzelle-lib-tc2-ethercat",
+        "roboterzelle-lib-tc2-standard",
+        "roboterzelle-lib-tc2-system",
+        "roboterzelle-lib-tc3-eventlogger",
+        "roboterzelle-lib-tc3-module",
+        "roboterzelle-lib-tc3-packml-v3",
+        "roboterzelle-lib-visuelemmeter",
+        "roboterzelle-lib-visuelems",
+        "roboterzelle-lib-visuelemsspecialcontrols",
+        "roboterzelle-lib-visuelemswincontrols",
+        "roboterzelle-lib-visuelemtexteditor",
+        "roboterzelle-lib-visuinputs",
+        "roboterzelle-lib-visunativecontrol",
+        "roboterzelle-rt"
+      ]
+    }
+  ]
+}

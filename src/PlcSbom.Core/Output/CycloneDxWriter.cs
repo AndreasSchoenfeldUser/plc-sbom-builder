@@ -94,6 +94,8 @@ public static class CycloneDxWriter
         dependsOn[primaryRef] = new SortedSet<string>(StringComparer.Ordinal);
         completeness[primaryRef] = Completeness.Complete;
 
+        // Station gaps of a station with neither program nor controller firmware go to the machine.
+        var stationGapsOnMachine = new List<Gap>();
         foreach (var station in machine.Stations)
         {
             var stationSlug = BomRef.Slug(station.Name);
@@ -161,7 +163,11 @@ public static class CycloneDxWriter
             if (station.Gaps.Count > 0)
             {
                 var target = programRefs.FirstOrDefault() ?? controllerRef ?? primaryRef;
-                if (target != primaryRef)
+                if (target == primaryRef)
+                {
+                    stationGapsOnMachine.AddRange(station.Gaps);
+                }
+                else
                 {
                     var index = components.FindIndex(c => c.BomRef == target);
                     components[index] = components[index] with
@@ -181,9 +187,6 @@ public static class CycloneDxWriter
             dependsOn[primaryRef].Add(bomRef);
         }
 
-        var stationGapsOnMachine = machine.Stations
-            .Where(s => s.Gaps.Count > 0 && s.Devices.All(d => d.IsPassive) && s.Software.Count == 0)
-            .SelectMany(s => s.Gaps);
         var primary = Primary(machine, primaryRef, ns, [.. machine.Gaps, .. stationGapsOnMachine]);
 
         var tools = machine.Stations

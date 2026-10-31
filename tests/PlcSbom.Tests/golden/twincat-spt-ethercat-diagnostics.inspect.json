@@ -1,0 +1,175 @@
+{
+  "format": 1,
+  "adapter": "twincat",
+  "file": "fixtures/twincat/spt-ethercat-diagnostics/SPT EtherCAT Diagnostics.tsproj",
+  "sha256": "225630ab0ee3d008e41fc7923e922dfdf8b8e5b652a36a5f0582e518d9984813",
+  "project": {
+    "tcVersion": "3.1.4026.24",
+    "ioDevices": [
+      {
+        "name": "Device 1 (EtherCAT)",
+        "devType": "111",
+        "disabled": false,
+        "boxes": [
+          {
+            "id": "1",
+            "name": "Term 1 (EK1100)",
+            "boxType": "9099",
+            "fieldbus": "EtherCAT",
+            "vendorId": "#x00000002",
+            "productCode": "#x044c2c52",
+            "revisionNo": "#x00120000",
+            "desc": "EK1100",
+            "type": "EK1100 EtherCAT Coupler (2A E-Bus)",
+            "children": [
+              {
+                "id": "2",
+                "name": "Term 2 (EL6910)",
+                "boxType": "9099",
+                "fieldbus": "EtherCAT",
+                "vendorId": "#x00000002",
+                "productCode": "#x1afe3052",
+                "revisionNo": "#x00150000",
+                "desc": "EL6910",
+                "type": "EL6910, TwinSAFE PLC",
+                "children": []
+              },
+              {
+                "id": "9",
+                "name": "Term 9 (EL9011)",
+                "boxType": "9099",
+                "fieldbus": "EtherCAT",
+                "vendorId": "#x00000002",
+                "productCode": "#x23333050",
+                "desc": "EL9011",
+                "type": "EL9011 End Terminal",
+                "children": []
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "plcProjects": [
+      {
+        "name": "EtherCatDiagnosticsSample",
+        "file": "EtherCatDiagnosticsSample/EtherCatDiagnosticsSample.plcproj",
+        "programVersion": "3.1.4026.24",
+        "libraries": [
+          {
+            "kind": "placeholder",
+            "name": "SPT Base Types",
+            "defaultResolution": "SPT Base Types, * (Beckhoff Automation LLC)",
+            "namespace": "SPT_BaseTypes",
+            "systemLibrary": false
+          },
+          {
+            "kind": "placeholder",
+            "name": "SPT EtherCat",
+            "defaultResolution": "SPT EtherCat, * (Beckhoff Automation LLC)",
+            "namespace": "SPT_EtherCat",
+            "systemLibrary": false
+          },
+          {
+            "kind": "placeholder",
+            "name": "SPT Event Logger",
+            "defaultResolution": "SPT Event Logger, * (Beckhoff Automation LLC)",
+            "namespace": "SPT_EventLogger",
+            "systemLibrary": false
+          },
+          {
+            "kind": "placeholder",
+            "name": "System_VisuElemMeter",
+            "defaultResolution": "VisuElemMeter, 4.7.0.0 (System)",
+            "namespace": "VisuElemMeter",
+            "systemLibrary": true
+          },
+          {
+            "kind": "placeholder",
+            "name": "System_VisuElems",
+            "defaultResolution": "VisuElems, 4.8.0.0 (System)",
+            "namespace": "VisuElems",
+            "systemLibrary": true
+          },
+          {
+            "kind": "placeholder",
+            "name": "System_VisuElemsSpecialControls",
+            "defaultResolution": "VisuElemsSpecialControls, 4.7.0.0 (System)",
+            "namespace": "VisuElemsSpecialControls",
+            "systemLibrary": true
+          },
+          {
+            "kind": "placeholder",
+            "name": "System_VisuElemsWinControls",
+            "defaultResolution": "VisuElemsWinControls, 4.8.0.0 (System)",
+            "namespace": "VisuElemsWinControls",
+            "systemLibrary": true
+          },
+          {
+            "kind": "placeholder",
+            "name": "System_VisuElemTextEditor",
+            "defaultResolution": "VisuElemTextEditor, 4.8.0.0 (System)",
+            "namespace": "VisuElemTextEditor",
+            "systemLibrary": true
+          },
+          {
+            "kind": "placeholder",
+            "name": "System_VisuInputs",
+            "defaultResolution": "VisuInputs, 4.7.0.0 (System)",
+            "namespace": "VisuInputs",
+            "systemLibrary": true
+          },
+          {
+            "kind": "placeholder",
+            "name": "System_VisuNativeControl",
+            "defaultResolution": "VisuNativeControl, 4.8.0.0 (System)",
+            "namespace": "VisuNativeControl",
+            "systemLibrary": true
+          },
+          {
+            "kind": "placeholder",
+            "name": "Tc2_EtherCAT",
+            "defaultResolution": "Tc2_EtherCAT, * (Beckhoff Automation GmbH)",
+            "namespace": "Tc2_EtherCAT",
+            "systemLibrary": false
+          },
+          {
+            "kind": "placeholder",
+            "name": "Tc2_Standard",
+            "defaultResolution": "Tc2_Standard, * (Beckhoff Automation GmbH)",
+            "namespace": "Tc2_Standard",
+            "systemLibrary": false
+          },
+          {
+            "kind": "placeholder",
+            "name": "Tc2_System",
+            "defaultResolution": "Tc2_System, * (Beckhoff Automation GmbH)",
+            "namespace": "Tc2_System",
+            "systemLibrary": false
+          },
+          {
+            "kind": "placeholder",
+            "name": "Tc3_EventLogger",
+            "defaultResolution": "Tc3_EventLogger, * (Beckhoff Automation GmbH)",
+            "namespace": "Tc3_EventLogger",
+            "systemLibrary": false
+          },
+          {
+            "kind": "placeholder",
+            "name": "Tc3_Module",
+            "defaultResolution": "Tc3_Module, * (Beckhoff Automation GmbH)",
+            "namespace": "Tc3_Module",
+            "systemLibrary": true
+          },
+          {
+            "kind": "placeholder",
+            "name": "Tc3_PackML_V3",
+            "defaultResolution": "Tc3_PackML_V3, * (Beckhoff Automation GmbH)",
+            "namespace": "Tc3_PackML_V3",
+            "systemLibrary": false
+          }
+        ]
+      }
+    ]
+  }
+}
