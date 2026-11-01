@@ -34,7 +34,33 @@ Die Optionen aller Befehle sind schon angelegt und erscheinen in der Hilfe (`plc
 
 Das Werkzeug ist eine einzelne ausführbare Datei, eine .NET-Runtime auf dem Rechner ist nicht nötig.
 
-**Aus dem CI-Paket.** Die CI (GitHub Actions) baut je Lauf `plc-sbom-<version>-linux-x64.tar.gz` und `plc-sbom-<version>-win-x64.zip`. Paket auspacken, die Datei `plc-sbom` bzw. `plc-sbom.exe` in den Pfad legen. Veröffentlichte Releases gibt es noch nicht.
+**Aus dem Paket.** Es gibt zwei Pakete, `plc-sbom-<version>-linux-x64.tar.gz` und `plc-sbom-<version>-win-x64.zip`. Paket auspacken und die Datei `plc-sbom` bzw. `plc-sbom.exe` in den Pfad legen. Jedes Paket enthält:
+
+| Datei | Inhalt |
+|---|---|
+| `plc-sbom`, `plc-sbom.exe` | das Werkzeug, eine Datei mit .NET-Laufzeit |
+| `plc-sbom.cdx.json` | SBOM des Werkzeugs selbst, CycloneDX 1.6, nach BSI TR-03183-2 |
+| `THIRD-PARTY-NOTICES.md` | Lizenzen der Drittkomponenten |
+
+Die CI (GitHub Actions) baut beide Pakete bei jedem Lauf. Auf einen Tag `v<version>` legt sie zusätzlich `SHA256SUMS` mit den Prüfsummen beider Pakete daneben. Veröffentlichte Releases gibt es noch nicht; die Pakete stehen als Artefakte am CI-Lauf.
+
+Prüfsummen eines Release prüfen:
+
+```bash
+sha256sum -c SHA256SUMS                     # Windows: Get-FileHash <paket> -Algorithm SHA256
+```
+
+**SBOM des Werkzeugs.** `plc-sbom.cdx.json` beschreibt genau die ausgelieferte Datei: SHA-512 der Exe, je mitgelieferter Bibliothek (NuGet-Pakete, eigene Assemblys, 172 Assemblys der .NET-Laufzeit) Name, Version, Hersteller, Lizenz und SHA-512 der Bytes, wie sie in der Exe liegen. Die .NET-Laufzeit steht zusätzlich als logische Komponente darüber. Wer die Datei in Dependency-Track einspielt, überwacht damit das Werkzeug selbst. Sie besteht die eigene Prüfung im Release-Modus:
+
+```text
+> plc-sbom validate plc-sbom.cdx.json --release-build
+[prüfung]   Schema CycloneDX 1.6 ............ OK
+[prüfung]   Pflichtfelder BSI TR-03183-2 .... OK, 0 Warnungen, 1 Hinweis
+            1 Hinweis ausgeblendet, mit --verbose anzeigen.
+[ausgabe]   plc-sbom.result.json
+```
+
+Der Hinweis ist `LOGICAL_COMPONENT` an der .NET-Laufzeit. Ob die SBOM zur Exe passt, zeigt der Hash: `sha512sum plc-sbom` muss den Wert unter `metadata.component` ergeben. Wie die Datei entsteht, beschreibt docs/entscheidungen.md E-025.
 
 **Selbst bauen.** Voraussetzung ist das .NET 10 SDK.
 
@@ -399,28 +425,39 @@ Die Begründung je Code mit der TR-Stelle steht in [docs/regeln-tr03183.md](docs
 
 ## 10. In der Pipeline
 
-Mit der Ergebnisdatei kann die Pipeline einen Entwicklungs-Build mit Warnungen als instabil markieren, ohne dass der Exit-Code dafür herhalten muss. Beispiel für Jenkins:
+Ein vollständiges Jenkinsfile für das Repository einer Maschine liegt unter [examples/Jenkinsfile](examples/Jenkinsfile). Es setzt die Staffelung aus Entwicklungs- und Release-Build um und braucht nur `machine.yml` im Wurzelverzeichnis.
 
-```groovy
-stage('SBOM') {
-  steps {
-    script {
-      def release = env.TAG_NAME ?: "dev-${env.BUILD_NUMBER}"
-      def gate = env.TAG_NAME ? '--release-build' : ''
-      def rc = sh(returnStatus: true, script: "plc-sbom build --config machine.yml --release ${release} ${gate}")
-      def result = readJSON file: 'build/sbom-maschine.result.json'
-      if (rc == 1) error "SBOM-Prüfung fehlgeschlagen: ${result.errors} Fehler, ${result.warnings} Warnungen"
-      if (rc >= 2) error "SBOM-Lauf abgebrochen (Exit ${rc}), siehe Log"
-      if (result.warnings > 0) unstable "SBOM mit ${result.warnings} Warnungen"
-    }
-  }
-}
-stage('Archiv') {
-  steps { archiveArtifacts artifacts: 'build/sbom-*.cdx.json, build/sbom-*.html, build/*.result.json' }
-}
+| Stufe | Wann | Was |
+|---|---|---|
+| AML exportieren | Parameter `AML_EXPORT` | `plc-sbom export-aml` auf einem Agenten `tia-v21`, Ergebnis per `stash` weitergereicht (folgt mit M14) |
+| SBOM | immer | alte Ausgaben `build/sbom-maschine.*` entfernen, `plc-sbom build` aufrufen, Ergebnisdatei lesen, Exit-Code auswerten |
+| Archiv | wenn SBOM nicht fehlgeschlagen ist | SBOM, Bericht und Ergebnisdatei archivieren, mit Fingerabdruck |
+| Dependency-Track | Release-Build oder Parameter `DTRACK_UPLOAD` | SBOM mit `dependencyTrackPublisher` übergeben, Projekt = Maschinentyp, Version = Release |
+
+**Entwicklungs- und Release-Build.** Ohne Tag ist die Release-Kennung `dev-<Buildnummer>`, Warnungen machen den Build instabil. Ein Tag-Build (Jenkins setzt `TAG_NAME`, etwa in einem Multibranch-Projekt mit Tag-Erkennung) nimmt den Tag als Release-Kennung und ruft `build` mit `--release-build` auf; dann beenden auch Warnungen den Build. Ein leeres `TAG_NAME` zählt als Entwicklungs-Build.
+
+**Exit-Codes.** Das Jenkinsfile beendet den Build bei Exit 1 bis 4 mit einer eigenen Meldung und nennt bei Exit 2 und 3 den Code der Ursache aus der Ergebnisdatei. Bei einem Fehlschlag archiviert es Ergebnisdatei und Bericht trotzdem. Meldungen aus einem Testlauf in Jenkins mit der Beispielmaschine:
+
+```text
+WARNING: SBOM mit 117 Warnungen und 109 Hinweisen                                         Entwicklungs-Build
+ERROR: SBOM-Prüfung nicht bestanden: 0 Fehler, 117 Warnungen (Release-Build: auch Warnungen zählen)   Tag R2026.10
+ERROR: SBOM-Lauf abgebrochen: Aufruf oder Konfiguration falsch (Exit 2, CONFIG_NOT_FOUND)  machine.yml fehlt
 ```
 
-Jenkins setzt `GIT_COMMIT`; `--commit` ist dann nicht nötig. Für reproduzierbare Dateien bei gleichem Commit reicht die Commit-Zeit, `SOURCE_DATE_EPOCH` muss nicht gesetzt werden. Auf Windows-Agenten `bat` statt `sh`. `readJSON` stammt aus dem Plugin „Pipeline Utility Steps“. Ein vollständiges Jenkinsfile folgt mit M13 unter `examples/Jenkinsfile`.
+**Einrichten.** Anzupassen sind die Werte unter `environment`:
+
+| Variable | Vorgabe | Bedeutung |
+|---|---|---|
+| `PLC_SBOM` | `plc-sbom` | Pfad zur Exe, wenn sie nicht im PATH des Agenten liegt |
+| `MACHINE_CONFIG` | `machine.yml` | Maschinenbeschreibung |
+| `SBOM`, `SBOM_RESULT` | `build/sbom-maschine.cdx.json`, `build/sbom-maschine.result.json` | Ausgabe und Ergebnisdatei |
+| `TIA_PROJECT`, `AML_FILE` | `tia/Linie1.zap21`, `export/Linie1.aml` | nur für `AML_EXPORT`; `AML_FILE` muss zum `path` der Station passen |
+| `DTRACK_PROJECT` | `Maschine XY` | Projektname in Dependency-Track |
+| `DTRACK_CREDENTIALS` | `dependency-track-api-key` | ID eines Credentials vom Typ „Secret text“ mit dem API-Schlüssel |
+
+Nötig sind die Jenkins-Plugins „Pipeline“ und „Pipeline Utility Steps“ (`readJSON`), für die letzte Stufe „OWASP Dependency-Track“. Dort sind die Server-URL und „Auto Create Projects“ global einzustellen. Der Schritt `dependencyTrackPublisher` bekommt die ID des Credentials, nicht den Schlüssel; der Schlüssel steht nie im Jenkinsfile. Agenten tragen das Label `plc-sbom`, Linux und Windows gehen beide, der Aufruf wählt `sh` oder `bat`.
+
+Jenkins setzt `GIT_COMMIT`; `--commit` ist dann nicht nötig. Für reproduzierbare Dateien bei gleichem Commit reicht die Commit-Zeit, `SOURCE_DATE_EPOCH` muss nicht gesetzt werden. Für GitLab CI oder Azure DevOps gilt dasselbe Muster: Exit-Code auswerten, Ergebnisdatei lesen, Warnungen als „instabil“ oder „mit Warnungen“ markieren, `--release-build` nur auf Tags.
 
 ## 11. Häufige Meldungen
 
@@ -992,4 +1029,4 @@ Die Abdeckung ist „gefunden“ geteilt durch „gefunden“ plus „nicht gefu
 
 ## 20. Was folgt
 
-Die nächsten Schritte nach Meilensteinplan (CLAUDE.md Abschnitt 12): M1, M2 (CODESYS V3.5), M5 (Rockwell Studio 5000), M6 (Beckhoff TwinCAT 3), M7 (Siemens TIA Portal, AML-Export), M8 (GSD-Geräte mit GSDML-Dateien), M9 (`build` mit `machine.yml`, Hersteller- und Teil-SBOMs), M10 (Prüfbericht), M11 (Abgleich mit dem Feld) und M12 (Kennungsprüfung gegen CSAF) sind umgesetzt; alle Prüfregeln mit ihrer TR-Stelle stehen in [docs/regeln-tr03183.md](docs/regeln-tr03183.md). CODESYS V2.3 und CODESYS 4 (M3, M4) warten auf Demo-Projekte. Als Nächstes kommen ein vollständiges Jenkinsfile und die Release-Pakete mit eigener SBOM (M13). TIA Portal über Openness kommt zuletzt (M14).
+Die nächsten Schritte nach Meilensteinplan (CLAUDE.md Abschnitt 12): M1, M2 (CODESYS V3.5), M5 (Rockwell Studio 5000), M6 (Beckhoff TwinCAT 3), M7 (Siemens TIA Portal, AML-Export), M8 (GSD-Geräte mit GSDML-Dateien), M9 (`build` mit `machine.yml`, Hersteller- und Teil-SBOMs), M10 (Prüfbericht), M11 (Abgleich mit dem Feld), M12 (Kennungsprüfung gegen CSAF) und M13 (Jenkinsfile, Pakete mit eigener SBOM und Prüfsummen) sind umgesetzt; alle Prüfregeln mit ihrer TR-Stelle stehen in [docs/regeln-tr03183.md](docs/regeln-tr03183.md). CODESYS V2.3 und CODESYS 4 (M3, M4) warten auf Demo-Projekte. Als Letztes kommt TIA Portal über Openness (M14), mit `export-aml` und `doctor`.

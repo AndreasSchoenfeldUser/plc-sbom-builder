@@ -1,0 +1,131 @@
+// Jenkinsfile für das Repository einer Maschine: SBOM mit plc-sbom erzeugen, prüfen, archivieren und
+// optional an Dependency-Track übergeben (CLAUDE.md Abschnitt 10, Bedienung in ANLEITUNG.md Abschnitt 10).
+//
+// Stufen: AML exportieren (optional, Windows mit TIA V21) → SBOM → Archiv → Dependency-Track (optional).
+//
+// Staffelung nach Whitepaper Abschnitt 6.5:
+//   Entwicklungs-Build (kein Tag): Release-Kennung dev-<Buildnummer>. Fehler beenden den Build,
+//                                  Warnungen machen ihn instabil.
+//   Release-Build (Tag-Build, TAG_NAME gesetzt): Release-Kennung = Tag, --release-build. Auch Warnungen
+//                                  beenden den Build; die SBOM geht an Dependency-Track.
+//
+// Voraussetzungen auf dem Jenkins-Controller: Plugins „Pipeline“, „Pipeline Utility Steps“ (readJSON),
+// für die letzte Stufe „OWASP Dependency-Track“ mit eingetragener Server-URL und aktivem
+// „Auto Create Projects“. Der API-Schlüssel liegt als Credential vom Typ „Secret text“ unter der ID
+// aus DTRACK_CREDENTIALS, nie im Jenkinsfile. Auf den Agenten liegt plc-sbom im PATH (oder PLC_SBOM
+// zeigt auf die Datei). Agenten mit Linux und Windows gehen beide: der Aufruf wählt sh oder bat.
+
+pipeline {
+  agent { label 'plc-sbom' }
+
+  parameters {
+    booleanParam(name: 'AML_EXPORT', defaultValue: false,
+      description: 'AML-Datei vor dem Build mit plc-sbom export-aml aus dem TIA-Projekt erzeugen (Agent mit TIA Portal V21, ab M14)')
+    booleanParam(name: 'DTRACK_UPLOAD', defaultValue: false,
+      description: 'SBOM auch im Entwicklungs-Build an Dependency-Track übergeben; Release-Builds übergeben immer')
+  }
+
+  options {
+    timeout(time: 60, unit: 'MINUTES')
+    buildDiscarder(logRotator(numToKeepStr: '50', artifactNumToKeepStr: '20'))
+  }
+
+  environment {
+    PLC_SBOM            = 'plc-sbom'                       // Pfad zur Exe, wenn sie nicht im PATH liegt
+    MACHINE_CONFIG      = 'machine.yml'
+    SBOM                = 'build/sbom-maschine.cdx.json'
+    SBOM_RESULT         = 'build/sbom-maschine.result.json'
+    RELEASE             = "${env.TAG_NAME ?: 'dev-' + env.BUILD_NUMBER}"
+    TIA_PROJECT         = 'tia/Linie1.zap21'               // nur für AML_EXPORT
+    AML_FILE            = 'export/Linie1.aml'              // muss zum path der Station in machine.yml passen
+    DTRACK_PROJECT      = 'Maschine XY'                    // Projektname = Maschinentyp, Version = RELEASE
+    DTRACK_CREDENTIALS  = 'dependency-track-api-key'       // Credential-ID, nicht der Schlüssel
+  }
+
+  stages {
+    stage('AML exportieren') {
+      when {
+        beforeAgent true
+        expression { params.AML_EXPORT }
+      }
+      agent { label 'tia-v21' }
+      steps {
+        bat "\"${env.PLC_SBOM}\" export-aml --project ${env.TIA_PROJECT} --out ${env.AML_FILE}"
+        stash name: 'aml', includes: env.AML_FILE
+      }
+    }
+
+    stage('SBOM') {
+      steps {
+        script {
+          if (params.AML_EXPORT) {
+            unstash 'aml'
+          }
+          // Ausgaben eines früheren Laufs im Workspace entfernen, sonst gälte eine alte Ergebnisdatei als
+          // Ergebnis dieses Laufs. Nur die eigenen Dateien: Teil-SBOMs früherer Stufen bleiben in build/.
+          def stem = env.SBOM - '.cdx.json'
+          if (isUnix()) {
+            sh "rm -f ${stem}.*"
+          } else {
+            def winStem = stem.replace('/', '\\')
+            bat "if exist ${winStem}.* del /q ${winStem}.*"
+          }
+          def gate = env.TAG_NAME ? '--release-build' : ''
+          def command = "\"${env.PLC_SBOM}\" build --config ${env.MACHINE_CONFIG} --release ${env.RELEASE} --out ${env.SBOM} ${gate}"
+          def rc = isUnix() ? sh(returnStatus: true, script: command) : bat(returnStatus: true, script: command)
+
+          // build schreibt die Ergebnisdatei auch bei Exit 2, 3 und 4 (ANLEITUNG.md Abschnitt 9).
+          if (!fileExists(env.SBOM_RESULT)) {
+            error "plc-sbom endete mit Exit ${rc} ohne Ergebnisdatei ${env.SBOM_RESULT}, siehe Log"
+          }
+          def result = readJSON file: env.SBOM_RESULT
+          def cause = result.findings ? "${result.findings[0].code}" : 'siehe Log'
+          switch (rc) {
+            case 0:
+              break
+            case 1:
+              error "SBOM-Prüfung nicht bestanden: ${result.errors} Fehler, ${result.warnings} Warnungen${gate ? ' (Release-Build: auch Warnungen zählen)' : ''}"
+            case 2:
+              error "SBOM-Lauf abgebrochen: Aufruf oder Konfiguration falsch (Exit 2, ${cause})"
+            case 3:
+              error "SBOM-Lauf abgebrochen: Umgebung des Agenten (Exit 3, ${cause})"
+            default:
+              error "SBOM-Lauf abgebrochen (Exit ${rc}, ${cause})"
+          }
+          if (result.warnings > 0) {
+            unstable "SBOM mit ${result.warnings} Warnungen und ${result.notes} Hinweisen"
+          }
+          echo "SBOM ${env.SBOM}: ${result.components} Komponenten, ${result.stations} Stationen, Release ${env.RELEASE}"
+        }
+      }
+      post {
+        // Bei einem Befund oder Abbruch die Ergebnisdatei und den Bericht trotzdem sichern.
+        failure {
+          archiveArtifacts artifacts: 'build/*.result.json, build/sbom-*.html', allowEmptyArchive: true
+        }
+      }
+    }
+
+    stage('Archiv') {
+      steps {
+        archiveArtifacts artifacts: 'build/sbom-*.cdx.json, build/sbom-*.html, build/*.result.json', fingerprint: true
+      }
+    }
+
+    stage('Dependency-Track') {
+      when {
+        anyOf {
+          expression { env.TAG_NAME ? true : false }       // leeres TAG_NAME zählt nicht als Tag
+          expression { params.DTRACK_UPLOAD }
+        }
+      }
+      steps {
+        dependencyTrackPublisher artifact: env.SBOM,
+          projectName: env.DTRACK_PROJECT,
+          projectVersion: env.RELEASE,
+          synchronous: true,
+          dependencyTrackApiKey: env.DTRACK_CREDENTIALS
+      }
+    }
+  }
+}

@@ -1,6 +1,6 @@
 # CLAUDE.md: PLC SBOM Builder (`plc-sbom`), Prototyp
 
-> Stand: 01.11.2026 (Meilensteine und CODESYS V2.3/4 ergänzt; M1-Entscheidungen E-007 bis E-011 und TR-Regeln in `docs/regeln-tr03183.md` nachgetragen; M1, M2, M5 bis M12 umgesetzt (M9: E-021, M10: E-022, M11: E-023, M12: E-024), M3/M4 zurückgestellt (E-016), Golden File aus dem Comquent-V21-Export offen (E-019); übrige Fakten Stand 29.10.2026). Grundlage: Produktseite comquent.de/produkte/plc-sbom-builder (Quelltext `src/app/produkte/inhalte.ts` im Website-Repository), der Entwurf `plc-sbom-builder-claude.md` mit der Recherche vom 25.10.2026, das Comquent-Whitepaper „SBOM für SPS-Projekte mit TIA Portal V21“, die Siemens-Openness-Skills (V21) und drei öffentliche AML-Exporte aus TIA V17, V18 und V21 (geprüft am 29.10.2026). Recherchefakten mit Datum 25.10.2026 sind nicht erneut geprüft; Versionen und Normstände vor der Nutzung nachsehen.
+> Stand: 01.11.2026 (Meilensteine und CODESYS V2.3/4 ergänzt; M1-Entscheidungen E-007 bis E-011 und TR-Regeln in `docs/regeln-tr03183.md` nachgetragen; M1, M2, M5 bis M13 umgesetzt (M9: E-021, M10: E-022, M11: E-023, M12: E-024, M13: E-025), M3/M4 zurückgestellt (E-016), Golden File aus dem Comquent-V21-Export offen (E-019); übrige Fakten Stand 29.10.2026). Grundlage: Produktseite comquent.de/produkte/plc-sbom-builder (Quelltext `src/app/produkte/inhalte.ts` im Website-Repository), der Entwurf `plc-sbom-builder-claude.md` mit der Recherche vom 25.10.2026, das Comquent-Whitepaper „SBOM für SPS-Projekte mit TIA Portal V21“, die Siemens-Openness-Skills (V21) und drei öffentliche AML-Exporte aus TIA V17, V18 und V21 (geprüft am 29.10.2026). Recherchefakten mit Datum 25.10.2026 sind nicht erneut geprüft; Versionen und Normstände vor der Nutzung nachsehen.
 > Produkt der Comquent GmbH (Industrial DevOps, Puchheim). Schwesterwerkzeuge: `plc-build` (../plc-build-tool), `plc-git-bridge` (../plc-git-bridge).
 
 ## 0. Start
@@ -177,8 +177,12 @@ plc-sbom-builder/
 │   ├── csaf/                       CSAF-Dokument für ids (synthetisch; echte Siemens-Dokumente nur in _local)
 │   └── _local/                     gitignored, Dateien ohne Lizenz
 ├── samples/maschine-xy/            machine.yml, Programmquellen, Hersteller- und Teil-SBOM, CPE-Tabelle (erwartete Ausgabe: golden/maschine-xy.cdx.json)
-├── examples/Jenkinsfile
-├── tools/Register-OpennessFirewall.ps1   ab M14
+├── examples/Jenkinsfile            Pipeline für das Repository einer Maschine (M13, E-025)
+├── tools/
+│   ├── check-licenses.cs           Lizenzprüfung, erzeugt THIRD-PARTY-NOTICES.md
+│   ├── crosscheck-sbomqs.cs        Gegenprüfung des Validators mit sbomqs (E-010)
+│   ├── tool-sbom.cs                SBOM des Werkzeugs aus der veröffentlichten Exe (E-025)
+│   └── Register-OpennessFirewall.ps1   ab M14
 └── docs/
     ├── entscheidungen.md           kurze ADRs, datiert (Kontext, Entscheidung, Folgen)
     ├── regeln-tr03183.md           TR-Feld → CycloneDX-Pfad → Quelle im Werkzeug → Verhalten bei Lücke
@@ -870,7 +874,7 @@ Verbindlich ist `docs/regeln-tr03183.md` (angelegt mit M1 nach dem PDF v2.1.0, a
 - **Hardware** regelt die TR nicht.
 - Eine SBOM je Softwareversion; rekursiv bis zur ersten Komponente außerhalb des eigenen Lieferumfangs.
 
-Der eigene Validator ist die Laufzeitprüfung, Schema eingebettet (offline). In CI läuft zusätzlich `sbomqs compliance --bsi-v21` über alle Golden Files, verglichen je Komponente und Pflichtfeld mit `tools/crosscheck-sbomqs.cs` (E-010; sbomqs vergibt Punkte und kennt keine Lückenvermerke). Weichen beide ab, gilt das als Fehler im eigenen Validator, bis das Gegenteil belegt ist.
+Der eigene Validator ist die Laufzeitprüfung, Schema eingebettet (offline). In CI läuft zusätzlich `sbomqs compliance --bsi-v21` über alle Golden Files und die SBOM des Linux-Pakets, verglichen je Komponente und Pflichtfeld mit `tools/crosscheck-sbomqs.cs` (E-010; sbomqs vergibt Punkte und kennt keine Lückenvermerke). Weichen beide ab, gilt das als Fehler im eigenen Validator, bis das Gegenteil belegt ist.
 
 ## 10. Pipeline
 
@@ -904,7 +908,9 @@ stage('Archiv') {
 }
 ```
 
-Auf Windows-Agenten `bat` statt `sh`. Zugangsdaten für Dependency-Track nur als Jenkins-Credential, nie im Jenkinsfile oder im Werkzeug.
+Auf Windows-Agenten `bat` statt `sh`. Zugangsdaten für Dependency-Track nur als Jenkins-Credential, nie im Jenkinsfile oder im Werkzeug; `dependencyTrackPublisher` bekommt die Credential-ID (`dependencyTrackApiKey`), nicht den Schlüssel.
+
+Umgesetzt mit M13 (E-025): Das Jenkinsfile ruft `build` mit `--out` auf, entfernt vorher die Ausgaben `build/sbom-maschine.*` eines früheren Laufs (sonst gälte eine alte Ergebnisdatei), wertet jeden Exit-Code mit eigener Meldung aus und archiviert bei einem Fehlschlag Ergebnisdatei und Bericht. Release-Build nur bei nicht leerem `TAG_NAME`; Dependency-Track im Release-Build immer, sonst mit Parameter `DTRACK_UPLOAD`. Getestet in Jenkins (Docker) mit Entwicklungs-Build, Tag-Build, fehlender `machine.yml` und Upload ohne Server (TESTFAELLE.md Lauf 20); `PipelineExampleTests` binden das Jenkinsfile an Ergebnisdatei und Ausgabepfade.
 
 ## 11. Auslieferung und Lizenz
 
@@ -912,10 +918,10 @@ Auf Windows-Agenten `bat` statt `sh`. Zugangsdaten für Dependency-Track nur als
 - **Pakete:** self-contained Single-File-Executables, keine installierte .NET-Runtime nötig:
   - `plc-sbom-<version>-linux-x64.tar.gz` mit `plc-sbom`
   - `plc-sbom-<version>-win-x64.zip` mit `plc-sbom.exe` und ab M14 `plc-sbom-tia-openness.exe` (net48, nutzt das .NET Framework von Windows) samt `Register-OpennessFirewall.ps1`
-- **SBOM des Werkzeugs selbst:** Jedes Paket enthält `plc-sbom.cdx.json` (CycloneDX 1.6, erzeugt in CI aus den NuGet-Abhängigkeiten) und besteht die eigene TR-Prüfung.
+- **SBOM des Werkzeugs selbst:** Jedes Paket enthält `plc-sbom.cdx.json` (CycloneDX 1.6, erzeugt in CI aus den NuGet-Abhängigkeiten) und besteht die eigene TR-Prüfung. Umgesetzt mit M13 (E-025): `tools/tool-sbom.cs` liest Bundle-Manifest und `deps.json` aus der veröffentlichten Exe; Hauptkomponente ist die Exe (`executable`, `archive`, `structured`, SHA-512), darunter je gebündelter Assembly eine Komponente mit SHA-512 der Bytes im Bundle, Ersteller und Lizenz aus der `.nuspec`, die .NET-Laufzeit als logische Komponente. Der CI-Rauchtest prüft sie mit `validate --release-build` und den Hash der Exe; Trimming, ReadyToRun oder Kompression im Bundle lassen den Generator abbrechen.
 - **Version:** SemVer, eine Quelle in `Directory.Build.props`, im Programm über `plc-sbom --version` und in `metadata.tools` der erzeugten SBOMs.
 - **Prüfsummen:** SHA-256 je Paket in `SHA256SUMS`. Code-Signatur der Windows-Exes später; sie würde die Openness-Firewall-Freigabe nicht ersetzen (die braucht ein Siemens-Zertifikat).
-- Release-Pakete entstehen in CI auf Tag, nicht lokal. Nichts veröffentlichen ohne ausdrückliche Anweisung.
+- Release-Pakete entstehen in CI auf Tag, nicht lokal: Job `release` auf `v<version>` prüft den Tag gegen `Directory.Build.props` und legt beide Pakete mit `SHA256SUMS` als Workflow-Artefakt ab. Ein GitHub-Release legt der Mensch an. Nichts veröffentlichen ohne ausdrückliche Anweisung.
 
 ## 12. Meilensteine
 
@@ -936,7 +942,7 @@ Jeder Meilenstein endet mit grünen Tests auf ubuntu und windows, `dotnet format
 | M10 | `report` (HTML, Markdown) | Baum, Tabellen, Quellen, Lückenliste und Hardware-Anhang wie in 8.2 (umgesetzt, E-022) |
 | M11 | `compare`, `--as-built`, `--csv` | Web-API-Fixture gegen AML-Soll, Abweichungen erkannt, Exit 1 bei Abweichung (umgesetzt, E-023; die Web-API-Fixture beschreibt eine CPU 1518, die in keinem AML vorkommt: Web-API gegen synthetisches Soll, AML-Soll gegen allgemeine Feld-Datei; offen ist ein Mitschnitt der CPU aus dem Comquent-Demo) |
 | M12 | `ids` | Abdeckungsbericht gegen eine Handvoll echter Siemens-CSAF-Dateien (umgesetzt, E-024; sechs Dokumente lokal, Ergebnis in Abschnitt 6) |
-| M13 | `examples/Jenkinsfile`, README und ANLEITUNG.md auf Release-Stand, Release-Pakete mit eigener SBOM | Pipeline-Stufen Build → Archiv → optional Dependency-Track, Staffelung Entwicklungs-/Release-Build |
+| M13 | `examples/Jenkinsfile`, README und ANLEITUNG.md auf Release-Stand, Release-Pakete mit eigener SBOM | Pipeline-Stufen Build → Archiv → optional Dependency-Track, Staffelung Entwicklungs-/Release-Build (umgesetzt, E-025; Jenkinsfile in Jenkins getestet, SBOM des Werkzeugs besteht `--release-build` und sbomqs; offen ist die Bestätigung durch CI und einen echten Tag) |
 | M14 | Adapter `tia-portal` (TIA über Openness): Openness-Worker mit `doctor`, `inventory` und `export-aml`, Firewall-Skript, Live-Tests | 5.5.6 erfüllt |
 
 Die Adapter-Meilensteine M2 bis M8 und M14 folgen der festgelegten Reihenfolge: CODESYS (V3.5, V2.3, CODESYS 4), Rockwell, Beckhoff, TIA AML, TIA Openness. Fehlt für einen Spike die Comquent-Fixture, geht die Arbeit mit dem nächsten Adapter weiter und der Spike wird nachgeholt; das wird in `docs/entscheidungen.md` vermerkt.

@@ -2,6 +2,8 @@ name: ci
 
 on:
   push:
+    branches: ["**"]
+    tags: ["v*"]
   pull_request:
 
 permissions:
@@ -55,6 +57,14 @@ jobs:
           version=$(dotnet msbuild src/PlcSbom.Cli/PlcSbom.Cli.csproj -getProperty:Version)
           echo "PACKAGE=plc-sbom-${version}-${{ matrix.rid }}" >> "$GITHUB_ENV"
 
+      # M13: every package carries the SBOM of the tool itself (CLAUDE.md section 11, E-025).
+      - name: Tool SBOM
+        run: |
+          exe=out/publish/plc-sbom
+          if [ "$RUNNER_OS" = "Windows" ]; then exe=out/publish/plc-sbom.exe; fi
+          mkdir -p out/pkg
+          dotnet run tools/tool-sbom.cs -- --exe "$exe" --out out/pkg/plc-sbom.cdx.json
+
       - name: Package (Linux)
         if: runner.os == 'Linux'
         run: |
@@ -86,6 +96,11 @@ jobs:
           "$exe" --help
           "$exe" --version
           expect() { want=$1; shift; set +e; "$exe" "$@"; got=$?; set -e; [ "$got" = "$want" ] || { echo "exit $got, erwartet $want: $*"; exit 1; }; }
+          # M13: the SBOM of the package names the exe with its SHA-512 and passes the release gate.
+          test -f "$smoke/plc-sbom.cdx.json"
+          grep -q "\"$(sha512sum "$exe" | cut -d' ' -f1)\"" "$smoke/plc-sbom.cdx.json"
+          cp "$smoke/plc-sbom.cdx.json" out/tool-sbom.cdx.json
+          expect 0 validate out/tool-sbom.cdx.json --release-build
           expect 2 unbekannt
           expect 2 build --config machine.yml --release R1
           if [ "$RUNNER_OS" = "Windows" ]; then
@@ -121,6 +136,7 @@ jobs:
   # Cross-check of the own TR-03183-2 validator against sbomqs over all golden files
   # (CLAUDE.md section 9, docs/entscheidungen.md E-010). A difference fails the job.
   crosscheck:
+    needs: build
     runs-on: ubuntu-latest
     env:
       SBOMQS_VERSION: "2.1.3"
@@ -140,5 +156,51 @@ jobs:
           mkdir -p "$RUNNER_TEMP/sbomqs"
           tar -xzf "$RUNNER_TEMP/$file" -C "$RUNNER_TEMP/sbomqs"
 
+      # The SBOM of the Linux package is checked along with the golden files.
+      - uses: actions/download-artifact@v7
+        with:
+          pattern: plc-sbom-*-linux-x64
+          path: out/artifact
+          merge-multiple: true
+
       - name: Cross-check with sbomqs
-        run: dotnet run tools/crosscheck-sbomqs.cs -- --sbomqs "$RUNNER_TEMP/sbomqs/sbomqs" --markdown "$GITHUB_STEP_SUMMARY"
+        run: |
+          mkdir -p out/pkg
+          tar -xzf out/artifact/plc-sbom-*-linux-x64.tar.gz -C out/pkg ./plc-sbom.cdx.json
+          dotnet run tools/crosscheck-sbomqs.cs -- --sbomqs "$RUNNER_TEMP/sbomqs/sbomqs" --markdown "$GITHUB_STEP_SUMMARY" \
+            tests/PlcSbom.Tests/golden/*.cdx.json out/pkg/plc-sbom.cdx.json
+
+  # Release packages on a tag v<version> (CLAUDE.md section 11): both packages and SHA256SUMS as one
+  # workflow artifact. Publishing them (GitHub release, download page) stays a manual step.
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [build, crosscheck]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Tag matches version
+        run: |
+          version=$(sed -n 's:.*<Version>\(.*\)</Version>.*:\1:p' Directory.Build.props)
+          [ "v${version}" = "${GITHUB_REF_NAME}" ] || { echo "Tag ${GITHUB_REF_NAME} passt nicht zur Version ${version} in Directory.Build.props"; exit 1; }
+          echo "VERSION=${version}" >> "$GITHUB_ENV"
+
+      - uses: actions/download-artifact@v7
+        with:
+          pattern: plc-sbom-*
+          path: dist
+          merge-multiple: true
+
+      - name: Checksums
+        run: |
+          cd dist
+          test -f "plc-sbom-${VERSION}-linux-x64.tar.gz"
+          test -f "plc-sbom-${VERSION}-win-x64.zip"
+          sha256sum plc-sbom-* | sort -k2 > SHA256SUMS
+          cat SHA256SUMS
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: plc-sbom-${{ env.VERSION }}-release
+          path: dist/*
+          if-no-files-found: error
