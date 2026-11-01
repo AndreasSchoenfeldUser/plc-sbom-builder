@@ -26,6 +26,9 @@ public sealed record ValidationReport
 
     public int Notes => Findings.Count(f => f.Severity == Severity.Note);
 
+    /// <summary>The report with further findings, e.g. those of the build run; sorted like the validator's own.</summary>
+    public ValidationReport WithFindings(IEnumerable<Finding> more) => this with { Findings = SbomValidator.Sort(Findings.Concat(more)) };
+
     /// <summary>Exit code (CLAUDE.md 7.2): errors always 1, warnings only in a release build.</summary>
     public int ExitCode(bool releaseBuild) =>
         Errors > 0 || (releaseBuild && Warnings > 0) ? ExitCodes.Finding : ExitCodes.Ok;
@@ -90,7 +93,7 @@ public static class SbomValidator
         };
     }
 
-    private static List<Finding> Sort(IEnumerable<Finding> findings) =>
+    internal static List<Finding> Sort(IEnumerable<Finding> findings) =>
         findings
             .OrderByDescending(f => f.Severity)
             .ThenBy(f => f.ComponentRef ?? "", StringComparer.Ordinal)

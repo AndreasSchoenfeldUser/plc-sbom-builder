@@ -23,8 +23,8 @@ Abschnittsnummern ohne Zusatz beziehen sich auf die TR. Code: [TrValidator.cs](.
 |---|---|---|---|---|---|
 | Format | 4 | `bomFormat` = `CycloneDX`, `specVersion` ≥ 1.6, gültig gegen das Schema | Writer schreibt CycloneDX 1.6 | `NOT_CYCLONEDX`, `SPEC_VERSION_UNSUPPORTED`, `SCHEMA_INVALID` (Fehler); `SCHEMA_NOT_EMBEDDED` (Warnung bei Version > 1.6, Schema nicht eingebettet) | nein |
 | Keine Schwachstellen | 3.1 | `vulnerabilities` fehlt oder ist leer | Writer schreibt keine | `VULNERABILITIES_PRESENT` | nein |
-| Ersteller der SBOM | 5.2.1, Tab. 8 | `metadata.manufacturer.contact[].email` oder `metadata.manufacturer.url[]` | Hersteller der Maschine mit Kontakt (`machine` in `machine.yml`, ab M9) | `SBOM_CREATOR_MISSING` | nein |
-| Zeitstempel | 5.2.1, Tab. 8 | `metadata.timestamp` | `SOURCE_DATE_EPOCH`, sonst Commit-Zeit, sonst aktuelle Zeit (CLAUDE.md 8.4, ab M9); immer UTC | `TIMESTAMP_MISSING` | nein |
+| Ersteller der SBOM | 5.2.1, Tab. 8 | `metadata.manufacturer.contact[].email` oder `metadata.manufacturer.url[]` | Maschinenbauer mit Kontakt (`machine.supplier`, `machine.contact` in `machine.yml`) | `SBOM_CREATOR_MISSING` | nein |
+| Zeitstempel | 5.2.1, Tab. 8 | `metadata.timestamp` | `SOURCE_DATE_EPOCH`, sonst Commit-Zeit (`git log -1 --format=%ct`), sonst aktuelle Uhrzeit mit Warnung `TIMESTAMP_FROM_CLOCK` (CLAUDE.md 8.4); immer UTC, ganze Sekunden | `TIMESTAMP_MISSING` | nein |
 | Hauptkomponente | 3.2.1 | `metadata.component` | die Maschine | `PRIMARY_COMPONENT_MISSING` | nein |
 | SBOM-URI | 5.2.3, Tab. 10 | `serialNumber` | UUIDv5 aus Maschine, Release, Commit und Seriennummer | nicht geprüft, Pflicht nur „falls vorhanden“ (Form prüft das Schema) | – |
 
@@ -34,15 +34,15 @@ Die TR verlangt als Ersteller die E-Mail-Adresse und nur ersatzweise eine URL. D
 
 | TR-Feld | CycloneDX-Pfad | Quelle im Werkzeug | Code ohne Lückenvermerk | Lückencodes, die das Fehlen erklären |
 |---|---|---|---|---|
-| Ersteller | `manufacturer.contact[].email` oder `manufacturer.url[]` | Hersteller aus Quelle, GSDML oder `vendorOverrides`; Kontakt aus `machine.yml` (ab M9) | `CREATOR_MISSING` | `supplier-unknown`, `creator-contact-unknown`, `protected-block-unknown` |
+| Ersteller | `manufacturer.contact[].email` oder `manufacturer.url[]` | Hersteller aus Quelle, GSDML, Gerätebeschreibung oder `vendorOverrides`; Kontakt aus `vendorContacts` in `machine.yml`; Anwenderprogramm: Maschinenbauer mit `machine.contact` | `CREATOR_MISSING` | `supplier-unknown`, `creator-contact-unknown`, `protected-block-unknown` |
 | Name | `name` | `<Typname>, Firmware`, Bibliotheksname, `<Station>, Anwenderprogramm` | `SCHEMA_INVALID` (CycloneDX verlangt `name`) | keine |
 | Version | `version` | Firmware wie im Projekt, Bibliotheksversion, `<Release> (git <kurz-hash>)` | `VERSION_MISSING` | `firmware-not-in-project`, `version-unresolved`, `runtime-version-unknown`, `protected-block-unknown` |
 | Dateiname | Property `bsi:component:filename`, höchstens einmal | Dateiname der ausgelieferten Form, wenn eine Datei vorliegt; bei Firmware nie | `FILENAME_MISSING`; doppelt: `BSI_PROPERTY_DUPLICATE` | `filename-unavailable` |
 | Abhängigkeiten | Eintrag in `dependencies` mit `ref` und `dependsOn` (auch leer); verschachtelte Komponenten zählen als enthalten | Writer: Maschine → alle Firmware-Komponenten und Programme; Programm → Firmware der Steuerung, Bibliotheken, Laufzeit; Gerät ohne Station → Maschine | `DEPENDENCIES_MISSING`, `DEPENDENCY_REF_UNKNOWN`, `COMPONENT_UNREACHABLE` | keine |
 | Vollständigkeit der Abhängigkeiten | Komponente in `compositions[].dependencies` eines Eintrags mit `aggregate` | Writer: Maschine `complete`; Programm `complete`, mit `libraries-not-read` oder `program-not-read` `incomplete`; Firmware, Bibliotheken, Laufzeit `unknown` | `COMPLETENESS_MISSING` | keine |
-| Distributionslizenz | `licenses[]` mit `acknowledgement` = `concluded`: `expression`, `license.id` oder `license.name` = `LicenseRef-…` | `licenses` in `machine.yml` (ab M9) | `DISTRIBUTION_LICENCE_MISSING`; keine SPDX-Kennung (6.1): `DISTRIBUTION_LICENCE_INVALID` | `license-unknown` |
-| Hash der ausgelieferten Form | `externalReferences[type=distribution].hashes[alg=SHA-512].content` | SHA-512 der Datei, wenn sie vorliegt; nie erfunden | `HASH_MISSING` | `hash-unavailable`, `program-source-missing` |
-| ausführbar | Property `bsi:component:executable` = `executable` / `non-executable`, genau einmal | Firmware fest `executable`; Software aus der Quelle | `EXECUTABLE_PROPERTY_MISSING`; falscher Wert `BSI_PROPERTY_INVALID`; doppelt `BSI_PROPERTY_DUPLICATE` | `file-properties-unknown` |
+| Distributionslizenz | `licenses[]` mit `acknowledgement` = `concluded`: `expression`, `license.id` oder `license.name` = `LicenseRef-…` | `licenses` in `machine.yml` je Hersteller; Maschine und Anwenderprogramme über den Maschinenbauer | `DISTRIBUTION_LICENCE_MISSING`; keine SPDX-Kennung (6.1): `DISTRIBUTION_LICENCE_INVALID` | `license-unknown` |
+| Hash der ausgelieferten Form | `externalReferences[type=distribution].hashes[alg=SHA-512].content` | SHA-512 der Datei, wenn sie vorliegt; Firmware: aus der zugeordneten Hersteller-SBOM (`bsi:component:filename` und Hash von deren `metadata.component`); nie erfunden | `HASH_MISSING` | `hash-unavailable`, `program-source-missing` |
+| ausführbar | Property `bsi:component:executable` = `executable` / `non-executable`, genau einmal | Firmware fest `executable`; Anwenderprogramm fest `executable`, `no archive`, `unstructured` (E-021); Software aus der Quelle | `EXECUTABLE_PROPERTY_MISSING`; falscher Wert `BSI_PROPERTY_INVALID`; doppelt `BSI_PROPERTY_DUPLICATE` | `file-properties-unknown` |
 | Archiv | Property `bsi:component:archive` = `archive` / `no archive`, genau einmal | Firmware fest `archive` | `ARCHIVE_PROPERTY_MISSING` usw. wie oben | `file-properties-unknown` |
 | strukturiert | Property `bsi:component:structured` = `structured` / `unstructured`, genau einmal | Firmware fest `unstructured` | `STRUCTURED_PROPERTY_MISSING` usw. wie oben | `file-properties-unknown` |
 
@@ -60,10 +60,10 @@ Einzelheiten:
 | TR-Feld | CycloneDX-Pfad | Quelle im Werkzeug | Prüfung |
 |---|---|---|---|
 | SBOM-URI | `serialNumber` | siehe Abschnitt 2 | keine |
-| Quellcode-URI | `externalReferences[type=source-distribution].url` | Programm: URL des Quellverzeichnisses im Repository beim Commit (ab M9) | keine |
-| URI der ausgelieferten Form | `externalReferences[type=distribution].url` | nur, wenn die Quelle sie nennt | keine |
+| Quellcode-URI | `externalReferences[type=source-distribution].url` | Programm: `sourceUrl` aus `machine.yml` mit `{commit}` und `{path}`; ohne `sourceUrl` keine URI | keine |
+| URI der ausgelieferten Form | `externalReferences[type=distribution].url` | nur, wenn die Quelle sie nennt; Firmware: aus der zugeordneten Hersteller-SBOM | keine |
 | Andere eindeutige Kennungen | `cpe`, `purl`, `swid.tagId` | CPE nur aus `kennungen/cpe-map.yml` (CLAUDE.md Abschnitt 6), PURL nur aus Teil-SBOMs | keine |
-| Originallizenzen | `licenses[]` mit `acknowledgement` = `declared` | `licenses` in `machine.yml` (ab M9) | keine |
+| Originallizenzen | `licenses[]` mit `acknowledgement` = `declared` | wird nicht erzeugt; `licenses` setzt nur die Distributionslizenz. Komponenten aus Hersteller- und Teil-SBOMs behalten ihre Angaben | keine |
 
 Ob ein solcher Wert existiert, weiß nur die Quelle. Der Writer schreibt ihn, sobald eine Quelle ihn liefert; der Validator kann sein Fehlen nicht bewerten.
 
@@ -92,15 +92,15 @@ Spalte „erklärt“: das Pflichtfeld aus Abschnitt 3, dessen Fehlen der Code e
 | `firmware-not-in-project` | Hinweis | Version | Lückenregeln: Gerät ohne Firmware-Angabe im Projekt | 5.2.2 Version. Die Firmware hat eine Version, nur steht sie nicht in der Quelle; das Änderungsdatum einer Datei (5.2.2 Nr. 3) gibt es nicht. Erst der Ist-Stand schließt die Lücke. Für TIA-Geräte ohne Attribut setzt der Adapter `tia-aml` zusätzlich `firmware-attribute-missing` (Warnung, E-019). |
 | `firmware-attribute-missing` | Warnung | – | Adapter `tia-aml` (M7): Gerät mit Bestellnummer ohne Attribut `FirmwareVersion` (V21: PM 70W), nicht in `passiveOrderNumbers` (E-019) | Kein TR-Feld; die Version erklärt `firmware-not-in-project`. Ob das Gerät überhaupt Firmware hat, ist offen: ist es passiv, gehört es nicht in die SBOM (Art. 3 Nr. 39 CRA: nur Softwareelemente), sonst fehlt seine Firmware-Version. Warnung, bis der Anwender das Gerät als passiv erklärt oder ein Ist-Stand vorliegt. |
 | `firmware-projected-only` | Hinweis | – | Lückenregeln: Firmware mit Herkunft `projected` | Die Version ist ein Sollwert aus dem Projekt. 5.1 verlangt die Informationen, die beim Build vorliegen; der Ist-Stand kommt über `compare` (M11). |
-| `hash-unavailable` | Hinweis | Hash | Lückenregeln: jede Firmware; Software ohne SHA-512 der ausgelieferten Form | 3.2.1: Angaben, die wegen der Art der Zusammensetzung nicht verfügbar sind, entfallen, auch Hash und Dateiname. Hersteller-Firmware steckt im Gerät und erreicht das Werkzeug nie als Datei; ein SPS-Programm hat kein stabiles Binärartefakt (CLAUDE.md 5.6). Auslegung, siehe E-011. |
-| `filename-unavailable` | Hinweis | Dateiname | wie `hash-unavailable` | 3.2.1 wie oben. |
+| `hash-unavailable` | Hinweis | Hash | Lückenregeln: Firmware ohne Hash aus einer Hersteller-SBOM; Software ohne SHA-512 der ausgelieferten Form, auch jedes Anwenderprogramm mit `program` | 3.2.1: Angaben, die wegen der Art der Zusammensetzung nicht verfügbar sind, entfallen, auch Hash und Dateiname. Hersteller-Firmware steckt im Gerät und erreicht das Werkzeug nie als Datei; ein SPS-Programm hat kein stabiles Binärartefakt (CLAUDE.md 5.6). Auslegung, siehe E-011. |
+| `filename-unavailable` | Hinweis | Dateiname | Lückenregeln: Firmware ohne Dateiname aus einer Hersteller-SBOM; Software ohne Dateiname | 3.2.1 wie oben. |
 | `version-unresolved` | Warnung | Version | Lückenregeln: Version fehlt oder ist ein Platzhalter (`*`, „neueste installierte“) | 5.2.2 Version; 3.2.1 verlangt für ausgelieferte Komponenten die genaue Version. Beim Übersetzen gab es eine feste Version, die Quelle nennt sie nicht. |
 | `runtime-version-unknown` | Warnung | Version | Lückenregeln: Laufzeit ohne Version; Adapter `twincat` (M6) | 5.2.2 Version. TwinCAT führt nur die XAE-Version im Projekt. |
 | `libraries-not-read` | Warnung | – | Adapter `tia-aml` (M7): Station mit CPU ohne `libraries` (E-019) | 5.2.2 Abhängigkeiten, 5.1. Das Programm wird `incomplete` gekennzeichnet; Bibliotheken sind eingebundene Fremdkomponenten (3.2.1, kompilierter Code). |
 | `program-not-read` | Hinweis | – | Adapter `tia-aml` (M7): jede Station mit CPU | 5.2.2 Vollständigkeit: Das Programm wird `incomplete` gekennzeichnet, wie die TR es für unvollständige Aufzählungen vorsieht. |
 | `ekey-disabled` | Warnung | – | Adapter `studio5000` (M5), nur an Modulen außer der Steuerung (E-017) | Kein TR-Feld. Das Gerät im Feld kann vom projektierten abweichen; der Soll-Stand ist dann wenig belastbar. |
 | `license-unknown` | Warnung | Distributionslizenz | Lückenregeln: keine Distributionslizenz bekannt | 5.2.2, 6.1. Pflichtfeld fehlt, Lücke vermerkt. |
-| `vendor-sbom-missing` | Hinweis | – | Lückenregeln: jede Firmware, bis eine Hersteller-SBOM zugeordnet ist (M9) | 5.1: Die Firmware gehört zum Lieferumfang, ihre Bestandteile kennt nur der Hersteller. Die Abhängigkeiten der Firmware sind deshalb `unknown`; das ist eine zulässige Angabe der Vollständigkeit. |
+| `vendor-sbom-missing` | Hinweis | – | Lückenregeln: jede Firmware ohne zugeordnete Hersteller-SBOM (`vendorSboms`, E-021) | 5.1: Die Firmware gehört zum Lieferumfang, ihre Bestandteile kennt nur der Hersteller. Die Abhängigkeiten der Firmware sind deshalb `unknown`; das ist eine zulässige Angabe der Vollständigkeit. |
 | `protected-block-unknown` | Warnung | Ersteller, Version | Adapter `tia-portal` (M14) | 5.2.2 Ersteller und Version. |
 | `gsdml-not-found` | Warnung | – | Adapter `tia-aml` (M8): GSDML-Datei nicht gefunden, mehrfach mit verschiedenem Inhalt oder kein `gsdml`-Verzeichnis angegeben (E-020) | Ohne GSDML fehlen Hersteller und Bestellnummer; die Pflichtfeld-Lücke selbst trägt `supplier-unknown`. |
 | `devdesc-not-found` | Warnung | – | Adapter `codesys`, Quelle `v35`, wenn `deviceDescriptions` gesetzt ist (E-015) | Kein TR-Feld. Ohne eindeutige Gerätebeschreibung fehlen Hersteller und Produktname; die Pflichtfeld-Lücke selbst trägt `supplier-unknown`. |
@@ -111,6 +111,7 @@ Spalte „erklärt“: das Pflichtfeld aus Abschnitt 3, dessen Fehlen der Code e
 | `devices-not-read` | Warnung | – | Adapter `twincat` (M6): PROFINET-Boxen, E/A-Gerät in eigener Datei (E-018) | Kein TR-Feld. Die Firmware dieser Geräte fehlt in der SBOM; 5.1 verlangt die Komponenten bis zur ersten außerhalb des eigenen Lieferumfangs. Warnung, damit ein Release-Build die Lücke nicht übersieht. |
 | `program-source-missing` | Warnung | Hash | Lückenregeln: Anwenderprogramm ohne `program` in `machine.yml` | Ohne Quellverzeichnis gibt es nicht einmal den Hash über die Quellen (Abschnitt 9). |
 | `file-properties-unknown` | Warnung | ausführbar, Archiv, strukturiert | Lückenregeln: Software ohne Angabe der Dateieigenschaften | 5.2.2. |
+| `input-field-missing` | Warnung | Ersteller, Version, Dateiname, Distributionslizenz, Hash, ausführbar, Archiv, strukturiert | `build` (M9): Komponente einer Hersteller- oder Teil-SBOM, der Pflichtfelder fehlen, die kein eigener Lückenvermerk der Komponente erklärt (E-021) | 5.1: Eingebundene SBOMs bleiben unverändert; was ihnen fehlt, wird sichtbar statt aufgefüllt. CLAUDE.md 5.7: Abweichungen fremder SBOMs sind Warnungen. Ungültige Werte (etwa Lizenz als Freitext) bleiben Fehler. |
 
 Unbekannte Lückencodes ergeben die Warnung `GAP_UNKNOWN` und erklären kein Feld.
 
@@ -147,7 +148,9 @@ Ein SPS-Programm hat keine stabile ausgelieferte Datei (CLAUDE.md 5.6). Die Vers
 - In der SBOM als Hash des Quellcodes (5.2.5): `externalReferences[type=source-distribution]` mit der Quellcode-URI und `hashes[alg=SHA-512]`. Die TR legt für diesen Hash noch kein Verfahren fest.
 - Der Hash der ausgelieferten Form fehlt, Lückenvermerk `hash-unavailable` (Hinweis). Ohne `program` gibt es auch keinen Quell-Hash: `program-source-missing` (Warnung).
 
-Berechnet wird der Hash mit `build` (M9); das Modell und der Writer tragen ihn schon.
+Berechnet wird der Hash von `build` ([ProgramHash.cs](../src/PlcSbom.Core/Build/ProgramHash.cs)). Mit `sourceUrl` in `machine.yml` steht er unter `externalReferences[type=source-distribution]`, sonst als Property `<namespace>:sourceCode:sha512`, weil CycloneDX für eine externe Referenz eine URL verlangt und keine erfunden wird. Pfad und Zahl der Dateien stehen als `<namespace>:sourceCode:path` und `:files` daneben (E-021).
+
+Der Hash gilt für die Bytes, wie sie ausgecheckt sind. Ändert Git die Zeilenenden (`core.autocrlf`), ändert sich der Hash; die Beispielmaschine ist deshalb in `.gitattributes` mit `-text` eingetragen.
 
 ## 10. Gegenprüfung mit sbomqs
 
@@ -223,3 +226,19 @@ Vor dem ersten Lauf ohne Abweichung hat der Abgleich an absichtlich veränderten
 | Effektive Lizenz: Taxonomie „genau einmal je Komponente“, TR optional (5.2.5) | Validator folgt der TR | E-009, offen |
 | Hash und Dateiname bei Hersteller-Firmware als Hinweis | Auslegung von 3.2.1 | E-011, offen |
 | CLAUDE.md nennt „TR §8.2“ für die Vollständigkeit | Die Pflicht steht in 5.2.2, Abschnitt 8.2 ist die Mapping-Tabelle | ohne Folgen |
+
+## 12. Zusammenführen mit Hersteller- und Teil-SBOMs (M9)
+
+`build` hängt eingelesene CycloneDX-SBOMs in die Maschine ein ([InputSbomReader.cs](../src/PlcSbom.Core/Merge/InputSbomReader.cs), [MachineBuilder.cs](../src/PlcSbom.Core/Build/MachineBuilder.cs), E-021). Die Regeln mit ihrer TR-Stelle:
+
+| Regel | TR | Umsetzung |
+|---|---|---|
+| Zusammenführen statt Verweisen | 5.1: Verweise auf andere SBOMs nur, wenn diese die TR erfüllen; 8.1.16: der Verweisende ist für die Verfügbarkeit verantwortlich | Komponenten werden in die SBOM der Maschine übernommen, kein BOM-Link. So hängt das Ergebnis nicht an fremden Dateien |
+| Eingelesene SBOM für sich prüfen | 5.1 | Validator über die Datei; Fehler oder Warnungen ergeben eine Warnung `VENDOR_SBOM_NOT_TR_CONFORM` bzw. `PARTIAL_SBOM_NOT_TR_CONFORM` |
+| Fehlende Pflichtfelder sichtbar lassen | 5.2.2, CLAUDE.md 2 (kein erfundener Wert) | Komponente unverändert, Lückenvermerk `input-field-missing` (Warnung), wenn kein eigener Vermerk der Komponente das Fehlen erklärt |
+| Effektive Lizenz neu setzen | 3.2.8, Anmerkung: „set anew when merging SBOMs“ | `bsi:component:effectiveLicence` (auch `effectiveLicense`) wird an jeder übernommenen Komponente entfernt. Das Werkzeug setzt keine neue, weil es nicht weiß, unter welcher Lizenz der Maschinenbauer die Komponente nutzt; das Feld ist optional (5.2.5) |
+| Hersteller-SBOM gehört zur Firmware | 3.2.5: bei abweichenden Angaben gilt die referenzierte BOM; 5.1: mehrere Instanzen mit verschiedenen Metadaten getrennt aufführen | Die Wurzel der Hersteller-SBOM ist die Firmware selbst und wird nicht doppelt geschrieben. Ihre Bestandteile hängen unter der Firmware, ihre Vollständigkeitsangabe gilt für die Firmware. Dateiname und SHA-512 der Firmware-Datei übernimmt die Firmware; Name, Version und Hersteller bleiben die aus dem Projekt, die Zuordnung setzt ihre Übereinstimmung voraus |
+| Abhängigkeiten auflösen | 5.1, 3.2.7 (enthalten = abhängig) | Die Wurzel einer Teil-SBOM hängt von allen Komponenten ab, auf die in der Datei nichts zeigt; die Komponenten einer BOM bilden ihre Hauptkomponente. Verweise auf unbekannte `bom-ref`s werden verworfen (Warnung `INPUT_SBOM_REF_UNKNOWN`) |
+| Eindeutige Kennungen | 5.2.2 (Abhängigkeiten über `bom-ref`) | Präfix `vendor-<datei>/` bzw. `partial-<datei>/` vor jeder `bom-ref`; fehlende `bom-ref`s werden in Dokumentreihenfolge vergeben. Doppelte `bom-ref` in der Datei: `INPUT_SBOM_INVALID` (Fehler) |
+
+Die Zuordnung einer Hersteller-SBOM zu einer Firmware steht in ANLEITUNG.md Abschnitt 4.2: gleiche CPE, oder gleicher Hersteller, gleiche Bestellnummer (Property `<namespace>:device:orderNumber`) und gleiche Version. Eine echte Hersteller-SBOM für ein Steuerungsgerät gibt es bisher nicht (CLAUDE.md 1.3); belegt ist die Zuordnung nur an der synthetischen Datei der Beispielmaschine. Wie Hersteller die Bestellnummer in ihre SBOM schreiben, ist offen (E-021).

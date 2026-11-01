@@ -184,57 +184,32 @@ public static class TrValidator
             .ToList();
         var logical = properties.Any(p => IsOwnNamespace(p.Name) && p.Name.EndsWith(":logicalComponent", StringComparison.Ordinal) && p.Value == "true");
 
-        var missing = new List<string>();
+        var missing = MissingFields(c, properties);
         if (bomRef is null)
         {
             findings.Add(new(Severity.Error, "BOM_REF_MISSING",
                 $"Komponente „{name}“ hat keine bom-ref; ohne sie lassen sich keine Abhängigkeiten angeben.", null, name, [TrField.BomRef]));
         }
-        if (!HasContact(c["manufacturer"] as JsonObject))
-        {
-            missing.Add(TrField.Creator);
-        }
-        if (string.IsNullOrWhiteSpace(Text(c["version"])))
-        {
-            missing.Add(TrField.Version);
-        }
-        var filenames = properties.Count(p => p.Name == "bsi:component:filename");
-        if (filenames == 0)
-        {
-            missing.Add(TrField.Filename);
-        }
-        else if (filenames > 1)
+        if (properties.Count(p => p.Name == "bsi:component:filename") > 1)
         {
             findings.Add(new(Severity.Error, "BSI_PROPERTY_DUPLICATE", $"{label}: bsi:component:filename kommt mehrfach vor.", bomRef, name, [TrField.Filename]));
         }
         var concluded = ConcludedLicences(c);
-        if (concluded.Count == 0)
-        {
-            missing.Add(TrField.DistributionLicence);
-        }
         foreach (var licence in concluded.Where(l => !l.Valid))
         {
             findings.Add(new(Severity.Error, "DISTRIBUTION_LICENCE_INVALID",
                 $"{label}: Die Distributionslizenz „{licence.Text}“ ist weder eine SPDX-Kennung noch ein SPDX-Ausdruck noch eine Kennung LicenseRef-… (TR-03183-2 Abschnitt 6.1).",
                 bomRef, name, [TrField.DistributionLicence]));
         }
-        if (!HasDistributionSha512(c))
-        {
-            missing.Add(TrField.Hash);
-        }
         foreach (var traitName in FileTraitNames)
         {
             var (field, allowed) = FileTraits[traitName];
             var values = properties.Where(p => p.Name == traitName).Select(p => p.Value).ToList();
-            if (values.Count == 0)
-            {
-                missing.Add(field);
-            }
-            else if (values.Count > 1)
+            if (values.Count > 1)
             {
                 findings.Add(new(Severity.Error, "BSI_PROPERTY_DUPLICATE", $"{label}: {traitName} kommt mehrfach vor.", bomRef, name, [field]));
             }
-            else if (!allowed.Contains(values[0], StringComparer.Ordinal))
+            else if (values.Count == 1 && !allowed.Contains(values[0], StringComparer.Ordinal))
             {
                 findings.Add(new(Severity.Error, "BSI_PROPERTY_INVALID",
                     $"{label}: {traitName} hat den Wert „{values[0]}“, erlaubt sind „{allowed[0]}“ und „{allowed[1]}“.", bomRef, name, [field]));
@@ -281,6 +256,62 @@ public static class TrValidator
         {
             findings.Add(new(Severity.Error, MissingCode(field), $"{label}: {MissingText(field)} Kein Lückenvermerk erklärt das Fehlen.", bomRef, name, [field]));
         }
+    }
+
+    /// <summary>
+    /// Required fields of TR 5.2.2 that a component lacks and that neither one of its gaps nor its
+    /// marking as logical component explains. Used to mark components of merged input SBOMs.
+    /// </summary>
+    public static IReadOnlyList<string> UnexplainedMissingFields(JsonObject component)
+    {
+        var properties = Properties(component);
+        var missing = MissingFields(component, properties);
+        if (properties.Any(p => IsOwnNamespace(p.Name) && p.Name.EndsWith(":logicalComponent", StringComparison.Ordinal) && p.Value == "true"))
+        {
+            missing.RemoveAll(NotForLogicalComponents.Contains);
+        }
+        foreach (var gap in properties.Where(p => IsOwnNamespace(p.Name) && p.Name.EndsWith(":gap", StringComparison.Ordinal)))
+        {
+            if (GapCatalog.Find(gap.Value) is { } definition)
+            {
+                missing.RemoveAll(definition.Excuses.Contains);
+            }
+        }
+        return missing;
+    }
+
+    /// <summary>Required fields of TR 5.2.2 that are absent (invalid or duplicate values are checked elsewhere).</summary>
+    private static List<string> MissingFields(JsonObject c, List<(string Name, string Value)> properties)
+    {
+        var missing = new List<string>();
+        if (!HasContact(c["manufacturer"] as JsonObject))
+        {
+            missing.Add(TrField.Creator);
+        }
+        if (string.IsNullOrWhiteSpace(Text(c["version"])))
+        {
+            missing.Add(TrField.Version);
+        }
+        if (properties.All(p => p.Name != "bsi:component:filename"))
+        {
+            missing.Add(TrField.Filename);
+        }
+        if (ConcludedLicences(c).Count == 0)
+        {
+            missing.Add(TrField.DistributionLicence);
+        }
+        if (!HasDistributionSha512(c))
+        {
+            missing.Add(TrField.Hash);
+        }
+        foreach (var traitName in FileTraitNames)
+        {
+            if (properties.All(p => p.Name != traitName))
+            {
+                missing.Add(FileTraits[traitName].Field);
+            }
+        }
+        return missing;
     }
 
     private static void CheckLicenceProperties(List<(string Name, string Value)> properties, string label, string? bomRef, string name, List<Finding> findings)

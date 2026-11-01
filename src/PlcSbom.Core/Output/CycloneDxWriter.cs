@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using PlcSbom.Core.Gaps;
 using PlcSbom.Core.Model;
 
@@ -21,7 +22,8 @@ public sealed record WriterOptions
 /// <summary>
 /// Writes the model as CycloneDX 1.6 JSON, variant B (ADR E-007): only software components
 /// (firmware, application, library); device and station are properties of the firmware, the structure
-/// is in "dependencies". The machine is the primary component in metadata.component.
+/// is in "dependencies". The machine is the primary component in metadata.component. Components of
+/// merged input SBOMs are written as read, with prefixed bom-refs and own properties added.
 /// Output is deterministic: fixed field order, sorted components, properties and dependencies,
 /// LF line endings, no BOM.
 /// </summary>
@@ -67,11 +69,17 @@ public static class CycloneDxWriter
         string? Cpe,
         string? Purl,
         IReadOnlyList<ExternalRef> ExternalReferences,
-        IReadOnlyList<KeyValuePair<string, string>> Properties);
+        IReadOnlyList<KeyValuePair<string, string>> Properties,
+        JsonObject? Raw = null);
 
     private sealed record ExternalRef(string Type, string Url, string? Sha512);
 
-    private enum Completeness { Complete, Incomplete, Unknown }
+    private static class Completeness
+    {
+        public const string Complete = "complete";
+        public const string Incomplete = "incomplete";
+        public const string Unknown = "unknown";
+    }
 
     private sealed record BomDraft(
         Machine Machine,
@@ -79,7 +87,7 @@ public static class CycloneDxWriter
         Draft Primary,
         IReadOnlyList<Draft> Components,
         IReadOnlyDictionary<string, SortedSet<string>> DependsOn,
-        IReadOnlyDictionary<string, Completeness> Completeness,
+        IReadOnlyDictionary<string, string> Completeness,
         IReadOnlyList<ToolInfo> Tools);
 
     private static BomDraft Build(Machine machine, WriterOptions o)
@@ -88,7 +96,10 @@ public static class CycloneDxWriter
         var refs = new BomRef.Registry();
         var components = new List<Draft>();
         var dependsOn = new Dictionary<string, SortedSet<string>>(StringComparer.Ordinal);
-        var completeness = new Dictionary<string, Completeness>(StringComparer.Ordinal);
+        var completeness = new Dictionary<string, string>(StringComparer.Ordinal);
+        var vendorSboms = machine.InputSboms
+            .Where(i => i.Kind == InputSbomKind.Vendor)
+            .ToDictionary(i => i.Id, StringComparer.Ordinal);
 
         var primaryRef = refs.Claim(BomRef.Slug(machine.Name));
         dependsOn[primaryRef] = new SortedSet<string>(StringComparer.Ordinal);
@@ -109,9 +120,8 @@ public static class CycloneDxWriter
                     ? $"{stationSlug}-fw"
                     : $"{stationSlug}-fw-{BomRef.Slug(device.Position ?? device.DeviceName ?? device.TypeName)}";
                 var bomRef = refs.Claim(candidate);
-                components.Add(Firmware(device, bomRef, station, ns));
-                dependsOn[bomRef] = new SortedSet<string>(StringComparer.Ordinal);
-                completeness[bomRef] = Completeness.Unknown;
+                components.Add(Firmware(device, bomRef, station, vendorSboms, ns));
+                AddFirmwareDependencies(device, bomRef, vendorSboms, dependsOn, completeness);
                 firmwareRefs.Add(bomRef);
                 if (isController)
                 {
@@ -181,10 +191,18 @@ public static class CycloneDxWriter
         foreach (var device in machine.UnassignedDevices.Where(d => !d.IsPassive))
         {
             var bomRef = refs.Claim($"{primaryRef}-fw-{BomRef.Slug(device.DeviceName ?? device.Position ?? device.TypeName)}");
-            components.Add(Firmware(device, bomRef, station: null, ns));
-            dependsOn[bomRef] = new SortedSet<string>(StringComparer.Ordinal);
-            completeness[bomRef] = Completeness.Unknown;
+            components.Add(Firmware(device, bomRef, station: null, vendorSboms, ns));
+            AddFirmwareDependencies(device, bomRef, vendorSboms, dependsOn, completeness);
             dependsOn[primaryRef].Add(bomRef);
+        }
+
+        foreach (var input in machine.InputSboms)
+        {
+            AddInput(input, components, dependsOn, completeness, ns);
+            if (input.Kind == InputSbomKind.Partial)
+            {
+                dependsOn[primaryRef].Add(input.RootRef);
+            }
         }
 
         var primary = Primary(machine, primaryRef, ns, [.. machine.Gaps, .. stationGapsOnMachine]);
@@ -206,6 +224,99 @@ public static class CycloneDxWriter
             dependsOn,
             completeness,
             tools);
+    }
+
+    /// <summary>
+    /// A vendor SBOM's root is the firmware itself: the firmware takes over the root's dependencies and
+    /// their completeness. Without a vendor SBOM its parts are known only to the vendor (unknown).
+    /// </summary>
+    private static void AddFirmwareDependencies(
+        Device device,
+        string bomRef,
+        IReadOnlyDictionary<string, InputSbom> vendorSboms,
+        Dictionary<string, SortedSet<string>> dependsOn,
+        Dictionary<string, string> completeness)
+    {
+        var inputs = VendorSbomsOf(device, bomRef, vendorSboms);
+        dependsOn[bomRef] = new SortedSet<string>(inputs.SelectMany(i => i.DependsOn.GetValueOrDefault(i.RootRef) ?? []), StringComparer.Ordinal);
+        var states = inputs.Select(i => i.Completeness.GetValueOrDefault(i.RootRef) ?? Completeness.Unknown).Distinct().ToList();
+        completeness[bomRef] = states.Count == 1 ? states[0] : Completeness.Unknown;
+    }
+
+    private static List<InputSbom> VendorSbomsOf(Device device, string bomRef, IReadOnlyDictionary<string, InputSbom> vendorSboms) =>
+        device.VendorSboms.Select(id => vendorSboms.TryGetValue(id, out var input)
+            ? input
+            : throw new InvalidOperationException($"Modellfehler: Hersteller-SBOM „{id}“ der Firmware {bomRef} fehlt in der Maschine.")).ToList();
+
+    /// <summary>Components of an input SBOM, written as read, with the properties of this tool added.</summary>
+    private static void AddInput(
+        InputSbom input,
+        List<Draft> components,
+        Dictionary<string, SortedSet<string>> dependsOn,
+        Dictionary<string, string> completeness,
+        string ns)
+    {
+        var rootRef = input.RootRef;
+        var written = input.Kind == InputSbomKind.Vendor ? input.Components : [input.Root, .. input.Components];
+        foreach (var raw in written)
+        {
+            var copy = (JsonObject)raw.DeepClone();
+            AnnotateInput(copy, input, rootRef, ns);
+            var bomRef = copy["bom-ref"]!.GetValue<string>();
+            components.Add(new Draft(bomRef, "", "", null, null, null, null, null, [], [], copy));
+        }
+        foreach (var bomRef in AllRefs(input).Where(r => input.Kind != InputSbomKind.Vendor || r != rootRef))
+        {
+            dependsOn[bomRef] = new SortedSet<string>(input.DependsOn.GetValueOrDefault(bomRef) ?? [], StringComparer.Ordinal);
+            completeness[bomRef] = input.Completeness.GetValueOrDefault(bomRef) ?? Completeness.Unknown;
+        }
+    }
+
+    private static IEnumerable<string> AllRefs(InputSbom input)
+    {
+        IEnumerable<string> Walk(JsonObject component)
+        {
+            yield return component["bom-ref"]!.GetValue<string>();
+            foreach (var child in (component["components"] as JsonArray ?? []).OfType<JsonObject>())
+            {
+                foreach (var r in Walk(child))
+                {
+                    yield return r;
+                }
+            }
+        }
+        return new[] { input.Root }.Concat(input.Components).SelectMany(Walk);
+    }
+
+    private static void AnnotateInput(JsonObject component, InputSbom input, string rootRef, string ns)
+    {
+        var bomRef = component["bom-ref"]!.GetValue<string>();
+        var added = new List<KeyValuePair<string, string>> { new($"{ns}:inputSbom", input.SourcePath) };
+        if (bomRef == rootRef)
+        {
+            added.Add(new($"{ns}:inputSbom:kind", input.Kind == InputSbomKind.Vendor ? "vendor" : "partial"));
+            added.Add(new($"{ns}:inputSbom:sha256", input.Sha256));
+            if (input.Station is not null)
+            {
+                added.Add(new($"{ns}:station", input.Station));
+            }
+        }
+        foreach (var code in input.Gaps.GetValueOrDefault(bomRef) ?? [])
+        {
+            added.Add(new($"{ns}:gap", code));
+        }
+        if (component["properties"] is not JsonArray properties)
+        {
+            component["properties"] = properties = [];
+        }
+        foreach (var (name, value) in added.Distinct().OrderBy(p => p.Key, StringComparer.Ordinal).ThenBy(p => p.Value, StringComparer.Ordinal))
+        {
+            properties.Add(new JsonObject { ["name"] = name, ["value"] = value });
+        }
+        foreach (var child in (component["components"] as JsonArray ?? []).OfType<JsonObject>())
+        {
+            AnnotateInput(child, input, rootRef, ns);
+        }
     }
 
     private static string SoftwareRef(string stationSlug, SoftwareItem item) => item.Kind switch
@@ -231,10 +342,16 @@ public static class CycloneDxWriter
         return new Draft(bomRef, "device", machine.Name, machine.Release, machine.Supplier, machine.Licensing, null, null, [], p.Items);
     }
 
-    private static Draft Firmware(Device device, string bomRef, Station? station, string ns)
+    private static Draft Firmware(Device device, string bomRef, Station? station, IReadOnlyDictionary<string, InputSbom> vendorSboms, string ns)
     {
         var p = new PropertyList(ns);
         AddTraits(p, FileTraits.Firmware);
+        p.Add(BsiFilename, device.FirmwareFileName);
+        foreach (var input in VendorSbomsOf(device, bomRef, vendorSboms))
+        {
+            p.Add($"{ns}:inputSbom", input.SourcePath);
+            p.Add($"{ns}:inputSbom:sha256", input.Sha256);
+        }
         p.Add(BsiEffectiveLicence, device.FirmwareLicensing?.Effective);
         AddStation(p, station, ns);
         p.Add($"{ns}:device:vendor", device.Vendor?.Name);
@@ -266,8 +383,10 @@ public static class CycloneDxWriter
             p.Add($"{ns}:{key}", value);
         }
         p.AddRange(GapProperties(device.Gaps, ns));
+        var externalReferences = new List<ExternalRef>();
+        AddReference(externalReferences, "distribution", device.FirmwareUri, device.FirmwareSha512, $"{device.TypeName}, Firmware");
         return new Draft(bomRef, "firmware", $"{device.TypeName}, Firmware", device.Firmware, device.Vendor,
-            device.FirmwareLicensing, device.Cpe, null, [], p.Items);
+            device.FirmwareLicensing, device.Cpe, null, externalReferences, p.Items);
     }
 
     private static Draft Software(SoftwareItem item, string bomRef, Station station, string ns)
@@ -291,6 +410,11 @@ public static class CycloneDxWriter
         {
             p.Add($"{ns}:version:requested", item.Version);
         }
+        if (item.SourceUri is null)
+        {
+            // Without a URI CycloneDX has no place for the source hash in externalReferences.
+            p.Add($"{ns}:sourceCode:sha512", item.SourceSha512);
+        }
         foreach (var (key, value) in item.SourceProperties)
         {
             p.Add($"{ns}:{key}", value);
@@ -299,7 +423,10 @@ public static class CycloneDxWriter
 
         var externalReferences = new List<ExternalRef>();
         AddReference(externalReferences, "distribution", item.DeployableUri, item.DeployableSha512, item.Name);
-        AddReference(externalReferences, "source-distribution", item.SourceUri, item.SourceSha512, item.Name);
+        if (item.SourceUri is not null)
+        {
+            AddReference(externalReferences, "source-distribution", item.SourceUri, item.SourceSha512, item.Name);
+        }
 
         var type = item.Kind is SoftwareKind.UserProgram or SoftwareKind.Runtime ? "application" : "library";
         var version = item.VersionResolved ? item.Version : null;
@@ -449,16 +576,19 @@ public static class CycloneDxWriter
         w.WriteEndArray();
 
         // Completeness of each dependency list (TR 5.2.2, CLAUDE.md section 4.4).
+        // Own values first in a fixed order, other aggregates of input SBOMs after them, sorted.
         w.WriteStartArray("compositions");
-        foreach (var (state, text) in new[] { (Completeness.Complete, "complete"), (Completeness.Incomplete, "incomplete"), (Completeness.Unknown, "unknown") })
+        string[] own = [Completeness.Complete, Completeness.Incomplete, Completeness.Unknown];
+        var aggregates = own.Concat(bom.Completeness.Values.Except(own).Distinct().Order(StringComparer.Ordinal));
+        foreach (var aggregate in aggregates)
         {
-            var members = bom.Completeness.Where(c => c.Value == state).Select(c => c.Key).Order(StringComparer.Ordinal).ToList();
+            var members = bom.Completeness.Where(c => c.Value == aggregate).Select(c => c.Key).Order(StringComparer.Ordinal).ToList();
             if (members.Count == 0)
             {
                 continue;
             }
             w.WriteStartObject();
-            w.WriteString("aggregate", text);
+            w.WriteString("aggregate", aggregate);
             w.WriteStartArray("dependencies");
             foreach (var member in members)
             {
@@ -493,6 +623,11 @@ public static class CycloneDxWriter
 
     private static void WriteComponent(Utf8JsonWriter w, Draft c)
     {
+        if (c.Raw is not null)
+        {
+            c.Raw.WriteTo(w);
+            return;
+        }
         w.WriteStartObject();
         w.WriteString("bom-ref", c.BomRef);
         w.WriteString("type", c.Type);

@@ -1,0 +1,4 @@
+ORGANIZATION_BLOCK "Main"
+BEGIN
+   "Foerderband_DB"(Freigabe := TRUE);
+END_ORGANIZATION_BLOCK

@@ -1,0 +1,4481 @@
+{
+  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:1a02a05d-7584-5a0b-9e78-e462de8d242a",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-10-17T11:00:00Z",
+    "tools": {
+      "components": [
+        {
+          "type": "application",
+          "manufacturer": {
+            "name": "Comquent GmbH"
+          },
+          "name": "PLC SBOM Builder",
+          "version": "0.1.0"
+        },
+        {
+          "type": "application",
+          "name": "CODESYS",
+          "version": "V3.5 SP15"
+        },
+        {
+          "type": "application",
+          "manufacturer": {
+            "name": "Siemens AG"
+          },
+          "name": "TIA Portal",
+          "version": "V17",
+          "properties": [
+            {
+              "name": "firma:tool:release",
+              "value": "1700.0.4302.1"
+            }
+          ]
+        },
+        {
+          "type": "application",
+          "name": "TwinCAT XAE",
+          "version": "3.1.4022.4"
+        }
+      ]
+    },
+    "manufacturer": {
+      "name": "Musterbau GmbH",
+      "contact": [
+        {
+          "email": "sbom@musterbau.example"
+        }
+      ]
+    },
+    "component": {
+      "bom-ref": "maschine-xy",
+      "type": "device",
+      "supplier": {
+        "name": "Musterbau GmbH"
+      },
+      "manufacturer": {
+        "name": "Musterbau GmbH",
+        "contact": [
+          {
+            "email": "sbom@musterbau.example"
+          }
+        ]
+      },
+      "name": "Maschine XY",
+      "version": "R2026.10",
+      "licenses": [
+        {
+          "expression": "LicenseRef-musterbau-proprietary",
+          "acknowledgement": "concluded"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firma:git:commit",
+          "value": "a1b2c3d4e5f60718293a4b5c6d7e8f9012345678"
+        },
+        {
+          "name": "firma:logicalComponent",
+          "value": "true"
+        }
+      ]
+    }
+  },
+  "components": [
+    {
+      "bom-ref": "partial-hmi-web/af63bd4c8601b7f1",
+      "type": "file",
+      "name": "hmi-web",
+      "version": "1.4.0",
+      "properties": [
+        {
+          "name": "firma:gap",
+          "value": "input-field-missing"
+        },
+        {
+          "name": "firma:inputSbom",
+          "value": "samples/maschine-xy/sbom/teil/hmi-web.cdx.json"
+        },
+        {
+          "name": "firma:inputSbom:kind",
+          "value": "partial"
+        },
+        {
+          "name": "firma:inputSbom:sha256",
+          "value": "e8828b3d6a809b3140b77db8819e8ae05cacd3775d47bb70ffbef766273aa369"
+        },
+        {
+          "name": "firma:station",
+          "value": "PLC_1"
+        }
+      ]
+    },
+    {
+      "bom-ref": "partial-hmi-web/pkg:npm/maschine-xy-hmi-web@1.4.0?package-id=2ca70c872f5ed6a5",
+      "type": "library",
+      "name": "maschine-xy-hmi-web",
+      "version": "1.4.0",
+      "licenses": [
+        {
+          "license": {
+            "name": "UNLICENSED"
+          }
+        }
+      ],
+      "cpe": "cpe:2.3:a:maschine-xy-hmi-web:maschine-xy-hmi-web:1.4.0:*:*:*:*:*:*:*",
+      "purl": "pkg:npm/maschine-xy-hmi-web@1.4.0",
+      "properties": [
+        {
+          "name": "syft:package:foundBy",
+          "value": "javascript-lock-cataloger"
+        },
+        {
+          "name": "syft:package:language",
+          "value": "javascript"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "npm"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "javascript-npm-package-lock-entry"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:maschine-xy-hmi-web:maschine_xy_hmi_web:1.4.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:maschine_xy_hmi_web:maschine-xy-hmi-web:1.4.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:maschine_xy_hmi_web:maschine_xy_hmi_web:1.4.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:maschine-xy-hmi:maschine-xy-hmi-web:1.4.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:maschine-xy-hmi:maschine_xy_hmi_web:1.4.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:maschine_xy_hmi:maschine-xy-hmi-web:1.4.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:maschine_xy_hmi:maschine_xy_hmi_web:1.4.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:maschine-xy:maschine-xy-hmi-web:1.4.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:maschine-xy:maschine_xy_hmi_web:1.4.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:maschine_xy:maschine-xy-hmi-web:1.4.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:maschine_xy:maschine_xy_hmi_web:1.4.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:maschine:maschine-xy-hmi-web:1.4.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:maschine:maschine_xy_hmi_web:1.4.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:location:0:path",
+          "value": "/package-lock.json"
+        },
+        {
+          "name": "firma:gap",
+          "value": "input-field-missing"
+        },
+        {
+          "name": "firma:inputSbom",
+          "value": "samples/maschine-xy/sbom/teil/hmi-web.cdx.json"
+        }
+      ]
+    },
+    {
+      "bom-ref": "partial-hmi-web/pkg:npm/ms@2.1.3?package-id=bb1077662b3cb7e0",
+      "type": "library",
+      "name": "ms",
+      "version": "2.1.3",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "cpe": "cpe:2.3:a:vercel:ms:2.1.3:*:*:*:*:node.js:*:*",
+      "purl": "pkg:npm/ms@2.1.3",
+      "properties": [
+        {
+          "name": "syft:package:foundBy",
+          "value": "javascript-lock-cataloger"
+        },
+        {
+          "name": "syft:package:language",
+          "value": "javascript"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "npm"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "javascript-npm-package-lock-entry"
+        },
+        {
+          "name": "syft:location:0:path",
+          "value": "/package-lock.json"
+        },
+        {
+          "name": "firma:gap",
+          "value": "input-field-missing"
+        },
+        {
+          "name": "firma:inputSbom",
+          "value": "samples/maschine-xy/sbom/teil/hmi-web.cdx.json"
+        }
+      ]
+    },
+    {
+      "bom-ref": "partial-hmi-web/pkg:npm/picocolors@1.1.1?package-id=9b208867cdc8b323",
+      "type": "library",
+      "name": "picocolors",
+      "version": "1.1.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "ISC"
+          }
+        }
+      ],
+      "cpe": "cpe:2.3:a:picocolors:picocolors:1.1.1:*:*:*:*:*:*:*",
+      "purl": "pkg:npm/picocolors@1.1.1",
+      "properties": [
+        {
+          "name": "syft:package:foundBy",
+          "value": "javascript-lock-cataloger"
+        },
+        {
+          "name": "syft:package:language",
+          "value": "javascript"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "npm"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "javascript-npm-package-lock-entry"
+        },
+        {
+          "name": "syft:location:0:path",
+          "value": "/package-lock.json"
+        },
+        {
+          "name": "firma:gap",
+          "value": "input-field-missing"
+        },
+        {
+          "name": "firma:inputSbom",
+          "value": "samples/maschine-xy/sbom/teil/hmi-web.cdx.json"
+        }
+      ]
+    },
+    {
+      "bom-ref": "plc-1-app",
+      "type": "application",
+      "supplier": {
+        "name": "Musterbau GmbH"
+      },
+      "manufacturer": {
+        "name": "Musterbau GmbH",
+        "contact": [
+          {
+            "email": "sbom@musterbau.example"
+          }
+        ]
+      },
+      "name": "PLC_1, Anwenderprogramm",
+      "version": "R2026.10 (git a1b2c3d)",
+      "licenses": [
+        {
+          "expression": "LicenseRef-musterbau-proprietary",
+          "acknowledgement": "concluded"
+        }
+      ],
+      "externalReferences": [
+        {
+          "url": "https://git.musterbau.example/maschine-xy/-/tree/a1b2c3d4e5f60718293a4b5c6d7e8f9012345678/samples/maschine-xy/programm/PLC_1",
+          "type": "source-distribution",
+          "hashes": [
+            {
+              "alg": "SHA-512",
+              "content": "00c89308cb1893cfa521f2b20f13a13d7f12f5f03dbab0e51c042fdac1287a6ee087127cf7e37344c947a97893222e5e3802e48120e6c8e91c6608fbadf42804"
+            }
+          ]
+        }
+      ],
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "no archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "firma:adapter",
+          "value": "tia-aml"
+        },
+        {
+          "name": "firma:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "program-not-read"
+        },
+        {
+          "name": "firma:origin",
+          "value": "declared"
+        },
+        {
+          "name": "firma:software:kind",
+          "value": "user-program"
+        },
+        {
+          "name": "firma:source",
+          "value": "fixtures/tia-aml/plc-commissioning-sample_device.aml"
+        },
+        {
+          "name": "firma:source:exportedAt",
+          "value": "2024-12-28T20:29:17Z"
+        },
+        {
+          "name": "firma:source:sha256",
+          "value": "0fade7c6844270656da6718e515d5f9fcbaa056a72891405bf1ae3c4c73bf1d6"
+        },
+        {
+          "name": "firma:sourceCode:files",
+          "value": "2"
+        },
+        {
+          "name": "firma:sourceCode:path",
+          "value": "samples/maschine-xy/programm/PLC_1"
+        },
+        {
+          "name": "firma:station",
+          "value": "PLC_1"
+        },
+        {
+          "name": "firma:vendor:origin",
+          "value": "declared"
+        }
+      ]
+    },
+    {
+      "bom-ref": "plc-1-fw",
+      "type": "firmware",
+      "supplier": {
+        "name": "Siemens AG"
+      },
+      "manufacturer": {
+        "name": "Siemens AG",
+        "url": [
+          "https://www.siemens.com"
+        ]
+      },
+      "name": "CPU 1214C DC/DC/DC, Firmware",
+      "version": "V4.5",
+      "licenses": [
+        {
+          "expression": "LicenseRef-siemens-proprietary",
+          "acknowledgement": "concluded"
+        }
+      ],
+      "cpe": "cpe:2.3:o:siemens:simatic_s7-1200_cpu_firmware:4.5:*:*:*:*:*:*:*",
+      "externalReferences": [
+        {
+          "url": "https://www.example.com/synthetisch/cpu1214c-v4.5.upd",
+          "type": "distribution",
+          "hashes": [
+            {
+              "alg": "SHA-512",
+              "content": "e112beed21020c914c86890c4885ae3a35d06a8793cc0b34b74d173e23decc88a560b5c8a2c12d656b204c4810fe3d124e14b8810d687f6fc80c3985fc684928"
+            }
+          ]
+        }
+      ],
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:filename",
+          "value": "cpu1214c-v4.5.upd"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "firma:adapter",
+          "value": "tia-aml"
+        },
+        {
+          "name": "firma:device:classification",
+          "value": "CPU"
+        },
+        {
+          "name": "firma:device:name",
+          "value": "PLC_1"
+        },
+        {
+          "name": "firma:device:orderNumber",
+          "value": "6ES7 214-1AG40-0XB0"
+        },
+        {
+          "name": "firma:device:position",
+          "value": "S7-1200 station_1/0/1"
+        },
+        {
+          "name": "firma:device:type",
+          "value": "CPU 1214C DC/DC/DC"
+        },
+        {
+          "name": "firma:device:vendor",
+          "value": "Siemens AG"
+        },
+        {
+          "name": "firma:device:vendor:origin",
+          "value": "assumed"
+        },
+        {
+          "name": "firma:firmware:origin",
+          "value": "projected"
+        },
+        {
+          "name": "firma:firmware:version",
+          "value": "V4.5"
+        },
+        {
+          "name": "firma:gap",
+          "value": "firmware-projected-only"
+        },
+        {
+          "name": "firma:inputSbom",
+          "value": "samples/maschine-xy/sbom/lieferanten/siemens-cpu1214c-v4.5-synthetisch.cdx.json"
+        },
+        {
+          "name": "firma:inputSbom:sha256",
+          "value": "d71bc02e46af86a149b53bc4d2d6f7cab5a66e34efc7d01943437b9a2dd3d1c0"
+        },
+        {
+          "name": "firma:source",
+          "value": "fixtures/tia-aml/plc-commissioning-sample_device.aml"
+        },
+        {
+          "name": "firma:source:exportedAt",
+          "value": "2024-12-28T20:29:17Z"
+        },
+        {
+          "name": "firma:source:sha256",
+          "value": "0fade7c6844270656da6718e515d5f9fcbaa056a72891405bf1ae3c4c73bf1d6"
+        },
+        {
+          "name": "firma:station",
+          "value": "PLC_1"
+        }
+      ]
+    },
+    {
+      "bom-ref": "plc-1-fw-gsd-device-1-0-0",
+      "type": "firmware",
+      "supplier": {
+        "name": "Leuze electronic GmbH + Co. KG"
+      },
+      "manufacturer": {
+        "name": "Leuze electronic GmbH + Co. KG",
+        "url": [
+          "https://www.leuze.com"
+        ]
+      },
+      "name": "BCL248i, Firmware",
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "firma:adapter",
+          "value": "tia-aml"
+        },
+        {
+          "name": "firma:device:classification",
+          "value": "HeadModule"
+        },
+        {
+          "name": "firma:device:name",
+          "value": "BCL248i"
+        },
+        {
+          "name": "firma:device:orderNumber",
+          "value": "501xxxxx"
+        },
+        {
+          "name": "firma:device:orderNumber:pattern",
+          "value": "true"
+        },
+        {
+          "name": "firma:device:position",
+          "value": "GSD device_1/0/0"
+        },
+        {
+          "name": "firma:device:type",
+          "value": "BCL248i"
+        },
+        {
+          "name": "firma:device:vendor",
+          "value": "Leuze electronic GmbH + Co. KG"
+        },
+        {
+          "name": "firma:device:vendor:origin",
+          "value": "gsdml"
+        },
+        {
+          "name": "firma:firmware:origin",
+          "value": "not-in-project"
+        },
+        {
+          "name": "firma:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "firmware-not-in-project"
+        },
+        {
+          "name": "firma:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "vendor-sbom-missing"
+        },
+        {
+          "name": "firma:gsdml:hardwareRelease",
+          "value": "3"
+        },
+        {
+          "name": "firma:gsdml:softwareRelease",
+          "value": "V1.*.*"
+        },
+        {
+          "name": "firma:source",
+          "value": "fixtures/tia-aml/plc-commissioning-sample_device.aml"
+        },
+        {
+          "name": "firma:source:exportedAt",
+          "value": "2024-12-28T20:29:17Z"
+        },
+        {
+          "name": "firma:source:sha256",
+          "value": "0fade7c6844270656da6718e515d5f9fcbaa056a72891405bf1ae3c4c73bf1d6"
+        },
+        {
+          "name": "firma:station",
+          "value": "PLC_1"
+        },
+        {
+          "name": "firma:vendorKey:DeviceId",
+          "value": "0x0015"
+        },
+        {
+          "name": "firma:vendorKey:GSDML",
+          "value": "GSDML-V2.41-LEUZE-BCL248I-20211213.XML"
+        },
+        {
+          "name": "firma:vendorKey:GsdId",
+          "value": "DAP"
+        },
+        {
+          "name": "firma:vendorKey:GsdType",
+          "value": "DAP"
+        },
+        {
+          "name": "firma:vendorKey:VendorId",
+          "value": "0x0152"
+        },
+        {
+          "name": "firma:vendorKey:gsdmlFile",
+          "value": "fixtures/gsdml/GSDML-V2.41-LEUZE-BCL248i-20211213.xml"
+        },
+        {
+          "name": "firma:vendorKey:gsdmlSha256",
+          "value": "ca1b97e3068ce1663ebba66422d9fbf77d314fc8ff3dfe589ad8c0bf6156eaf7"
+        }
+      ]
+    },
+    {
+      "bom-ref": "plc-1-lib-lgf",
+      "type": "library",
+      "supplier": {
+        "name": "Siemens AG"
+      },
+      "manufacturer": {
+        "name": "Siemens AG",
+        "url": [
+          "https://www.siemens.com"
+        ]
+      },
+      "name": "LGF",
+      "version": "7.0.1",
+      "licenses": [
+        {
+          "expression": "LicenseRef-siemens-proprietary",
+          "acknowledgement": "concluded"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firma:adapter",
+          "value": "tia-aml"
+        },
+        {
+          "name": "firma:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "firma:origin",
+          "value": "declared"
+        },
+        {
+          "name": "firma:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "firma:source",
+          "value": "fixtures/tia-aml/plc-commissioning-sample_device.aml"
+        },
+        {
+          "name": "firma:source:exportedAt",
+          "value": "2024-12-28T20:29:17Z"
+        },
+        {
+          "name": "firma:source:sha256",
+          "value": "0fade7c6844270656da6718e515d5f9fcbaa056a72891405bf1ae3c4c73bf1d6"
+        },
+        {
+          "name": "firma:station",
+          "value": "PLC_1"
+        },
+        {
+          "name": "firma:vendor:origin",
+          "value": "declared"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-app",
+      "type": "application",
+      "supplier": {
+        "name": "Musterbau GmbH"
+      },
+      "manufacturer": {
+        "name": "Musterbau GmbH",
+        "contact": [
+          {
+            "email": "sbom@musterbau.example"
+          }
+        ]
+      },
+      "name": "Roboterzelle, Anwenderprogramm",
+      "version": "R2026.10 (git a1b2c3d)",
+      "licenses": [
+        {
+          "expression": "LicenseRef-musterbau-proprietary",
+          "acknowledgement": "concluded"
+        }
+      ],
+      "externalReferences": [
+        {
+          "url": "https://git.musterbau.example/maschine-xy/-/tree/a1b2c3d4e5f60718293a4b5c6d7e8f9012345678/samples/maschine-xy/programm/Roboterzelle",
+          "type": "source-distribution",
+          "hashes": [
+            {
+              "alg": "SHA-512",
+              "content": "db703802039ba7678d16a44fc6aad65a28c9bc439941643fb629de0090c8ef1d0a9f20479e958c0da3ad10552c62cdca1268d10dea6712cc952c1154cd3a1c1f"
+            }
+          ]
+        }
+      ],
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "no archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "firma:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "firma:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "firma:origin",
+          "value": "declared"
+        },
+        {
+          "name": "firma:software:kind",
+          "value": "user-program"
+        },
+        {
+          "name": "firma:source",
+          "value": "fixtures/twincat/aixocat-heatpump/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "firma:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "firma:sourceCode:files",
+          "value": "2"
+        },
+        {
+          "name": "firma:sourceCode:path",
+          "value": "samples/maschine-xy/programm/Roboterzelle"
+        },
+        {
+          "name": "firma:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "firma:vendor:origin",
+          "value": "declared"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-fw-device-1-ethercat-1",
+      "type": "firmware",
+      "supplier": {
+        "name": "Beckhoff Automation GmbH & Co. KG"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation GmbH & Co. KG",
+        "url": [
+          "https://www.beckhoff.com"
+        ]
+      },
+      "name": "EK1100, Firmware",
+      "licenses": [
+        {
+          "expression": "LicenseRef-beckhoff-proprietary",
+          "acknowledgement": "concluded"
+        }
+      ],
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "firma:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "firma:device:disabled",
+          "value": "true"
+        },
+        {
+          "name": "firma:device:name",
+          "value": "Coupler (EK1100)"
+        },
+        {
+          "name": "firma:device:position",
+          "value": "Device 1 (EtherCAT)/1"
+        },
+        {
+          "name": "firma:device:type",
+          "value": "EK1100"
+        },
+        {
+          "name": "firma:device:vendor",
+          "value": "Beckhoff Automation GmbH & Co. KG"
+        },
+        {
+          "name": "firma:device:vendor:origin",
+          "value": "assumed"
+        },
+        {
+          "name": "firma:firmware:origin",
+          "value": "not-in-project"
+        },
+        {
+          "name": "firma:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "firmware-not-in-project"
+        },
+        {
+          "name": "firma:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "order-number-not-in-project"
+        },
+        {
+          "name": "firma:gap",
+          "value": "vendor-sbom-missing"
+        },
+        {
+          "name": "firma:source",
+          "value": "fixtures/twincat/aixocat-heatpump/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "firma:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "firma:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "firma:vendorKey:ProductCode",
+          "value": "0x044c2c52"
+        },
+        {
+          "name": "firma:vendorKey:RevisionNo",
+          "value": "0x00120000"
+        },
+        {
+          "name": "firma:vendorKey:VendorId",
+          "value": "0x00000002"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-fw-device-1-ethercat-1-10",
+      "type": "firmware",
+      "supplier": {
+        "name": "Beckhoff Automation GmbH & Co. KG"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation GmbH & Co. KG",
+        "url": [
+          "https://www.beckhoff.com"
+        ]
+      },
+      "name": "EL3214, Firmware",
+      "licenses": [
+        {
+          "expression": "LicenseRef-beckhoff-proprietary",
+          "acknowledgement": "concluded"
+        }
+      ],
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "firma:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "firma:device:disabled",
+          "value": "true"
+        },
+        {
+          "name": "firma:device:name",
+          "value": "InpTempSens3wire (EL3214)"
+        },
+        {
+          "name": "firma:device:position",
+          "value": "Device 1 (EtherCAT)/1/10"
+        },
+        {
+          "name": "firma:device:type",
+          "value": "EL3214"
+        },
+        {
+          "name": "firma:device:vendor",
+          "value": "Beckhoff Automation GmbH & Co. KG"
+        },
+        {
+          "name": "firma:device:vendor:origin",
+          "value": "assumed"
+        },
+        {
+          "name": "firma:firmware:origin",
+          "value": "not-in-project"
+        },
+        {
+          "name": "firma:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "firmware-not-in-project"
+        },
+        {
+          "name": "firma:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "order-number-not-in-project"
+        },
+        {
+          "name": "firma:gap",
+          "value": "vendor-sbom-missing"
+        },
+        {
+          "name": "firma:source",
+          "value": "fixtures/twincat/aixocat-heatpump/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "firma:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "firma:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "firma:vendorKey:ProductCode",
+          "value": "0x0c8e3052"
+        },
+        {
+          "name": "firma:vendorKey:RevisionNo",
+          "value": "0x00110000"
+        },
+        {
+          "name": "firma:vendorKey:VendorId",
+          "value": "0x00000002"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-fw-device-1-ethercat-1-2",
+      "type": "firmware",
+      "supplier": {
+        "name": "Beckhoff Automation GmbH & Co. KG"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation GmbH & Co. KG",
+        "url": [
+          "https://www.beckhoff.com"
+        ]
+      },
+      "name": "EL3064, Firmware",
+      "licenses": [
+        {
+          "expression": "LicenseRef-beckhoff-proprietary",
+          "acknowledgement": "concluded"
+        }
+      ],
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "firma:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "firma:device:disabled",
+          "value": "true"
+        },
+        {
+          "name": "firma:device:name",
+          "value": "InpPressSens (EL3064)"
+        },
+        {
+          "name": "firma:device:position",
+          "value": "Device 1 (EtherCAT)/1/2"
+        },
+        {
+          "name": "firma:device:type",
+          "value": "EL3064"
+        },
+        {
+          "name": "firma:device:vendor",
+          "value": "Beckhoff Automation GmbH & Co. KG"
+        },
+        {
+          "name": "firma:device:vendor:origin",
+          "value": "assumed"
+        },
+        {
+          "name": "firma:firmware:origin",
+          "value": "not-in-project"
+        },
+        {
+          "name": "firma:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "firmware-not-in-project"
+        },
+        {
+          "name": "firma:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "order-number-not-in-project"
+        },
+        {
+          "name": "firma:gap",
+          "value": "vendor-sbom-missing"
+        },
+        {
+          "name": "firma:source",
+          "value": "fixtures/twincat/aixocat-heatpump/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "firma:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "firma:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "firma:vendorKey:ProductCode",
+          "value": "0x0bf83052"
+        },
+        {
+          "name": "firma:vendorKey:RevisionNo",
+          "value": "0x00140000"
+        },
+        {
+          "name": "firma:vendorKey:VendorId",
+          "value": "0x00000002"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-fw-device-1-ethercat-1-3",
+      "type": "firmware",
+      "supplier": {
+        "name": "Beckhoff Automation GmbH & Co. KG"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation GmbH & Co. KG",
+        "url": [
+          "https://www.beckhoff.com"
+        ]
+      },
+      "name": "EL3204-0200, Firmware",
+      "licenses": [
+        {
+          "expression": "LicenseRef-beckhoff-proprietary",
+          "acknowledgement": "concluded"
+        }
+      ],
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "firma:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "firma:device:disabled",
+          "value": "true"
+        },
+        {
+          "name": "firma:device:name",
+          "value": "InpTempSens1 (EL3204-0200)"
+        },
+        {
+          "name": "firma:device:position",
+          "value": "Device 1 (EtherCAT)/1/3"
+        },
+        {
+          "name": "firma:device:type",
+          "value": "EL3204-0200"
+        },
+        {
+          "name": "firma:device:vendor",
+          "value": "Beckhoff Automation GmbH & Co. KG"
+        },
+        {
+          "name": "firma:device:vendor:origin",
+          "value": "assumed"
+        },
+        {
+          "name": "firma:firmware:origin",
+          "value": "not-in-project"
+        },
+        {
+          "name": "firma:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "firmware-not-in-project"
+        },
+        {
+          "name": "firma:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "order-number-not-in-project"
+        },
+        {
+          "name": "firma:gap",
+          "value": "vendor-sbom-missing"
+        },
+        {
+          "name": "firma:source",
+          "value": "fixtures/twincat/aixocat-heatpump/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "firma:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "firma:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "firma:vendorKey:ProductCode",
+          "value": "0x0c843052"
+        },
+        {
+          "name": "firma:vendorKey:RevisionNo",
+          "value": "0x001200c8"
+        },
+        {
+          "name": "firma:vendorKey:VendorId",
+          "value": "0x00000002"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-fw-device-1-ethercat-1-4",
+      "type": "firmware",
+      "supplier": {
+        "name": "Beckhoff Automation GmbH & Co. KG"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation GmbH & Co. KG",
+        "url": [
+          "https://www.beckhoff.com"
+        ]
+      },
+      "name": "EL3204-0200, Firmware",
+      "licenses": [
+        {
+          "expression": "LicenseRef-beckhoff-proprietary",
+          "acknowledgement": "concluded"
+        }
+      ],
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "firma:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "firma:device:disabled",
+          "value": "true"
+        },
+        {
+          "name": "firma:device:name",
+          "value": "InpTempSens2 (EL3204-0200)"
+        },
+        {
+          "name": "firma:device:position",
+          "value": "Device 1 (EtherCAT)/1/4"
+        },
+        {
+          "name": "firma:device:type",
+          "value": "EL3204-0200"
+        },
+        {
+          "name": "firma:device:vendor",
+          "value": "Beckhoff Automation GmbH & Co. KG"
+        },
+        {
+          "name": "firma:device:vendor:origin",
+          "value": "assumed"
+        },
+        {
+          "name": "firma:firmware:origin",
+          "value": "not-in-project"
+        },
+        {
+          "name": "firma:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "firmware-not-in-project"
+        },
+        {
+          "name": "firma:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "order-number-not-in-project"
+        },
+        {
+          "name": "firma:gap",
+          "value": "vendor-sbom-missing"
+        },
+        {
+          "name": "firma:source",
+          "value": "fixtures/twincat/aixocat-heatpump/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "firma:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "firma:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "firma:vendorKey:ProductCode",
+          "value": "0x0c843052"
+        },
+        {
+          "name": "firma:vendorKey:RevisionNo",
+          "value": "0x001200c8"
+        },
+        {
+          "name": "firma:vendorKey:VendorId",
+          "value": "0x00000002"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-fw-device-1-ethercat-1-5",
+      "type": "firmware",
+      "supplier": {
+        "name": "Beckhoff Automation GmbH & Co. KG"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation GmbH & Co. KG",
+        "url": [
+          "https://www.beckhoff.com"
+        ]
+      },
+      "name": "EL3204-0200, Firmware",
+      "licenses": [
+        {
+          "expression": "LicenseRef-beckhoff-proprietary",
+          "acknowledgement": "concluded"
+        }
+      ],
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "firma:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "firma:device:disabled",
+          "value": "true"
+        },
+        {
+          "name": "firma:device:name",
+          "value": "InpTempSens3 (EL3204-0200)"
+        },
+        {
+          "name": "firma:device:position",
+          "value": "Device 1 (EtherCAT)/1/5"
+        },
+        {
+          "name": "firma:device:type",
+          "value": "EL3204-0200"
+        },
+        {
+          "name": "firma:device:vendor",
+          "value": "Beckhoff Automation GmbH & Co. KG"
+        },
+        {
+          "name": "firma:device:vendor:origin",
+          "value": "assumed"
+        },
+        {
+          "name": "firma:firmware:origin",
+          "value": "not-in-project"
+        },
+        {
+          "name": "firma:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "firmware-not-in-project"
+        },
+        {
+          "name": "firma:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "order-number-not-in-project"
+        },
+        {
+          "name": "firma:gap",
+          "value": "vendor-sbom-missing"
+        },
+        {
+          "name": "firma:source",
+          "value": "fixtures/twincat/aixocat-heatpump/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "firma:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "firma:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "firma:vendorKey:ProductCode",
+          "value": "0x0c843052"
+        },
+        {
+          "name": "firma:vendorKey:RevisionNo",
+          "value": "0x001200c8"
+        },
+        {
+          "name": "firma:vendorKey:VendorId",
+          "value": "0x00000002"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-fw-device-1-ethercat-1-6",
+      "type": "firmware",
+      "supplier": {
+        "name": "Beckhoff Automation GmbH & Co. KG"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation GmbH & Co. KG",
+        "url": [
+          "https://www.beckhoff.com"
+        ]
+      },
+      "name": "EL3403-0010, Firmware",
+      "licenses": [
+        {
+          "expression": "LicenseRef-beckhoff-proprietary",
+          "acknowledgement": "concluded"
+        }
+      ],
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "firma:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "firma:device:disabled",
+          "value": "true"
+        },
+        {
+          "name": "firma:device:name",
+          "value": "InpPowMeas (EL3403-0010)"
+        },
+        {
+          "name": "firma:device:position",
+          "value": "Device 1 (EtherCAT)/1/6"
+        },
+        {
+          "name": "firma:device:type",
+          "value": "EL3403-0010"
+        },
+        {
+          "name": "firma:device:vendor",
+          "value": "Beckhoff Automation GmbH & Co. KG"
+        },
+        {
+          "name": "firma:device:vendor:origin",
+          "value": "assumed"
+        },
+        {
+          "name": "firma:firmware:origin",
+          "value": "not-in-project"
+        },
+        {
+          "name": "firma:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "firmware-not-in-project"
+        },
+        {
+          "name": "firma:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "order-number-not-in-project"
+        },
+        {
+          "name": "firma:gap",
+          "value": "vendor-sbom-missing"
+        },
+        {
+          "name": "firma:source",
+          "value": "fixtures/twincat/aixocat-heatpump/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "firma:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "firma:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "firma:vendorKey:ProductCode",
+          "value": "0x0d4b3052"
+        },
+        {
+          "name": "firma:vendorKey:RevisionNo",
+          "value": "0x0018000a"
+        },
+        {
+          "name": "firma:vendorKey:VendorId",
+          "value": "0x00000002"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-fw-device-1-ethercat-1-7",
+      "type": "firmware",
+      "supplier": {
+        "name": "Beckhoff Automation GmbH & Co. KG"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation GmbH & Co. KG",
+        "url": [
+          "https://www.beckhoff.com"
+        ]
+      },
+      "name": "EL4004, Firmware",
+      "licenses": [
+        {
+          "expression": "LicenseRef-beckhoff-proprietary",
+          "acknowledgement": "concluded"
+        }
+      ],
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "firma:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "firma:device:disabled",
+          "value": "true"
+        },
+        {
+          "name": "firma:device:name",
+          "value": "AnalogOutp (EL4004)"
+        },
+        {
+          "name": "firma:device:position",
+          "value": "Device 1 (EtherCAT)/1/7"
+        },
+        {
+          "name": "firma:device:type",
+          "value": "EL4004"
+        },
+        {
+          "name": "firma:device:vendor",
+          "value": "Beckhoff Automation GmbH & Co. KG"
+        },
+        {
+          "name": "firma:device:vendor:origin",
+          "value": "assumed"
+        },
+        {
+          "name": "firma:firmware:origin",
+          "value": "not-in-project"
+        },
+        {
+          "name": "firma:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "firmware-not-in-project"
+        },
+        {
+          "name": "firma:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "order-number-not-in-project"
+        },
+        {
+          "name": "firma:gap",
+          "value": "vendor-sbom-missing"
+        },
+        {
+          "name": "firma:source",
+          "value": "fixtures/twincat/aixocat-heatpump/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "firma:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "firma:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "firma:vendorKey:ProductCode",
+          "value": "0x0fa43052"
+        },
+        {
+          "name": "firma:vendorKey:RevisionNo",
+          "value": "0x00140000"
+        },
+        {
+          "name": "firma:vendorKey:VendorId",
+          "value": "0x00000002"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-fw-device-1-ethercat-1-8",
+      "type": "firmware",
+      "supplier": {
+        "name": "Beckhoff Automation GmbH & Co. KG"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation GmbH & Co. KG",
+        "url": [
+          "https://www.beckhoff.com"
+        ]
+      },
+      "name": "EL2652, Firmware",
+      "licenses": [
+        {
+          "expression": "LicenseRef-beckhoff-proprietary",
+          "acknowledgement": "concluded"
+        }
+      ],
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "firma:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "firma:device:disabled",
+          "value": "true"
+        },
+        {
+          "name": "firma:device:name",
+          "value": "OutpSwitchValv (EL2652)"
+        },
+        {
+          "name": "firma:device:position",
+          "value": "Device 1 (EtherCAT)/1/8"
+        },
+        {
+          "name": "firma:device:type",
+          "value": "EL2652"
+        },
+        {
+          "name": "firma:device:vendor",
+          "value": "Beckhoff Automation GmbH & Co. KG"
+        },
+        {
+          "name": "firma:device:vendor:origin",
+          "value": "assumed"
+        },
+        {
+          "name": "firma:firmware:origin",
+          "value": "not-in-project"
+        },
+        {
+          "name": "firma:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "firmware-not-in-project"
+        },
+        {
+          "name": "firma:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "order-number-not-in-project"
+        },
+        {
+          "name": "firma:gap",
+          "value": "vendor-sbom-missing"
+        },
+        {
+          "name": "firma:source",
+          "value": "fixtures/twincat/aixocat-heatpump/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "firma:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "firma:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "firma:vendorKey:ProductCode",
+          "value": "0x0a5c3052"
+        },
+        {
+          "name": "firma:vendorKey:RevisionNo",
+          "value": "0x00120000"
+        },
+        {
+          "name": "firma:vendorKey:VendorId",
+          "value": "0x00000002"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-fw-device-1-ethercat-1-9",
+      "type": "firmware",
+      "supplier": {
+        "name": "Beckhoff Automation GmbH & Co. KG"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation GmbH & Co. KG",
+        "url": [
+          "https://www.beckhoff.com"
+        ]
+      },
+      "name": "EL2622, Firmware",
+      "licenses": [
+        {
+          "expression": "LicenseRef-beckhoff-proprietary",
+          "acknowledgement": "concluded"
+        }
+      ],
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "firma:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "firma:device:disabled",
+          "value": "true"
+        },
+        {
+          "name": "firma:device:name",
+          "value": "OutpCont (EL2622)"
+        },
+        {
+          "name": "firma:device:position",
+          "value": "Device 1 (EtherCAT)/1/9"
+        },
+        {
+          "name": "firma:device:type",
+          "value": "EL2622"
+        },
+        {
+          "name": "firma:device:vendor",
+          "value": "Beckhoff Automation GmbH & Co. KG"
+        },
+        {
+          "name": "firma:device:vendor:origin",
+          "value": "assumed"
+        },
+        {
+          "name": "firma:firmware:origin",
+          "value": "not-in-project"
+        },
+        {
+          "name": "firma:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "firmware-not-in-project"
+        },
+        {
+          "name": "firma:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "order-number-not-in-project"
+        },
+        {
+          "name": "firma:gap",
+          "value": "vendor-sbom-missing"
+        },
+        {
+          "name": "firma:source",
+          "value": "fixtures/twincat/aixocat-heatpump/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "firma:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "firma:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "firma:vendorKey:ProductCode",
+          "value": "0x0a3e3052"
+        },
+        {
+          "name": "firma:vendorKey:RevisionNo",
+          "value": "0x00120000"
+        },
+        {
+          "name": "firma:vendorKey:VendorId",
+          "value": "0x00000002"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-tc2-standard",
+      "type": "library",
+      "supplier": {
+        "name": "Beckhoff Automation GmbH"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation GmbH"
+      },
+      "name": "Tc2_Standard",
+      "properties": [
+        {
+          "name": "firma:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "firma:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "firma:library:company",
+          "value": "Beckhoff Automation GmbH"
+        },
+        {
+          "name": "firma:library:reference",
+          "value": "Tc2_Standard"
+        },
+        {
+          "name": "firma:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "firma:origin",
+          "value": "source"
+        },
+        {
+          "name": "firma:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "firma:source",
+          "value": "fixtures/twincat/aixocat-heatpump/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "firma:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "firma:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "firma:vendor:origin",
+          "value": "source"
+        },
+        {
+          "name": "firma:version:requested",
+          "value": "*"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-tc2-system",
+      "type": "library",
+      "supplier": {
+        "name": "Beckhoff Automation GmbH"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation GmbH"
+      },
+      "name": "Tc2_System",
+      "properties": [
+        {
+          "name": "firma:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "firma:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "firma:library:company",
+          "value": "Beckhoff Automation GmbH"
+        },
+        {
+          "name": "firma:library:reference",
+          "value": "Tc2_System"
+        },
+        {
+          "name": "firma:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "firma:origin",
+          "value": "source"
+        },
+        {
+          "name": "firma:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "firma:source",
+          "value": "fixtures/twincat/aixocat-heatpump/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "firma:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "firma:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "firma:vendor:origin",
+          "value": "source"
+        },
+        {
+          "name": "firma:version:requested",
+          "value": "*"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-tc2-utilities",
+      "type": "library",
+      "supplier": {
+        "name": "Beckhoff Automation GmbH"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation GmbH"
+      },
+      "name": "Tc2_Utilities",
+      "properties": [
+        {
+          "name": "firma:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "firma:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "firma:library:company",
+          "value": "Beckhoff Automation GmbH"
+        },
+        {
+          "name": "firma:library:reference",
+          "value": "Tc2_Utilities"
+        },
+        {
+          "name": "firma:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "firma:origin",
+          "value": "source"
+        },
+        {
+          "name": "firma:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "firma:source",
+          "value": "fixtures/twincat/aixocat-heatpump/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "firma:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "firma:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "firma:vendor:origin",
+          "value": "source"
+        },
+        {
+          "name": "firma:version:requested",
+          "value": "*"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-tc3-module",
+      "type": "library",
+      "supplier": {
+        "name": "Beckhoff Automation GmbH"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation GmbH"
+      },
+      "name": "Tc3_Module",
+      "properties": [
+        {
+          "name": "firma:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "firma:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "firma:library:company",
+          "value": "Beckhoff Automation GmbH"
+        },
+        {
+          "name": "firma:library:reference",
+          "value": "Tc3_Module"
+        },
+        {
+          "name": "firma:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "firma:origin",
+          "value": "source"
+        },
+        {
+          "name": "firma:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "firma:source",
+          "value": "fixtures/twincat/aixocat-heatpump/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "firma:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "firma:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "firma:vendor:origin",
+          "value": "source"
+        },
+        {
+          "name": "firma:version:requested",
+          "value": "*"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-visudialogs",
+      "type": "library",
+      "name": "VisuDialogs",
+      "properties": [
+        {
+          "name": "firma:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "firma:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "supplier-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "firma:library:company",
+          "value": "System"
+        },
+        {
+          "name": "firma:library:reference",
+          "value": "VisuDialogs"
+        },
+        {
+          "name": "firma:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "firma:origin",
+          "value": "source"
+        },
+        {
+          "name": "firma:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "firma:source",
+          "value": "fixtures/twincat/aixocat-heatpump/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "firma:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "firma:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "firma:version:requested",
+          "value": "*"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-visuelem3dpath",
+      "type": "library",
+      "name": "VisuElem3DPath",
+      "properties": [
+        {
+          "name": "firma:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "firma:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "supplier-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "firma:library:company",
+          "value": "System"
+        },
+        {
+          "name": "firma:library:reference",
+          "value": "System_VisuElem3DPath"
+        },
+        {
+          "name": "firma:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "firma:origin",
+          "value": "source"
+        },
+        {
+          "name": "firma:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "firma:source",
+          "value": "fixtures/twincat/aixocat-heatpump/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "firma:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "firma:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "firma:version:requested",
+          "value": "3.5.6.0"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-visuelemmeter",
+      "type": "library",
+      "name": "VisuElemMeter",
+      "properties": [
+        {
+          "name": "firma:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "firma:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "supplier-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "firma:library:company",
+          "value": "System"
+        },
+        {
+          "name": "firma:library:reference",
+          "value": "System_VisuElemMeter"
+        },
+        {
+          "name": "firma:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "firma:origin",
+          "value": "source"
+        },
+        {
+          "name": "firma:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "firma:source",
+          "value": "fixtures/twincat/aixocat-heatpump/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "firma:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "firma:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "firma:version:requested",
+          "value": "3.5.6.0"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-visuelems",
+      "type": "library",
+      "name": "VisuElems",
+      "properties": [
+        {
+          "name": "firma:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "firma:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "supplier-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "firma:library:company",
+          "value": "System"
+        },
+        {
+          "name": "firma:library:reference",
+          "value": "System_VisuElems"
+        },
+        {
+          "name": "firma:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "firma:origin",
+          "value": "source"
+        },
+        {
+          "name": "firma:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "firma:source",
+          "value": "fixtures/twincat/aixocat-heatpump/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "firma:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "firma:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "firma:version:requested",
+          "value": "3.5.6.10"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-visuelemsdatetime",
+      "type": "library",
+      "name": "VisuElemsDateTime",
+      "properties": [
+        {
+          "name": "firma:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "firma:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "supplier-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "firma:library:company",
+          "value": "System"
+        },
+        {
+          "name": "firma:library:reference",
+          "value": "System_VisuElemsDateTime"
+        },
+        {
+          "name": "firma:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "firma:origin",
+          "value": "source"
+        },
+        {
+          "name": "firma:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "firma:source",
+          "value": "fixtures/twincat/aixocat-heatpump/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "firma:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "firma:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "firma:version:requested",
+          "value": "3.5.6.0"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-visuelemsspecialcontrols",
+      "type": "library",
+      "name": "VisuElemsSpecialControls",
+      "properties": [
+        {
+          "name": "firma:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "firma:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "supplier-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "firma:library:company",
+          "value": "System"
+        },
+        {
+          "name": "firma:library:reference",
+          "value": "System_VisuElemsSpecialControls"
+        },
+        {
+          "name": "firma:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "firma:origin",
+          "value": "source"
+        },
+        {
+          "name": "firma:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "firma:source",
+          "value": "fixtures/twincat/aixocat-heatpump/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "firma:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "firma:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "firma:version:requested",
+          "value": "3.5.6.0"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-visuelemswincontrols",
+      "type": "library",
+      "name": "VisuElemsWinControls",
+      "properties": [
+        {
+          "name": "firma:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "firma:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "supplier-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "firma:library:company",
+          "value": "System"
+        },
+        {
+          "name": "firma:library:reference",
+          "value": "System_VisuElemsWinControls"
+        },
+        {
+          "name": "firma:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "firma:origin",
+          "value": "source"
+        },
+        {
+          "name": "firma:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "firma:source",
+          "value": "fixtures/twincat/aixocat-heatpump/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "firma:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "firma:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "firma:version:requested",
+          "value": "3.5.6.0"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-visuelemtexteditor",
+      "type": "library",
+      "name": "VisuElemTextEditor",
+      "properties": [
+        {
+          "name": "firma:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "firma:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "supplier-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "firma:library:company",
+          "value": "System"
+        },
+        {
+          "name": "firma:library:reference",
+          "value": "System_VisuElemTextEditor"
+        },
+        {
+          "name": "firma:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "firma:origin",
+          "value": "source"
+        },
+        {
+          "name": "firma:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "firma:source",
+          "value": "fixtures/twincat/aixocat-heatpump/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "firma:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "firma:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "firma:version:requested",
+          "value": "3.5.6.0"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-visuinputs",
+      "type": "library",
+      "name": "visuinputs",
+      "properties": [
+        {
+          "name": "firma:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "firma:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "supplier-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "firma:library:company",
+          "value": "system"
+        },
+        {
+          "name": "firma:library:reference",
+          "value": "system_visuinputs"
+        },
+        {
+          "name": "firma:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "firma:origin",
+          "value": "source"
+        },
+        {
+          "name": "firma:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "firma:source",
+          "value": "fixtures/twincat/aixocat-heatpump/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "firma:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "firma:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "firma:version:requested",
+          "value": "3.5.6.0"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-lib-visunativecontrol",
+      "type": "library",
+      "name": "VisuNativeControl",
+      "properties": [
+        {
+          "name": "firma:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "firma:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "supplier-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "firma:library:company",
+          "value": "System"
+        },
+        {
+          "name": "firma:library:reference",
+          "value": "System_VisuNativeControl"
+        },
+        {
+          "name": "firma:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "firma:origin",
+          "value": "source"
+        },
+        {
+          "name": "firma:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "firma:source",
+          "value": "fixtures/twincat/aixocat-heatpump/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "firma:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "firma:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "firma:version:requested",
+          "value": "3.5.6.0"
+        }
+      ]
+    },
+    {
+      "bom-ref": "roboterzelle-rt",
+      "type": "application",
+      "supplier": {
+        "name": "Beckhoff Automation GmbH & Co. KG"
+      },
+      "manufacturer": {
+        "name": "Beckhoff Automation GmbH & Co. KG",
+        "url": [
+          "https://www.beckhoff.com"
+        ]
+      },
+      "name": "TwinCAT 3 Runtime",
+      "licenses": [
+        {
+          "expression": "LicenseRef-beckhoff-proprietary",
+          "acknowledgement": "concluded"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firma:adapter",
+          "value": "twincat"
+        },
+        {
+          "name": "firma:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "runtime-version-unknown"
+        },
+        {
+          "name": "firma:origin",
+          "value": "assumed"
+        },
+        {
+          "name": "firma:software:kind",
+          "value": "runtime"
+        },
+        {
+          "name": "firma:source",
+          "value": "fixtures/twincat/aixocat-heatpump/HeatPumpTestBenchControl.tsproj"
+        },
+        {
+          "name": "firma:source:sha256",
+          "value": "8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb"
+        },
+        {
+          "name": "firma:station",
+          "value": "Roboterzelle"
+        },
+        {
+          "name": "firma:vendor:origin",
+          "value": "assumed"
+        }
+      ]
+    },
+    {
+      "bom-ref": "vendor-siemens-cpu1214c-v4-5-synthetisch/rtos",
+      "type": "library",
+      "supplier": {
+        "name": "Siemens AG"
+      },
+      "manufacturer": {
+        "name": "Siemens AG",
+        "url": [
+          "https://www.siemens.com"
+        ]
+      },
+      "name": "Beispiel-Echtzeitkern",
+      "version": "2.1.0",
+      "licenses": [
+        {
+          "license": {
+            "name": "LicenseRef-siemens-proprietary",
+            "acknowledgement": "concluded"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "url": "https://www.example.com/synthetisch/rtos-2.1.0.bin",
+          "type": "distribution",
+          "hashes": [
+            {
+              "alg": "SHA-512",
+              "content": "332c04aaa46bd7bac1ec978160f37f782bde02d8ed2e5908d4577954e56272810d151226c8b8733ee925c32ee8c8a0dfca51d1deeac3cfbc7bc3462b1b7c8739"
+            }
+          ]
+        }
+      ],
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "no archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:filename",
+          "value": "rtos-2.1.0.bin"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "firma:inputSbom",
+          "value": "samples/maschine-xy/sbom/lieferanten/siemens-cpu1214c-v4.5-synthetisch.cdx.json"
+        }
+      ]
+    },
+    {
+      "bom-ref": "vendor-siemens-cpu1214c-v4-5-synthetisch/tcpip",
+      "type": "library",
+      "supplier": {
+        "name": "Siemens AG"
+      },
+      "manufacturer": {
+        "name": "Siemens AG",
+        "url": [
+          "https://www.siemens.com"
+        ]
+      },
+      "name": "Beispiel-TCP/IP-Stack",
+      "version": "1.4.2",
+      "licenses": [
+        {
+          "license": {
+            "name": "LicenseRef-siemens-proprietary",
+            "acknowledgement": "concluded"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "url": "https://www.example.com/synthetisch/tcpip-1.4.2.bin",
+          "type": "distribution",
+          "hashes": [
+            {
+              "alg": "SHA-512",
+              "content": "1a4725d4d5d7361a10af8cc155cb86c9378b01714155b66c9249f97442c6e6593cd6a1715841f8dd505121cec47942f3b5073bc2937b05e62744a5722f61627d"
+            }
+          ]
+        }
+      ],
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "no archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:filename",
+          "value": "tcpip-1.4.2.bin"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "firma:inputSbom",
+          "value": "samples/maschine-xy/sbom/lieferanten/siemens-cpu1214c-v4.5-synthetisch.cdx.json"
+        }
+      ]
+    },
+    {
+      "bom-ref": "verpackung-app",
+      "type": "application",
+      "supplier": {
+        "name": "Musterbau GmbH"
+      },
+      "manufacturer": {
+        "name": "Musterbau GmbH",
+        "contact": [
+          {
+            "email": "sbom@musterbau.example"
+          }
+        ]
+      },
+      "name": "Verpackung, Anwenderprogramm",
+      "version": "R2026.10 (git a1b2c3d)",
+      "licenses": [
+        {
+          "expression": "LicenseRef-musterbau-proprietary",
+          "acknowledgement": "concluded"
+        }
+      ],
+      "externalReferences": [
+        {
+          "url": "https://git.musterbau.example/maschine-xy/-/tree/a1b2c3d4e5f60718293a4b5c6d7e8f9012345678/samples/maschine-xy/programm/Verpackung",
+          "type": "source-distribution",
+          "hashes": [
+            {
+              "alg": "SHA-512",
+              "content": "69e7c4f36fd0d6af7f2343a3a5f9f3b35a3c1a756f648271fd7a50a0440a6cc42c6ffbfaf06a7b24753bfd0a606c711aac9410222e117f658ab8c039eb8e00e9"
+            }
+          ]
+        }
+      ],
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "no archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "firma:adapter",
+          "value": "codesys"
+        },
+        {
+          "name": "firma:adapter:source",
+          "value": "v35"
+        },
+        {
+          "name": "firma:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "firma:origin",
+          "value": "declared"
+        },
+        {
+          "name": "firma:software:kind",
+          "value": "user-program"
+        },
+        {
+          "name": "firma:source",
+          "value": "fixtures/codesys/v35/robin-codesys_project.xml"
+        },
+        {
+          "name": "firma:source:sha256",
+          "value": "acf12d77f7ad9ba162485e9c8d64545d97ab37e81f396507112917330af17f2d"
+        },
+        {
+          "name": "firma:sourceCode:files",
+          "value": "1"
+        },
+        {
+          "name": "firma:sourceCode:path",
+          "value": "samples/maschine-xy/programm/Verpackung"
+        },
+        {
+          "name": "firma:station",
+          "value": "Verpackung"
+        },
+        {
+          "name": "firma:vendor:origin",
+          "value": "declared"
+        }
+      ]
+    },
+    {
+      "bom-ref": "verpackung-fw",
+      "type": "firmware",
+      "name": "Gerät 4102/0000 0005, Firmware",
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "firma:adapter",
+          "value": "codesys"
+        },
+        {
+          "name": "firma:adapter:source",
+          "value": "v35"
+        },
+        {
+          "name": "firma:device:name",
+          "value": "Device"
+        },
+        {
+          "name": "firma:device:type",
+          "value": "Gerät 4102/0000 0005"
+        },
+        {
+          "name": "firma:firmware:origin",
+          "value": "unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "firmware-not-in-project"
+        },
+        {
+          "name": "firma:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "order-number-not-in-project"
+        },
+        {
+          "name": "firma:gap",
+          "value": "supplier-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "vendor-sbom-missing"
+        },
+        {
+          "name": "firma:source",
+          "value": "fixtures/codesys/v35/robin-codesys_project.xml"
+        },
+        {
+          "name": "firma:source:sha256",
+          "value": "acf12d77f7ad9ba162485e9c8d64545d97ab37e81f396507112917330af17f2d"
+        },
+        {
+          "name": "firma:station",
+          "value": "Verpackung"
+        },
+        {
+          "name": "firma:vendorKey:DeviceDescriptionVersion",
+          "value": "3.5.15.0"
+        },
+        {
+          "name": "firma:vendorKey:DeviceId",
+          "value": "0000 0005"
+        },
+        {
+          "name": "firma:vendorKey:DeviceType",
+          "value": "4102"
+        }
+      ]
+    },
+    {
+      "bom-ref": "verpackung-lib-3slicense",
+      "type": "library",
+      "supplier": {
+        "name": "3S - Smart Software Solutions GmbH"
+      },
+      "manufacturer": {
+        "name": "3S - Smart Software Solutions GmbH"
+      },
+      "name": "3SLicense",
+      "properties": [
+        {
+          "name": "firma:adapter",
+          "value": "codesys"
+        },
+        {
+          "name": "firma:adapter:source",
+          "value": "v35"
+        },
+        {
+          "name": "firma:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "firma:library:company",
+          "value": "3S - Smart Software Solutions GmbH"
+        },
+        {
+          "name": "firma:library:reference",
+          "value": "#3SLicense"
+        },
+        {
+          "name": "firma:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "firma:origin",
+          "value": "source"
+        },
+        {
+          "name": "firma:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "firma:source",
+          "value": "fixtures/codesys/v35/robin-codesys_project.xml"
+        },
+        {
+          "name": "firma:source:sha256",
+          "value": "acf12d77f7ad9ba162485e9c8d64545d97ab37e81f396507112917330af17f2d"
+        },
+        {
+          "name": "firma:station",
+          "value": "Verpackung"
+        },
+        {
+          "name": "firma:vendor:origin",
+          "value": "source"
+        },
+        {
+          "name": "firma:version:requested",
+          "value": "0.0.0.0"
+        }
+      ]
+    },
+    {
+      "bom-ref": "verpackung-lib-breakpoint-logging-functions",
+      "type": "library",
+      "supplier": {
+        "name": "3S - Smart Software Solutions GmbH"
+      },
+      "manufacturer": {
+        "name": "3S - Smart Software Solutions GmbH"
+      },
+      "name": "Breakpoint Logging Functions",
+      "properties": [
+        {
+          "name": "firma:adapter",
+          "value": "codesys"
+        },
+        {
+          "name": "firma:adapter:source",
+          "value": "v35"
+        },
+        {
+          "name": "firma:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "firma:library:company",
+          "value": "3S - Smart Software Solutions GmbH"
+        },
+        {
+          "name": "firma:library:reference",
+          "value": "#BreakpointLogging"
+        },
+        {
+          "name": "firma:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "firma:origin",
+          "value": "source"
+        },
+        {
+          "name": "firma:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "firma:source",
+          "value": "fixtures/codesys/v35/robin-codesys_project.xml"
+        },
+        {
+          "name": "firma:source:sha256",
+          "value": "acf12d77f7ad9ba162485e9c8d64545d97ab37e81f396507112917330af17f2d"
+        },
+        {
+          "name": "firma:station",
+          "value": "Verpackung"
+        },
+        {
+          "name": "firma:vendor:origin",
+          "value": "source"
+        },
+        {
+          "name": "firma:version:requested",
+          "value": "3.5.5.0"
+        }
+      ]
+    },
+    {
+      "bom-ref": "verpackung-lib-caa-device-diagnosis",
+      "type": "library",
+      "supplier": {
+        "name": "CAA Technical Workgroup"
+      },
+      "manufacturer": {
+        "name": "CAA Technical Workgroup"
+      },
+      "name": "CAA Device Diagnosis",
+      "properties": [
+        {
+          "name": "firma:adapter",
+          "value": "codesys"
+        },
+        {
+          "name": "firma:adapter:source",
+          "value": "v35"
+        },
+        {
+          "name": "firma:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "firma:library:company",
+          "value": "CAA Technical Workgroup"
+        },
+        {
+          "name": "firma:library:reference",
+          "value": "#CAA Device Diagnosis"
+        },
+        {
+          "name": "firma:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "firma:origin",
+          "value": "source"
+        },
+        {
+          "name": "firma:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "firma:source",
+          "value": "fixtures/codesys/v35/robin-codesys_project.xml"
+        },
+        {
+          "name": "firma:source:sha256",
+          "value": "acf12d77f7ad9ba162485e9c8d64545d97ab37e81f396507112917330af17f2d"
+        },
+        {
+          "name": "firma:station",
+          "value": "Verpackung"
+        },
+        {
+          "name": "firma:vendor:origin",
+          "value": "source"
+        },
+        {
+          "name": "firma:version:requested",
+          "value": "3.5.15.0"
+        }
+      ]
+    },
+    {
+      "bom-ref": "verpackung-lib-iostandard",
+      "type": "library",
+      "name": "IoStandard",
+      "properties": [
+        {
+          "name": "firma:adapter",
+          "value": "codesys"
+        },
+        {
+          "name": "firma:adapter:source",
+          "value": "v35"
+        },
+        {
+          "name": "firma:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "supplier-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "firma:library:company",
+          "value": "System"
+        },
+        {
+          "name": "firma:library:reference",
+          "value": "#IoStandard"
+        },
+        {
+          "name": "firma:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "firma:origin",
+          "value": "source"
+        },
+        {
+          "name": "firma:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "firma:source",
+          "value": "fixtures/codesys/v35/robin-codesys_project.xml"
+        },
+        {
+          "name": "firma:source:sha256",
+          "value": "acf12d77f7ad9ba162485e9c8d64545d97ab37e81f396507112917330af17f2d"
+        },
+        {
+          "name": "firma:station",
+          "value": "Verpackung"
+        },
+        {
+          "name": "firma:version:requested",
+          "value": "3.5.15.0"
+        }
+      ]
+    },
+    {
+      "bom-ref": "verpackung-lib-robin",
+      "type": "library",
+      "supplier": {
+        "name": "INESC TEC"
+      },
+      "manufacturer": {
+        "name": "INESC TEC"
+      },
+      "name": "Robin",
+      "version": "0.1.2",
+      "properties": [
+        {
+          "name": "firma:adapter",
+          "value": "codesys"
+        },
+        {
+          "name": "firma:adapter:source",
+          "value": "v35"
+        },
+        {
+          "name": "firma:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "firma:library:company",
+          "value": "INESC TEC"
+        },
+        {
+          "name": "firma:library:reference",
+          "value": "Robin, 0.1.2 (INESC TEC)"
+        },
+        {
+          "name": "firma:library:resolution",
+          "value": "fixed"
+        },
+        {
+          "name": "firma:origin",
+          "value": "source"
+        },
+        {
+          "name": "firma:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "firma:source",
+          "value": "fixtures/codesys/v35/robin-codesys_project.xml"
+        },
+        {
+          "name": "firma:source:sha256",
+          "value": "acf12d77f7ad9ba162485e9c8d64545d97ab37e81f396507112917330af17f2d"
+        },
+        {
+          "name": "firma:station",
+          "value": "Verpackung"
+        },
+        {
+          "name": "firma:vendor:origin",
+          "value": "source"
+        }
+      ]
+    },
+    {
+      "bom-ref": "verpackung-lib-sm3-basic",
+      "type": "library",
+      "supplier": {
+        "name": "3S - Smart Software Solutions GmbH"
+      },
+      "manufacturer": {
+        "name": "3S - Smart Software Solutions GmbH"
+      },
+      "name": "SM3_Basic",
+      "properties": [
+        {
+          "name": "firma:adapter",
+          "value": "codesys"
+        },
+        {
+          "name": "firma:adapter:source",
+          "value": "v35"
+        },
+        {
+          "name": "firma:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "firma:library:company",
+          "value": "3S - Smart Software Solutions GmbH"
+        },
+        {
+          "name": "firma:library:reference",
+          "value": "#SM3_Basic"
+        },
+        {
+          "name": "firma:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "firma:origin",
+          "value": "source"
+        },
+        {
+          "name": "firma:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "firma:source",
+          "value": "fixtures/codesys/v35/robin-codesys_project.xml"
+        },
+        {
+          "name": "firma:source:sha256",
+          "value": "acf12d77f7ad9ba162485e9c8d64545d97ab37e81f396507112917330af17f2d"
+        },
+        {
+          "name": "firma:station",
+          "value": "Verpackung"
+        },
+        {
+          "name": "firma:vendor:origin",
+          "value": "source"
+        },
+        {
+          "name": "firma:version:requested",
+          "value": "4.5.1.0"
+        }
+      ]
+    },
+    {
+      "bom-ref": "verpackung-lib-sm3-cnc",
+      "type": "library",
+      "supplier": {
+        "name": "3S - Smart Software Solutions GmbH"
+      },
+      "manufacturer": {
+        "name": "3S - Smart Software Solutions GmbH"
+      },
+      "name": "SM3_CNC",
+      "properties": [
+        {
+          "name": "firma:adapter",
+          "value": "codesys"
+        },
+        {
+          "name": "firma:adapter:source",
+          "value": "v35"
+        },
+        {
+          "name": "firma:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "firma:library:company",
+          "value": "3S - Smart Software Solutions GmbH"
+        },
+        {
+          "name": "firma:library:reference",
+          "value": "#SM3_CNC"
+        },
+        {
+          "name": "firma:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "firma:origin",
+          "value": "source"
+        },
+        {
+          "name": "firma:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "firma:source",
+          "value": "fixtures/codesys/v35/robin-codesys_project.xml"
+        },
+        {
+          "name": "firma:source:sha256",
+          "value": "acf12d77f7ad9ba162485e9c8d64545d97ab37e81f396507112917330af17f2d"
+        },
+        {
+          "name": "firma:station",
+          "value": "Verpackung"
+        },
+        {
+          "name": "firma:vendor:origin",
+          "value": "source"
+        },
+        {
+          "name": "firma:version:requested",
+          "value": "4.5.1.0"
+        }
+      ]
+    },
+    {
+      "bom-ref": "verpackung-lib-sm3-robotics",
+      "type": "library",
+      "supplier": {
+        "name": "3S - Smart Software Solutions GmbH"
+      },
+      "manufacturer": {
+        "name": "3S - Smart Software Solutions GmbH"
+      },
+      "name": "SM3_Robotics",
+      "properties": [
+        {
+          "name": "firma:adapter",
+          "value": "codesys"
+        },
+        {
+          "name": "firma:adapter:source",
+          "value": "v35"
+        },
+        {
+          "name": "firma:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "firma:library:company",
+          "value": "3S - Smart Software Solutions GmbH"
+        },
+        {
+          "name": "firma:library:reference",
+          "value": "#SM3_Robotics"
+        },
+        {
+          "name": "firma:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "firma:origin",
+          "value": "source"
+        },
+        {
+          "name": "firma:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "firma:source",
+          "value": "fixtures/codesys/v35/robin-codesys_project.xml"
+        },
+        {
+          "name": "firma:source:sha256",
+          "value": "acf12d77f7ad9ba162485e9c8d64545d97ab37e81f396507112917330af17f2d"
+        },
+        {
+          "name": "firma:station",
+          "value": "Verpackung"
+        },
+        {
+          "name": "firma:vendor:origin",
+          "value": "source"
+        },
+        {
+          "name": "firma:version:requested",
+          "value": "4.5.1.0"
+        }
+      ]
+    },
+    {
+      "bom-ref": "verpackung-lib-sm3-robotics-visu",
+      "type": "library",
+      "supplier": {
+        "name": "3S - Smart Software Solutions GmbH"
+      },
+      "manufacturer": {
+        "name": "3S - Smart Software Solutions GmbH"
+      },
+      "name": "SM3_Robotics_Visu",
+      "properties": [
+        {
+          "name": "firma:adapter",
+          "value": "codesys"
+        },
+        {
+          "name": "firma:adapter:source",
+          "value": "v35"
+        },
+        {
+          "name": "firma:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "firma:library:company",
+          "value": "3S - Smart Software Solutions GmbH"
+        },
+        {
+          "name": "firma:library:reference",
+          "value": "#SM3_Robotics_Visu"
+        },
+        {
+          "name": "firma:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "firma:origin",
+          "value": "source"
+        },
+        {
+          "name": "firma:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "firma:source",
+          "value": "fixtures/codesys/v35/robin-codesys_project.xml"
+        },
+        {
+          "name": "firma:source:sha256",
+          "value": "acf12d77f7ad9ba162485e9c8d64545d97ab37e81f396507112917330af17f2d"
+        },
+        {
+          "name": "firma:station",
+          "value": "Verpackung"
+        },
+        {
+          "name": "firma:vendor:origin",
+          "value": "source"
+        },
+        {
+          "name": "firma:version:requested",
+          "value": "4.5.1.0"
+        }
+      ]
+    },
+    {
+      "bom-ref": "verpackung-lib-sm3-transformation",
+      "type": "library",
+      "supplier": {
+        "name": "3S - Smart Software Solutions GmbH"
+      },
+      "manufacturer": {
+        "name": "3S - Smart Software Solutions GmbH"
+      },
+      "name": "SM3_Transformation",
+      "properties": [
+        {
+          "name": "firma:adapter",
+          "value": "codesys"
+        },
+        {
+          "name": "firma:adapter:source",
+          "value": "v35"
+        },
+        {
+          "name": "firma:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "firma:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "firma:gap",
+          "value": "version-unresolved"
+        },
+        {
+          "name": "firma:library:company",
+          "value": "3S - Smart Software Solutions GmbH"
+        },
+        {
+          "name": "firma:library:reference",
+          "value": "#SM3_Transformation"
+        },
+        {
+          "name": "firma:library:resolution",
+          "value": "default"
+        },
+        {
+          "name": "firma:origin",
+          "value": "source"
+        },
+        {
+          "name": "firma:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "firma:source",
+          "value": "fixtures/codesys/v35/robin-codesys_project.xml"
+        },
+        {
+          "name": "firma:source:sha256",
+          "value": "acf12d77f7ad9ba162485e9c8d64545d97ab37e81f396507112917330af17f2d"
+        },
+        {
+          "name": "firma:station",
+          "value": "Verpackung"
+        },
+        {
+          "name": "firma:vendor:origin",
+          "value": "source"
+        },
+        {
+          "name": "firma:version:requested",
+          "value": "4.5.1.0"
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "maschine-xy",
+      "dependsOn": [
+        "partial-hmi-web/af63bd4c8601b7f1",
+        "plc-1-app",
+        "plc-1-fw",
+        "plc-1-fw-gsd-device-1-0-0",
+        "roboterzelle-app",
+        "roboterzelle-fw-device-1-ethercat-1",
+        "roboterzelle-fw-device-1-ethercat-1-10",
+        "roboterzelle-fw-device-1-ethercat-1-2",
+        "roboterzelle-fw-device-1-ethercat-1-3",
+        "roboterzelle-fw-device-1-ethercat-1-4",
+        "roboterzelle-fw-device-1-ethercat-1-5",
+        "roboterzelle-fw-device-1-ethercat-1-6",
+        "roboterzelle-fw-device-1-ethercat-1-7",
+        "roboterzelle-fw-device-1-ethercat-1-8",
+        "roboterzelle-fw-device-1-ethercat-1-9",
+        "verpackung-app",
+        "verpackung-fw"
+      ]
+    },
+    {
+      "ref": "partial-hmi-web/af63bd4c8601b7f1",
+      "dependsOn": [
+        "partial-hmi-web/pkg:npm/maschine-xy-hmi-web@1.4.0?package-id=2ca70c872f5ed6a5"
+      ]
+    },
+    {
+      "ref": "partial-hmi-web/pkg:npm/maschine-xy-hmi-web@1.4.0?package-id=2ca70c872f5ed6a5",
+      "dependsOn": [
+        "partial-hmi-web/pkg:npm/ms@2.1.3?package-id=bb1077662b3cb7e0",
+        "partial-hmi-web/pkg:npm/picocolors@1.1.1?package-id=9b208867cdc8b323"
+      ]
+    },
+    {
+      "ref": "partial-hmi-web/pkg:npm/ms@2.1.3?package-id=bb1077662b3cb7e0",
+      "dependsOn": []
+    },
+    {
+      "ref": "partial-hmi-web/pkg:npm/picocolors@1.1.1?package-id=9b208867cdc8b323",
+      "dependsOn": []
+    },
+    {
+      "ref": "plc-1-app",
+      "dependsOn": [
+        "plc-1-fw",
+        "plc-1-lib-lgf"
+      ]
+    },
+    {
+      "ref": "plc-1-fw",
+      "dependsOn": [
+        "vendor-siemens-cpu1214c-v4-5-synthetisch/rtos",
+        "vendor-siemens-cpu1214c-v4-5-synthetisch/tcpip"
+      ]
+    },
+    {
+      "ref": "plc-1-fw-gsd-device-1-0-0",
+      "dependsOn": []
+    },
+    {
+      "ref": "plc-1-lib-lgf",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-app",
+      "dependsOn": [
+        "roboterzelle-lib-tc2-standard",
+        "roboterzelle-lib-tc2-system",
+        "roboterzelle-lib-tc2-utilities",
+        "roboterzelle-lib-tc3-module",
+        "roboterzelle-lib-visudialogs",
+        "roboterzelle-lib-visuelem3dpath",
+        "roboterzelle-lib-visuelemmeter",
+        "roboterzelle-lib-visuelems",
+        "roboterzelle-lib-visuelemsdatetime",
+        "roboterzelle-lib-visuelemsspecialcontrols",
+        "roboterzelle-lib-visuelemswincontrols",
+        "roboterzelle-lib-visuelemtexteditor",
+        "roboterzelle-lib-visuinputs",
+        "roboterzelle-lib-visunativecontrol",
+        "roboterzelle-rt"
+      ]
+    },
+    {
+      "ref": "roboterzelle-fw-device-1-ethercat-1",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-fw-device-1-ethercat-1-10",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-fw-device-1-ethercat-1-2",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-fw-device-1-ethercat-1-3",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-fw-device-1-ethercat-1-4",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-fw-device-1-ethercat-1-5",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-fw-device-1-ethercat-1-6",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-fw-device-1-ethercat-1-7",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-fw-device-1-ethercat-1-8",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-fw-device-1-ethercat-1-9",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-tc2-standard",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-tc2-system",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-tc2-utilities",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-tc3-module",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-visudialogs",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-visuelem3dpath",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-visuelemmeter",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-visuelems",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-visuelemsdatetime",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-visuelemsspecialcontrols",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-visuelemswincontrols",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-visuelemtexteditor",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-visuinputs",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-lib-visunativecontrol",
+      "dependsOn": []
+    },
+    {
+      "ref": "roboterzelle-rt",
+      "dependsOn": []
+    },
+    {
+      "ref": "vendor-siemens-cpu1214c-v4-5-synthetisch/rtos",
+      "dependsOn": []
+    },
+    {
+      "ref": "vendor-siemens-cpu1214c-v4-5-synthetisch/tcpip",
+      "dependsOn": []
+    },
+    {
+      "ref": "verpackung-app",
+      "dependsOn": [
+        "verpackung-fw",
+        "verpackung-lib-3slicense",
+        "verpackung-lib-breakpoint-logging-functions",
+        "verpackung-lib-caa-device-diagnosis",
+        "verpackung-lib-iostandard",
+        "verpackung-lib-robin",
+        "verpackung-lib-sm3-basic",
+        "verpackung-lib-sm3-cnc",
+        "verpackung-lib-sm3-robotics",
+        "verpackung-lib-sm3-robotics-visu",
+        "verpackung-lib-sm3-transformation"
+      ]
+    },
+    {
+      "ref": "verpackung-fw",
+      "dependsOn": []
+    },
+    {
+      "ref": "verpackung-lib-3slicense",
+      "dependsOn": []
+    },
+    {
+      "ref": "verpackung-lib-breakpoint-logging-functions",
+      "dependsOn": []
+    },
+    {
+      "ref": "verpackung-lib-caa-device-diagnosis",
+      "dependsOn": []
+    },
+    {
+      "ref": "verpackung-lib-iostandard",
+      "dependsOn": []
+    },
+    {
+      "ref": "verpackung-lib-robin",
+      "dependsOn": []
+    },
+    {
+      "ref": "verpackung-lib-sm3-basic",
+      "dependsOn": []
+    },
+    {
+      "ref": "verpackung-lib-sm3-cnc",
+      "dependsOn": []
+    },
+    {
+      "ref": "verpackung-lib-sm3-robotics",
+      "dependsOn": []
+    },
+    {
+      "ref": "verpackung-lib-sm3-robotics-visu",
+      "dependsOn": []
+    },
+    {
+      "ref": "verpackung-lib-sm3-transformation",
+      "dependsOn": []
+    }
+  ],
+  "compositions": [
+    {
+      "aggregate": "complete",
+      "dependencies": [
+        "maschine-xy",
+        "plc-1-fw",
+        "roboterzelle-app",
+        "vendor-siemens-cpu1214c-v4-5-synthetisch/rtos",
+        "vendor-siemens-cpu1214c-v4-5-synthetisch/tcpip",
+        "verpackung-app"
+      ]
+    },
+    {
+      "aggregate": "incomplete",
+      "dependencies": [
+        "plc-1-app"
+      ]
+    },
+    {
+      "aggregate": "unknown",
+      "dependencies": [
+        "partial-hmi-web/af63bd4c8601b7f1",
+        "partial-hmi-web/pkg:npm/maschine-xy-hmi-web@1.4.0?package-id=2ca70c872f5ed6a5",
+        "partial-hmi-web/pkg:npm/ms@2.1.3?package-id=bb1077662b3cb7e0",
+        "partial-hmi-web/pkg:npm/picocolors@1.1.1?package-id=9b208867cdc8b323",
+        "plc-1-fw-gsd-device-1-0-0",
+        "plc-1-lib-lgf",
+        "roboterzelle-fw-device-1-ethercat-1",
+        "roboterzelle-fw-device-1-ethercat-1-10",
+        "roboterzelle-fw-device-1-ethercat-1-2",
+        "roboterzelle-fw-device-1-ethercat-1-3",
+        "roboterzelle-fw-device-1-ethercat-1-4",
+        "roboterzelle-fw-device-1-ethercat-1-5",
+        "roboterzelle-fw-device-1-ethercat-1-6",
+        "roboterzelle-fw-device-1-ethercat-1-7",
+        "roboterzelle-fw-device-1-ethercat-1-8",
+        "roboterzelle-fw-device-1-ethercat-1-9",
+        "roboterzelle-lib-tc2-standard",
+        "roboterzelle-lib-tc2-system",
+        "roboterzelle-lib-tc2-utilities",
+        "roboterzelle-lib-tc3-module",
+        "roboterzelle-lib-visudialogs",
+        "roboterzelle-lib-visuelem3dpath",
+        "roboterzelle-lib-visuelemmeter",
+        "roboterzelle-lib-visuelems",
+        "roboterzelle-lib-visuelemsdatetime",
+        "roboterzelle-lib-visuelemsspecialcontrols",
+        "roboterzelle-lib-visuelemswincontrols",
+        "roboterzelle-lib-visuelemtexteditor",
+        "roboterzelle-lib-visuinputs",
+        "roboterzelle-lib-visunativecontrol",
+        "roboterzelle-rt",
+        "verpackung-fw",
+        "verpackung-lib-3slicense",
+        "verpackung-lib-breakpoint-logging-functions",
+        "verpackung-lib-caa-device-diagnosis",
+        "verpackung-lib-iostandard",
+        "verpackung-lib-robin",
+        "verpackung-lib-sm3-basic",
+        "verpackung-lib-sm3-cnc",
+        "verpackung-lib-sm3-robotics",
+        "verpackung-lib-sm3-robotics-visu",
+        "verpackung-lib-sm3-transformation"
+      ]
+    }
+  ]
+}

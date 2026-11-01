@@ -6,7 +6,7 @@ Die Bedienung (Befehle, Ausgaben, Lückencodes, Einsatz in der Pipeline) beschre
 
 ## Stand
 
-Stand 01.11.2026, Version 0.1.0: Das Gerüst (M0) steht, M1 und M2 sind abgeschlossen, M5, M6, M7 und M8 sind umgesetzt. `plc-sbom validate` ist nutzbar: Es prüft eine SBOM gegen das eingebettete Schema CycloneDX 1.6 und die Regeln der BSI TR-03183-2 und schreibt die Ergebnisdatei. Welche Regel woher kommt, steht in [docs/regeln-tr03183.md](docs/regeln-tr03183.md); in CI prüft sbomqs den Validator gegen. Mit M2 liest der Adapter `codesys` PLCopen-XML-Exporte aus CODESYS V3.5; `plc-sbom inspect <export.xml> --adapter codesys` zeigt das Rohinventar (Steuerungen, Geräte, Bibliotheken mit Auflösung). Mit M5 liest der Adapter `studio5000` L5X-Exporte aus Rockwell Studio 5000 (Steuerung, Module mit Revision und Kodierung, Add-On Instructions); `inspect --adapter studio5000` zeigt auch dafür das Rohinventar. Mit M6 liest der Adapter `twincat` Beckhoff-TwinCAT-3-Projekte (`.tsproj` mit EtherCAT-Teilnehmern, `.plcproj` mit Bibliotheken), ebenfalls mit `inspect`. Mit M7 liest der Adapter `tia-aml` den AML-Export aus Siemens TIA Portal V17 bis V21: Geräte mit Bestellnummer und projektierter Firmware, passive Module, Stationen je CPU über das PROFINET-IO-System; `inspect --adapter tia-aml` zeigt CPUs, IO-Systeme und die Zuordnung jedes Geräts. Mit M8 kommen Hersteller und Bestellnummer von GSD-Geräten aus den GSDML-Dateien im Repository (`inspect --gsdml <verzeichnis>`). Alle anderen Befehle sind mit ihren Optionen angelegt; ein Aufruf endet mit Exit 2 und `[NOT_IMPLEMENTED]` und nennt den Meilenstein, der den Befehl umsetzt. Die Beispiele unten beschreiben das Zielbild aus CLAUDE.md.
+Stand 01.11.2026, Version 0.1.0: Das Gerüst (M0) steht, M1 und M2 sind abgeschlossen, M5 bis M9 sind umgesetzt. Mit M9 erzeugt `plc-sbom build --config machine.yml --release <kennung>` die SBOM einer ganzen Maschine: alle Stationen mit ihren Adaptern, je Station das Anwenderprogramm mit SHA-512 über die Quellen, Hersteller- und Teil-SBOMs eingehängt, Kontakte, Lizenzen, CPE und passive Geräte aus der `machine.yml`, geprüft gegen Schema und TR, dazu die Ergebnisdatei. Gleiche Eingabe ergibt dieselbe Datei, auf Linux und Windows. Eine Beispielmaschine mit drei Stationen (CODESYS, TIA, TwinCAT), einer Syft-SBOM und einer Hersteller-SBOM liegt unter [samples/maschine-xy](samples/maschine-xy/). `plc-sbom validate` ist ebenfalls nutzbar: Es prüft eine SBOM gegen das eingebettete Schema CycloneDX 1.6 und die Regeln der BSI TR-03183-2 und schreibt die Ergebnisdatei. Welche Regel woher kommt, steht in [docs/regeln-tr03183.md](docs/regeln-tr03183.md); in CI prüft sbomqs den Validator gegen. Mit M2 liest der Adapter `codesys` PLCopen-XML-Exporte aus CODESYS V3.5; `plc-sbom inspect <export.xml> --adapter codesys` zeigt das Rohinventar (Steuerungen, Geräte, Bibliotheken mit Auflösung). Mit M5 liest der Adapter `studio5000` L5X-Exporte aus Rockwell Studio 5000 (Steuerung, Module mit Revision und Kodierung, Add-On Instructions); `inspect --adapter studio5000` zeigt auch dafür das Rohinventar. Mit M6 liest der Adapter `twincat` Beckhoff-TwinCAT-3-Projekte (`.tsproj` mit EtherCAT-Teilnehmern, `.plcproj` mit Bibliotheken), ebenfalls mit `inspect`. Mit M7 liest der Adapter `tia-aml` den AML-Export aus Siemens TIA Portal V17 bis V21: Geräte mit Bestellnummer und projektierter Firmware, passive Module, Stationen je CPU über das PROFINET-IO-System; `inspect --adapter tia-aml` zeigt CPUs, IO-Systeme und die Zuordnung jedes Geräts. Mit M8 kommen Hersteller und Bestellnummer von GSD-Geräten aus den GSDML-Dateien im Repository (`inspect --gsdml <verzeichnis>`). `report`, `compare`, `ids`, `export-aml` und `doctor` sind mit ihren Optionen angelegt; ein Aufruf endet mit Exit 2 und `[NOT_IMPLEMENTED]` und nennt den Meilenstein, der den Befehl umsetzt. Die Beispiele unten beschreiben das Zielbild aus CLAUDE.md; was davon schon geht, steht in der [ANLEITUNG.md](ANLEITUNG.md).
 
 | Meilenstein | Inhalt | Stand |
 |---|---|---|
@@ -18,7 +18,7 @@ Stand 01.11.2026, Version 0.1.0: Das Gerüst (M0) steht, M1 und M2 sind abgeschl
 | M6 | Adapter `twincat` (Beckhoff) | umgesetzt: Adapter, `inspect --adapter twincat`, Feldtabelle [docs/adapter-twincat.md](docs/adapter-twincat.md) (E-018), neuer Lückencode `devices-not-read`, echte Fixtures aus AixOCAT, SPT_V4_Samples und TcOpen, fünf Golden Files, Gegenprüfung mit sbomqs ohne Abweichung; offen ist die Bestätigung durch CI |
 | M7 | Adapter `tia-aml` (TIA V17–V21, AML-Export) | umgesetzt: Leser und Adapter, Stationen über IO-Systeme, `inspect --adapter tia-aml`, Feldtabelle [docs/adapter-tia-aml.md](docs/adapter-tia-aml.md) (E-019), neuer Lückencode `firmware-attribute-missing`, V17-Fixture (MIT) und eine synthetische Datei mit zwei CPUs, drei Golden Files, V18- und V21-Exporte ohne Lizenz laufen lokal ohne Fehler, Gegenprüfung mit sbomqs ohne Abweichung; offen sind das Golden File aus dem Comquent-V21-Export und die Bestätigung durch CI |
 | M8 | GSDML-Leser, GSD-Geräte in `tia-aml` | umgesetzt: GSDML-Leser in `Adapters/Gsdml/`, Hersteller und Bestellnummer aus der GSDML (E-020), `inspect --gsdml`, GSDML-Fixture des Leuze BCL248i (MIT, aus dem Repository der V17-Fixture), neues Golden File, Gegenprüfung mit sbomqs ohne Abweichung; GSD-Geräte ohne GSDML tragen jetzt auch `gsdml-not-found` |
-| M9 | `build` mit `machine.yml`, Merge, Determinismus | offen |
+| M9 | `build` mit `machine.yml`, Merge, Determinismus | umgesetzt: `build` mit strengem Leser für `machine.yml` (YamlDotNet), Anwenderprogramm mit Quell-Hash, `vendorOverrides`, `passiveOrderNumbers`, `vendorContacts`, `licenses`, CPE-Tabelle, Hersteller- und Teil-SBOMs (E-021), neuer Lückencode `input-field-missing`, Beispielmaschine `samples/maschine-xy` mit Golden File, Gegenprüfung mit sbomqs ohne Abweichung; offen ist die Bestätigung durch CI |
 | M10–M12 | `report`, `compare`, `ids` | offen |
 | M13 | Jenkinsfile, README und ANLEITUNG.md auf Release-Stand, Release-Pakete | offen |
 | M14 | Adapter `tia-portal` über TIA Openness V21 (Windows) | offen |
@@ -49,6 +49,12 @@ plc-sbom ids        <sbom> --csaf <verzeichnis> [--cpe-map kennungen/cpe-map.yml
 plc-sbom inspect    <projektdatei> --adapter <id> [--gsdml <verzeichnis>]
 plc-sbom export-aml --project <.ap21|.zap21> --out <datei.aml> [--allow-upgrade]   (Windows, TIA V21)
 plc-sbom doctor     [--adapter tia-portal] [--deep]                                  (Windows, TIA V21)
+```
+
+Die Beispielmaschine bauen:
+
+```bash
+plc-sbom build --config samples/maschine-xy/machine.yml --release R2026.10
 ```
 
 Neben der SBOM schreibt `build` eine Ergebnisdatei `<out>.result.json` mit Exit-Code und der Zahl der Fehler, Warnungen und Hinweise. Damit kann eine Jenkins-Pipeline einen Build mit Warnungen als instabil markieren.
@@ -103,7 +109,7 @@ dotnet run tools/check-licenses.cs              # Lizenzen aller Pakete; mit -- 
 dotnet run tools/crosscheck-sbomqs.cs -- --sbomqs <pfad>   # Validator gegen sbomqs v2.1.3 über alle Golden Files
 ```
 
-Alle Testfälle mit Testläufen und Ergebnissen beschreibt [TESTFAELLE.md](TESTFAELLE.md) (Stand 01.11.2026: 480 Tests, alle bestanden; fünf davon brauchen Dateien ohne Lizenz aus `fixtures/_local/` und überspringen sich in CI). Die Gegenprüfung mit sbomqs und ihr Ergebnis beschreibt [docs/regeln-tr03183.md](docs/regeln-tr03183.md) Abschnitt 10.
+Alle Testfälle mit Testläufen und Ergebnissen beschreibt [TESTFAELLE.md](TESTFAELLE.md) (Stand 01.11.2026: 639 Tests, alle bestanden; fünf davon brauchen Dateien ohne Lizenz aus `fixtures/_local/` und überspringen sich in CI). Die Gegenprüfung mit sbomqs und ihr Ergebnis beschreibt [docs/regeln-tr03183.md](docs/regeln-tr03183.md) Abschnitt 10.
 
 Paket für eine Plattform (self-contained, eine Datei):
 
@@ -116,16 +122,16 @@ CI (GitHub Actions, ubuntu und windows) baut, testet, prüft Format und Lizenzen
 
 Der Openness-Worker unter `workers/tia-openness/` ist eine eigene Solution (.NET Framework 4.8) und baut nur auf Windows mit TIA Portal V21. Live-Tests gegen TIA laufen nur mit `PLC_SBOM_LIVE=1`.
 
-## Aufbau (geplant)
+## Aufbau
 
 | Pfad | Inhalt |
 |---|---|
-| `src/PlcSbom.Core` | Modell, Adapter, Merge, Kennungen, Feldabgleich, Validator, Ausgabe |
+| `src/PlcSbom.Core` | Modell, Konfiguration, Build, Adapter, Merge, Kennungen, Validator, Ausgabe; Feldabgleich folgt |
 | `src/PlcSbom.Cli` | Einstieg `plc-sbom`, Befehle, Exit-Codes |
 | `workers/tia-openness` | Openness-Worker für `tia-portal` und `export-aml` (ab M14) |
 | `tests/PlcSbom.Tests` | xUnit, Golden Files unter `golden/` |
 | `fixtures/` | echte Beispieldateien, Herkunft und Lizenz in `FIXTURES.md`; Dateien ohne Lizenz nur unter `_local/` (nicht eingecheckt) |
-| `samples/maschine-xy` | Beispielmaschine mit `machine.yml` und erwarteter Ausgabe |
+| `samples/maschine-xy` | Beispielmaschine mit `machine.yml`, Programmquellen, Hersteller- und Teil-SBOM; erwartete Ausgabe in `tests/PlcSbom.Tests/golden/maschine-xy.cdx.json` |
 | `docs/` | Entscheidungen, TR-Regeln, Adapter-Feldtabellen, Messungen |
 
 ## Abgrenzung

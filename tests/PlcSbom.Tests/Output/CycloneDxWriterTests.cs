@@ -195,15 +195,28 @@ public sealed class CycloneDxWriterTests
     }
 
     [Fact]
-    public void A_hash_without_uri_is_a_model_error()
+    public void A_deployable_hash_without_uri_is_a_model_error()
     {
         var machine = HandModel.Create();
         var station = machine.Stations[0] with
         {
-            Software = [machine.Stations[0].Software[0] with { SourceUri = null }],
+            Software = [machine.Stations[0].Software[0] with { DeployableSha512 = new string('a', 128) }],
         };
 
         Assert.Throws<InvalidOperationException>(() => CycloneDxWriter.Write(machine with { Stations = [station] }, Options));
+    }
+
+    [Fact]
+    public void A_source_hash_without_uri_is_written_as_property()
+    {
+        var machine = HandModel.Create();
+        var program = machine.Stations[0].Software[0];
+        var station = machine.Stations[0] with { Software = [program with { SourceUri = null }] };
+
+        var json = Encoding.UTF8.GetString(CycloneDxWriter.Write(machine with { Stations = [station] }, Options));
+
+        Assert.Contains($"\"name\": \"plcsbom:sourceCode:sha512\",\n          \"value\": \"{program.SourceSha512}\"", json);
+        Assert.DoesNotContain("source-distribution", json);
     }
 
     [Fact]

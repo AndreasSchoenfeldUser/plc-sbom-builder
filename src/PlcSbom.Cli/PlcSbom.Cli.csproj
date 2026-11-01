@@ -7,7 +7,7 @@
   </PropertyGroup>
   <!-- Delivery (CLAUDE.md section 11): self-contained single file, no installed .NET runtime needed.
        Applies to `dotnet publish -r <rid>`; build and test stay framework-dependent.
-       No trimming: YamlDotNet and CycloneDX.Core (from M1) use reflection. -->
+       No trimming: NJsonSchema and Newtonsoft.Json use reflection (E-005, E-008). -->
   <PropertyGroup Condition="'$(RuntimeIdentifier)' != ''">
     <SelfContained>true</SelfContained>
     <PublishSingleFile>true</PublishSingleFile>

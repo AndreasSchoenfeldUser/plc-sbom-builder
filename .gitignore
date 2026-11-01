@@ -8,7 +8,7 @@ obj/
 TestResults/
 
 # plc-sbom output and packages
-build/
+/build/
 out/
 dist/
 

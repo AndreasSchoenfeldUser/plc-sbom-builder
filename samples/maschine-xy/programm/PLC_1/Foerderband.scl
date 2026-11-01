@@ -1,0 +1,12 @@
+FUNCTION_BLOCK "Foerderband"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+   VAR_INPUT
+      Freigabe : Bool;
+   END_VAR
+   VAR_OUTPUT
+      Motor : Bool;
+   END_VAR
+BEGIN
+   #Motor := #Freigabe;
+END_FUNCTION_BLOCK

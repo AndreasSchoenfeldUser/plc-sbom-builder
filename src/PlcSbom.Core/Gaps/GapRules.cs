@@ -38,11 +38,11 @@ public static class GapRules
                 VendorGap(device.Vendor),
                 device.Firmware is null ? GapCatalog.FirmwareNotInProject : null,
                 device.Firmware is not null && device.FirmwareOrigin == FirmwareOrigin.Projected ? GapCatalog.FirmwareProjectedOnly : null,
-                // Vendor firmware never reaches the tool as a file: no SHA-512, no file name (TR 3.2.1).
-                GapCatalog.HashUnavailable,
-                GapCatalog.FilenameUnavailable,
+                // Vendor firmware does not reach the tool as a file: SHA-512 and file name only from a vendor SBOM (TR 3.2.1, E-011).
+                device.FirmwareSha512 is null ? GapCatalog.HashUnavailable : null,
+                device.FirmwareFileName is null ? GapCatalog.FilenameUnavailable : null,
                 device.FirmwareLicensing?.Distribution is null ? GapCatalog.LicenseUnknown : null,
-                GapCatalog.VendorSbomMissing),
+                device.VendorSboms.Count == 0 ? GapCatalog.VendorSbomMissing : null),
         };
     }
 

@@ -110,7 +110,6 @@ public sealed class CliAppTests
     }
 
     [Theory]
-    [InlineData("M9", "build", "--config", "machine.yml", "--release", "R2026.10")]
     [InlineData("M10", "report", "sbom.json", "--format", "md", "--out", "bericht.md")]
     [InlineData("M11", "compare", "sbom.json", "--field", "feld/1042.json", "--csv", "x.csv")]
     [InlineData("M12", "ids", "sbom.json", "--csaf", "csaf/")]
@@ -150,10 +149,11 @@ public sealed class CliAppTests
     [Fact]
     public async Task Common_options_are_accepted_after_the_command()
     {
-        var (exit, _, error) = await Run(Linux, "build", "--config", "m.yml", "--release", "R1", "--verbose", "--timeout", "30");
+        var (exit, _, error) = await Run(Linux, "build", "--config", "m.yml", "--release", "R1", "--out", Path.Combine(Path.GetTempPath(), $"plc-sbom-{Guid.NewGuid():N}", "s.cdx.json"), "--verbose", "--timeout", "30");
 
+        // The options parse; the command then fails on the missing file, not on the call.
         Assert.Equal(ExitCodes.Usage, exit);
-        Assert.StartsWith("[NOT_IMPLEMENTED] ", error);
+        Assert.StartsWith("[CONFIG_NOT_FOUND] ", error);
     }
 
     [Fact]

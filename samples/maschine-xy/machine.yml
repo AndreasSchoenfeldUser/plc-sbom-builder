@@ -1,0 +1,45 @@
+# Beispielmaschine für plc-sbom build (CLAUDE.md Abschnitt 7.4). Die Projektdateien sind die Fixtures
+# des Repositorys; alles andere in diesem Verzeichnis ist Comquent-eigen (README.md).
+machine:
+  name: Maschine XY
+  supplier: Musterbau GmbH
+  contact: sbom@musterbau.example
+namespace: firma
+
+gsdml: [../../fixtures/gsdml]
+vendorContacts:
+  "Siemens AG": https://www.siemens.com
+  "Beckhoff Automation GmbH & Co. KG": https://www.beckhoff.com
+  "Leuze electronic GmbH + Co. KG": https://www.leuze.com
+licenses:
+  "Musterbau GmbH": LicenseRef-musterbau-proprietary
+  "Siemens AG": LicenseRef-siemens-proprietary
+  "Beckhoff Automation GmbH & Co. KG": LicenseRef-beckhoff-proprietary
+sourceUrl: "https://git.musterbau.example/maschine-xy/-/tree/{commit}/{path}"
+
+stations:
+  - name: Verpackung
+    adapter: codesys
+    source: v35
+    path: ../../fixtures/codesys/v35/robin-codesys_project.xml
+    program: programm/Verpackung
+
+  - name: PLC_1
+    adapter: tia-aml
+    path: ../../fixtures/tia-aml/plc-commissioning-sample_device.aml
+    plc: PLC_1
+    devices: ["GSD device_1"]
+    libraries:
+      - { name: LGF, vendor: Siemens AG, version: "7.0.1" }
+    program: programm/PLC_1
+
+  - name: Roboterzelle
+    adapter: twincat
+    path: ../../fixtures/twincat/aixocat-heatpump/HeatPumpTestBenchControl.tsproj
+    program: programm/Roboterzelle
+
+vendorSboms: sbom/lieferanten/*.cdx.json
+partialSboms:
+  - path: sbom/teil/hmi-web.cdx.json
+    station: PLC_1
+cpeMap: kennungen/cpe-map.yml

@@ -1,0 +1,213 @@
+{
+  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:7d0c1b9e-3f4a-5b6c-8d7e-9f0a1b2c3d4e",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-10-15T08:00:00Z",
+    "manufacturer": {
+      "name": "Beispiel-Lieferant (synthetisch)",
+      "url": [
+        "https://www.example.com/synthetisch"
+      ]
+    },
+    "component": {
+      "bom-ref": "fw",
+      "type": "firmware",
+      "supplier": {
+        "name": "Siemens AG"
+      },
+      "manufacturer": {
+        "name": "Siemens AG",
+        "url": [
+          "https://www.siemens.com"
+        ]
+      },
+      "name": "CPU 1214C DC/DC/DC, Firmware",
+      "version": "V4.5",
+      "description": "Synthetische Hersteller-SBOM für Tests von plc-sbom, kein Dokument von Siemens.",
+      "licenses": [
+        {
+          "license": {
+            "name": "LicenseRef-siemens-proprietary",
+            "acknowledgement": "concluded"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "url": "https://www.example.com/synthetisch/cpu1214c-v4.5.upd",
+          "type": "distribution",
+          "hashes": [
+            {
+              "alg": "SHA-512",
+              "content": "e112beed21020c914c86890c4885ae3a35d06a8793cc0b34b74d173e23decc88a560b5c8a2c12d656b204c4810fe3d124e14b8810d687f6fc80c3985fc684928"
+            }
+          ]
+        }
+      ],
+      "properties": [
+        {
+          "name": "beispiel:device:orderNumber",
+          "value": "6ES7 214-1AG40-0XB0"
+        },
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:effectiveLicence",
+          "value": "LicenseRef-siemens-proprietary"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:filename",
+          "value": "cpu1214c-v4.5.upd"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        }
+      ]
+    }
+  },
+  "components": [
+    {
+      "bom-ref": "rtos",
+      "type": "library",
+      "supplier": {
+        "name": "Siemens AG"
+      },
+      "manufacturer": {
+        "name": "Siemens AG",
+        "url": [
+          "https://www.siemens.com"
+        ]
+      },
+      "name": "Beispiel-Echtzeitkern",
+      "version": "2.1.0",
+      "licenses": [
+        {
+          "license": {
+            "name": "LicenseRef-siemens-proprietary",
+            "acknowledgement": "concluded"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "url": "https://www.example.com/synthetisch/rtos-2.1.0.bin",
+          "type": "distribution",
+          "hashes": [
+            {
+              "alg": "SHA-512",
+              "content": "332c04aaa46bd7bac1ec978160f37f782bde02d8ed2e5908d4577954e56272810d151226c8b8733ee925c32ee8c8a0dfca51d1deeac3cfbc7bc3462b1b7c8739"
+            }
+          ]
+        }
+      ],
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "no archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:filename",
+          "value": "rtos-2.1.0.bin"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        }
+      ]
+    },
+    {
+      "bom-ref": "tcpip",
+      "type": "library",
+      "supplier": {
+        "name": "Siemens AG"
+      },
+      "manufacturer": {
+        "name": "Siemens AG",
+        "url": [
+          "https://www.siemens.com"
+        ]
+      },
+      "name": "Beispiel-TCP/IP-Stack",
+      "version": "1.4.2",
+      "licenses": [
+        {
+          "license": {
+            "name": "LicenseRef-siemens-proprietary",
+            "acknowledgement": "concluded"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "url": "https://www.example.com/synthetisch/tcpip-1.4.2.bin",
+          "type": "distribution",
+          "hashes": [
+            {
+              "alg": "SHA-512",
+              "content": "1a4725d4d5d7361a10af8cc155cb86c9378b01714155b66c9249f97442c6e6593cd6a1715841f8dd505121cec47942f3b5073bc2937b05e62744a5722f61627d"
+            }
+          ]
+        }
+      ],
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "no archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:filename",
+          "value": "tcpip-1.4.2.bin"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "fw",
+      "dependsOn": [
+        "rtos",
+        "tcpip"
+      ]
+    },
+    {
+      "ref": "rtos",
+      "dependsOn": []
+    },
+    {
+      "ref": "tcpip",
+      "dependsOn": []
+    }
+  ],
+  "compositions": [
+    {
+      "aggregate": "complete",
+      "dependencies": [
+        "fw",
+        "rtos",
+        "tcpip"
+      ]
+    }
+  ]
+}

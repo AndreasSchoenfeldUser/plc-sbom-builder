@@ -1,3 +1,5 @@
+using System.Text.Json.Nodes;
+
 namespace PlcSbom.Core.Model;
 
 // Internal model (CLAUDE.md section 4.2). Adapters fill it, the writers turn it into an SBOM format.
@@ -30,6 +32,9 @@ public sealed record Machine
     public IReadOnlyList<Device> UnassignedDevices { get; init; } = [];
 
     public IReadOnlyList<Gap> Gaps { get; init; } = [];
+
+    /// <summary>Vendor and partial SBOMs merged into the machine SBOM (CLAUDE.md section 5.7).</summary>
+    public IReadOnlyList<InputSbom> InputSboms { get; init; } = [];
 }
 
 /// <summary>A controller with everything attached to it. Read by exactly one adapter.</summary>
@@ -117,6 +122,18 @@ public sealed record Device
     /// <summary>Further facts from the source, written as &lt;ns&gt;:&lt;key&gt;, e.g. device:ekey.</summary>
     public IReadOnlyDictionary<string, string> SourceProperties { get; init; } = new Dictionary<string, string>();
 
+    /// <summary>Ids of the vendor SBOMs (<see cref="InputSbom.Id"/>) that describe this firmware.</summary>
+    public IReadOnlyList<string> VendorSboms { get; init; } = [];
+
+    /// <summary>File name of the firmware as delivered, only if a vendor SBOM names it.</summary>
+    public string? FirmwareFileName { get; init; }
+
+    /// <summary>URI of the firmware as delivered (TR 5.2.4), only from a vendor SBOM. Required to write <see cref="FirmwareSha512"/>.</summary>
+    public string? FirmwareUri { get; init; }
+
+    /// <summary>SHA-512 of the firmware as delivered (TR 5.2.2), only from a vendor SBOM.</summary>
+    public string? FirmwareSha512 { get; init; }
+
     public IReadOnlyList<Gap> Gaps { get; init; } = [];
 }
 
@@ -196,7 +213,7 @@ public sealed record SoftwareItem
     /// <summary>URI of the source code (TR 5.2.4). Required to write <see cref="SourceSha512"/>.</summary>
     public string? SourceUri { get; init; }
 
-    /// <summary>SHA-512 over the source code (TR 5.2.5, optional).</summary>
+    /// <summary>SHA-512 over the source code (TR 5.2.5, optional). Without <see cref="SourceUri"/> it is written as a property.</summary>
     public string? SourceSha512 { get; init; }
 
     /// <summary>Further facts from the source, written as &lt;ns&gt;:&lt;key&gt;, e.g. library:placeholder.</summary>
@@ -227,3 +244,54 @@ public sealed record Licensing(string? Distribution, string? Original = null, st
 
 /// <summary>A required statement no source provides. Recorded, never filled (CLAUDE.md section 4.4).</summary>
 public sealed record Gap(string Code, string Message);
+
+public enum InputSbomKind
+{
+    /// <summary>SBOM of a component vendor, describes one firmware (machine.yml "vendorSboms").</summary>
+    Vendor,
+
+    /// <summary>Partial SBOM from Syft, cdxgen or similar (machine.yml "partialSboms").</summary>
+    Partial,
+}
+
+/// <summary>
+/// A CycloneDX SBOM read as input and merged into the machine SBOM (CLAUDE.md section 5.7). Unlike the
+/// rest of the model it stays CycloneDX: its components are written as read, with bom-refs made unique
+/// by the prefix <see cref="Id"/>. A writer for another format would have to convert them.
+/// </summary>
+public sealed record InputSbom
+{
+    /// <summary>Prefix of all bom-refs of this input, unique within the machine.</summary>
+    public required string Id { get; init; }
+
+    public required InputSbomKind Kind { get; init; }
+
+    /// <summary>File relative to the repository, with '/'.</summary>
+    public required string SourcePath { get; init; }
+
+    public required string Sha256 { get; init; }
+
+    /// <summary>Partial SBOM: station it belongs to (null: the machine).</summary>
+    public string? Station { get; init; }
+
+    /// <summary>
+    /// metadata.component of the input with prefixed bom-ref. A partial SBOM's root becomes a component of
+    /// the machine SBOM; a vendor SBOM's root is the firmware it describes and is not written again: its
+    /// dependencies become those of the firmware.
+    /// </summary>
+    public required JsonObject Root { get; init; }
+
+    public string RootRef => Root["bom-ref"]!.GetValue<string>();
+
+    /// <summary>Top-level components of the input with prefixed bom-refs, nested components inside.</summary>
+    public IReadOnlyList<JsonObject> Components { get; init; } = [];
+
+    /// <summary>Dependencies of every component of the input (root and nested included), prefixed.</summary>
+    public IReadOnlyDictionary<string, IReadOnlyList<string>> DependsOn { get; init; } = new Dictionary<string, IReadOnlyList<string>>();
+
+    /// <summary>Completeness of the dependencies per bom-ref (CycloneDX aggregate, e.g. "complete", "unknown").</summary>
+    public IReadOnlyDictionary<string, string> Completeness { get; init; } = new Dictionary<string, string>();
+
+    /// <summary>Gap codes the merge records per bom-ref, e.g. input-field-missing.</summary>
+    public IReadOnlyDictionary<string, IReadOnlyList<string>> Gaps { get; init; } = new Dictionary<string, IReadOnlyList<string>>();
+}

@@ -2,10 +2,11 @@
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
-  <!-- Every package with its license in docs/entscheidungen.md. Checked on nuget.org 31.10.2026. -->
+  <!-- Every package with its license in docs/entscheidungen.md. Checked on nuget.org 31.10.2026 (YamlDotNet 01.11.2026). -->
   <ItemGroup>
     <PackageVersion Include="NJsonSchema" Version="11.6.1" />
     <PackageVersion Include="System.CommandLine" Version="2.0.14" />
+    <PackageVersion Include="YamlDotNet" Version="18.1.0" />
   </ItemGroup>
   <ItemGroup Label="Tests">
     <PackageVersion Include="xunit.v3" Version="4.0.2" />

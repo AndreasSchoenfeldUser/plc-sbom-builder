@@ -84,7 +84,7 @@ Begründung für Platzhalter ohne Umleitung: In CODESYS löst zuerst eine Umleit
 
 **Eigene Properties** der Quelle `v35`: `<ns>:adapter:source = v35`, an Bibliotheken `<ns>:library:reference`, `<ns>:library:resolution` (`fixed`, `redirection`, `default`, `none`), `<ns>:library:company`.
 
-**Anwenderprogramm.** Kommt mit `build` (M9) aus `program` in `machine.yml` (CLAUDE.md Abschnitt 5.6), nicht aus dem Export.
+**Anwenderprogramm.** Entsteht in `build` aus `program` in `machine.yml` (CLAUDE.md Abschnitt 5.6, E-021), nicht aus dem Export. Es hängt von der Firmware der Steuerung und den Bibliotheken der Station ab.
 
 ### 1.4 Fehlerfälle
 

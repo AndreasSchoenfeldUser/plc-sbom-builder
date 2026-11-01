@@ -62,7 +62,7 @@ Nicht gelesen: Bausteine (`Compile`), Visualisierungen, Tasks, Variablen, Mappin
 
 **Bestellnummer.** Das Projekt nennt keine Bestellnummer. `Desc` ist die Kurzbezeichnung, die TwinCAT anzeigt, und weicht von der Bestellnummer ab: Bei der EK1200 (TcOpen) steht `Desc="EK1200"`, `Type` beginnt mit `EK1200-5000`. Deshalb keine Bestellnummer, Lücke `order-number-not-in-project` (Warnung); bestimmt ist das Gerät über `VendorId`, `ProductCode` und `RevisionNo` (E-018).
 
-**Hersteller.** EtherCAT-Herstellerkennung `0x00000002` ist Beckhoff; alle Klemmen und Koppler der Fixtures tragen sie. Hersteller `Beckhoff Automation GmbH & Co. KG`, `vendor:origin = assumed`. Andere Kennungen (in den Quell-Repositories `0x00000024` am IndraDrive, `0x0000001d`, `0x01000056`): kein Hersteller, `supplier-unknown`. `vendorOverrides` (M9) erklärt den Hersteller.
+**Hersteller.** EtherCAT-Herstellerkennung `0x00000002` ist Beckhoff; alle Klemmen und Koppler der Fixtures tragen sie. Hersteller `Beckhoff Automation GmbH & Co. KG`, `vendor:origin = assumed`. Andere Kennungen (in den Quell-Repositories `0x00000024` am IndraDrive, `0x0000001d`, `0x01000056`): kein Hersteller, `supplier-unknown`. `vendorOverrides` erklärt den Hersteller; weil die Teilnehmer keine Bestellnummer haben, trifft das Muster die Kurzbezeichnung (`Desc`, Typname) (E-021).
 
 **Deaktivierte Geräte.** Ein E/A-Gerät mit `Disabled="true"` ist projektiert, läuft aber nicht. Seine Teilnehmer bleiben in der SBOM, damit nichts unbemerkt fehlt, und tragen `<ns>:device:disabled = true`. In Testprojekten von Bibliotheken (TcOpen, AixOCAT) sind die Master meist deaktiviert.
 
@@ -82,7 +82,7 @@ Nicht gelesen: Bausteine (`Compile`), Visualisierungen, Tasks, Variablen, Mappin
 
 Eine Auflösung ohne eigenen Platzhalter legt die Version einer Bibliothek fest, die eine andere Bibliothek referenziert (TcoCore: `Tc2_Utilities 3.3.47.0`). Sie kommt in die SBOM, weil sie nur so gesetzt wird. Hersteller ist die Angabe in Klammern bzw. der dritte Teil von `Include`; `System` in jeder Schreibweise ist kein Hersteller (`supplier-unknown`). Gleiche Bibliotheken aus mehreren SPS-Projekten erscheinen einmal; `newest` und `*` gelten dabei als gleich.
 
-**Anwenderprogramm.** Kommt mit `build` (M9) aus `program` in `machine.yml` (CLAUDE.md Abschnitt 5.6).
+**Anwenderprogramm.** Entsteht in `build` aus `program` in `machine.yml` (CLAUDE.md Abschnitt 5.6, E-021). Es hängt von der Laufzeit und den Bibliotheken ab; eine Steuerungs-Firmware gibt es im Projekt nicht.
 
 ## 4. Fehlerfälle
 
@@ -96,9 +96,9 @@ Eine Auflösung ohne eigenen Platzhalter legt die Version einer Bibliothek fest,
 
 ## 5. Offen
 
-- **Passive Klemmen** (Endklemme EL9011, Einspeiseklemmen, EK1122): Das Projekt kennzeichnet sie nicht als passiv; sie erscheinen als Firmware-Komponente ohne Version. Abhilfe ab M9 über `passiveOrderNumbers` bzw. ein Muster auf die Kurzbezeichnung.
+- **Passive Klemmen** (Endklemme EL9011, Einspeiseklemmen, EK1122): Das Projekt kennzeichnet sie nicht als passiv; sie erscheinen als Firmware-Komponente ohne Version. Abhilfe: `passiveOrderNumbers` mit einem Muster auf die Kurzbezeichnung (`"EL9011"`), seit M9 (E-021). Eine eingebaute Liste passiver Klemmen gibt es nicht.
 - **Ausgelagerte E/A-Geräte** (`Device@File`): Ablageort und Form der `.xti` sind an keinem echten Projekt belegt. Mit einer Fixture lesen statt als Lücke führen.
 - **PROFINET-Geräte**: brauchen den GSDML-Leser aus M8.
 - **Antriebe mit `ProductRevision`** (CLAUDE.md 5.3): in keinem Projekt der Quell-Repositories gefunden; nicht gelesen.
-- **Laufzeitversion**: nur aus dem Feld oder deklariert (M9/M11).
+- **Laufzeitversion**: nur aus dem Feld (M11). `machine.yml` kennt keinen Schlüssel dafür.
 - **Bestellnummer**: Ob sich die Bestellnummer belastbar aus Produktcode und Revision ableiten lässt (Beckhoff-ESI), ist nicht geprüft.

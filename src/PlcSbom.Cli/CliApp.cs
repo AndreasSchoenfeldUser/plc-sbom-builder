@@ -38,7 +38,7 @@ public static class CliApp
         Func<ParseResult, CancellationToken, Task<int>> Guard(Func<ParseResult, Task<int>> action) =>
             (parse, _) => ExecuteAsync(() => action(parse), stderr, parse.GetValue(verbose));
 
-        root.Subcommands.Add(Build(Guard));
+        root.Subcommands.Add(Build(Guard, environment, verbose, stdout));
         root.Subcommands.Add(Validate(Guard, verbose, stdout));
         root.Subcommands.Add(Report(Guard));
         root.Subcommands.Add(Compare(Guard));
@@ -87,12 +87,16 @@ public static class CliApp
         }
     }
 
-    private static Command Build(Func<Func<ParseResult, Task<int>>, Func<ParseResult, CancellationToken, Task<int>>> guard)
+    private static Command Build(
+        Func<Func<ParseResult, Task<int>>, Func<ParseResult, CancellationToken, Task<int>>> guard,
+        CliEnvironment environment,
+        Option<bool> verbose,
+        TextWriter stdout)
     {
-        var config = new Option<FileInfo>("--config") { Description = "Maschinenbeschreibung machine.yml", Required = true };
+        var config = new Option<string>("--config") { Description = "Maschinenbeschreibung machine.yml", Required = true };
         var release = new Option<string>("--release") { Description = "Release-Kennung, z. B. R2026.10", Required = true };
         var commit = new Option<string?>("--commit") { Description = "Git-Commit (Vorgabe: GIT_COMMIT, sonst git rev-parse HEAD)", HelpName = "sha" };
-        var output = new Option<FileInfo>("--out") { Description = "SBOM-Datei", DefaultValueFactory = _ => new FileInfo("build/sbom-maschine.cdx.json") };
+        var output = new Option<string>("--out") { Description = "SBOM-Datei", DefaultValueFactory = _ => "build/sbom-maschine.cdx.json" };
         var report = new Option<string>("--report") { Description = "Prüfbericht neben der SBOM", DefaultValueFactory = _ => "html" };
         report.AcceptOnlyFromAmong("html", "md", "none");
         var releaseBuild = new Option<bool>("--release-build") { Description = "Warnungen sind Befunde (Exit 1)" };
@@ -101,7 +105,10 @@ public static class CliApp
         {
             config, release, commit, output, report, releaseBuild,
         };
-        command.SetAction(guard(_ => NotImplemented("build", "M9")));
+        command.SetAction(guard(p => BuildCommand.RunAsync(
+            new BuildOptions(p.GetValue(config)!, p.GetValue(release)!, p.GetValue(commit), p.GetValue(output)!, p.GetValue(report)!, p.GetValue(releaseBuild), p.GetValue(verbose)),
+            environment.Build,
+            stdout)));
         return command;
     }
 

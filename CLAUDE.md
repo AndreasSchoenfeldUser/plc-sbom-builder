@@ -1,6 +1,6 @@
 # CLAUDE.md: PLC SBOM Builder (`plc-sbom`), Prototyp
 
-> Stand: 01.11.2026 (Meilensteine und CODESYS V2.3/4 ergänzt; M1-Entscheidungen E-007 bis E-011 und TR-Regeln in `docs/regeln-tr03183.md` nachgetragen; M1, M2, M5, M6, M7 und M8 umgesetzt, M3/M4 zurückgestellt (E-016), Golden File aus dem Comquent-V21-Export offen (E-019); übrige Fakten Stand 29.10.2026). Grundlage: Produktseite comquent.de/produkte/plc-sbom-builder (Quelltext `src/app/produkte/inhalte.ts` im Website-Repository), der Entwurf `plc-sbom-builder-claude.md` mit der Recherche vom 25.10.2026, das Comquent-Whitepaper „SBOM für SPS-Projekte mit TIA Portal V21“, die Siemens-Openness-Skills (V21) und drei öffentliche AML-Exporte aus TIA V17, V18 und V21 (geprüft am 29.10.2026). Recherchefakten mit Datum 25.10.2026 sind nicht erneut geprüft; Versionen und Normstände vor der Nutzung nachsehen.
+> Stand: 01.11.2026 (Meilensteine und CODESYS V2.3/4 ergänzt; M1-Entscheidungen E-007 bis E-011 und TR-Regeln in `docs/regeln-tr03183.md` nachgetragen; M1, M2, M5, M6, M7, M8 und M9 umgesetzt (M9: E-021), M3/M4 zurückgestellt (E-016), Golden File aus dem Comquent-V21-Export offen (E-019); übrige Fakten Stand 29.10.2026). Grundlage: Produktseite comquent.de/produkte/plc-sbom-builder (Quelltext `src/app/produkte/inhalte.ts` im Website-Repository), der Entwurf `plc-sbom-builder-claude.md` mit der Recherche vom 25.10.2026, das Comquent-Whitepaper „SBOM für SPS-Projekte mit TIA Portal V21“, die Siemens-Openness-Skills (V21) und drei öffentliche AML-Exporte aus TIA V17, V18 und V21 (geprüft am 29.10.2026). Recherchefakten mit Datum 25.10.2026 sind nicht erneut geprüft; Versionen und Normstände vor der Nutzung nachsehen.
 > Produkt der Comquent GmbH (Industrial DevOps, Puchheim). Schwesterwerkzeuge: `plc-build` (../plc-build-tool), `plc-git-bridge` (../plc-git-bridge).
 
 ## 0. Start
@@ -123,7 +123,7 @@ Jenkins / GitLab / Azure
 | Worker | C#, **.NET Framework 4.8**, SDK-Projektformat | Vorgabe von TIA Openness V21 |
 | CycloneDX | eigener Writer mit `System.Text.Json`; Schemaprüfung mit NuGet `NJsonSchema` 11.6.1 (MIT) gegen das eingebettete Schema CycloneDX 1.6.2 | `CycloneDX.Core` verworfen: Abhängigkeit JsonSchema.Net steht unter einer kostenpflichtigen EULA (E-008) |
 | CLI | `System.CommandLine` | Unterbefehle, Hilfe, Exit-Codes |
-| Konfiguration | `YamlDotNet` | `machine.yml` je Maschine |
+| Konfiguration | `YamlDotNet` 18.1.0 (MIT), über das `RepresentationModel` | `machine.yml` je Maschine, streng gelesen: unbekannte Schlüssel, Typen und Werte mit Zeilennummer (E-021) |
 | JSON | `System.Text.Json` | Feld-Dateien, Worker-Protokoll, Ergebnisdatei |
 | XML | `System.Xml.Linq` mit sicheren `XmlReaderSettings` | L5X, AML, GSDML, tsproj/xti, plcproj, PLCopen XML |
 | Tests | xUnit v3, Golden Files | Determinismus prüfbar |
@@ -147,7 +147,9 @@ plc-sbom-builder/
 ├── PlcSbom.sln                     Kern, CLI, Tests (baut überall)
 ├── src/
 │   ├── PlcSbom.Core/
-│   │   ├── Model/                  Machine, Station, Device, SoftwareItem, Gap
+│   │   ├── Model/                  Machine, Station, Device, SoftwareItem, Gap, InputSbom
+│   │   ├── Config/                 machine.yml lesen und prüfen
+│   │   ├── Build/                  build ohne Ausgabe: Stationen, Erklärungen, Programm-Hash, Commit und Zeit
 │   │   ├── Adapters/
 │   │   │   ├── Studio5000/         L5X
 │   │   │   ├── TwinCat/            tsproj, xti, plcproj
@@ -171,7 +173,7 @@ plc-sbom-builder/
 │   └── live/                       nur mit PLC_SBOM_LIVE=1 auf dem Windows-Agenten (M14)
 ├── fixtures/                       echte Beispieldateien + FIXTURES.md (Herkunft, Commit, Pfad, Lizenz)
 │   └── _local/                     gitignored, Dateien ohne Lizenz
-├── samples/maschine-xy/            machine.yml, Hersteller-SBOMs, GSDML, Feld-Datei, erwartete Ausgabe
+├── samples/maschine-xy/            machine.yml, Programmquellen, Hersteller- und Teil-SBOM, CPE-Tabelle (erwartete Ausgabe: golden/maschine-xy.cdx.json)
 ├── examples/Jenkinsfile
 ├── tools/Register-OpennessFirewall.ps1   ab M14
 └── docs/
@@ -296,6 +298,10 @@ Beispiel der Produktseite (verkürzt, Zielbild):
 | `<ns>:source` | Quelldatei relativ zum Repository |
 | `<ns>:source:sha256` | SHA-256 der Quelldatei |
 | `<ns>:source:exportedAt` | Exportzeitpunkt aus der Quelle (AML `LastWritingDateTime`) |
+| `<ns>:git:commit`, `<ns>:logicalComponent` | an der Maschine: voller Commit und Kennzeichen der logischen Komponente (TR 3.2.2) |
+| `<ns>:sourceCode:path`, `<ns>:sourceCode:files` | Anwenderprogramm: Quellverzeichnis relativ zum Repository und Zahl der Dateien im Hash |
+| `<ns>:sourceCode:sha512` | Anwenderprogramm: SHA-512 über die Quellen, wenn keine `sourceUrl` eine Quellcode-URI ergibt (sonst unter `externalReferences[type=source-distribution]`, E-021) |
+| `<ns>:inputSbom`, `<ns>:inputSbom:sha256`, `<ns>:inputSbom:kind` | Komponente aus einer Hersteller- oder Teil-SBOM: Quelldatei; an der Wurzel einer Teil-SBOM und an der Firmware zu einer Hersteller-SBOM zusätzlich SHA-256, an der Wurzel der Teil-SBOM `kind` = `partial` |
 
 **bom-ref**: stabil und lesbar aus Station + Art + Position bzw. Name (`plc1-fw`, `plc1-app`, `plc1-lib-lgf-blinker`), eindeutig über die ganze Maschine. Komponenten ohne CPE bekommen damit eine eindeutige Kennung.
 
@@ -325,6 +331,7 @@ Beispiel der Produktseite (verkürzt, Zielbild):
 | `device-unassigned` | Gerät gehört zu keiner Station (kein IO-System, nicht in `devices`) | Hinweis |
 | `devices-not-read` | Quelle enthält Geräte, die der Adapter nicht ausliest (TwinCAT: PROFINET-Boxen, E/A-Gerät in eigener Datei) | Warnung |
 | `program-not-read` | Quelle enthält keine Bausteine (`tia-aml`); geschützte Bausteine unbekannt | Hinweis |
+| `input-field-missing` | Komponente einer Hersteller- oder Teil-SBOM, der Pflichtfelder fehlen; erklärt alle Felder aus TR 5.2.2 (E-021) | Warnung |
 
 Vollständigkeit zusätzlich über `compositions[].aggregate` (`incomplete`, `unknown`), wie TR §8.2 es für die Vollständigkeit der Abhängigkeiten vorsieht.
 
@@ -634,17 +641,25 @@ H5 ist beantwortet: Comquent-Demo-Projekt über `tia-aml` (exportiert mit `expor
 
 ### 5.6 Anwenderprogramm (alle Adapter)
 
-- Name = Station + „, Anwenderprogramm“, Version = Release + ` (git <kurz-hash>)`.
-- Hash: SHA-512 über das Quellverzeichnis der Station (`program` in `machine.yml`), Verfahren wie `../plc-build-tool/docs/adr/0005-hash-ueber-quellen.md`, nur mit SHA-512 statt SHA-256: alle Dateien rekursiv, Pfad relativ mit `/`, ordinal sortiert, je Datei `<pfad>\0<sha512 des inhalts>\n`, darüber SHA-512. Eine SPS liefert kein stabiles Binärartefakt; das Verfahren steht in `docs/regeln-tr03183.md`.
-- Ohne `program` in der Konfiguration: Lücke `program-source-missing` mit Warnung, kein erfundener Hash.
+Umgesetzt mit M9 (E-021).
+
+- Jede Station bekommt ein Anwenderprogramm. Name = Station + „, Anwenderprogramm“, Version = Release + ` (git <kurz-hash>)`, ohne bekannten Commit nur das Release (Warnung `COMMIT_UNKNOWN`). Hersteller ist der Maschinenbauer (`declared`), Lizenz die aus `licenses` für ihn. Dateieigenschaften fest `executable`, `no archive`, `unstructured`.
+- Abhängigkeiten: Firmware der Steuerung, Bibliotheken und Laufzeit der Station. Stationslücken (`libraries-not-read`, `program-not-read`) hängen am Programm und machen es `incomplete`.
+- Hash: SHA-512 über das Quellverzeichnis der Station (`program` in `machine.yml`, auch eine einzelne Datei), Verfahren wie `../plc-build-tool/docs/adr/0005-hash-ueber-quellen.md`, nur mit SHA-512 statt SHA-256: alle Dateien rekursiv, Pfad relativ mit `/`, ordinal sortiert, je Datei `<pfad>\0<sha512 des inhalts>\n`, darüber SHA-512. Eine SPS liefert kein stabiles Binärartefakt; das Verfahren steht in `docs/regeln-tr03183.md`. Gehasht werden die Bytes wie ausgecheckt; Zeilenenden über `.gitattributes` festlegen.
+- Quellcode-URI nur aus `sourceUrl` (`{commit}`, `{path}`); dann steht der Hash unter `externalReferences[type=source-distribution]`, sonst als `<ns>:sourceCode:sha512`.
+- Ohne `program` in der Konfiguration: Lücke `program-source-missing` mit Warnung, kein erfundener Hash. Fehlt das Verzeichnis: Exit 2 (`PROGRAM_NOT_FOUND`).
 
 ### 5.7 Hersteller- und Teil-SBOMs
 
-- Hersteller-SBOMs liegen als `*.cdx.json` im Repository neben den Projektquellen (Glob in `machine.yml`), Teil-SBOMs aus Syft oder cdxgen als Build-Ergebnis.
-- Jede Eingangs-SBOM braucht eine `metadata.component`. Sie wird einer Station oder der Maschine zugeordnet (Konfiguration), ihre `bom-ref` werden mit Präfix eindeutig gemacht.
-- Hersteller-SBOMs werden einer Firmware zugeordnet über Hersteller + Bestellnummer + Version. Passt keine, bleibt `vendor-sbom-missing` stehen.
-- Fremde SBOMs werden selbst gegen die TR geprüft (TR §5.1: Verweise nur auf konforme SBOMs); Abweichungen sind Warnungen, keine Fehler.
-- Effektive Lizenz beim Zusammenführen neu setzen (TR §3.2.8).
+Umgesetzt mit M9 (E-021, Regeln mit TR-Stelle in `docs/regeln-tr03183.md` Abschnitt 12).
+
+- Hersteller-SBOMs liegen als `*.cdx.json` im Repository neben den Projektquellen (Muster in `vendorSboms`, `*`, `?`, `**`), Teil-SBOMs aus Syft oder cdxgen als Build-Ergebnis (`partialSboms`, fehlt eine: Exit 2 `PARTIAL_SBOM_NOT_FOUND`).
+- Jede Eingangs-SBOM braucht eine `metadata.component`. Ihre `bom-ref` werden mit Präfix eindeutig gemacht (`vendor-<datei>/…`, `partial-<datei>/…`). Unlesbar, ohne `metadata.component` oder mit doppelter `bom-ref`: Fehler `INPUT_SBOM_INVALID` (Exit 1), nicht übernommen.
+- Hersteller-SBOMs werden einer Firmware zugeordnet über gleiche CPE oder über Hersteller + Bestellnummer + Version; die Bestellnummer steht als Property `<namespace>:device:orderNumber` an `metadata.component`. Passt keine, bleibt `vendor-sbom-missing` stehen und die Datei draußen (Warnung `VENDOR_SBOM_UNUSED`).
+- Die Wurzel einer Hersteller-SBOM ist die Firmware selbst und wird nicht doppelt geschrieben: Ihre Bestandteile hängen unter der Firmware, Dateiname und SHA-512 der Firmware-Datei gehen an die Firmware (dann entfallen `hash-unavailable`, `filename-unavailable`).
+- Die Wurzel einer Teil-SBOM wird Komponente unter der Maschine, mit `station` mit `<ns>:station`; sie hängt von allen Komponenten der Datei ab, auf die sonst nichts zeigt.
+- Fremde SBOMs werden selbst gegen die TR geprüft (TR §5.1: Verweise nur auf konforme SBOMs); Abweichungen sind Warnungen, keine Fehler. Fehlende Pflichtfelder einer übernommenen Komponente ergeben `input-field-missing`.
+- Effektive Lizenz beim Zusammenführen neu setzen (TR §3.2.8): Die effektive Lizenz fremder Komponenten wird entfernt; eine neue setzt das Werkzeug nur, wenn eine Quelle sie liefert.
 - Hierarchisch zusammenführen (Maschine → Station → Komponente), nicht flach anhängen.
 
 ## 6. Kennungen
@@ -656,7 +671,7 @@ H5 ist beantwortet: Comquent-Demo-Projekt über `tia-aml` (exportiert mit `expor
      orderNumber: "6ES7 511-1AK0?-0AB0"      # Wildcard ? und *
      cpe: "cpe:2.3:o:siemens:simatic_s7-1500_cpu_1511-1_pn_firmware:{version}:*:*:*:*:*:*:*"
    ```
-   Nur gesetzt, wenn ein Eintrag passt. `{version}` ist die Firmware ohne führendes `V`. Nie aus dem Typnamen ableiten.
+   Nur gesetzt, wenn ein Eintrag passt und die Firmware-Version bekannt ist. `{version}` ist die Firmware ohne führendes `V` und in jeder Zeile Pflicht (sonst `CPE_MAP_INVALID`). Nie aus dem Typnamen ableiten. Umgesetzt mit M9 (`Identifiers/CpeMap.cs`).
 3. **bom-ref** für alles ohne CPE (Abschnitt 4.3).
 4. **PURL** nur für echte Softwarepakete (aus Teil-SBOMs). purl-spec kennt keinen Typ für Hardware oder Firmware; kein `pkg:generic` für Firmware erfinden.
 5. **Kennungsprüfung** `plc-sbom ids`: Prüft je Komponente, ob sie in einem lokalen Verzeichnis mit CSAF-Dokumenten (`product_identification_helper.model_numbers`, `cpe`) oder in der CPE-Tabelle auffindbar ist, und meldet die Abdeckung. Bestellnummern werden dabei ohne Leerzeichen verglichen. Das ist **keine** Schwachstellenbewertung, sondern ein Test, ob die Kennungen tragen. CSAF-Quellen: Siemens ProductCERT, CERT@VDE (Phoenix Contact, WAGO, Beckhoff, CODESYS), CISA. Rockwell-Advisories tragen dort keine Identifikationshilfe, nur Namen.
@@ -677,14 +692,14 @@ plc-sbom export-aml --project <.ap21|.zap21> --out <datei.aml> [--allow-upgrade]
 plc-sbom doctor     [--adapter tia-portal] [--deep]                                     (Windows, TIA V21)
 ```
 
-- `build` liest alle Stationen, führt Hersteller- und Teil-SBOMs zusammen, setzt Kennungen, validiert, schreibt SBOM, Bericht und Ergebnisdatei. Ein Aufruf in der Pipeline reicht.
+- `build` liest alle Stationen, führt Hersteller- und Teil-SBOMs zusammen, setzt Kennungen, validiert, schreibt SBOM, Bericht und Ergebnisdatei. Ein Aufruf in der Pipeline reicht. Umgesetzt mit M9 bis auf den Bericht (M10); `--report` schreibt bis dahin nur eine Zeile `[bericht]`. Adapter `tia-portal` und die `codesys`-Quellen `v23`, `c4` enden mit `NOT_IMPLEMENTED`.
 - `validate` prüft eine vorhandene SBOM, auch fremde.
 - `inspect` gibt das Rohinventar eines Adapters als JSON aus; bei `tia-aml` mit CPUs, IO-Systemen und Gerätezuordnung (5.4.4).
 - `export-aml` und `doctor` laufen über den Openness-Worker; auf anderen Plattformen Exit 3 mit klarer Meldung.
-- `--commit` nach Vorgabe aus `GIT_COMMIT`, sonst `git rev-parse HEAD`.
+- `--commit` nach Vorgabe aus `GIT_COMMIT`, sonst `git rev-parse HEAD` im Verzeichnis von `machine.yml`; 7 bis 64 Hexadezimalzeichen, sonst Exit 2 (`COMMIT_INVALID`). `--release` ohne Leerzeichen (`RELEASE_INVALID`).
 - Gemeinsame Optionen: `--verbose`, `--timeout <min>` (für den Worker).
 
-Konsolenausgabe je Phase eine Zeile mit Kennzeichen, wie im Oberflächenentwurf der Produktseite:
+Konsolenausgabe je Phase eine Zeile mit Kennzeichen, wie im Oberflächenentwurf der Produktseite (Zielbild; die echte Ausgabe der Beispielmaschine steht in ANLEITUNG.md Abschnitt 4, dort steht vor jedem Stationsnamen „Station“, und jede Warnung hat eine eigene Zeile):
 
 ```text
 > plc-sbom build --config machine.yml --release R2026.10
@@ -717,7 +732,7 @@ Gleich wie bei `plc-build`, damit die ganze Werkzeugfamilie in Pipelines gleich 
 
 ### 7.3 Ergebnisdatei
 
-`build`, `validate`, `compare` und `export-aml` schreiben zusätzlich `<out>.result.json` (z. B. `sbom-maschine.result.json`): Exit-Code, Anzahl Fehler, Warnungen, Hinweise, Komponenten, Stationen, Lücken je Code, Abweichungen. Damit kann die Pipeline einen Entwicklungs-Build mit Warnungen als „instabil“ markieren (Jenkins: `readJSON` + `unstable`), ohne den Exit-Code zu überladen.
+`build`, `validate`, `compare` und `export-aml` schreiben zusätzlich `<out>.result.json` (z. B. `sbom-maschine.result.json`): Exit-Code, Anzahl Fehler, Warnungen, Hinweise, Komponenten, Stationen, Lücken je Code, Abweichungen. Damit kann die Pipeline einen Entwicklungs-Build mit Warnungen als „instabil“ markieren (Jenkins: `readJSON` + `unstable`), ohne den Exit-Code zu überladen. `build` nimmt die Warnungen des Laufs (Adapter, eingelesene SBOMs, Commit, Zeitstempel) mit auf und schreibt die Datei auch bei Exit 2, 3 und 4, dann mit dem Code der Ursache als einzigem Befund (E-021).
 
 ### 7.4 `machine.yml`
 
@@ -730,9 +745,12 @@ namespace: firma                          # eigener Property-Namespace, Vorgabe 
 
 gsdml: [gsdml/]                           # Verzeichnisse mit GSDML-Dateien
 deviceDescriptions: [codesys/devdesc/]    # Verzeichnisse mit CODESYS-Gerätebeschreibungen (*.devdesc.xml)
-passiveOrderNumbers: ["6EP1*"]            # Geräte ohne Firmware-Attribut bewusst als passiv erklären
-vendorOverrides:                          # Muster auf Bestellnummer → Hersteller
+passiveOrderNumbers: ["6EP1*"]            # Geräte ohne Firmware-Version bewusst als passiv erklären (nie die Steuerung)
+vendorOverrides:                          # Muster auf Bestellnummer (ohne Bestellnummer: Typname) → Hersteller
   "3RK*": Siemens AG
+vendorContacts:                           # Kontakt je Hersteller (TR 5.2.2: E-Mail, sonst URL)
+  "Siemens AG": https://www.siemens.com
+sourceUrl: "https://git.musterbau.example/maschine-xy/-/tree/{commit}/{path}"   # Quellcode-URI der Programme
 protectedBlockVendors:                    # Muster auf Bausteinautor/-familie → Lieferant (tia-portal)
   "ACME*": ACME Automation GmbH
 
@@ -767,7 +785,7 @@ stations:
     path: twincat/Zelle/Zelle.tsproj
     program: twincat/Zelle
 
-vendorSboms: sbom/lieferanten/*.cdx.json
+vendorSboms: sbom/lieferanten/*.cdx.json   # ein Muster oder eine Liste
 partialSboms:
   - path: build/teil/hmi-web.cdx.json
     station: PLC_1                        # ohne Angabe: unter der Maschine
@@ -776,7 +794,7 @@ licenses:                                 # Distributionslizenz je Hersteller, f
   "Siemens AG": LicenseRef-siemens-proprietary
 ```
 
-Validierung mit klaren Meldungen und Exit 2. Pfade relativ zur Konfigurationsdatei. Unbekannte Schlüssel sind Fehler, damit Tippfehler nicht still ignoriert werden.
+Validierung mit klaren Meldungen und Exit 2 (`CONFIG_INVALID` mit Datei und Zeile). Pfade relativ zur Konfigurationsdatei; in der SBOM stehen sie relativ zum Git-Repository. Unbekannte Schlüssel sind Fehler, damit Tippfehler nicht still ignoriert werden; ebenso Schlüssel, die für den Adapter der Station nicht gelten (`source` nur `codesys` und dort Pflicht; `plc` nur `codesys`, `tia-aml`, `tia-portal`; `devices`, `ignoreDevices` nur `tia-aml`, `tia-portal`; `libraries` nur `tia-aml`; `allowUpgrade`, `globalLibraries` nur `tia-portal`). Werte bleiben Text, wie geschrieben. `vendorContacts` und `sourceUrl` sind mit M9 dazugekommen (E-021). Beschreibung für Anwender: ANLEITUNG.md Abschnitt 5.
 
 ## 8. Ausgaben
 
@@ -817,9 +835,10 @@ Eingang im Prototyp sind Dateien, keine Geräte:
 
 - Komponenten, Properties, Abhängigkeiten sortiert; feste Feldreihenfolge.
 - `bom-ref` stabil aus Station + Art + Position bzw. Name.
-- Zeitstempel aus `SOURCE_DATE_EPOCH`, sonst Commit-Zeit von `HEAD`, sonst aktuelle Zeit mit Warnung.
+- Zeitstempel aus `SOURCE_DATE_EPOCH`, sonst Commit-Zeit des Commits (`git log -1 --format=%ct`), sonst aktuelle Zeit mit Warnung `TIMESTAMP_FROM_CLOCK`; ganze Sekunden, UTC.
+- Pfade relativ zum Git-Repository mit `/`; Dateien in sortierter Reihenfolge gelesen.
 - `serialNumber` als UUIDv5 aus Maschine + Release + Commit (bei `--as-built` zusätzlich Seriennummer der Maschine).
-- In Tests Uhr und Umgebung injiziert.
+- In Tests Uhr und Umgebung injiziert (`IBuildEnvironment`). Belegt mit M9: Golden File `maschine-xy.cdx.json` auf ubuntu und windows, CI baut die Beispielmaschine mit dem Paket zweimal und vergleicht die Bytes.
 
 ## 9. TR-03183-2 v2.1.0: Regeln im Validator
 
@@ -931,6 +950,8 @@ Die Adapter-Meilensteine M2 bis M8 und M14 folgen der festgelegten Reihenfolge: 
 | CODESYS 4 | **Comquent-Demo-Projekt** (von Comquent zu liefern) | Projektablage gespeichert mit zwei aufeinanderfolgenden CODESYS-4-Versionen; Gerät, E/A, zwei Bibliotheken | Comquent-eigen |
 | Feld (S7 Web-API) | `github.com/siemens/simatic-s7-webserver-api` (v3.3.92) | | MIT |
 | CSAF | `cert-portal.siemens.com/productcert/csaf/ssa-452276.json` | mit `model_numbers` | öffentlich |
+| Teil-SBOM (Syft) | `samples/maschine-xy/sbom/teil/hmi-web.cdx.json`, erzeugt mit Syft 1.54.1 aus `samples/maschine-xy/hmi-web/` (eigene `package.json`, npm-Lockfile) | CycloneDX 1.6, Wurzel ohne Abhängigkeiten, drei npm-Pakete, keine TR-Pflichtfelder (eingecheckt, M9) | Comquent-eigen |
+| Hersteller-SBOM | `samples/maschine-xy/sbom/lieferanten/siemens-cpu1214c-v4.5-synthetisch.cdx.json` | **synthetisch**, vollständig nach TR, Bestellnummer als Property; echte Hersteller-SBOMs für Steuerungen gibt es nicht (1.3, E-021) | Comquent-eigen |
 
 Solange die Comquent-Demo-Projekte fehlen, M3 und M4 zurückstellen und die `_local`-Dateien nur lokal nutzen. M7 ist mit der V17-Fixture und einer synthetischen Datei mit zwei CPUs umgesetzt; das Golden File aus dem Comquent-V21-Export wird nachgeholt (E-019). Synthetische Fixtures sind erlaubt, wenn sie als solche benannt sind (`*-synthetisch.*`) und ein echtes Gegenstück für dasselbe Attribut existiert.
 
@@ -949,7 +970,7 @@ Solange die Comquent-Demo-Projekte fehlen, M3 und M4 zurückstellen und die `_lo
   - Die Seite nennt den Befehlsnamen nicht; die Oberflächenentwürfe zeigen `plc-sbom build --maschine …`, das Werkzeug heißt `plc-sbom build --config …`.
   - TR-03183-2 v2.1.0 erlaubt auch SPDX 3.0.1; die Seite nennt nur CycloneDX 1.6.
   - Die Seite nennt CODESYS V3.5; der Adapter deckt zusätzlich CODESYS V2.3 und CODESYS 4 ab (V2.3 und 4 nach Spike).
-- **Sicherheit:** keine Lizenzdateien, keine Hersteller-DLLs, keine Kundenprojekte, keine Zugangsdaten im Repository. `.gitignore` wie in `../plc-build-tool/.gitignore`, ergänzt um `build/`, `fixtures/_local/`. Secrets nie loggen.
+- **Sicherheit:** keine Lizenzdateien, keine Hersteller-DLLs, keine Kundenprojekte, keine Zugangsdaten im Repository. `.gitignore` wie in `../plc-build-tool/.gitignore`, ergänzt um `/build/` (nur im Wurzelverzeichnis: auf macOS mit `core.ignorecase` träfe `build/` auch die Quellordner `Build/`, E-021) und `fixtures/_local/`. Secrets nie loggen.
 - **Sprache:** Code, Bezeichner, Commit-Nachrichten Englisch; Doku, Meldungen und Berichte Deutsch (Zielgruppe DACH).
 - **Abhängigkeiten** klein halten: .NET 10, `NJsonSchema` (statt `CycloneDX.Core`, E-008), `System.CommandLine`, `YamlDotNet`, `System.Text.Json`. Jede neue Abhängigkeit mit Lizenz in `docs/entscheidungen.md`.
 - Nichts nach außen pushen oder veröffentlichen ohne ausdrückliche Anweisung.

@@ -93,6 +93,14 @@ jobs:
           else
             expect 3 export-aml --project a.zap21 --out a.aml
           fi
+          # M9: the package builds the sample machine; two runs give the same bytes (H3).
+          export SOURCE_DATE_EPOCH=1792234800
+          for run in a b; do
+            expect 0 build --config samples/maschine-xy/machine.yml --release R2026.10 \
+              --commit a1b2c3d4e5f60718293a4b5c6d7e8f9012345678 --out "out/m9/$run/sbom-maschine.cdx.json" --report none
+          done
+          unset SOURCE_DATE_EPOCH
+          cmp out/m9/a/sbom-maschine.cdx.json out/m9/b/sbom-maschine.cdx.json
 
       - uses: actions/upload-artifact@v7
         with:

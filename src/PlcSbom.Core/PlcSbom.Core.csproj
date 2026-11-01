@@ -5,6 +5,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="NJsonSchema" />
+    <PackageReference Include="YamlDotNet" />
   </ItemGroup>
   <ItemGroup>
     <!-- CycloneDX 1.6.2 JSON schemas, embedded so validation works offline (CLAUDE.md section 2). -->

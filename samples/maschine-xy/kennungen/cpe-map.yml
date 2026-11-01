@@ -1,0 +1,6 @@
+# CPE-Tabelle der Beispielmaschine (CLAUDE.md Abschnitt 6). Gepflegt vom Anwender; plc-sbom setzt
+# eine CPE nur, wenn Hersteller und Bestellnummer passen und die Firmware-Version bekannt ist.
+# {version} ist die Firmware ohne führendes "V". Die CPE unten ist ein Beispiel.
+- vendor: Siemens AG
+  orderNumber: "6ES7 214-1AG4?-0XB0"
+  cpe: "cpe:2.3:o:siemens:simatic_s7-1200_cpu_firmware:{version}:*:*:*:*:*:*:*"

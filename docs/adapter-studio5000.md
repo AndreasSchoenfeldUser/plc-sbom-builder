@@ -59,11 +59,11 @@ Nicht gelesen: Programme, Routinen, Tags, Datentypen, Tasks, `ExtendedProperties
 
 **Kodierung an der Steuerung.** Am Controller-Modul steht in allen vier echten Controller-Exporten `EKey State="Disabled"`. Das ist dort kein Projektierungsentscheid: Laut Rockwell müssen Firmware der Steuerung und Logix Designer dieselbe Hauptversion haben (ControlLogix 5590 User Manual 1756-UM900, Abschnitt „Controller Firmware and Logix Designer Application Compatibility“, über die Suche am 31.10.2026 gefunden; die Seite blockt automatische Abrufe, Wortlaut nicht geprüft). Die Steuerung bekommt deshalb kein `ekey-disabled`. **Annahme**, an weiteren Exporten prüfen.
 
-**Hersteller.** Herstellerkennung `1` ist Rockwell Automation (CIP-Herstellerkennung; in acd nennt `ExtendedProperties` am 1756-EN2T mit `Vendor="1"` den Hersteller `Rockwell Automation/Allen-Bradley`). Name `Rockwell Automation`, `vendor:origin = assumed`. Andere Kennungen: kein Hersteller, `supplier-unknown` mit der Kennung in der Meldung, Kennung als `<ns>:vendorKey:VendorId`. Eine Tabelle CIP-Kennung → Hersteller ist nicht eingebettet; `vendorOverrides` in `machine.yml` (M9) erklärt den Hersteller mit `origin = declared`.
+**Hersteller.** Herstellerkennung `1` ist Rockwell Automation (CIP-Herstellerkennung; in acd nennt `ExtendedProperties` am 1756-EN2T mit `Vendor="1"` den Hersteller `Rockwell Automation/Allen-Bradley`). Name `Rockwell Automation`, `vendor:origin = assumed`. Andere Kennungen: kein Hersteller, `supplier-unknown` mit der Kennung in der Meldung, Kennung als `<ns>:vendorKey:VendorId`. Eine Tabelle CIP-Kennung → Hersteller ist nicht eingebettet; `vendorOverrides` in `machine.yml` erklärt den Hersteller über die `CatalogNumber` mit `origin = declared`, `supplier-unknown` entfällt dann (E-021, Test `Vendor_override_by_order_number_replaces_supplier_unknown`).
 
 **Add-On Instructions.** Je AOI eine Komponente vom Typ `library` mit bom-ref `<station>-aoi-<name>`. Version = `Revision` unverändert (in allen Fixtures `Major.Minor`, z. B. `1.7`), `RevisionExtension` als eigene Property. Hersteller = `Vendor` unverändert, `vendor:origin = source`; ohne `Vendor` `supplier-unknown`. Für AOIs ohne Hersteller oder Kontakt gelten die allgemeinen Lückenregeln (`supplier-unknown`, `creator-contact-unknown`, `file-properties-unknown`, `license-unknown`).
 
-**Anwenderprogramm.** Kommt mit `build` (M9) aus `program` in `machine.yml` (CLAUDE.md Abschnitt 5.6), nicht aus dem Export.
+**Anwenderprogramm.** Entsteht in `build` aus `program` in `machine.yml` (CLAUDE.md Abschnitt 5.6, E-021), nicht aus dem Export. Es hängt von der Firmware der Steuerung und den AOIs ab.
 
 ## 4. Fehlerfälle
 

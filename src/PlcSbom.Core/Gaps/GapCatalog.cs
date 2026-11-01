@@ -70,6 +70,7 @@ public static class GapCatalog
     public const string ProgramNotRead = "program-not-read";
     public const string ProgramSourceMissing = "program-source-missing";
     public const string FilePropertiesUnknown = "file-properties-unknown";
+    public const string InputFieldMissing = "input-field-missing";
 
     private static readonly GapDefinition[] Definitions =
     [
@@ -95,6 +96,9 @@ public static class GapCatalog
         new(ProgramNotRead, Severity.Note, [], "Die Quelle enthält keine Bausteine, geschützte Bausteine sind unbekannt."),
         new(ProgramSourceMissing, Severity.Warning, [TrField.Hash], "Für das Anwenderprogramm ist kein Quellverzeichnis angegeben, es gibt keinen Hash."),
         new(FilePropertiesUnknown, Severity.Warning, [TrField.Executable, TrField.Archive, TrField.Structured], "Ob die Komponente ausführbar, ein Archiv oder strukturiert ist, ist nicht bekannt."),
+        new(InputFieldMissing, Severity.Warning,
+            [TrField.Creator, TrField.Version, TrField.Filename, TrField.DistributionLicence, TrField.Hash, TrField.Executable, TrField.Archive, TrField.Structured],
+            "Die Komponente stammt aus einer eingelesenen SBOM, der Pflichtfelder fehlen; sie wurde unverändert übernommen."),
     ];
 
     private static readonly Dictionary<string, GapDefinition> ByCode = Definitions.ToDictionary(d => d.Code, StringComparer.Ordinal);

@@ -29,6 +29,15 @@ public static class ResultFile
         return Path.Combine(directory, name + ".result.json");
     }
 
+    /// <summary>Result of a run that ended before validation (exit 2, 3 or 4): one error with the code of the cause.</summary>
+    public static byte[] WriteAborted(string command, string sbomFile, PlcSbomException cause) =>
+        Write(command, sbomFile, new ValidationReport
+        {
+            SpecVersion = "",
+            SchemaValid = false,
+            Findings = [new Finding(Severity.Error, cause.Code, cause.Message)],
+        }, cause.ExitCode);
+
     public static byte[] Write(string command, string sbomFile, ValidationReport report, int exitCode)
     {
         using var stream = new MemoryStream();

@@ -12,6 +12,7 @@ Die Pakete von plc-sbom sind self-contained und enthalten die .NET-Laufzeit sowi
 | NJsonSchema | 11.6.1 | MIT | http://njsonschema.org/ |
 | NJsonSchema.Annotations | 11.6.1 | MIT | http://njsonschema.org/ |
 | System.CommandLine | 2.0.14 | MIT | https://github.com/dotnet/command-line-api |
+| YamlDotNet | 18.1.0 | MIT | https://github.com/aaubry/YamlDotNet/wiki |
 
 ## .NET Runtime
 
@@ -36,6 +37,10 @@ Copyright © Rico Suter, 2025. Lizenz MIT, Text unten.
 ## System.CommandLine 2.0.14
 
 © Microsoft Corporation. All rights reserved. Lizenz MIT, Text unten.
+
+## YamlDotNet 18.1.0
+
+Copyright (c) Antoine Aubry and contributors. Lizenz MIT, Text unten.
 
 ## Lizenztext MIT
 

@@ -144,7 +144,7 @@ Nicht gelesen: Texte (`ExternalTextList`), `ModuleInfo/Name`, `VendorName` im `M
 
 Der CAx-Export enthält weder Bibliotheken noch Bausteine.
 
-- Station mit CPU ohne deklarierte Bibliotheken: `libraries-not-read` (Warnung) und `program-not-read` (Hinweis) an der Station. Ohne Anwenderprogramm (vor M9) hängen sie an der Firmware der CPU.
+- Station mit CPU ohne deklarierte Bibliotheken: `libraries-not-read` (Warnung) und `program-not-read` (Hinweis) an der Station. Seit M9 hat jede Station ein Anwenderprogramm; die Lücken hängen dort, das Programm ist `incomplete`. Ohne Programm (Adapter allein, etwa in den Adapter-Tests) hängen sie an der Firmware der CPU.
 - Mit `libraries` in der Station: je Eintrag eine `library`-Komponente mit `<ns>:origin` = `declared` (Hersteller `vendor:origin` = `declared`); `libraries-not-read` entfällt. Ohne Version: `version-unresolved`.
 
 ## 6. Stationen

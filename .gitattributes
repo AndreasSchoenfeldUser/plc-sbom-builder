@@ -9,3 +9,5 @@
 # Fixtures and golden files byte-exact (line endings, BOM are test content).
 fixtures/** -text -merge
 tests/PlcSbom.Tests/golden/** -text -merge
+# Sample machine byte-exact: the program hash and the golden file depend on its bytes.
+samples/** -text -merge
