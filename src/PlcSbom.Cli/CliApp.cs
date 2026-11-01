@@ -43,7 +43,7 @@ public static class CliApp
         root.Subcommands.Add(Report(Guard));
         root.Subcommands.Add(Compare(Guard));
         root.Subcommands.Add(Ids(Guard));
-        root.Subcommands.Add(Inspect(Guard, stdout));
+        root.Subcommands.Add(Inspect(Guard, stdout, stderr));
         root.Subcommands.Add(ExportAml(Guard, environment));
         root.Subcommands.Add(Doctor(Guard, environment));
 
@@ -146,14 +146,14 @@ public static class CliApp
         return command;
     }
 
-    private static Command Inspect(Func<Func<ParseResult, Task<int>>, Func<ParseResult, CancellationToken, Task<int>>> guard, TextWriter stdout)
+    private static Command Inspect(Func<Func<ParseResult, Task<int>>, Func<ParseResult, CancellationToken, Task<int>>> guard, TextWriter stdout, TextWriter stderr)
     {
         var project = new Argument<string>("projektdatei") { Description = "Projektdatei oder Export, z. B. Verpackung.xml (PLCopen XML) oder Linie1.aml" };
         var adapter = new Option<string>("--adapter") { Description = "Adapter", Required = true };
         adapter.AcceptOnlyFromAmong([.. AdapterIds.All]);
         var gsdml = new Option<DirectoryInfo?>("--gsdml") { Description = "Verzeichnis mit GSDML-Dateien" };
         var command = new Command("inspect", "Gibt das Rohinventar eines Adapters als JSON aus") { project, adapter, gsdml };
-        command.SetAction(guard(p => InspectCommand.RunAsync(p.GetValue(project)!, p.GetValue(adapter)!, p.GetValue(gsdml)?.ToString(), stdout)));
+        command.SetAction(guard(p => InspectCommand.RunAsync(p.GetValue(project)!, p.GetValue(adapter)!, p.GetValue(gsdml)?.ToString(), stdout, stderr)));
         return command;
     }
 

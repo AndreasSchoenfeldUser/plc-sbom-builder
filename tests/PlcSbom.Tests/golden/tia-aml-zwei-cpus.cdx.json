@@ -1,0 +1,1291 @@
+{
+  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:1a02a05d-7584-5a0b-9e78-e462de8d242a",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-10-31T12:00:00Z",
+    "tools": {
+      "components": [
+        {
+          "type": "application",
+          "manufacturer": {
+            "name": "Comquent GmbH"
+          },
+          "name": "PLC SBOM Builder",
+          "version": "0.1.0"
+        },
+        {
+          "type": "application",
+          "manufacturer": {
+            "name": "Siemens AG"
+          },
+          "name": "TIA Portal",
+          "version": "V21",
+          "properties": [
+            {
+              "name": "plcsbom:tool:release",
+              "value": "2100.0.121.1"
+            }
+          ]
+        }
+      ]
+    },
+    "manufacturer": {
+      "name": "Musterbau GmbH",
+      "contact": [
+        {
+          "email": "sbom@musterbau.example"
+        }
+      ]
+    },
+    "component": {
+      "bom-ref": "maschine-xy",
+      "type": "device",
+      "supplier": {
+        "name": "Musterbau GmbH"
+      },
+      "manufacturer": {
+        "name": "Musterbau GmbH",
+        "contact": [
+          {
+            "email": "sbom@musterbau.example"
+          }
+        ]
+      },
+      "name": "Maschine XY",
+      "version": "R2026.10",
+      "licenses": [
+        {
+          "expression": "LicenseRef-musterbau-proprietary",
+          "acknowledgement": "concluded"
+        }
+      ],
+      "properties": [
+        {
+          "name": "bsi:component:effectiveLicence",
+          "value": "LicenseRef-musterbau-proprietary"
+        },
+        {
+          "name": "plcsbom:git:commit",
+          "value": "a1b2c3d4e5f60718293a4b5c6d7e8f9012345678"
+        },
+        {
+          "name": "plcsbom:logicalComponent",
+          "value": "true"
+        }
+      ]
+    }
+  },
+  "components": [
+    {
+      "bom-ref": "linie-1-fw",
+      "type": "firmware",
+      "supplier": {
+        "name": "Siemens AG"
+      },
+      "manufacturer": {
+        "name": "Siemens AG"
+      },
+      "name": "CPU 1511-1 PN, Firmware",
+      "version": "V2.8",
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "plcsbom:adapter",
+          "value": "tia-aml"
+        },
+        {
+          "name": "plcsbom:device:classification",
+          "value": "CPU"
+        },
+        {
+          "name": "plcsbom:device:name",
+          "value": "PLC_1"
+        },
+        {
+          "name": "plcsbom:device:orderNumber",
+          "value": "6ES7 511-1AK02-0AB0"
+        },
+        {
+          "name": "plcsbom:device:position",
+          "value": "S71500/ET200MP station_1/0/1"
+        },
+        {
+          "name": "plcsbom:device:type",
+          "value": "CPU 1511-1 PN"
+        },
+        {
+          "name": "plcsbom:device:vendor",
+          "value": "Siemens AG"
+        },
+        {
+          "name": "plcsbom:device:vendor:origin",
+          "value": "assumed"
+        },
+        {
+          "name": "plcsbom:firmware:origin",
+          "value": "projected"
+        },
+        {
+          "name": "plcsbom:firmware:version",
+          "value": "V2.8"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "firmware-projected-only"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "program-not-read"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "vendor-sbom-missing"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "export/zwei-cpus-synthetisch.aml"
+        },
+        {
+          "name": "plcsbom:source:exportedAt",
+          "value": "2026-10-22T08:15:00Z"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "78d1e06e3add966ea517519f536163ef2a3f50b3916f420a13aba0e6177b3ba1"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Linie 1"
+        }
+      ]
+    },
+    {
+      "bom-ref": "linie-1-fw-et-200sp-station-1-0-0",
+      "type": "firmware",
+      "supplier": {
+        "name": "Siemens AG"
+      },
+      "manufacturer": {
+        "name": "Siemens AG"
+      },
+      "name": "IM 155-6 PN HF, Firmware",
+      "version": "V4.2",
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "plcsbom:adapter",
+          "value": "tia-aml"
+        },
+        {
+          "name": "plcsbom:device:classification",
+          "value": "HeadModule"
+        },
+        {
+          "name": "plcsbom:device:name",
+          "value": "IO_Device_1"
+        },
+        {
+          "name": "plcsbom:device:orderNumber",
+          "value": "6ES7 155-6AU01-0CN0"
+        },
+        {
+          "name": "plcsbom:device:position",
+          "value": "ET 200SP station_1/0/0"
+        },
+        {
+          "name": "plcsbom:device:type",
+          "value": "IM 155-6 PN HF"
+        },
+        {
+          "name": "plcsbom:device:vendor",
+          "value": "Siemens AG"
+        },
+        {
+          "name": "plcsbom:device:vendor:origin",
+          "value": "assumed"
+        },
+        {
+          "name": "plcsbom:firmware:origin",
+          "value": "projected"
+        },
+        {
+          "name": "plcsbom:firmware:version",
+          "value": "V4.2"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "firmware-projected-only"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "vendor-sbom-missing"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "export/zwei-cpus-synthetisch.aml"
+        },
+        {
+          "name": "plcsbom:source:exportedAt",
+          "value": "2026-10-22T08:15:00Z"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "78d1e06e3add966ea517519f536163ef2a3f50b3916f420a13aba0e6177b3ba1"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Linie 1"
+        }
+      ]
+    },
+    {
+      "bom-ref": "linie-1-fw-et-200sp-station-1-0-2",
+      "type": "firmware",
+      "supplier": {
+        "name": "Siemens AG"
+      },
+      "manufacturer": {
+        "name": "Siemens AG"
+      },
+      "name": "AI 4xU/I 2-wire ST, Firmware",
+      "version": "V2.0",
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "plcsbom:adapter",
+          "value": "tia-aml"
+        },
+        {
+          "name": "plcsbom:device:name",
+          "value": "AI 4xU/I 2-wire ST_1"
+        },
+        {
+          "name": "plcsbom:device:orderNumber",
+          "value": "6ES7 134-6HD01-0BA1"
+        },
+        {
+          "name": "plcsbom:device:position",
+          "value": "ET 200SP station_1/0/2"
+        },
+        {
+          "name": "plcsbom:device:type",
+          "value": "AI 4xU/I 2-wire ST"
+        },
+        {
+          "name": "plcsbom:device:vendor",
+          "value": "Siemens AG"
+        },
+        {
+          "name": "plcsbom:device:vendor:origin",
+          "value": "assumed"
+        },
+        {
+          "name": "plcsbom:firmware:origin",
+          "value": "projected"
+        },
+        {
+          "name": "plcsbom:firmware:version",
+          "value": "V2.0"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "firmware-projected-only"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "vendor-sbom-missing"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "export/zwei-cpus-synthetisch.aml"
+        },
+        {
+          "name": "plcsbom:source:exportedAt",
+          "value": "2026-10-22T08:15:00Z"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "78d1e06e3add966ea517519f536163ef2a3f50b3916f420a13aba0e6177b3ba1"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Linie 1"
+        }
+      ]
+    },
+    {
+      "bom-ref": "linie-1-fw-gsd-device-1-0-0",
+      "type": "firmware",
+      "name": "BCL248i, Firmware",
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "plcsbom:adapter",
+          "value": "tia-aml"
+        },
+        {
+          "name": "plcsbom:device:classification",
+          "value": "HeadModule"
+        },
+        {
+          "name": "plcsbom:device:name",
+          "value": "Scanner_1"
+        },
+        {
+          "name": "plcsbom:device:position",
+          "value": "GSD device_1/0/0"
+        },
+        {
+          "name": "plcsbom:device:type",
+          "value": "BCL248i"
+        },
+        {
+          "name": "plcsbom:firmware:origin",
+          "value": "not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "firmware-not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "order-number-not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "supplier-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "vendor-sbom-missing"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "export/zwei-cpus-synthetisch.aml"
+        },
+        {
+          "name": "plcsbom:source:exportedAt",
+          "value": "2026-10-22T08:15:00Z"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "78d1e06e3add966ea517519f536163ef2a3f50b3916f420a13aba0e6177b3ba1"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Linie 1"
+        },
+        {
+          "name": "plcsbom:vendorKey:GSDML",
+          "value": "GSDML-V2.41-LEUZE-BCL248I-20211213.XML"
+        },
+        {
+          "name": "plcsbom:vendorKey:GsdId",
+          "value": "DAP"
+        },
+        {
+          "name": "plcsbom:vendorKey:GsdType",
+          "value": "DAP"
+        }
+      ]
+    },
+    {
+      "bom-ref": "linie-1-fw-s71500-et200mp-station-1-0-0",
+      "type": "firmware",
+      "supplier": {
+        "name": "Siemens AG"
+      },
+      "manufacturer": {
+        "name": "Siemens AG"
+      },
+      "name": "PM 70W 120/230VAC, Firmware",
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "plcsbom:adapter",
+          "value": "tia-aml"
+        },
+        {
+          "name": "plcsbom:device:name",
+          "value": "PM 70W 120/230VAC"
+        },
+        {
+          "name": "plcsbom:device:orderNumber",
+          "value": "6EP1332-4BA00"
+        },
+        {
+          "name": "plcsbom:device:position",
+          "value": "S71500/ET200MP station_1/0/0"
+        },
+        {
+          "name": "plcsbom:device:type",
+          "value": "PM 70W 120/230VAC"
+        },
+        {
+          "name": "plcsbom:device:vendor",
+          "value": "Siemens AG"
+        },
+        {
+          "name": "plcsbom:device:vendor:origin",
+          "value": "assumed"
+        },
+        {
+          "name": "plcsbom:firmware:origin",
+          "value": "not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "firmware-attribute-missing"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "firmware-not-in-project"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "vendor-sbom-missing"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "export/zwei-cpus-synthetisch.aml"
+        },
+        {
+          "name": "plcsbom:source:exportedAt",
+          "value": "2026-10-22T08:15:00Z"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "78d1e06e3add966ea517519f536163ef2a3f50b3916f420a13aba0e6177b3ba1"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Linie 1"
+        }
+      ]
+    },
+    {
+      "bom-ref": "linie-1-fw-s71500-et200mp-station-1-0-2",
+      "type": "firmware",
+      "supplier": {
+        "name": "Siemens AG"
+      },
+      "manufacturer": {
+        "name": "Siemens AG"
+      },
+      "name": "DI 16x24VDC HF, Firmware",
+      "version": "V2.2",
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "plcsbom:adapter",
+          "value": "tia-aml"
+        },
+        {
+          "name": "plcsbom:device:name",
+          "value": "DI 16x24VDC HF_1"
+        },
+        {
+          "name": "plcsbom:device:orderNumber",
+          "value": "6ES7 521-1BH00-0AB0"
+        },
+        {
+          "name": "plcsbom:device:position",
+          "value": "S71500/ET200MP station_1/0/2"
+        },
+        {
+          "name": "plcsbom:device:type",
+          "value": "DI 16x24VDC HF"
+        },
+        {
+          "name": "plcsbom:device:vendor",
+          "value": "Siemens AG"
+        },
+        {
+          "name": "plcsbom:device:vendor:origin",
+          "value": "assumed"
+        },
+        {
+          "name": "plcsbom:firmware:origin",
+          "value": "projected"
+        },
+        {
+          "name": "plcsbom:firmware:version",
+          "value": "V2.2"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "firmware-projected-only"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "vendor-sbom-missing"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "export/zwei-cpus-synthetisch.aml"
+        },
+        {
+          "name": "plcsbom:source:exportedAt",
+          "value": "2026-10-22T08:15:00Z"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "78d1e06e3add966ea517519f536163ef2a3f50b3916f420a13aba0e6177b3ba1"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Linie 1"
+        },
+        {
+          "name": "plcsbom:vendorKey:catalogVersion",
+          "value": "V2.1"
+        }
+      ]
+    },
+    {
+      "bom-ref": "linie-1-fw-sinamics-g-2-0-0",
+      "type": "firmware",
+      "supplier": {
+        "name": "Siemens AG"
+      },
+      "manufacturer": {
+        "name": "Siemens AG"
+      },
+      "name": "G120C PN, Firmware",
+      "version": "4.7.10",
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "plcsbom:adapter",
+          "value": "tia-aml"
+        },
+        {
+          "name": "plcsbom:device:classification",
+          "value": "HeadModule"
+        },
+        {
+          "name": "plcsbom:device:name",
+          "value": "Pump_2"
+        },
+        {
+          "name": "plcsbom:device:orderNumber",
+          "value": "6SL3210-1KE14-3AF2"
+        },
+        {
+          "name": "plcsbom:device:position",
+          "value": "SINAMICS G_2/0/0"
+        },
+        {
+          "name": "plcsbom:device:type",
+          "value": "G120C PN"
+        },
+        {
+          "name": "plcsbom:device:vendor",
+          "value": "Siemens AG"
+        },
+        {
+          "name": "plcsbom:device:vendor:origin",
+          "value": "assumed"
+        },
+        {
+          "name": "plcsbom:firmware:origin",
+          "value": "projected"
+        },
+        {
+          "name": "plcsbom:firmware:version",
+          "value": "4.7.10"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "firmware-projected-only"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "vendor-sbom-missing"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "export/zwei-cpus-synthetisch.aml"
+        },
+        {
+          "name": "plcsbom:source:exportedAt",
+          "value": "2026-10-22T08:15:00Z"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "78d1e06e3add966ea517519f536163ef2a3f50b3916f420a13aba0e6177b3ba1"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Linie 1"
+        }
+      ]
+    },
+    {
+      "bom-ref": "linie-1-lib-lgf",
+      "type": "library",
+      "supplier": {
+        "name": "Siemens AG"
+      },
+      "manufacturer": {
+        "name": "Siemens AG"
+      },
+      "name": "LGF",
+      "version": "7.0.1",
+      "properties": [
+        {
+          "name": "plcsbom:adapter",
+          "value": "tia-aml"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "file-properties-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:origin",
+          "value": "declared"
+        },
+        {
+          "name": "plcsbom:software:kind",
+          "value": "library"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "export/zwei-cpus-synthetisch.aml"
+        },
+        {
+          "name": "plcsbom:source:exportedAt",
+          "value": "2026-10-22T08:15:00Z"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "78d1e06e3add966ea517519f536163ef2a3f50b3916f420a13aba0e6177b3ba1"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Linie 1"
+        },
+        {
+          "name": "plcsbom:vendor:origin",
+          "value": "declared"
+        }
+      ]
+    },
+    {
+      "bom-ref": "linie-2-fw",
+      "type": "firmware",
+      "supplier": {
+        "name": "Siemens AG"
+      },
+      "manufacturer": {
+        "name": "Siemens AG"
+      },
+      "name": "CPU 1515-2 PN, Firmware",
+      "version": "V2.9",
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "plcsbom:adapter",
+          "value": "tia-aml"
+        },
+        {
+          "name": "plcsbom:device:classification",
+          "value": "CPU"
+        },
+        {
+          "name": "plcsbom:device:name",
+          "value": "PLC_2"
+        },
+        {
+          "name": "plcsbom:device:orderNumber",
+          "value": "6ES7 515-2AM02-0AB0"
+        },
+        {
+          "name": "plcsbom:device:position",
+          "value": "S71500/ET200MP station_2/0/1"
+        },
+        {
+          "name": "plcsbom:device:type",
+          "value": "CPU 1515-2 PN"
+        },
+        {
+          "name": "plcsbom:device:vendor",
+          "value": "Siemens AG"
+        },
+        {
+          "name": "plcsbom:device:vendor:origin",
+          "value": "assumed"
+        },
+        {
+          "name": "plcsbom:firmware:origin",
+          "value": "projected"
+        },
+        {
+          "name": "plcsbom:firmware:version",
+          "value": "V2.9"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "firmware-projected-only"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "libraries-not-read"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "program-not-read"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "vendor-sbom-missing"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "export/zwei-cpus-synthetisch.aml"
+        },
+        {
+          "name": "plcsbom:source:exportedAt",
+          "value": "2026-10-22T08:15:00Z"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "78d1e06e3add966ea517519f536163ef2a3f50b3916f420a13aba0e6177b3ba1"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Linie 2"
+        }
+      ]
+    },
+    {
+      "bom-ref": "linie-2-fw-et-200sp-station-2-0-0",
+      "type": "firmware",
+      "supplier": {
+        "name": "Siemens AG"
+      },
+      "manufacturer": {
+        "name": "Siemens AG"
+      },
+      "name": "IM 155-6 PN HF, Firmware",
+      "version": "V4.2",
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "plcsbom:adapter",
+          "value": "tia-aml"
+        },
+        {
+          "name": "plcsbom:device:classification",
+          "value": "HeadModule"
+        },
+        {
+          "name": "plcsbom:device:name",
+          "value": "IO_Device_2"
+        },
+        {
+          "name": "plcsbom:device:orderNumber",
+          "value": "6ES7 155-6AU01-0CN0"
+        },
+        {
+          "name": "plcsbom:device:position",
+          "value": "ET 200SP station_2/0/0"
+        },
+        {
+          "name": "plcsbom:device:type",
+          "value": "IM 155-6 PN HF"
+        },
+        {
+          "name": "plcsbom:device:vendor",
+          "value": "Siemens AG"
+        },
+        {
+          "name": "plcsbom:device:vendor:origin",
+          "value": "assumed"
+        },
+        {
+          "name": "plcsbom:firmware:origin",
+          "value": "projected"
+        },
+        {
+          "name": "plcsbom:firmware:version",
+          "value": "V4.2"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "firmware-projected-only"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "vendor-sbom-missing"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "export/zwei-cpus-synthetisch.aml"
+        },
+        {
+          "name": "plcsbom:source:exportedAt",
+          "value": "2026-10-22T08:15:00Z"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "78d1e06e3add966ea517519f536163ef2a3f50b3916f420a13aba0e6177b3ba1"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Linie 2"
+        }
+      ]
+    },
+    {
+      "bom-ref": "linie-2-fw-sinamics-g-1-0-0",
+      "type": "firmware",
+      "supplier": {
+        "name": "Siemens AG"
+      },
+      "manufacturer": {
+        "name": "Siemens AG"
+      },
+      "name": "G120C PN, Firmware",
+      "version": "4.7.10",
+      "properties": [
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "unstructured"
+        },
+        {
+          "name": "plcsbom:adapter",
+          "value": "tia-aml"
+        },
+        {
+          "name": "plcsbom:device:classification",
+          "value": "HeadModule"
+        },
+        {
+          "name": "plcsbom:device:name",
+          "value": "Pump_1"
+        },
+        {
+          "name": "plcsbom:device:orderNumber",
+          "value": "6SL3210-1KE14-3AF2"
+        },
+        {
+          "name": "plcsbom:device:position",
+          "value": "SINAMICS G_1/0/0"
+        },
+        {
+          "name": "plcsbom:device:type",
+          "value": "G120C PN"
+        },
+        {
+          "name": "plcsbom:device:vendor",
+          "value": "Siemens AG"
+        },
+        {
+          "name": "plcsbom:device:vendor:origin",
+          "value": "assumed"
+        },
+        {
+          "name": "plcsbom:firmware:origin",
+          "value": "projected"
+        },
+        {
+          "name": "plcsbom:firmware:version",
+          "value": "4.7.10"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "creator-contact-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "filename-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "firmware-projected-only"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "hash-unavailable"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "license-unknown"
+        },
+        {
+          "name": "plcsbom:gap",
+          "value": "vendor-sbom-missing"
+        },
+        {
+          "name": "plcsbom:source",
+          "value": "export/zwei-cpus-synthetisch.aml"
+        },
+        {
+          "name": "plcsbom:source:exportedAt",
+          "value": "2026-10-22T08:15:00Z"
+        },
+        {
+          "name": "plcsbom:source:sha256",
+          "value": "78d1e06e3add966ea517519f536163ef2a3f50b3916f420a13aba0e6177b3ba1"
+        },
+        {
+          "name": "plcsbom:station",
+          "value": "Linie 2"
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "linie-1-fw",
+      "dependsOn": []
+    },
+    {
+      "ref": "linie-1-fw-et-200sp-station-1-0-0",
+      "dependsOn": []
+    },
+    {
+      "ref": "linie-1-fw-et-200sp-station-1-0-2",
+      "dependsOn": []
+    },
+    {
+      "ref": "linie-1-fw-gsd-device-1-0-0",
+      "dependsOn": []
+    },
+    {
+      "ref": "linie-1-fw-s71500-et200mp-station-1-0-0",
+      "dependsOn": []
+    },
+    {
+      "ref": "linie-1-fw-s71500-et200mp-station-1-0-2",
+      "dependsOn": []
+    },
+    {
+      "ref": "linie-1-fw-sinamics-g-2-0-0",
+      "dependsOn": []
+    },
+    {
+      "ref": "linie-1-lib-lgf",
+      "dependsOn": []
+    },
+    {
+      "ref": "linie-2-fw",
+      "dependsOn": []
+    },
+    {
+      "ref": "linie-2-fw-et-200sp-station-2-0-0",
+      "dependsOn": []
+    },
+    {
+      "ref": "linie-2-fw-sinamics-g-1-0-0",
+      "dependsOn": []
+    },
+    {
+      "ref": "maschine-xy",
+      "dependsOn": [
+        "linie-1-fw",
+        "linie-1-fw-et-200sp-station-1-0-0",
+        "linie-1-fw-et-200sp-station-1-0-2",
+        "linie-1-fw-gsd-device-1-0-0",
+        "linie-1-fw-s71500-et200mp-station-1-0-0",
+        "linie-1-fw-s71500-et200mp-station-1-0-2",
+        "linie-1-fw-sinamics-g-2-0-0",
+        "linie-1-lib-lgf",
+        "linie-2-fw",
+        "linie-2-fw-et-200sp-station-2-0-0",
+        "linie-2-fw-sinamics-g-1-0-0"
+      ]
+    }
+  ],
+  "compositions": [
+    {
+      "aggregate": "complete",
+      "dependencies": [
+        "maschine-xy"
+      ]
+    },
+    {
+      "aggregate": "unknown",
+      "dependencies": [
+        "linie-1-fw",
+        "linie-1-fw-et-200sp-station-1-0-0",
+        "linie-1-fw-et-200sp-station-1-0-2",
+        "linie-1-fw-gsd-device-1-0-0",
+        "linie-1-fw-s71500-et200mp-station-1-0-0",
+        "linie-1-fw-s71500-et200mp-station-1-0-2",
+        "linie-1-fw-sinamics-g-2-0-0",
+        "linie-1-lib-lgf",
+        "linie-2-fw",
+        "linie-2-fw-et-200sp-station-2-0-0",
+        "linie-2-fw-sinamics-g-1-0-0"
+      ]
+    }
+  ]
+}

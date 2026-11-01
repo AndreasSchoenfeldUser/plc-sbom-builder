@@ -6,7 +6,7 @@ Die Bedienung (Befehle, Ausgaben, Lückencodes, Einsatz in der Pipeline) beschre
 
 ## Stand
 
-Stand 01.11.2026, Version 0.1.0: Das Gerüst (M0) steht, M1 und M2 sind abgeschlossen, M5 und M6 sind umgesetzt. `plc-sbom validate` ist nutzbar: Es prüft eine SBOM gegen das eingebettete Schema CycloneDX 1.6 und die Regeln der BSI TR-03183-2 und schreibt die Ergebnisdatei. Welche Regel woher kommt, steht in [docs/regeln-tr03183.md](docs/regeln-tr03183.md); in CI prüft sbomqs den Validator gegen. Mit M2 liest der Adapter `codesys` PLCopen-XML-Exporte aus CODESYS V3.5; `plc-sbom inspect <export.xml> --adapter codesys` zeigt das Rohinventar (Steuerungen, Geräte, Bibliotheken mit Auflösung). Mit M5 liest der Adapter `studio5000` L5X-Exporte aus Rockwell Studio 5000 (Steuerung, Module mit Revision und Kodierung, Add-On Instructions); `inspect --adapter studio5000` zeigt auch dafür das Rohinventar. Mit M6 liest der Adapter `twincat` Beckhoff-TwinCAT-3-Projekte (`.tsproj` mit EtherCAT-Teilnehmern, `.plcproj` mit Bibliotheken), ebenfalls mit `inspect`. Alle anderen Befehle sind mit ihren Optionen angelegt; ein Aufruf endet mit Exit 2 und `[NOT_IMPLEMENTED]` und nennt den Meilenstein, der den Befehl umsetzt. Die Beispiele unten beschreiben das Zielbild aus CLAUDE.md.
+Stand 01.11.2026, Version 0.1.0: Das Gerüst (M0) steht, M1 und M2 sind abgeschlossen, M5, M6 und M7 sind umgesetzt. `plc-sbom validate` ist nutzbar: Es prüft eine SBOM gegen das eingebettete Schema CycloneDX 1.6 und die Regeln der BSI TR-03183-2 und schreibt die Ergebnisdatei. Welche Regel woher kommt, steht in [docs/regeln-tr03183.md](docs/regeln-tr03183.md); in CI prüft sbomqs den Validator gegen. Mit M2 liest der Adapter `codesys` PLCopen-XML-Exporte aus CODESYS V3.5; `plc-sbom inspect <export.xml> --adapter codesys` zeigt das Rohinventar (Steuerungen, Geräte, Bibliotheken mit Auflösung). Mit M5 liest der Adapter `studio5000` L5X-Exporte aus Rockwell Studio 5000 (Steuerung, Module mit Revision und Kodierung, Add-On Instructions); `inspect --adapter studio5000` zeigt auch dafür das Rohinventar. Mit M6 liest der Adapter `twincat` Beckhoff-TwinCAT-3-Projekte (`.tsproj` mit EtherCAT-Teilnehmern, `.plcproj` mit Bibliotheken), ebenfalls mit `inspect`. Mit M7 liest der Adapter `tia-aml` den AML-Export aus Siemens TIA Portal V17 bis V21: Geräte mit Bestellnummer und projektierter Firmware, passive Module, Stationen je CPU über das PROFINET-IO-System; `inspect --adapter tia-aml` zeigt CPUs, IO-Systeme und die Zuordnung jedes Geräts. Alle anderen Befehle sind mit ihren Optionen angelegt; ein Aufruf endet mit Exit 2 und `[NOT_IMPLEMENTED]` und nennt den Meilenstein, der den Befehl umsetzt. Die Beispiele unten beschreiben das Zielbild aus CLAUDE.md.
 
 | Meilenstein | Inhalt | Stand |
 |---|---|---|
@@ -16,7 +16,8 @@ Stand 01.11.2026, Version 0.1.0: Das Gerüst (M0) steht, M1 und M2 sind abgeschl
 | M3, M4 | Adapter `codesys`, Quellen `v23` (CODESYS V2.3) und `c4` (CODESYS 4) | zurückgestellt, bis die Comquent-Demo-Projekte da sind (E-016) |
 | M5 | Adapter `studio5000` (Rockwell) | umgesetzt: Adapter, `inspect --adapter studio5000`, Feldtabelle [docs/adapter-studio5000.md](docs/adapter-studio5000.md) (E-017), echte Fixtures aus `ra-logix-cicd` und `hutcheb/acd`, drei Golden Files, Gegenprüfung mit sbomqs ohne Abweichung; CI auf ubuntu und windows grün (Lauf 41251063889) |
 | M6 | Adapter `twincat` (Beckhoff) | umgesetzt: Adapter, `inspect --adapter twincat`, Feldtabelle [docs/adapter-twincat.md](docs/adapter-twincat.md) (E-018), neuer Lückencode `devices-not-read`, echte Fixtures aus AixOCAT, SPT_V4_Samples und TcOpen, fünf Golden Files, Gegenprüfung mit sbomqs ohne Abweichung; offen ist die Bestätigung durch CI |
-| M7, M8 | Adapter `tia-aml` (TIA V17–V21, AML-Export), GSDML-Leser | offen |
+| M7 | Adapter `tia-aml` (TIA V17–V21, AML-Export) | umgesetzt: Leser und Adapter, Stationen über IO-Systeme, `inspect --adapter tia-aml`, Feldtabelle [docs/adapter-tia-aml.md](docs/adapter-tia-aml.md) (E-019), neuer Lückencode `firmware-attribute-missing`, V17-Fixture (MIT) und eine synthetische Datei mit zwei CPUs, drei Golden Files, V18- und V21-Exporte ohne Lizenz laufen lokal ohne Fehler, Gegenprüfung mit sbomqs ohne Abweichung; offen sind das Golden File aus dem Comquent-V21-Export und die Bestätigung durch CI |
+| M8 | GSDML-Leser, GSD-Geräte in `tia-aml` | offen |
 | M9 | `build` mit `machine.yml`, Merge, Determinismus | offen |
 | M10–M12 | `report`, `compare`, `ids` | offen |
 | M13 | Jenkinsfile, README und ANLEITUNG.md auf Release-Stand, Release-Pakete | offen |
@@ -102,7 +103,7 @@ dotnet run tools/check-licenses.cs              # Lizenzen aller Pakete; mit -- 
 dotnet run tools/crosscheck-sbomqs.cs -- --sbomqs <pfad>   # Validator gegen sbomqs v2.1.3 über alle Golden Files
 ```
 
-Alle Testfälle mit Testläufen und Ergebnissen beschreibt [TESTFAELLE.md](TESTFAELLE.md) (Stand 01.11.2026: 398 Tests, alle bestanden). Die Gegenprüfung mit sbomqs und ihr Ergebnis beschreibt [docs/regeln-tr03183.md](docs/regeln-tr03183.md) Abschnitt 10.
+Alle Testfälle mit Testläufen und Ergebnissen beschreibt [TESTFAELLE.md](TESTFAELLE.md) (Stand 01.11.2026: 480 Tests, alle bestanden; fünf davon brauchen Dateien ohne Lizenz aus `fixtures/_local/` und überspringen sich in CI). Die Gegenprüfung mit sbomqs und ihr Ergebnis beschreibt [docs/regeln-tr03183.md](docs/regeln-tr03183.md) Abschnitt 10.
 
 Paket für eine Plattform (self-contained, eine Datei):
 

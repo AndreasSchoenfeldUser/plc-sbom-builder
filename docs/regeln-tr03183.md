@@ -1,6 +1,6 @@
 # Regeln der BSI TR-03183-2 im Validator
 
-Stand 31.10.2026, plc-sbom 0.1.0.
+Stand 01.11.2026, plc-sbom 0.1.0.
 
 Grundlage:
 
@@ -89,24 +89,25 @@ Spalte „erklärt“: das Pflichtfeld aus Abschnitt 3, dessen Fehlen der Code e
 
 | Code | Schwere | erklärt | Gesetzt von | Begründung |
 |---|---|---|---|---|
-| `firmware-not-in-project` | Hinweis | Version | Lückenregeln: Gerät ohne Firmware-Angabe im Projekt | 5.2.2 Version. Die Firmware hat eine Version, nur steht sie nicht in der Quelle; das Änderungsdatum einer Datei (5.2.2 Nr. 3) gibt es nicht. Erst der Ist-Stand schließt die Lücke. Für TIA-Geräte ohne Attribut wird der Adapter (M7) eine Warnung setzen (CLAUDE.md 5.4.3). |
+| `firmware-not-in-project` | Hinweis | Version | Lückenregeln: Gerät ohne Firmware-Angabe im Projekt | 5.2.2 Version. Die Firmware hat eine Version, nur steht sie nicht in der Quelle; das Änderungsdatum einer Datei (5.2.2 Nr. 3) gibt es nicht. Erst der Ist-Stand schließt die Lücke. Für TIA-Geräte ohne Attribut setzt der Adapter `tia-aml` zusätzlich `firmware-attribute-missing` (Warnung, E-019). |
+| `firmware-attribute-missing` | Warnung | – | Adapter `tia-aml` (M7): Gerät mit Bestellnummer ohne Attribut `FirmwareVersion` (V21: PM 70W), nicht in `passiveOrderNumbers` (E-019) | Kein TR-Feld; die Version erklärt `firmware-not-in-project`. Ob das Gerät überhaupt Firmware hat, ist offen: ist es passiv, gehört es nicht in die SBOM (Art. 3 Nr. 39 CRA: nur Softwareelemente), sonst fehlt seine Firmware-Version. Warnung, bis der Anwender das Gerät als passiv erklärt oder ein Ist-Stand vorliegt. |
 | `firmware-projected-only` | Hinweis | – | Lückenregeln: Firmware mit Herkunft `projected` | Die Version ist ein Sollwert aus dem Projekt. 5.1 verlangt die Informationen, die beim Build vorliegen; der Ist-Stand kommt über `compare` (M11). |
 | `hash-unavailable` | Hinweis | Hash | Lückenregeln: jede Firmware; Software ohne SHA-512 der ausgelieferten Form | 3.2.1: Angaben, die wegen der Art der Zusammensetzung nicht verfügbar sind, entfallen, auch Hash und Dateiname. Hersteller-Firmware steckt im Gerät und erreicht das Werkzeug nie als Datei; ein SPS-Programm hat kein stabiles Binärartefakt (CLAUDE.md 5.6). Auslegung, siehe E-011. |
 | `filename-unavailable` | Hinweis | Dateiname | wie `hash-unavailable` | 3.2.1 wie oben. |
 | `version-unresolved` | Warnung | Version | Lückenregeln: Version fehlt oder ist ein Platzhalter (`*`, „neueste installierte“) | 5.2.2 Version; 3.2.1 verlangt für ausgelieferte Komponenten die genaue Version. Beim Übersetzen gab es eine feste Version, die Quelle nennt sie nicht. |
 | `runtime-version-unknown` | Warnung | Version | Lückenregeln: Laufzeit ohne Version; Adapter `twincat` (M6) | 5.2.2 Version. TwinCAT führt nur die XAE-Version im Projekt. |
-| `libraries-not-read` | Warnung | – | Adapter `tia-aml` (M7) | 5.2.2 Abhängigkeiten, 5.1. Das Programm wird `incomplete` gekennzeichnet; Bibliotheken sind eingebundene Fremdkomponenten (3.2.1, kompilierter Code). |
-| `program-not-read` | Hinweis | – | Adapter `tia-aml` (M7) | 5.2.2 Vollständigkeit: Das Programm wird `incomplete` gekennzeichnet, wie die TR es für unvollständige Aufzählungen vorsieht. |
+| `libraries-not-read` | Warnung | – | Adapter `tia-aml` (M7): Station mit CPU ohne `libraries` (E-019) | 5.2.2 Abhängigkeiten, 5.1. Das Programm wird `incomplete` gekennzeichnet; Bibliotheken sind eingebundene Fremdkomponenten (3.2.1, kompilierter Code). |
+| `program-not-read` | Hinweis | – | Adapter `tia-aml` (M7): jede Station mit CPU | 5.2.2 Vollständigkeit: Das Programm wird `incomplete` gekennzeichnet, wie die TR es für unvollständige Aufzählungen vorsieht. |
 | `ekey-disabled` | Warnung | – | Adapter `studio5000` (M5), nur an Modulen außer der Steuerung (E-017) | Kein TR-Feld. Das Gerät im Feld kann vom projektierten abweichen; der Soll-Stand ist dann wenig belastbar. |
 | `license-unknown` | Warnung | Distributionslizenz | Lückenregeln: keine Distributionslizenz bekannt | 5.2.2, 6.1. Pflichtfeld fehlt, Lücke vermerkt. |
 | `vendor-sbom-missing` | Hinweis | – | Lückenregeln: jede Firmware, bis eine Hersteller-SBOM zugeordnet ist (M9) | 5.1: Die Firmware gehört zum Lieferumfang, ihre Bestandteile kennt nur der Hersteller. Die Abhängigkeiten der Firmware sind deshalb `unknown`; das ist eine zulässige Angabe der Vollständigkeit. |
 | `protected-block-unknown` | Warnung | Ersteller, Version | Adapter `tia-portal` (M14) | 5.2.2 Ersteller und Version. |
 | `gsdml-not-found` | Warnung | – | Adapter `tia-aml` (M8) | Ohne GSDML fehlen Hersteller und Bestellnummer; die Pflichtfeld-Lücke selbst trägt `supplier-unknown`. |
 | `devdesc-not-found` | Warnung | – | Adapter `codesys`, Quelle `v35`, wenn `deviceDescriptions` gesetzt ist (E-015) | Kein TR-Feld. Ohne eindeutige Gerätebeschreibung fehlen Hersteller und Produktname; die Pflichtfeld-Lücke selbst trägt `supplier-unknown`. |
-| `order-number-not-in-project` | Warnung | – | Adapter `tia-aml` (M8), `codesys` (M2), `studio5000` (M5, Modul ohne `CatalogNumber`), `twincat` (M6, jeder EtherCAT-Teilnehmer, E-018) | Kein TR-Pflichtfeld. Die Bestellnummer ist der Schlüssel für CSAF-Advisories (CLAUDE.md Abschnitt 6). |
+| `order-number-not-in-project` | Warnung | – | Adapter `tia-aml` (M7, GSD-Gerät ohne GSDML; ab M8 nur, wenn auch die GSDML keine nennt), `codesys` (M2), `studio5000` (M5, Modul ohne `CatalogNumber`), `twincat` (M6, jeder EtherCAT-Teilnehmer, E-018) | Kein TR-Pflichtfeld. Die Bestellnummer ist der Schlüssel für CSAF-Advisories (CLAUDE.md Abschnitt 6). |
 | `supplier-unknown` | Warnung | Ersteller | Lückenregeln: kein Hersteller bekannt | 5.2.2 Ersteller. |
 | `creator-contact-unknown` | Warnung | Ersteller | Lückenregeln: Hersteller ohne E-Mail und URL | 5.2.2: E-Mail-Adresse, sonst URL. |
-| `device-unassigned` | Hinweis | – | Lückenregeln: Gerät ohne Station | Kein TR-Feld. Die Firmware hängt direkt an der Maschine. |
+| `device-unassigned` | Hinweis | – | Lückenregeln: Gerät ohne Station; Adapter `tia-aml` (M7): Gerät an keinem IO-System einer Station und in keinem `devices` | Kein TR-Feld. Die Firmware hängt direkt an der Maschine. |
 | `devices-not-read` | Warnung | – | Adapter `twincat` (M6): PROFINET-Boxen, E/A-Gerät in eigener Datei (E-018) | Kein TR-Feld. Die Firmware dieser Geräte fehlt in der SBOM; 5.1 verlangt die Komponenten bis zur ersten außerhalb des eigenen Lieferumfangs. Warnung, damit ein Release-Build die Lücke nicht übersieht. |
 | `program-source-missing` | Warnung | Hash | Lückenregeln: Anwenderprogramm ohne `program` in `machine.yml` | Ohne Quellverzeichnis gibt es nicht einmal den Hash über die Quellen (Abschnitt 9). |
 | `file-properties-unknown` | Warnung | ausführbar, Archiv, strukturiert | Lückenregeln: Software ohne Angabe der Dateieigenschaften | 5.2.2. |

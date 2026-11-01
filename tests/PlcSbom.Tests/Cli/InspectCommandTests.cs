@@ -86,6 +86,56 @@ public sealed class InspectCommandTests
     }
 
     [Fact]
+    public async Task Tia_aml_inventory_matches_the_golden_file()
+    {
+        var fixture = Fixtures.PathOf("tia-aml/zwei-cpus-synthetisch.aml");
+
+        var (exit, output, error) = await Run("inspect", fixture, "--adapter", "tia-aml");
+
+        Assert.Equal(ExitCodes.Ok, exit);
+        Assert.DoesNotContain("192.0.2.", output); // network addresses never leave the reader
+        // Warnings go to stderr as well as into the JSON.
+        Assert.StartsWith("[TIA_AML_CATALOG_VERSION_DIFFERS] ", error);
+        var normalized = output.Replace(fixture.Replace("\\", "\\\\"), "fixtures/tia-aml/zwei-cpus-synthetisch.aml");
+        Golden.AssertMatches("tia-aml-zwei-cpus.inspect.json", Encoding.UTF8.GetBytes(normalized));
+    }
+
+    [Fact]
+    public async Task Tia_aml_inventory_shows_cpus_and_assignment()
+    {
+        var (exit, output, error) = await Run("inspect", Fixtures.PathOf("tia-aml/plc-commissioning-sample_device.aml"), "--adapter", "tia-aml");
+
+        Assert.Equal(ExitCodes.Ok, exit);
+        Assert.Equal("", error);
+        var inspection = JsonNode.Parse(output)!["inspection"]!;
+        Assert.Equal("V17", inspection["tool"]!["version"]!.GetValue<string>());
+        Assert.Equal("PLC_1", inspection["cpus"]![0]!["name"]!.GetValue<string>());
+        var gsd = inspection["devices"]![0]!;
+        Assert.Equal("GSD device_1", gsd["name"]!.GetValue<string>());
+        Assert.Empty(gsd["assignedTo"]!.AsArray());
+        Assert.Equal("gsdDevice", gsd["items"]![1]!["treatment"]!.GetValue<string>());
+    }
+
+    [Fact]
+    public async Task Non_aml_file_ends_with_exit_2()
+    {
+        var (exit, _, error) = await Run("inspect", Fixtures.PathOf("codesys/v35/robin-codesys_project.xml"), "--adapter", "tia-aml");
+
+        Assert.Equal(ExitCodes.Usage, exit);
+        Assert.StartsWith("[NOT_AML] ", error);
+    }
+
+    [Fact]
+    public async Task Gsdml_for_tia_aml_names_milestone_m8()
+    {
+        var (exit, _, error) = await Run("inspect", Fixtures.PathOf("tia-aml/plc-commissioning-sample_device.aml"), "--adapter", "tia-aml", "--gsdml", "gsdml/");
+
+        Assert.Equal(ExitCodes.Usage, exit);
+        Assert.StartsWith("[NOT_IMPLEMENTED] ", error);
+        Assert.Contains("M8", error);
+    }
+
+    [Fact]
     public async Task Non_tsproj_file_ends_with_exit_2()
     {
         var (exit, _, error) = await Run("inspect", Fixtures.PathOf("codesys/v35/robin-codesys_project.xml"), "--adapter", "twincat");

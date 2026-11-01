@@ -1,6 +1,6 @@
 # Anleitung: PLC SBOM Builder (`plc-sbom`)
 
-Stand: 31.10.2026, Version 0.1.0 (Prototyp). Diese Anleitung beschreibt, was das Werkzeug in dieser Version kann und wie man es aufruft. Was erst mit späteren Meilensteinen kommt, ist als „folgt“ gekennzeichnet. Hintergrund, Architektur und Planung stehen in [CLAUDE.md](CLAUDE.md), ein Überblick in [README.md](README.md).
+Stand: 01.11.2026, Version 0.1.0 (Prototyp). Diese Anleitung beschreibt, was das Werkzeug in dieser Version kann und wie man es aufruft. Was erst mit späteren Meilensteinen kommt, ist als „folgt“ gekennzeichnet. Hintergrund, Architektur und Planung stehen in [CLAUDE.md](CLAUDE.md), ein Überblick in [README.md](README.md).
 
 ## 1. Wofür das Werkzeug da ist
 
@@ -16,7 +16,7 @@ Eine SBOM allein erfüllt den Cyber Resilience Act nicht. Das Werkzeug bewertet 
 |---|---|---|
 | `validate` | vorhandene SBOM prüfen (Schema und TR-03183-2), Ergebnisdatei schreiben | **nutzbar** |
 | `build` | SBOM aus `machine.yml` und den SPS-Projekten erzeugen | folgt (M9) |
-| `inspect` | Rohinventar eines Adapters ausgeben | **nutzbar für `codesys`** (CODESYS V3.5, PLCopen XML), **`studio5000`** (Rockwell, L5X) und **`twincat`** (Beckhoff TwinCAT 3); andere Adapter folgen (M7–M14) |
+| `inspect` | Rohinventar eines Adapters ausgeben | **nutzbar für `codesys`** (CODESYS V3.5, PLCopen XML), **`studio5000`** (Rockwell, L5X), **`twincat`** (Beckhoff TwinCAT 3) und **`tia-aml`** (Siemens TIA Portal V17–V21, AML-Export); `--gsdml` folgt (M8), `tia-portal` folgt (M14) |
 | `report` | Prüfbericht als HTML oder Markdown | folgt (M10) |
 | `compare` | SBOM mit dem Ist-Stand aus dem Feld abgleichen | folgt (M11) |
 | `ids` | Kennungen gegen CSAF-Advisories prüfen | folgt (M12) |
@@ -145,6 +145,7 @@ Der Code im Lückenvermerk ist klein geschrieben mit Bindestrich (`hash-unavaila
 |---|---|---|---|
 | `firmware-not-in-project` | Das Projekt führt keine Firmware-Version für dieses Gerät, z. B. EtherCAT-Klemmen | Hinweis | Version |
 | `firmware-projected-only` | Firmware nur als projektierter Sollwert bekannt, kein Ist-Stand | Hinweis | – |
+| `firmware-attribute-missing` | TIA: Das Gerät hat im AML kein Attribut `FirmwareVersion` (etwa eine Stromversorgung); ob es eigene Firmware hat, ist offen. Passive Geräte mit `passiveOrderNumbers` erklären | Warnung | – |
 | `hash-unavailable` | Die ausgelieferte Form liegt nicht vor, kein SHA-512 bestimmbar (TR Abschnitt 3.2.1) | Hinweis | Hash |
 | `filename-unavailable` | Die Komponente liegt nicht als Datei vor | Hinweis | Dateiname |
 | `vendor-sbom-missing` | Für diese Firmware liegt keine Hersteller-SBOM vor | Hinweis | – |
@@ -247,6 +248,12 @@ Auf Windows-Agenten `bat` statt `sh`. `readJSON` stammt aus dem Plugin „Pipeli
 | `[TWINCAT_FILE_NOT_FOUND]` | Eine `.plcproj` oder `_Config/PLC/*.xti`, auf die das Projekt verweist, fehlt | Datei einchecken; der Pfad steht in der Meldung |
 | `[TWINCAT_PLCPROJ_MISSING]` | Ein SPS-Projekt im `.tsproj` nennt keine `.plcproj` | Projekt in TwinCAT öffnen und speichern |
 | `[STUDIO5000_NOT_CONTROLLER]` | Der L5X-Export enthält nur einen Bestandteil (etwa eine AOI), nicht den ganzen Controller | Das ganze Projekt als L5X speichern, nicht einzelne Bausteine exportieren |
+| `[NOT_AML]` | Die Datei ist keine AutomationML-Datei (Wurzel nicht `CAEXFile`) | Die `.aml`-Datei aus dem CAx-Export angeben |
+| `[NOT_TIA_AML]` | Die AML-Datei stammt nicht aus TIA Portal (etwa aus dem TIA Selection Tool) | In TIA Portal über Extras → CAx-Daten exportieren |
+| `[TIA_AML_PLC_REQUIRED]` | Die AML-Datei enthält mehrere CPUs, oder mehrere Stationen lesen sie, und `plc` fehlt | CPU mit `plc` wählen; die Namen stehen in der Meldung und in `inspect` |
+| `[TIA_AML_PLC_NOT_FOUND]` | Die mit `plc` genannte CPU steht nicht in der AML-Datei | Namen aus der Meldung oder aus `inspect` übernehmen (genaue Schreibweise) |
+| `[TIA_AML_DEVICE_IN_TWO_STATIONS]` | Ein Gerät gehört zu zwei Stationen (gleiche CPU zweimal, oder `devices` greift ein Gerät am IO-System einer anderen Station) | `plc` und `devices` der Stationen prüfen |
+| `[TIA_AML_…]` als Warnung | `WRITER_VERSION_UNKNOWN`, `ROLE_UNKNOWN`, `TYPE_IDENTIFIER_UNKNOWN`, `CATALOG_VERSION_DIFFERS`, `IOSYSTEM_WITHOUT_CPU`, `PATTERN_UNUSED`, `EXPORT_TIME_INVALID`: etwas in der Datei war nicht vollständig auswertbar; der Lauf geht weiter | Meldung lesen; bei `PATTERN_UNUSED` Tippfehler in `devices` oder `ignoreDevices` prüfen |
 
 ## 10. Projekt ansehen: `inspect`
 
@@ -254,7 +261,7 @@ Auf Windows-Agenten `bat` statt `sh`. `readJSON` stammt aus dem Plugin „Pipeli
 plc-sbom inspect <projektdatei> --adapter <id> [--gsdml <verzeichnis>]
 ```
 
-`inspect` gibt das Rohinventar eines Adapters als JSON auf der Konsole aus: was der Adapter in der Datei findet, unverändert und noch ohne Lückenregeln. Damit lässt sich prüfen, ob ein Export das Erwartete enthält, und später die `machine.yml` schreiben. In Version 0.1.0 geht das für die Adapter `codesys`, `studio5000` und `twincat`; für die anderen endet der Aufruf mit Exit 2 und `[NOT_IMPLEMENTED]` und nennt den Meilenstein. `--gsdml` gilt nur für die TIA-Adapter.
+`inspect` gibt das Rohinventar eines Adapters als JSON auf der Konsole aus: was der Adapter in der Datei findet, unverändert und noch ohne Lückenregeln. Damit lässt sich prüfen, ob ein Export das Erwartete enthält, und später die `machine.yml` schreiben. In Version 0.1.0 geht das für die Adapter `codesys`, `studio5000`, `twincat` und `tia-aml`; für `tia-portal` endet der Aufruf mit Exit 2 und `[NOT_IMPLEMENTED]` und nennt den Meilenstein. `--gsdml` gilt nur für die TIA-Adapter und folgt mit M8.
 
 Beispiel (gekürzt):
 
@@ -387,6 +394,48 @@ Beispiel für `twincat` (gekürzt, aus einem echten Lauf):
 
 AMS-Net-IDs, IP-Adressen und der Beckhoff Identification Code (BIC) erscheinen auch in `inspect` nicht.
 
+Für `tia-aml` zeigt `inspect` die CPUs mit ihren IO-Systemen und je Gerät, zu welcher CPU es als Station gehören würde. Damit schreibt man `plc` und `devices` in die `machine.yml`. Beispiel aus der synthetischen Datei mit zwei CPUs (gekürzt):
+
+```text
+> plc-sbom inspect Linie1.aml --adapter tia-aml
+[TIA_AML_CATALOG_VERSION_DIFFERS] Linie1.aml: S71500/ET200MP station_1/DI 16x24VDC HF_1 hat im TypeIdentifier die Version V2.1, als FirmwareVersion aber V2.2. In die SBOM geht die FirmwareVersion.
+{
+  "format": 1,
+  "adapter": "tia-aml",
+  "file": "Linie1.aml",
+  "inspection": {
+    "tool": { "name": "TIA Portal", "version": "V21", "release": "2100.0.121.1", "vendor": "Siemens AG" },
+    "cpus": [
+      { "name": "PLC_1", "device": "S71500/ET200MP station_1", "typeName": "CPU 1511-1 PN", "firmwareVersion": "V2.8", "ioSystems": [ "PROFINET IO-System" ] },
+      { "name": "PLC_2", "device": "S71500/ET200MP station_2", "typeName": "CPU 1515-2 PN", "firmwareVersion": "V2.9", "ioSystems": [ "PROFINET IO-System" ] }
+    ],
+    "devices": [
+      {
+        "name": "ET 200SP station_1",
+        "folder": "Ungrouped devices",
+        "typeIdentifier": "System:Device.ET200SP",
+        "assignedTo": [ { "cpu": "PLC_1", "via": "io-system" } ],
+        "items": [
+          { "name": "IO_Device_1", "position": "0/0", "typeIdentifier": "OrderNumber:6ES7 155-6AU01-0CN0", "typeName": "IM 155-6 PN HF", "firmwareVersion": "V4.2", "deviceItemType": "HeadModule", "treatment": "firmware" },
+          { "name": "BA 2xRJ45", "position": "0/0/127", "typeIdentifier": "OrderNumber:6ES7 193-6AR00-0AA0", "typeName": "BA 2xRJ45", "firmwareVersion": "V0.0", "treatment": "passive" },
+          ...
+        ]
+      },
+      ...
+    ],
+    "warnings": [ { "code": "TIA_AML_CATALOG_VERSION_DIFFERS", "message": "..." } ]
+  }
+}
+```
+
+| Feld | Inhalt |
+|---|---|
+| `cpus[].ioSystems` | PROFINET-IO-Systeme, die der CPU gehören |
+| `devices[].assignedTo` | CPU, zu deren Station das Gerät gehört: `via` = `cpu` (enthält die CPU) oder `io-system` (an ihrem IO-System); leer: an keinem IO-System, kommt nur über `devices` in eine Station |
+| `items[].treatment` | `firmware`, `firmwareAttributeMissing` (kein Attribut `FirmwareVersion`), `passive` (`V0.0`), `rack`, `gsdDevice`, `gsdModule`, `structure`, `unknown` |
+
+Warnungen stehen im JSON und zusätzlich auf stderr. IP-Adressen, Subnetzmasken und Variablentabellen erscheinen nicht.
+
 ## 11. CODESYS V3.5
 
 Eingang ist der PLCopen-XML-Export des ganzen Projekts. Die `.project`-Datei ist binär und wird nicht gelesen. Den Export erzeugt man in CODESYS V3.5 über den PLCopen-XML-Export des Projekts und checkt ihn neben dem Projekt ein. Die Station erhält im Ergebnis die Property `<namespace>:adapter:source` = `v35`.
@@ -453,6 +502,31 @@ Wer feste Versionen in der SBOM will, setzt im Bibliotheksverwalter des SPS-Proj
 
 Alle gelesenen Stellen und Regeln: [docs/adapter-twincat.md](docs/adapter-twincat.md).
 
-## 14. Was folgt
+## 14. Siemens TIA Portal V17–V21 (AML-Export)
 
-Die nächsten Schritte nach Meilensteinplan (CLAUDE.md Abschnitt 12): M1, M2 (CODESYS V3.5), M5 (Rockwell Studio 5000) und M6 (Beckhoff TwinCAT 3) sind umgesetzt; alle Prüfregeln mit ihrer TR-Stelle stehen in [docs/regeln-tr03183.md](docs/regeln-tr03183.md). CODESYS V2.3 und CODESYS 4 (M3, M4) warten auf Demo-Projekte. Danach kommen Siemens TIA Portal über den AML-Export, zuletzt TIA Portal über Openness. Mit M9 erzeugt `build` die SBOM aus einer `machine.yml`; ab dann beschreibt diese Anleitung auch die Maschinenbeschreibung.
+Eingang ist die AML-Datei aus dem CAx-Export von TIA Portal (Extras → CAx-Daten exportieren), eingecheckt im Repository. Gelesen werden Dateien aus TIA Portal V17 bis V21; eine andere `WriterVersion` ergibt eine Warnung, die Datei wird trotzdem gelesen. Dateien aus anderen Werkzeugen, etwa dem TIA Selection Tool, enden mit `[NOT_TIA_AML]`. Die TIA-Version steht in `metadata.tools` als `TIA Portal` (`V21`, Release `2100.0.121.1`), der Exportzeitpunkt an jeder Komponente als `<namespace>:source:exportedAt`, damit ein veralteter Export auffällt.
+
+**Stationen.** Eine Station ist eine CPU und die Geräte ihres PROFINET-IO-Systems. Enthält die Datei mehrere CPUs, wählt `plc` je Station eine aus (ab M9 in `machine.yml`); mehrere Stationen dürfen dieselbe Datei lesen. Zur Station gehören das Gerät der CPU (Profilschiene, Stromversorgung, Module), alle Geräte an ihrem IO-System und alle, die ein Muster unter `devices` trifft (etwa ein Panel, das nur am Subnetz hängt). Geräte, die keine Station beansprucht, kommen unter die Maschine mit `device-unassigned` (Hinweis); was dort nicht hingehört, schließt `ignoreDevices` aus. Ohne `plc` ist die ganze Datei eine Station, wenn sie höchstens eine CPU enthält.
+
+**Firmware.** Jedes Gerät mit Bestellnummer und Firmware-Stand wird eine Firmware-Komponente, benannt nach dem Typnamen, etwa `CPU 1511-1 PN, Firmware` mit Version `V2.8` (`firmware:origin` = `projected`, Hinweis `firmware-projected-only`). Antriebe wie der G120C stehen mit ihrer Firmware ohne „V“ (`4.7.10`) wie im Projekt. Die Position steht als `<Gerät>/<Steckplatzpfad>`, etwa `ET 200SP station_1/0/0`.
+
+| Im Export | In der SBOM |
+|---|---|
+| `FirmwareVersion` = `V0.0` (Busadapter, einfache DI/DQ) | nicht; passives Modul, später im Hardware-Anhang des Berichts |
+| Profilschiene, Rack (Typname `Rack`) | nicht; Hardware-Anhang, Bestellnummer mit `*` als Muster gekennzeichnet |
+| integrierte Teile (`BuiltIn`: E/A der CPU, Schnittstellen, OPC UA) | nicht; Teil des übergeordneten Geräts |
+| kein Attribut `FirmwareVersion` (etwa PM 70W) | Firmware ohne Version, `firmware-attribute-missing` (Warnung) und `firmware-not-in-project` (Hinweis); mit `passiveOrderNumbers` (ab M9 in `machine.yml`, z. B. `"6EP1*"`) als passiv erklärt |
+
+**Hersteller.** Geräte aus dem Siemens-Katalog (`TypeIdentifier` `OrderNumber:…`) bekommen `Siemens AG` mit `vendor:origin` = `assumed`. Mit `vendorOverrides` (Muster auf Bestellnummer) lässt sich ein anderer Hersteller erklären (`declared`).
+
+**GSD-Geräte.** Für Geräte anderer Hersteller über GSDML nennt das AML nur den Dateinamen der GSDML und den Typnamen. Bis M8 trägt das Kopfmodul deshalb `order-number-not-in-project`, `supplier-unknown` (Warnungen) und `firmware-not-in-project`; der Dateiname steht als `<namespace>:vendorKey:GSDML`. Module des GSD-Geräts gelten als passiv. Mit M8 liest das Werkzeug Hersteller und Bestellnummer aus der GSDML-Datei.
+
+**Bibliotheken und Programm.** Der CAx-Export enthält weder Bibliotheken noch Bausteine. Jede Station mit CPU trägt `libraries-not-read` (Warnung) und `program-not-read` (Hinweis). Bibliotheken lassen sich je Station unter `libraries` deklarieren (ab M9 in `machine.yml`); sie kommen mit `<namespace>:origin` = `declared` in die SBOM, und `libraries-not-read` entfällt. Bibliothekstypen und geschützte Bausteine liefert erst der Adapter `tia-portal` über Openness (M14).
+
+IP-Adressen, Subnetzmasken, PROFINET-Gerätenamen und Variablentabellen werden nicht gelesen.
+
+Alle gelesenen Stellen und Regeln: [docs/adapter-tia-aml.md](docs/adapter-tia-aml.md).
+
+## 15. Was folgt
+
+Die nächsten Schritte nach Meilensteinplan (CLAUDE.md Abschnitt 12): M1, M2 (CODESYS V3.5), M5 (Rockwell Studio 5000), M6 (Beckhoff TwinCAT 3) und M7 (Siemens TIA Portal, AML-Export) sind umgesetzt; alle Prüfregeln mit ihrer TR-Stelle stehen in [docs/regeln-tr03183.md](docs/regeln-tr03183.md). CODESYS V2.3 und CODESYS 4 (M3, M4) warten auf Demo-Projekte. Als Nächstes kommen GSD-Geräte mit GSDML-Dateien (M8), zuletzt TIA Portal über Openness. Mit M9 erzeugt `build` die SBOM aus einer `machine.yml`; ab dann beschreibt diese Anleitung auch die Maschinenbeschreibung.

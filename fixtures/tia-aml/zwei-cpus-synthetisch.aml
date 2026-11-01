@@ -1,0 +1,630 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Synthetisch (Comquent): zwei CPUs mit je einem IO-System in einer Datei, aufgebaut nach CIP_cs_HardwareNetwork.aml (V18) und TIA_Export.aml (V21). Netzwerte aus RFC 5737. -->
+<CAEXFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" FileName="Linie1-synthetisch.aml" SchemaVersion="2.15" xsi:noNamespaceSchemaLocation="CAEX_ClassModel_V2.15.xsd">
+  <AdditionalInformation>
+    <WriterHeader>
+      <WriterName>Totally Integrated Automation Portal</WriterName>
+      <WriterID>1d4fcebb-1ad6-4881-b01d-bca335d94a46:V1.0</WriterID>
+      <WriterVendor>Siemens AG</WriterVendor>
+      <WriterVendorURL>www.siemens.com</WriterVendorURL>
+      <WriterVersion>2100</WriterVersion>
+      <WriterRelease>2100.0.121.1</WriterRelease>
+      <LastWritingDateTime>2026-10-22T08:15:00.1234567Z</LastWritingDateTime>
+    </WriterHeader>
+  </AdditionalInformation>
+  <AdditionalInformation AutomationMLVersion="2.0" />
+  <AdditionalInformation DocumentVersions="Recommendations">
+    <Document DocumentIdentifier="AR APC" Version="1.4.0" />
+  </AdditionalInformation>
+  <InstanceHierarchy Name="APC Sample Instance Hierarchy">
+    <InternalElement ID="00000000-0000-4000-8000-000000000001" Name="Linie1-synthetisch">
+      <InternalElement ID="00000000-0000-4000-8000-000000000002" Name="PN/IE_1">
+        <Attribute Name="Type" AttributeDataType="xs:string">
+          <Value>Ethernet</Value>
+        </Attribute>
+        <ExternalInterface ID="00000000-0000-4000-8000-000000000003" Name="LogicalEndPoint_Subnet" RefBaseClassPath="CommunicationInterfaceClassLib/LogicalEndPoint" />
+        <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationRoleClassLib/Subnet" />
+      </InternalElement>
+      <InternalElement ID="00000000-0000-4000-8000-000000000100" Name="S71500/ET200MP station_1">
+        <Attribute Name="TypeIdentifier" AttributeDataType="xs:string">
+          <Value>System:Device.S71500</Value>
+        </Attribute>
+        <InternalElement ID="00000000-0000-4000-8000-000000000101" Name="Rail_0">
+          <Attribute Name="TypeName" AttributeDataType="xs:string">
+            <Value>Rack</Value>
+          </Attribute>
+          <Attribute Name="TypeIdentifier" AttributeDataType="xs:string">
+            <Value>OrderNumber:6ES7 590-1***0-0AA0</Value>
+          </Attribute>
+          <Attribute Name="PositionNumber" AttributeDataType="xs:int">
+            <Value>0</Value>
+          </Attribute>
+          <Attribute Name="BuiltIn" AttributeDataType="xs:boolean">
+            <Value>false</Value>
+          </Attribute>
+          <InternalElement ID="00000000-0000-4000-8000-000000000102" Name="PM 70W 120/230VAC">
+            <Attribute Name="TypeName" AttributeDataType="xs:string">
+              <Value>PM 70W 120/230VAC</Value>
+            </Attribute>
+            <Attribute Name="TypeIdentifier" AttributeDataType="xs:string">
+              <Value>OrderNumber:6EP1332-4BA00</Value>
+            </Attribute>
+            <Attribute Name="PositionNumber" AttributeDataType="xs:int">
+              <Value>0</Value>
+            </Attribute>
+            <Attribute Name="BuiltIn" AttributeDataType="xs:boolean">
+              <Value>false</Value>
+            </Attribute>
+            <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationRoleClassLib/DeviceItem" />
+          </InternalElement>
+          <InternalElement ID="00000000-0000-4000-8000-000000000110" Name="PLC_1">
+            <Attribute Name="TypeName" AttributeDataType="xs:string">
+              <Value>CPU 1511-1 PN</Value>
+            </Attribute>
+            <Attribute Name="DeviceItemType" AttributeDataType="xs:string">
+              <Value>CPU</Value>
+            </Attribute>
+            <Attribute Name="FirmwareVersion" AttributeDataType="xs:string">
+              <Value>V2.8</Value>
+            </Attribute>
+            <Attribute Name="TypeIdentifier" AttributeDataType="xs:string">
+              <Value>OrderNumber:6ES7 511-1AK02-0AB0</Value>
+            </Attribute>
+            <Attribute Name="PositionNumber" AttributeDataType="xs:int">
+              <Value>1</Value>
+            </Attribute>
+            <Attribute Name="BuiltIn" AttributeDataType="xs:boolean">
+              <Value>false</Value>
+            </Attribute>
+            <InternalElement ID="00000000-0000-4000-8000-000000000111" Name="Default tag table">
+              <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationRoleClassLib/TagTable" />
+            </InternalElement>
+            <InternalElement ID="00000000-0000-4000-8000-000000000112" Name="OPC UA_1">
+              <Attribute Name="PositionNumber" AttributeDataType="xs:int">
+                <Value>254</Value>
+              </Attribute>
+              <Attribute Name="BuiltIn" AttributeDataType="xs:boolean">
+                <Value>true</Value>
+              </Attribute>
+              <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationRoleClassLib/DeviceItem" />
+            </InternalElement>
+            <InternalElement ID="00000000-0000-4000-8000-000000000113" Name="PROFINET interface_1">
+              <Attribute Name="Label" AttributeDataType="xs:string">
+                <Value>X1</Value>
+              </Attribute>
+              <Attribute Name="PositionNumber" AttributeDataType="xs:int">
+                <Value>32768</Value>
+              </Attribute>
+              <Attribute Name="BuiltIn" AttributeDataType="xs:boolean">
+                <Value>true</Value>
+              </Attribute>
+              <InternalElement ID="00000000-0000-4000-8000-000000000114" Name="E1">
+                <Attribute Name="SubnetMask" AttributeDataType="xs:string">
+                  <Value>255.255.255.0</Value>
+                </Attribute>
+                <Attribute Name="IpProtocolSelection" AttributeDataType="xs:string">
+                  <Value>Project</Value>
+                </Attribute>
+                <Attribute Name="Type" AttributeDataType="xs:string">
+                  <Value>Ethernet</Value>
+                </Attribute>
+                <Attribute Name="NetworkAddress" AttributeDataType="xs:string">
+                  <Value>192.0.2.1</Value>
+                </Attribute>
+                <ExternalInterface ID="00000000-0000-4000-8000-000000000115" Name="LogicalEndPoint_Node" RefBaseClassPath="CommunicationInterfaceClassLib/LogicalEndPoint" />
+                <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationRoleClassLib/Node" />
+                <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationEthernetRoleClassLib/NodeEthernet" />
+              </InternalElement>
+              <InternalElement ID="00000000-0000-4000-8000-000000000116" Name="PROFINET IO-System">
+                <Attribute Name="Number" AttributeDataType="xs:int">
+                  <Value>100</Value>
+                </Attribute>
+                <ExternalInterface ID="00000000-0000-4000-8000-000000000117" Name="LogicalEndPoint_IoSystem" RefBaseClassPath="CommunicationInterfaceClassLib/LogicalEndPoint" />
+                <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationRoleClassLib/IoSystem" />
+              </InternalElement>
+              <InternalElement ID="00000000-0000-4000-8000-000000000118" Name="Port_1">
+                <Attribute Name="Label" AttributeDataType="xs:string">
+                  <Value>P1 R</Value>
+                </Attribute>
+                <Attribute Name="PositionNumber" AttributeDataType="xs:int">
+                  <Value>32769</Value>
+                </Attribute>
+                <Attribute Name="BuiltIn" AttributeDataType="xs:boolean">
+                  <Value>true</Value>
+                </Attribute>
+                <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationRoleClassLib/CommunicationPort" />
+              </InternalElement>
+              <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationRoleClassLib/CommunicationInterface" />
+            </InternalElement>
+            <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationRoleClassLib/DeviceItem" />
+          </InternalElement>
+          <InternalElement ID="00000000-0000-4000-8000-000000000120" Name="DI 16x24VDC HF_1">
+            <Attribute Name="TypeName" AttributeDataType="xs:string">
+              <Value>DI 16x24VDC HF</Value>
+            </Attribute>
+            <Attribute Name="FirmwareVersion" AttributeDataType="xs:string">
+              <Value>V2.2</Value>
+            </Attribute>
+            <Attribute Name="TypeIdentifier" AttributeDataType="xs:string">
+              <Value>OrderNumber:6ES7 521-1BH00-0AB0/V2.1</Value>
+            </Attribute>
+            <Attribute Name="PositionNumber" AttributeDataType="xs:int">
+              <Value>2</Value>
+            </Attribute>
+            <Attribute Name="BuiltIn" AttributeDataType="xs:boolean">
+              <Value>false</Value>
+            </Attribute>
+            <InternalElement ID="00000000-0000-4000-8000-000000000121" Name="DI 16x24VDC HF_1">
+              <Attribute Name="PositionNumber" AttributeDataType="xs:int">
+                <Value>1</Value>
+              </Attribute>
+              <Attribute Name="BuiltIn" AttributeDataType="xs:boolean">
+                <Value>true</Value>
+              </Attribute>
+              <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationRoleClassLib/DeviceItem" />
+            </InternalElement>
+            <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationRoleClassLib/DeviceItem" />
+          </InternalElement>
+          <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationRoleClassLib/DeviceItem" />
+        </InternalElement>
+        <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationRoleClassLib/Device" />
+      </InternalElement>
+      <InternalElement ID="00000000-0000-4000-8000-000000000200" Name="S71500/ET200MP station_2">
+        <Attribute Name="TypeIdentifier" AttributeDataType="xs:string">
+          <Value>System:Device.S71500</Value>
+        </Attribute>
+        <InternalElement ID="00000000-0000-4000-8000-000000000201" Name="Rail_0">
+          <Attribute Name="TypeName" AttributeDataType="xs:string">
+            <Value>Rack</Value>
+          </Attribute>
+          <Attribute Name="TypeIdentifier" AttributeDataType="xs:string">
+            <Value>OrderNumber:6ES7 590-1***0-0AA0</Value>
+          </Attribute>
+          <Attribute Name="PositionNumber" AttributeDataType="xs:int">
+            <Value>0</Value>
+          </Attribute>
+          <Attribute Name="BuiltIn" AttributeDataType="xs:boolean">
+            <Value>false</Value>
+          </Attribute>
+          <InternalElement ID="00000000-0000-4000-8000-000000000210" Name="PLC_2">
+            <Attribute Name="TypeName" AttributeDataType="xs:string">
+              <Value>CPU 1515-2 PN</Value>
+            </Attribute>
+            <Attribute Name="DeviceItemType" AttributeDataType="xs:string">
+              <Value>CPU</Value>
+            </Attribute>
+            <Attribute Name="FirmwareVersion" AttributeDataType="xs:string">
+              <Value>V2.9</Value>
+            </Attribute>
+            <Attribute Name="TypeIdentifier" AttributeDataType="xs:string">
+              <Value>OrderNumber:6ES7 515-2AM02-0AB0</Value>
+            </Attribute>
+            <Attribute Name="PositionNumber" AttributeDataType="xs:int">
+              <Value>1</Value>
+            </Attribute>
+            <Attribute Name="BuiltIn" AttributeDataType="xs:boolean">
+              <Value>false</Value>
+            </Attribute>
+            <InternalElement ID="00000000-0000-4000-8000-000000000213" Name="PROFINET interface_1">
+              <Attribute Name="PositionNumber" AttributeDataType="xs:int">
+                <Value>32768</Value>
+              </Attribute>
+              <Attribute Name="BuiltIn" AttributeDataType="xs:boolean">
+                <Value>true</Value>
+              </Attribute>
+              <InternalElement ID="00000000-0000-4000-8000-000000000214" Name="E1">
+                <Attribute Name="SubnetMask" AttributeDataType="xs:string">
+                  <Value>255.255.255.0</Value>
+                </Attribute>
+                <Attribute Name="NetworkAddress" AttributeDataType="xs:string">
+                  <Value>192.0.2.2</Value>
+                </Attribute>
+                <ExternalInterface ID="00000000-0000-4000-8000-000000000215" Name="LogicalEndPoint_Node" RefBaseClassPath="CommunicationInterfaceClassLib/LogicalEndPoint" />
+                <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationRoleClassLib/Node" />
+                <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationEthernetRoleClassLib/NodeEthernet" />
+              </InternalElement>
+              <InternalElement ID="00000000-0000-4000-8000-000000000216" Name="PROFINET IO-System">
+                <Attribute Name="Number" AttributeDataType="xs:int">
+                  <Value>101</Value>
+                </Attribute>
+                <ExternalInterface ID="00000000-0000-4000-8000-000000000217" Name="LogicalEndPoint_IoSystem" RefBaseClassPath="CommunicationInterfaceClassLib/LogicalEndPoint" />
+                <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationRoleClassLib/IoSystem" />
+              </InternalElement>
+              <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationRoleClassLib/CommunicationInterface" />
+            </InternalElement>
+            <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationRoleClassLib/DeviceItem" />
+          </InternalElement>
+          <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationRoleClassLib/DeviceItem" />
+        </InternalElement>
+        <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationRoleClassLib/Device" />
+      </InternalElement>
+      <InternalElement ID="00000000-0000-4000-8000-000000000300" Name="Ungrouped devices">
+        <InternalElement ID="00000000-0000-4000-8000-000000000310" Name="ET 200SP station_1">
+          <Attribute Name="TypeIdentifier" AttributeDataType="xs:string">
+            <Value>System:Device.ET200SP</Value>
+          </Attribute>
+          <InternalElement ID="00000000-0000-4000-8000-000000000311" Name="Rack_0">
+            <Attribute Name="TypeName" AttributeDataType="xs:string">
+              <Value>Rack</Value>
+            </Attribute>
+            <Attribute Name="TypeIdentifier" AttributeDataType="xs:string">
+              <Value>System:Rack.ET200SP</Value>
+            </Attribute>
+            <Attribute Name="PositionNumber" AttributeDataType="xs:int">
+              <Value>0</Value>
+            </Attribute>
+            <Attribute Name="BuiltIn" AttributeDataType="xs:boolean">
+              <Value>false</Value>
+            </Attribute>
+            <InternalElement ID="00000000-0000-4000-8000-000000000312" Name="IO_Device_1">
+              <Attribute Name="TypeName" AttributeDataType="xs:string">
+                <Value>IM 155-6 PN HF</Value>
+              </Attribute>
+              <Attribute Name="DeviceItemType" AttributeDataType="xs:string">
+                <Value>HeadModule</Value>
+              </Attribute>
+              <Attribute Name="FirmwareVersion" AttributeDataType="xs:string">
+                <Value>V4.2</Value>
+              </Attribute>
+              <Attribute Name="TypeIdentifier" AttributeDataType="xs:string">
+                <Value>OrderNumber:6ES7 155-6AU01-0CN0</Value>
+              </Attribute>
+              <Attribute Name="PositionNumber" AttributeDataType="xs:int">
+                <Value>0</Value>
+              </Attribute>
+              <Attribute Name="BuiltIn" AttributeDataType="xs:boolean">
+                <Value>false</Value>
+              </Attribute>
+              <InternalElement ID="00000000-0000-4000-8000-000000000313" Name="BA 2xRJ45">
+                <Attribute Name="TypeName" AttributeDataType="xs:string">
+                  <Value>BA 2xRJ45</Value>
+                </Attribute>
+                <Attribute Name="FirmwareVersion" AttributeDataType="xs:string">
+                  <Value>V0.0</Value>
+                </Attribute>
+                <Attribute Name="TypeIdentifier" AttributeDataType="xs:string">
+                  <Value>OrderNumber:6ES7 193-6AR00-0AA0</Value>
+                </Attribute>
+                <Attribute Name="PositionNumber" AttributeDataType="xs:int">
+                  <Value>127</Value>
+                </Attribute>
+                <Attribute Name="BuiltIn" AttributeDataType="xs:boolean">
+                  <Value>false</Value>
+                </Attribute>
+                <InternalElement ID="00000000-0000-4000-8000-000000000314" Name="PROFINET interface">
+                  <Attribute Name="PositionNumber" AttributeDataType="xs:int">
+                    <Value>1</Value>
+                  </Attribute>
+                  <Attribute Name="BuiltIn" AttributeDataType="xs:boolean">
+                    <Value>true</Value>
+                  </Attribute>
+                  <ExternalInterface ID="00000000-0000-4000-8000-000000000315" Name="LogicalEndPoint_Interface" RefBaseClassPath="CommunicationInterfaceClassLib/LogicalEndPoint" />
+                  <InternalElement ID="00000000-0000-4000-8000-000000000316" Name="IE1">
+                    <Attribute Name="NetworkAddress" AttributeDataType="xs:string">
+                      <Value>192.0.2.11</Value>
+                    </Attribute>
+                    <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationRoleClassLib/Node" />
+                    <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationEthernetRoleClassLib/NodeEthernet" />
+                  </InternalElement>
+                  <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationRoleClassLib/CommunicationInterface" />
+                </InternalElement>
+                <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationRoleClassLib/DeviceItem" />
+              </InternalElement>
+              <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationRoleClassLib/DeviceItem" />
+            </InternalElement>
+            <InternalElement ID="00000000-0000-4000-8000-000000000320" Name="DI 8x24VDC ST_1">
+              <Attribute Name="TypeName" AttributeDataType="xs:string">
+                <Value>DI 8x24VDC ST</Value>
+              </Attribute>
+              <Attribute Name="FirmwareVersion" AttributeDataType="xs:string">
+                <Value>V0.0</Value>
+              </Attribute>
+              <Attribute Name="TypeIdentifier" AttributeDataType="xs:string">
+                <Value>OrderNumber:6ES7 131-6BF01-0BA0</Value>
+              </Attribute>
+              <Attribute Name="PositionNumber" AttributeDataType="xs:int">
+                <Value>1</Value>
+              </Attribute>
+              <Attribute Name="BuiltIn" AttributeDataType="xs:boolean">
+                <Value>false</Value>
+              </Attribute>
+              <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationRoleClassLib/DeviceItem" />
+            </InternalElement>
+            <InternalElement ID="00000000-0000-4000-8000-000000000321" Name="AI 4xU/I 2-wire ST_1">
+              <Attribute Name="TypeName" AttributeDataType="xs:string">
+                <Value>AI 4xU/I 2-wire ST</Value>
+              </Attribute>
+              <Attribute Name="FirmwareVersion" AttributeDataType="xs:string">
+                <Value>V2.0</Value>
+              </Attribute>
+              <Attribute Name="TypeIdentifier" AttributeDataType="xs:string">
+                <Value>OrderNumber:6ES7 134-6HD01-0BA1</Value>
+              </Attribute>
+              <Attribute Name="PositionNumber" AttributeDataType="xs:int">
+                <Value>2</Value>
+              </Attribute>
+              <Attribute Name="BuiltIn" AttributeDataType="xs:boolean">
+                <Value>false</Value>
+              </Attribute>
+              <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationRoleClassLib/DeviceItem" />
+            </InternalElement>
+            <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationRoleClassLib/DeviceItem" />
+          </InternalElement>
+          <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationRoleClassLib/Device" />
+        </InternalElement>
+        <InternalElement ID="00000000-0000-4000-8000-000000000330" Name="ET 200SP station_2">
+          <Attribute Name="TypeIdentifier" AttributeDataType="xs:string">
+            <Value>System:Device.ET200SP</Value>
+          </Attribute>
+          <InternalElement ID="00000000-0000-4000-8000-000000000331" Name="Rack_0">
+            <Attribute Name="TypeName" AttributeDataType="xs:string">
+              <Value>Rack</Value>
+            </Attribute>
+            <Attribute Name="TypeIdentifier" AttributeDataType="xs:string">
+              <Value>System:Rack.ET200SP</Value>
+            </Attribute>
+            <Attribute Name="PositionNumber" AttributeDataType="xs:int">
+              <Value>0</Value>
+            </Attribute>
+            <Attribute Name="BuiltIn" AttributeDataType="xs:boolean">
+              <Value>false</Value>
+            </Attribute>
+            <InternalElement ID="00000000-0000-4000-8000-000000000332" Name="IO_Device_2">
+              <Attribute Name="TypeName" AttributeDataType="xs:string">
+                <Value>IM 155-6 PN HF</Value>
+              </Attribute>
+              <Attribute Name="DeviceItemType" AttributeDataType="xs:string">
+                <Value>HeadModule</Value>
+              </Attribute>
+              <Attribute Name="FirmwareVersion" AttributeDataType="xs:string">
+                <Value>V4.2</Value>
+              </Attribute>
+              <Attribute Name="TypeIdentifier" AttributeDataType="xs:string">
+                <Value>OrderNumber:6ES7 155-6AU01-0CN0</Value>
+              </Attribute>
+              <Attribute Name="PositionNumber" AttributeDataType="xs:int">
+                <Value>0</Value>
+              </Attribute>
+              <Attribute Name="BuiltIn" AttributeDataType="xs:boolean">
+                <Value>false</Value>
+              </Attribute>
+              <InternalElement ID="00000000-0000-4000-8000-000000000334" Name="PROFINET interface">
+                <Attribute Name="PositionNumber" AttributeDataType="xs:int">
+                  <Value>1</Value>
+                </Attribute>
+                <Attribute Name="BuiltIn" AttributeDataType="xs:boolean">
+                  <Value>true</Value>
+                </Attribute>
+                <ExternalInterface ID="00000000-0000-4000-8000-000000000335" Name="LogicalEndPoint_Interface" RefBaseClassPath="CommunicationInterfaceClassLib/LogicalEndPoint" />
+                <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationRoleClassLib/CommunicationInterface" />
+              </InternalElement>
+              <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationRoleClassLib/DeviceItem" />
+            </InternalElement>
+            <InternalElement ID="00000000-0000-4000-8000-000000000340" Name="DQ 8x24VDC/0.5A ST_1">
+              <Attribute Name="TypeName" AttributeDataType="xs:string">
+                <Value>DQ 8x24VDC/0.5A ST</Value>
+              </Attribute>
+              <Attribute Name="FirmwareVersion" AttributeDataType="xs:string">
+                <Value>V0.0</Value>
+              </Attribute>
+              <Attribute Name="TypeIdentifier" AttributeDataType="xs:string">
+                <Value>OrderNumber:6ES7 132-6BF01-0BA0</Value>
+              </Attribute>
+              <Attribute Name="PositionNumber" AttributeDataType="xs:int">
+                <Value>1</Value>
+              </Attribute>
+              <Attribute Name="BuiltIn" AttributeDataType="xs:boolean">
+                <Value>false</Value>
+              </Attribute>
+              <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationRoleClassLib/DeviceItem" />
+            </InternalElement>
+            <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationRoleClassLib/DeviceItem" />
+          </InternalElement>
+          <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationRoleClassLib/Device" />
+        </InternalElement>
+        <InternalElement ID="00000000-0000-4000-8000-000000000350" Name="Testaufbau_1">
+          <Attribute Name="TypeIdentifier" AttributeDataType="xs:string">
+            <Value>System:Device.ET200SP</Value>
+          </Attribute>
+          <InternalElement ID="00000000-0000-4000-8000-000000000351" Name="Rack_0">
+            <Attribute Name="TypeName" AttributeDataType="xs:string">
+              <Value>Rack</Value>
+            </Attribute>
+            <Attribute Name="TypeIdentifier" AttributeDataType="xs:string">
+              <Value>System:Rack.ET200SP</Value>
+            </Attribute>
+            <Attribute Name="PositionNumber" AttributeDataType="xs:int">
+              <Value>0</Value>
+            </Attribute>
+            <Attribute Name="BuiltIn" AttributeDataType="xs:boolean">
+              <Value>false</Value>
+            </Attribute>
+            <InternalElement ID="00000000-0000-4000-8000-000000000352" Name="IO_Test">
+              <Attribute Name="TypeName" AttributeDataType="xs:string">
+                <Value>IM 155-6 PN ST</Value>
+              </Attribute>
+              <Attribute Name="DeviceItemType" AttributeDataType="xs:string">
+                <Value>HeadModule</Value>
+              </Attribute>
+              <Attribute Name="FirmwareVersion" AttributeDataType="xs:string">
+                <Value>V4.1</Value>
+              </Attribute>
+              <Attribute Name="TypeIdentifier" AttributeDataType="xs:string">
+                <Value>OrderNumber:6ES7 155-6AU00-0BN0</Value>
+              </Attribute>
+              <Attribute Name="PositionNumber" AttributeDataType="xs:int">
+                <Value>0</Value>
+              </Attribute>
+              <Attribute Name="BuiltIn" AttributeDataType="xs:boolean">
+                <Value>false</Value>
+              </Attribute>
+              <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationRoleClassLib/DeviceItem" />
+            </InternalElement>
+            <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationRoleClassLib/DeviceItem" />
+          </InternalElement>
+          <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationRoleClassLib/Device" />
+        </InternalElement>
+        <InternalElement ID="00000000-0000-4000-8000-000000000360" Name="GSD device_1">
+          <Attribute Name="TypeIdentifier" AttributeDataType="xs:string">
+            <Value>GSD:GSDML-V2.41-LEUZE-BCL248I-20211213.XML/D</Value>
+          </Attribute>
+          <InternalElement ID="00000000-0000-4000-8000-000000000361" Name="Rack">
+            <Attribute Name="TypeName" AttributeDataType="xs:string">
+              <Value>Rack</Value>
+            </Attribute>
+            <Attribute Name="TypeIdentifier" AttributeDataType="xs:string">
+              <Value>GSD:GSDML-V2.41-LEUZE-BCL248I-20211213.XML/R/DAP</Value>
+            </Attribute>
+            <Attribute Name="PositionNumber" AttributeDataType="xs:int">
+              <Value>0</Value>
+            </Attribute>
+            <Attribute Name="BuiltIn" AttributeDataType="xs:boolean">
+              <Value>false</Value>
+            </Attribute>
+            <InternalElement ID="00000000-0000-4000-8000-000000000362" Name="Scanner_1">
+              <Attribute Name="TypeName" AttributeDataType="xs:string">
+                <Value>BCL248i</Value>
+              </Attribute>
+              <Attribute Name="DeviceItemType" AttributeDataType="xs:string">
+                <Value>HeadModule</Value>
+              </Attribute>
+              <Attribute Name="TypeIdentifier" AttributeDataType="xs:string">
+                <Value>GSD:GSDML-V2.41-LEUZE-BCL248I-20211213.XML/DAP/DAP</Value>
+              </Attribute>
+              <Attribute Name="PositionNumber" AttributeDataType="xs:int">
+                <Value>0</Value>
+              </Attribute>
+              <Attribute Name="BuiltIn" AttributeDataType="xs:boolean">
+                <Value>false</Value>
+              </Attribute>
+              <InternalElement ID="00000000-0000-4000-8000-000000000364" Name="PN-IO">
+                <Attribute Name="PositionNumber" AttributeDataType="xs:int">
+                  <Value>1</Value>
+                </Attribute>
+                <Attribute Name="BuiltIn" AttributeDataType="xs:boolean">
+                  <Value>true</Value>
+                </Attribute>
+                <ExternalInterface ID="00000000-0000-4000-8000-000000000365" Name="LogicalEndPoint_Interface" RefBaseClassPath="CommunicationInterfaceClassLib/LogicalEndPoint" />
+                <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationRoleClassLib/CommunicationInterface" />
+              </InternalElement>
+              <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationRoleClassLib/DeviceItem" />
+            </InternalElement>
+            <InternalElement ID="00000000-0000-4000-8000-000000000366" Name="[M10] Activation_1">
+              <Attribute Name="TypeName" AttributeDataType="xs:string">
+                <Value>[M10] Activation</Value>
+              </Attribute>
+              <Attribute Name="TypeIdentifier" AttributeDataType="xs:string">
+                <Value>GSD:GSDML-V2.41-LEUZE-BCL248I-20211213.XML/M/ID_MOD_Activation</Value>
+              </Attribute>
+              <Attribute Name="PositionNumber" AttributeDataType="xs:int">
+                <Value>1</Value>
+              </Attribute>
+              <Attribute Name="BuiltIn" AttributeDataType="xs:boolean">
+                <Value>false</Value>
+              </Attribute>
+              <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationRoleClassLib/DeviceItem" />
+            </InternalElement>
+            <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationRoleClassLib/DeviceItem" />
+          </InternalElement>
+          <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationRoleClassLib/Device" />
+        </InternalElement>
+        <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationRoleClassLib/DeviceUserFolder" />
+      </InternalElement>
+      <InternalElement ID="00000000-0000-4000-8000-000000000400" Name="SINAMICS G_1">
+        <Attribute Name="TypeIdentifier" AttributeDataType="xs:string">
+          <Value>System:Device.G120C-2</Value>
+        </Attribute>
+        <InternalElement ID="00000000-0000-4000-8000-000000000401" Name="&#x9;_0">
+          <Attribute Name="TypeIdentifier" AttributeDataType="xs:string">
+            <Value>System:Rack.G120CPN-2</Value>
+          </Attribute>
+          <Attribute Name="PositionNumber" AttributeDataType="xs:int">
+            <Value>0</Value>
+          </Attribute>
+          <Attribute Name="BuiltIn" AttributeDataType="xs:boolean">
+            <Value>false</Value>
+          </Attribute>
+          <InternalElement ID="00000000-0000-4000-8000-000000000402" Name="Pump_1">
+            <Attribute Name="TypeName" AttributeDataType="xs:string">
+              <Value>G120C PN</Value>
+            </Attribute>
+            <Attribute Name="DeviceItemType" AttributeDataType="xs:string">
+              <Value>HeadModule</Value>
+            </Attribute>
+            <Attribute Name="FirmwareVersion" AttributeDataType="xs:string">
+              <Value>4.7.10</Value>
+            </Attribute>
+            <Attribute Name="TypeIdentifier" AttributeDataType="xs:string">
+              <Value>OrderNumber:6SL3210-1KE14-3AF2</Value>
+            </Attribute>
+            <Attribute Name="PositionNumber" AttributeDataType="xs:int">
+              <Value>0</Value>
+            </Attribute>
+            <Attribute Name="BuiltIn" AttributeDataType="xs:boolean">
+              <Value>false</Value>
+            </Attribute>
+            <InternalElement ID="00000000-0000-4000-8000-000000000403" Name="PROFINET interface">
+              <Attribute Name="PositionNumber" AttributeDataType="xs:int">
+                <Value>1</Value>
+              </Attribute>
+              <Attribute Name="BuiltIn" AttributeDataType="xs:boolean">
+                <Value>true</Value>
+              </Attribute>
+              <ExternalInterface ID="00000000-0000-4000-8000-000000000404" Name="LogicalEndPoint_Interface" RefBaseClassPath="CommunicationInterfaceClassLib/LogicalEndPoint" />
+              <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationRoleClassLib/CommunicationInterface" />
+            </InternalElement>
+            <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationRoleClassLib/DeviceItem" />
+          </InternalElement>
+          <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationRoleClassLib/DeviceItem" />
+        </InternalElement>
+        <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationRoleClassLib/Device" />
+      </InternalElement>
+      <InternalElement ID="00000000-0000-4000-8000-000000000410" Name="SINAMICS G_2">
+        <Attribute Name="TypeIdentifier" AttributeDataType="xs:string">
+          <Value>System:Device.G120C-2</Value>
+        </Attribute>
+        <InternalElement ID="00000000-0000-4000-8000-000000000411" Name="&#x9;_0">
+          <Attribute Name="TypeIdentifier" AttributeDataType="xs:string">
+            <Value>System:Rack.G120CPN-2</Value>
+          </Attribute>
+          <Attribute Name="PositionNumber" AttributeDataType="xs:int">
+            <Value>0</Value>
+          </Attribute>
+          <Attribute Name="BuiltIn" AttributeDataType="xs:boolean">
+            <Value>false</Value>
+          </Attribute>
+          <InternalElement ID="00000000-0000-4000-8000-000000000412" Name="Pump_2">
+            <Attribute Name="TypeName" AttributeDataType="xs:string">
+              <Value>G120C PN</Value>
+            </Attribute>
+            <Attribute Name="DeviceItemType" AttributeDataType="xs:string">
+              <Value>HeadModule</Value>
+            </Attribute>
+            <Attribute Name="FirmwareVersion" AttributeDataType="xs:string">
+              <Value>4.7.10</Value>
+            </Attribute>
+            <Attribute Name="TypeIdentifier" AttributeDataType="xs:string">
+              <Value>OrderNumber:6SL3210-1KE14-3AF2</Value>
+            </Attribute>
+            <Attribute Name="PositionNumber" AttributeDataType="xs:int">
+              <Value>0</Value>
+            </Attribute>
+            <Attribute Name="BuiltIn" AttributeDataType="xs:boolean">
+              <Value>false</Value>
+            </Attribute>
+            <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationRoleClassLib/DeviceItem" />
+          </InternalElement>
+          <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationRoleClassLib/DeviceItem" />
+        </InternalElement>
+        <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationRoleClassLib/Device" />
+      </InternalElement>
+      <SupportedRoleClass RefRoleClassPath="AutomationProjectConfigurationRoleClassLib/AutomationProject" />
+      <InternalLink Name="Link To Subnet_1" RefPartnerSideA="00000000-0000-4000-8000-000000000114:LogicalEndPoint_Node" RefPartnerSideB="00000000-0000-4000-8000-000000000002:LogicalEndPoint_Subnet" />
+      <InternalLink Name="Link To Subnet_2" RefPartnerSideA="00000000-0000-4000-8000-000000000214:LogicalEndPoint_Node" RefPartnerSideB="00000000-0000-4000-8000-000000000002:LogicalEndPoint_Subnet" />
+      <InternalLink Name="Link To IoSystem_1" RefPartnerSideA="00000000-0000-4000-8000-000000000314:LogicalEndPoint_Interface" RefPartnerSideB="00000000-0000-4000-8000-000000000116:LogicalEndPoint_IoSystem" />
+      <InternalLink Name="Link To IoSystem_2" RefPartnerSideA="00000000-0000-4000-8000-000000000334:LogicalEndPoint_Interface" RefPartnerSideB="00000000-0000-4000-8000-000000000216:LogicalEndPoint_IoSystem" />
+      <InternalLink Name="Link To IoSystem_3" RefPartnerSideA="00000000-0000-4000-8000-000000000403:LogicalEndPoint_Interface" RefPartnerSideB="00000000-0000-4000-8000-000000000216:LogicalEndPoint_IoSystem" />
+      <InternalLink Name="Link To IoSystem_4" RefPartnerSideA="00000000-0000-4000-8000-000000000364:LogicalEndPoint_Interface" RefPartnerSideB="00000000-0000-4000-8000-000000000116:LogicalEndPoint_IoSystem" />
+    </InternalElement>
+  </InstanceHierarchy>
+</CAEXFile>

@@ -1,6 +1,6 @@
 # CLAUDE.md: PLC SBOM Builder (`plc-sbom`), Prototyp
 
-> Stand: 31.10.2026 (Meilensteine und CODESYS V2.3/4 ergänzt; M1-Entscheidungen E-007 bis E-011 und TR-Regeln in `docs/regeln-tr03183.md` nachgetragen; M1, M2, M5 und M6 umgesetzt, M3/M4 zurückgestellt (E-016); übrige Fakten Stand 29.10.2026). Grundlage: Produktseite comquent.de/produkte/plc-sbom-builder (Quelltext `src/app/produkte/inhalte.ts` im Website-Repository), der Entwurf `plc-sbom-builder-claude.md` mit der Recherche vom 25.10.2026, das Comquent-Whitepaper „SBOM für SPS-Projekte mit TIA Portal V21“, die Siemens-Openness-Skills (V21) und drei öffentliche AML-Exporte aus TIA V17, V18 und V21 (geprüft am 29.10.2026). Recherchefakten mit Datum 25.10.2026 sind nicht erneut geprüft; Versionen und Normstände vor der Nutzung nachsehen.
+> Stand: 01.11.2026 (Meilensteine und CODESYS V2.3/4 ergänzt; M1-Entscheidungen E-007 bis E-011 und TR-Regeln in `docs/regeln-tr03183.md` nachgetragen; M1, M2, M5, M6 und M7 umgesetzt, M3/M4 zurückgestellt (E-016), Golden File aus dem Comquent-V21-Export offen (E-019); übrige Fakten Stand 29.10.2026). Grundlage: Produktseite comquent.de/produkte/plc-sbom-builder (Quelltext `src/app/produkte/inhalte.ts` im Website-Repository), der Entwurf `plc-sbom-builder-claude.md` mit der Recherche vom 25.10.2026, das Comquent-Whitepaper „SBOM für SPS-Projekte mit TIA Portal V21“, die Siemens-Openness-Skills (V21) und drei öffentliche AML-Exporte aus TIA V17, V18 und V21 (geprüft am 29.10.2026). Recherchefakten mit Datum 25.10.2026 sind nicht erneut geprüft; Versionen und Normstände vor der Nutzung nachsehen.
 > Produkt der Comquent GmbH (Industrial DevOps, Puchheim). Schwesterwerkzeuge: `plc-build` (../plc-build-tool), `plc-git-bridge` (../plc-git-bridge).
 
 ## 0. Start
@@ -285,7 +285,8 @@ Beispiel der Produktseite (verkürzt, Zielbild):
 | `<ns>:device:disabled` | `true`, wenn das Gerät im Projekt deaktiviert ist (TwinCAT: E/A-Gerät `Disabled="true"`) |
 | `<ns>:firmware:version` | Firmware-Stand wie in der Quelle |
 | `<ns>:firmware:origin` | `projected`, `as-found`, `not-in-project`, `unknown` |
-| `<ns>:vendorKey:<name>` | Herstellerschlüssel wie `GSDML`, `VendorId`, `DeviceId`, `ProductCode`, `RevisionNo` |
+| `<ns>:device:passive` | `declared`, wenn der Anwender das Gerät über `passiveOrderNumbers` als passiv erklärt hat (nur im Modell bzw. Bericht; passive Geräte stehen nicht in der SBOM) |
+| `<ns>:vendorKey:<name>` | Herstellerschlüssel wie `GSDML`, `GsdType`, `GsdId`, `VendorId`, `DeviceId`, `ProductCode`, `RevisionNo`, `catalogVersion` |
 | `<ns>:gsdml:softwareRelease` | `SoftwareRelease` aus der GSDML; beschreibt die GSDML, **nicht** die Firmware |
 | `<ns>:library` | Bibliothek eines Bibliothekstyps |
 | `<ns>:library:reference`, `<ns>:library:resolution`, `<ns>:library:company` | CODESYS und TwinCAT: Referenz wie im Export (`#SM3_Basic`, `Tc2_Standard`), Auflösung (`fixed`, `redirection`, `default`, `none`, bei TwinCAT zusätzlich `indirect`), Herstellerangabe der Referenz |
@@ -302,7 +303,8 @@ Beispiel der Produktseite (verkürzt, Zielbild):
 
 | Code | Wann | Schwere |
 |---|---|---|
-| `firmware-not-in-project` | Projekt führt keine Firmware (EtherCAT-Klemme, GSD-Gerät, TIA-Gerät ohne `FirmwareVersion`) | Hinweis; Warnung bei TIA-Gerät ohne Attribut |
+| `firmware-not-in-project` | Projekt führt keine Firmware (EtherCAT-Klemme, GSD-Gerät, TIA-Gerät ohne `FirmwareVersion`) | Hinweis |
+| `firmware-attribute-missing` | TIA-Gerät mit Bestellnummer ohne Attribut `FirmwareVersion`, nicht als passiv erklärt; ob es Firmware hat, ist offen (E-019) | Warnung |
 | `firmware-projected-only` | Firmware nur als Sollwert, kein Ist-Stand eingelesen | Hinweis |
 | `hash-unavailable` | Kein SHA-512 der ausgelieferten Form möglich (Hersteller-Firmware) | Hinweis |
 | `filename-unavailable` | Komponente liegt nicht als Datei vor, kein Dateiname bestimmbar | Hinweis |
@@ -431,31 +433,32 @@ Eingang: `.tsproj` plus die `.plcproj` je SPS-Projekt, auf die sie verweist (dir
 
 ### 5.4 Siemens TIA Portal V17–V21, AML-Export: `tia-aml` (M7, M8)
 
-Liest die AutomationML-Datei aus dem CAx-Export von TIA Portal. Kein TIA, keine Lizenz, läuft auf jedem Agenten.
+Liest die AutomationML-Datei aus dem CAx-Export von TIA Portal. Kein TIA, keine Lizenz, läuft auf jedem Agenten. M7 umgesetzt (ohne GSDML-Auswertung, die folgt mit M8); vollständige Feldtabelle, Regeln und Fixtures in `docs/adapter-tia-aml.md`, Entscheidungen E-019.
 
 #### 5.4.1 Eingang
 
 - **Herkunft, zwei Wege:**
   1. *Eingecheckt (Standard):* Der Entwickler exportiert in TIA über Extras → CAx-Daten exportieren und checkt die Datei ein (z. B. `export/Linie1.aml`).
   2. *Automatisch:* `plc-sbom export-aml` lässt den Openness-Worker die Datei in der Pipeline aus dem Projekt erzeugen (Abschnitt 5.5.5). Danach liest `tia-aml` sie wie eine eingecheckte Datei.
-- Eine AML-Datei kann ein ganzes Projekt mit mehreren CPUs enthalten. Mehrere Stationen dürfen auf dieselbe Datei zeigen; sie wird einmal gelesen.
-- **Format, belegt durch Fixtures aus V17, V18 und V21:** `CAEXFile@SchemaVersion="2.15"`, kein XML-Namespace, `AdditionalInformation AutomationMLVersion="2.0"`, Dokument `AR APC` Version 1.2.0. Den Parser trotzdem namespace-unabhängig schreiben (CAEX 3.0 hat einen Namespace) und über lokale Namen arbeiten.
+- Eine AML-Datei kann ein ganzes Projekt mit mehreren CPUs enthalten. Mehrere Stationen dürfen auf dieselbe Datei zeigen; sie wird einmal gelesen (der Adapter nimmt alle Stationen einer Datei auf einmal).
+- **Format, belegt durch Fixtures aus V17, V18 und V21:** `CAEXFile@SchemaVersion="2.15"`, kein XML-Namespace, `AdditionalInformation AutomationMLVersion="2.0"`, Dokument `AR APC` in Version 1.2.0 (V17), 1.3.0 (V18) bzw. 1.4.0 (V21). Der Parser arbeitet trotzdem namespace-unabhängig über lokale Namen (CAEX 3.0 hat einen Namespace). Anderes Wurzelelement als `CAEXFile`: Exit 2 (`NOT_AML`).
 - **Versionsprüfung** über `WriterHeader`:
-  - `WriterName` = `Totally Integrated Automation Portal`, sonst Exit 2 („keine AML-Datei aus TIA Portal“).
-  - `WriterVersion` `1700` … `2100` → TIA V17 … V21. Andere Werte: Warnung, Verarbeitung läuft weiter.
-  - `WriterRelease` (z. B. `2100.0.121.1`) in `metadata.tools` als Version von „TIA Portal“.
+  - `WriterName` = `Totally Integrated Automation Portal`, sonst Exit 2 (`NOT_TIA_AML`; belegt durch Exporte aus dem TIA Selection Tool und einem Beckhoff-Werkzeug).
+  - `WriterVersion` `1700` … `2100` → TIA V17 … V21 als Version von „TIA Portal“ in `metadata.tools`. Andere Werte: Warnung (`TIA_AML_WRITER_VERSION_UNKNOWN`), Version wie geschrieben, Verarbeitung läuft weiter.
+  - `WriterRelease` (z. B. `2100.0.121.1`) in `metadata.tools` als `<ns>:tool:release` von „TIA Portal“, `WriterVendor` (`Siemens AG`, in V21 `Siemens`) als dessen Hersteller.
   - `LastWritingDateTime` → `<ns>:source:exportedAt` und in den Bericht, damit ein veralteter Export auffällt.
 
 #### 5.4.2 Elemente erkennen
 
-`InternalElement` ist tief verschachtelt. Den Baum rekursiv durchlaufen und Elemente über ihre Rolle erkennen, nicht über feste Pfade. Die Rolle steht in `SupportedRoleClass@RefRoleClassPath` (in allen geprüften Dateien; `RoleRequirements` zusätzlich tolerieren). Vergleich auf den letzten Pfadteil:
+`InternalElement` ist tief verschachtelt. Den Baum rekursiv durchlaufen und Elemente über ihre Rolle erkennen, nicht über feste Pfade. Die Rolle steht in `SupportedRoleClass@RefRoleClassPath` (in allen geprüften Dateien; ein Netzknoten trägt `Node` und `NodeEthernet`). `RoleRequirements` kommt in keiner Fixture vor und wird nicht gelesen; Elemente ohne bekannte Rolle werden durchlaufen, unbekannte Rollen ergeben eine Warnung (`TIA_AML_ROLE_UNKNOWN`). Vergleich auf den letzten Pfadteil:
 
 | Rolle (`AutomationProjectConfigurationRoleClassLib/…`) | Bedeutung | Verwendung |
 |---|---|---|
 | `AutomationProject` | Projekt | Projektname für den Bericht |
 | `Device` | Station bzw. Gerät (S7-1500-Station, ET 200SP, G120C, GSD-Gerät) | Wurzel eines Geräts |
 | `DeviceItem` | Rack, Modul, Teilmodul | Kandidat für Gerät/Firmware |
-| `CommunicationInterface`, `CommunicationPort`, `Node` | Schnittstellen, Ports, Netzknoten | nur für die Stationszuordnung |
+| `CommunicationInterface`, `CommunicationPort` | Schnittstellen, Ports | nur für die Stationszuordnung |
+| `Node`, `NodeEthernet` | Netzknoten mit Adressen | samt Inhalt überspringen |
 | `IoSystem` | PROFINET-IO-System einer Steuerung | Stationszuordnung |
 | `Subnet` | Subnetz | ignorieren |
 | `DeviceUserFolder` | Ordner, z. B. „Ungrouped devices“ | durchlaufen |
@@ -472,15 +475,16 @@ Attribute stehen als `Attribute@Name` mit Kind-Element `Value`.
 | `TypeName` | `CPU 1511-1 PN`, `IM 155-6 PN HF`, `G120C PN` | Komponentenname: `<TypeName>, Firmware` |
 | `FirmwareVersion` | `V2.8`, `V3.3`, `V0.0`, `4.7.10` (G120C, ohne „V“) | unverändert übernehmen; nur für Vergleiche normalisieren (führendes `V` weg) |
 | `DeviceItemType` | `CPU`, `HeadModule` | → `<ns>:device:classification`; `CPU` markiert Stationswurzeln |
-| `PositionNumber` | `0`, `1`, `32768` | Teil von `<ns>:device:position` |
+| `PositionNumber` | `0`, `1`, `32768` | Pfad der nicht integrierten Teile; `<ns>:device:position` = `<Gerätename>/<Pfad>`, etwa `ET 200SP station_1/0/0` (E-019) |
 | `BuiltIn` | `true` bei integrierten DI/DQ, HSC, OPC UA, Schnittstellen | `true` → Teil des übergeordneten Geräts, keine eigene Komponente |
 | `InstallationDate`, `Label`, `IoType`, `StartAddress`, `Length` | | ignorieren |
 | `NetworkAddress`, `SubnetMask`, `ProfinetDeviceName`, `IpProtocolSelection` | | **nie übernehmen** (Leitplanke Netzdaten) |
 
 **`TypeIdentifier` auswerten:**
 
-- `OrderNumber:<MLFB>[/<Version>][//<Zusatz>]`: Siemens-Katalogeintrag. Präfix abtrennen, Bestellnummer bis zum ersten `/` mit Leerzeichen unverändert übernehmen. Ein `/V…`-Anhang (in Katalog-Kennungen üblich, in den AML-Fixtures nicht vorhanden) wird als `<ns>:vendorKey:catalogVersion` mitgeführt; weicht er von `FirmwareVersion` ab, Warnung. Enthält die Bestellnummer `*` (Profilschiene `6ES7 590-1***0-0AA0`), `orderNumber:pattern = true`; die CPE-Tabelle behandelt `*` in der Quelle nicht als Platzhalter.
+- `OrderNumber:<MLFB>[/<Version>][//<Zusatz>]`: Siemens-Katalogeintrag. Präfix abtrennen, Bestellnummer bis zum ersten `/` mit Leerzeichen unverändert übernehmen. Ein `/V…`-Anhang (in Katalog-Kennungen üblich, in den AML-Fixtures nicht vorhanden, nur synthetisch belegt) wird als `<ns>:vendorKey:catalogVersion` mitgeführt; weicht er von `FirmwareVersion` ab, Warnung (`TIA_AML_CATALOG_VERSION_DIFFERS`). Enthält die Bestellnummer `*` (Profilschiene `6ES7 590-1***0-0AA0`), `orderNumber:pattern = true`; die CPE-Tabelle behandelt `*` in der Quelle nicht als Platzhalter.
 - `System:Device.<Familie>`, `System:Rack.<Familie>`: Struktur, keine Komponente.
+- Anderes Präfix: Warnung (`TIA_AML_TYPE_IDENTIFIER_UNKNOWN`), das Teil fehlt in der SBOM.
 - `GSD:<GSDML-Datei>/<Art>/<Id>`: Gerät aus einer GSDML-Datei. Beobachtete Arten: `D` (Gerät), `R/DAP` (Rack), `DAP/DAP` (Kopfmodul, Device Access Point), `M/<ModulId>` (Modul). Weiter in 5.4.5.
 - Racks (`TypeName` = `Rack`, Profilschienen) sind Struktur, auch wenn sie eine Bestellnummer tragen; sie kommen in den Hardware-Anhang.
 
@@ -490,17 +494,17 @@ Attribute stehen als `Attribute@Name` mit Kind-Element `Value`.
 |---|---|
 | `FirmwareVersion` vorhanden, nicht `V0.0` | Firmware-Komponente, `firmware:origin = projected`, Lücke `firmware-projected-only` bis zum Ist-Stand |
 | `FirmwareVersion` = `V0.0` | passives Modul → Hardware-Anhang |
-| Attribut fehlt (Fixture: Stromversorgung PM 70W `6EP1332-4BA00`) | Firmware-Komponente ohne Version, Lücke `firmware-not-in-project`, **Warnung**. Passt die Bestellnummer auf ein Muster in `passiveOrderNumbers` (`machine.yml`), stattdessen passiv mit `<ns>:device:passive = declared` |
+| Attribut fehlt (Fixture: Stromversorgung PM 70W `6EP1332-4BA00`) | Firmware-Komponente ohne Version, Lücken `firmware-attribute-missing` (**Warnung**) und `firmware-not-in-project` (Hinweis), E-019. Passt die Bestellnummer auf ein Muster in `passiveOrderNumbers` (`machine.yml`), stattdessen passiv mit `<ns>:device:passive = declared` |
 | `BuiltIn` = `true` | keine eigene Komponente |
 
-**Hersteller:** Für `OrderNumber:`-Geräte `Siemens AG`, `vendor:origin = assumed`. Begründung: `OrderNumber:`-Kennungen stammen aus dem Siemens-Hardwarekatalog bzw. Siemens-HSPs; Geräte Dritter kommen über GSD. Annahme in `docs/adapter-tia-aml.md` festhalten und an jeder neuen Fixture prüfen. `vendorOverrides` in `machine.yml` (Muster → Hersteller) überschreibt mit `origin = declared`. GSD-Geräte: Abschnitt 5.4.5.
+**Hersteller:** Für `OrderNumber:`-Geräte `Siemens AG`, `vendor:origin = assumed`. Begründung: `OrderNumber:`-Kennungen stammen aus dem Siemens-Hardwarekatalog bzw. Siemens-HSPs; Geräte Dritter kommen über GSD. Annahme in `docs/adapter-tia-aml.md` festhalten und an jeder neuen Fixture prüfen. `vendorOverrides` in `machine.yml` (Muster → Hersteller, erster Treffer gilt) überschreibt mit `origin = declared`. Muster mit `*` und `?`; Bestellnummern passen mit und ohne Leerzeichen. GSD-Geräte: Abschnitt 5.4.5.
 
-**Antriebe und Panels:** Die V18-Fixture enthält zwei SINAMICS G120C mit Bestellnummer und Firmware `4.7.10`; Antriebe werden also wie andere Geräte behandelt. Für HMI-Panels liegt noch keine Fixture vor; das Comquent-Demo-Projekt (Abschnitt 13) nimmt eines auf, danach entscheiden.
+**Antriebe und Panels:** Die V18-Fixture enthält drei SINAMICS G120C mit Bestellnummer und Firmware `4.7.10`; Antriebe werden also wie andere Geräte behandelt. Für HMI-Panels liegt noch keine Fixture vor; das Comquent-Demo-Projekt (Abschnitt 13) nimmt eines auf, danach entscheiden.
 
 **Bibliotheken und Programm:** Der CAx-Export enthält weder Bibliotheken noch Bausteine.
 
-- Ohne Angabe: Lücke `libraries-not-read` (Warnung) und `program-not-read` (Hinweis) an der Station.
-- Mit `libraries` in der Station (`machine.yml`): je Eintrag eine `library`-Komponente mit `<ns>:source = declared`; `libraries-not-read` entfällt.
+- Ohne Angabe: Lücke `libraries-not-read` (Warnung) und `program-not-read` (Hinweis) an jeder Station mit CPU.
+- Mit `libraries` in der Station (`machine.yml`): je Eintrag eine `library`-Komponente mit `<ns>:origin = declared` (`<ns>:source` ist die Quelldatei der Station); `libraries-not-read` entfällt.
 - Das Anwenderprogramm entsteht wie bei allen Adaptern aus `program` (Abschnitt 5.6).
 - VCI-Dateien (`.libinfo`) als Quelle für Bibliothekstypen erst nach dem Prototyp prüfen, nur mit Fixture.
 
@@ -508,17 +512,17 @@ Attribute stehen als `Attribute@Name` mit Kind-Element `Value`.
 
 Eine Station ist **eine CPU und die Geräte ihres IO-Systems**.
 
-1. Stationswurzeln sind `DeviceItem`s mit `DeviceItemType = CPU`. In `machine.yml` wählt `plc: <Name>` die CPU über den Element-Namen. Enthält die Datei genau eine CPU, darf `plc` fehlen; bei mehreren ohne `plc` Exit 2 mit Liste der gefundenen CPUs.
-2. Zur Station gehören das `Device` der CPU (Rack, Module, Stromversorgung) und alle Geräte, deren Schnittstelle über ein `InternalLink` „Link To IoSystem“ mit dem `IoSystem` unter einer Schnittstelle dieser CPU verbunden ist. Die Fixture `CIP_cs_HardwareNetwork.aml` (V18) hat sieben solche Links; welche Seite (`RefPartnerSideA`/`B`, Form `<ID>:<Schnittstellenname>`) zum Gerät und welche zum IO-System gehört, an der Fixture belegen und in `docs/adapter-tia-aml.md` festhalten.
-3. `devices: [<Name oder Muster>]` in der Station nimmt weitere Geräte auf, die an keinem IO-System hängen (z. B. ein Panel nur am Subnetz).
-4. Alle übrigen Geräte der Datei kommen nur dann in die SBOM, wenn keine Station der Maschine auf diese Datei ein `plc` setzt (dann ist die ganze Datei eine Station). Sonst gehen sie unter die Maschine mit `device-unassigned` (Hinweis), damit nichts unbemerkt fehlt. Mit `ignoreDevices: [<Muster>]` lassen sie sich bewusst ausschließen; der Bericht führt sie dann als ausgeschlossen.
-5. Ein Gerät, das zwei Stationen beansprucht, ergibt Exit 2.
+1. Stationswurzeln sind `DeviceItem`s mit `DeviceItemType = CPU`. In `machine.yml` wählt `plc: <Name>` die CPU über den Element-Namen (`TIA_AML_PLC_NOT_FOUND` mit Liste, wenn es sie nicht gibt). Enthält die Datei höchstens eine CPU und liest nur eine Station sie, darf `plc` fehlen; sonst Exit 2 (`TIA_AML_PLC_REQUIRED`) mit Liste der gefundenen CPUs.
+2. Zur Station gehören das `Device` der CPU (Rack, Module, Stromversorgung) und alle Geräte, deren Schnittstelle über ein `InternalLink` „Link To IoSystem“ mit dem `IoSystem` unter einer Schnittstelle dieser CPU verbunden ist. Die Fixture `CIP_cs_HardwareNetwork.aml` (V18) hat sieben solche Links: `RefPartnerSideA` ist die Schnittstelle des Geräts (`<ID>:LogicalEndPoint_Interface`), `RefPartnerSideB` das IO-System (`<ID>:LogicalEndPoint_IoSystem`). Der Leser prüft beide Seiten und nimmt immer das ganze `Device` der Schnittstelle. Ein IO-System, das nicht unter einer CPU hängt, gehört der einzigen CPU seines Geräts, sonst Warnung (`TIA_AML_IOSYSTEM_WITHOUT_CPU`).
+3. `devices: [<Name oder Muster>]` in der Station nimmt weitere Geräte auf, die an keinem IO-System hängen (z. B. ein Panel nur am Subnetz). Das Muster trifft den Gerätenamen oder den Namen eines seiner Teile; trifft es nichts, Warnung (`TIA_AML_PATTERN_UNUSED`).
+4. Alle übrigen Geräte der Datei kommen nur dann in die SBOM, wenn keine Station der Maschine auf diese Datei ein `plc` setzt (dann ist die ganze Datei eine Station). Sonst gehen sie unter die Maschine mit `device-unassigned` (Hinweis) und eigenen Properties `<ns>:adapter`, `<ns>:source`, `<ns>:source:sha256`, damit nichts unbemerkt fehlt. Mit `ignoreDevices: [<Muster>]` lassen sie sich bewusst ausschließen (Muster aller Stationen derselben Datei gelten zusammen); der Bericht führt sie dann als ausgeschlossen.
+5. Ein Gerät, das zwei Stationen beansprucht, ergibt Exit 2 (`TIA_AML_DEVICE_IN_TWO_STATIONS`).
 
-`plc-sbom inspect <datei.aml> --adapter tia-aml` gibt CPUs, IO-Systeme und die Zuordnung aller Geräte aus. Damit schreibt der Anwender seine `machine.yml`.
+`plc-sbom inspect <datei.aml> --adapter tia-aml` gibt CPUs, IO-Systeme und die Zuordnung aller Geräte aus (je Gerät die CPU und `via` = `cpu` oder `io-system`, je Teil die Behandlung wie `firmware`, `passive`, `rack`). Warnungen stehen im JSON und auf stderr. Damit schreibt der Anwender seine `machine.yml`.
 
 #### 5.4.5 GSD-Geräte und GSDML-Dateien
 
-Im AML steht für GSD-Geräte nur `TypeIdentifier` (GSDML-Dateiname, Art, Id) und `TypeName`, keine Bestellnummer, kein Hersteller, keine Firmware (belegt durch Fixture `sample_device.aml`, Leuze BCL248i).
+Im AML steht für GSD-Geräte nur `TypeIdentifier` (GSDML-Dateiname, Art, Id) und `TypeName`, keine Bestellnummer, kein Hersteller, keine Firmware (belegt durch Fixture `sample_device.aml`, Leuze BCL248i). Stand M7 (ohne GSDML): Kopfmodul als Firmware-Komponente mit `order-number-not-in-project`, `supplier-unknown`, `firmware-not-in-project`; Dateiname, Art und Id als `<ns>:vendorKey:GSDML`, `GsdType`, `GsdId`; Module passiv. Der Rest dieses Abschnitts folgt mit M8.
 
 - `machine.yml` nennt unter `gsdml` Verzeichnisse mit GSDML-Dateien (im Repository der Maschine oder auf dem Agenten). Gesucht wird der Dateiname aus dem `TypeIdentifier`, ohne Groß-/Kleinschreibung.
 - Aus der GSDML-Datei (PROFINET GSDML, XML) lesen: `DeviceIdentity@VendorID` und `@DeviceID`, `DeviceIdentity/VendorName@Value` (Hersteller), das `DeviceAccessPointItem` mit der `ID` aus dem `TypeIdentifier` und daraus `ModuleInfo/OrderNumber@Value`, `ModuleInfo/SoftwareRelease@Value`, `ModuleInfo/HardwareRelease@Value`; für Module das `ModuleItem` mit der Modul-Id. Element- und Attributnamen an einer echten GSDML-Fixture belegen, bevor sie im Code stehen.
@@ -532,9 +536,9 @@ Im AML steht für GSD-Geräte nur `TypeIdentifier` (GSDML-Dateiname, Art, Id) un
 
 | Fall | Exit |
 |---|---|
-| Datei fehlt, kein gültiges XML, nicht von TIA Portal geschrieben | 2 |
-| `plc` nicht gefunden, mehrere CPUs ohne `plc`, Gerät in zwei Stationen | 2 |
-| Unbekannte `WriterVersion`, unbekannte Rolle, unbekannter `TypeIdentifier`-Präfix | Warnung, weiter |
+| Datei fehlt, kein gültiges XML, kein `CAEXFile`, nicht von TIA Portal geschrieben | 2 (`SOURCE_NOT_FOUND`, `XML_INVALID`, `NOT_AML`, `NOT_TIA_AML`) |
+| `plc` nicht gefunden, mehrere CPUs ohne `plc`, Gerät in zwei Stationen | 2 (`TIA_AML_PLC_NOT_FOUND`, `TIA_AML_PLC_REQUIRED`, `TIA_AML_DEVICE_IN_TWO_STATIONS`) |
+| Unbekannte `WriterVersion`, unbekannte Rolle, unbekannter `TypeIdentifier`-Präfix, abweichende Katalogversion, IO-System ohne CPU, Muster ohne Treffer | Warnung, weiter; nicht in der SBOM, sondern als Adapter-Warnung mit Code (E-019) |
 
 ### 5.5 Siemens TIA Portal V21 über Openness: `tia-portal` (M14)
 
@@ -910,7 +914,7 @@ Die Adapter-Meilensteine M2 bis M8 und M14 folgen der festgelegten Reihenfolge: 
 | L5X | `github.com/RockwellAutomation/ra-logix-cicd`, `1-production-files/L5Xs/*.L5X` | 1756-L85E, V36.11; zwei AOI-Exporte (eingecheckt) | MIT |
 | L5X | `github.com/hutcheb/acd`, `resources/*.L5X` | V34.01, AOI, 1756-EN2T, Redundanz (eingecheckt) | Apache-2.0 |
 | L5X | `github.com/Colt-H/L5X-Creator`, `github.com/reh3376/acd-l5x-tool-lib` | generiert, keine Studio-5000-Exporte; nicht als Beleg genutzt (`docs/adapter-studio5000.md`) | MIT |
-| TIA-AML | `github.com/vformi/PLC.Commissioning.Lib`, `src/PLC.Commissioning.Lib.App/samples/sample_device.aml` | **TIA V17** (`WriterVersion 1700`), S7-1200 CPU 1214C `V4.5`, GSD-Gerät Leuze BCL248i | MIT (geprüft 29.10.2026) |
+| TIA-AML | `github.com/vformi/PLC.Commissioning.Lib`, `src/PLC.Commissioning.Lib.App/samples/sample_device.aml` | **TIA V17** (`WriterVersion 1700`), S7-1200 CPU 1214C `V4.5`, GSD-Gerät Leuze BCL248i (eingecheckt; passende GSDML im selben Repository für M8) | MIT (geprüft 29.10.2026 und 01.11.2026) |
 | TIA-AML | `github.com/frattam-eng/openess_CIP`, `openess_CIP/CIP_cs_HardwareNetwork.aml` | **TIA V18**, S7-1500, vier ET 200SP mit passiven und firmwarebehafteten Modulen, zwei G120C, sieben IO-System-Links | keine → nur `_local` |
 | TIA-AML | `github.com/JBuschkind/Interoperabilit-tsprojekt`, `Testing-Files/TIA_Export.aml` u. a. | **TIA V21** (`WriterVersion 2100`), S7-1500 CPU 1511-1 PN `V2.8`, PM ohne Firmware-Attribut, Profilschiene mit `***` | keine → nur `_local` |
 | TIA-AML, GSDML | **Comquent-Demo-Projekt** (von Comquent zu liefern) | TIA V21, S7-1500, ET 200SP, ein GSD-Gerät mit weitergabefähiger GSDML, ein Antrieb, ein HMI-Panel, eine LGF-Instanz, ein know-how-geschützter Baustein; als `.zap21` für M14 und als AML-Export für M7/M8 | Comquent-eigen |
@@ -925,7 +929,7 @@ Die Adapter-Meilensteine M2 bis M8 und M14 folgen der festgelegten Reihenfolge: 
 | Feld (S7 Web-API) | `github.com/siemens/simatic-s7-webserver-api` (v3.3.92) | | MIT |
 | CSAF | `cert-portal.siemens.com/productcert/csaf/ssa-452276.json` | mit `model_numbers` | öffentlich |
 
-Solange die Comquent-Demo-Projekte fehlen, M7 mit der V17-Fixture beginnen, M3 und M4 zurückstellen und die `_local`-Dateien nur lokal nutzen. Synthetische Fixtures sind erlaubt, wenn sie als solche benannt sind (`*-synthetisch.*`) und ein echtes Gegenstück für dasselbe Attribut existiert.
+Solange die Comquent-Demo-Projekte fehlen, M3 und M4 zurückstellen und die `_local`-Dateien nur lokal nutzen. M7 ist mit der V17-Fixture und einer synthetischen Datei mit zwei CPUs umgesetzt; das Golden File aus dem Comquent-V21-Export wird nachgeholt (E-019). Synthetische Fixtures sind erlaubt, wenn sie als solche benannt sind (`*-synthetisch.*`) und ein echtes Gegenstück für dasselbe Attribut existiert.
 
 ## 14. Arbeitsweise in diesem Repository
 
@@ -953,7 +957,7 @@ Solange die Comquent-Demo-Projekte fehlen, M7 mit der V17-Fixture beginnen, M3 u
 - Comquent Whitepaper „SBOM für SPS-Projekte mit TIA Portal V21“ (`comquent.de website/Whitepaper/SBOM/Comquent_Whitepaper_SBOM_SPS_TIA_Portal_V21.pdf`), Kapitel 4 (Openness-Inventar) und 6 (Jenkins-Pipeline, Quality Gates)
 - Siemens TIA Portal AI Extensions, Openness-Skills V21: `github.com/siemens/tia-portal-ai-extensions` (lokal in `../plc-build-tool/.claude/skills/`)
 - TIA Portal Openness V21 Handbuch: `docs.tia.siemens.cloud/r/en-us/v21/tia-portal-openness-api-for-automation-of-engineering-workflows/` (Seiten: Firewall, Benutzergruppe, Hardware-Objekte, Bibliotheken, CAx-Export)
-- AutomationML, Application Recommendation „Automation Project Configuration“ (AR APC) 1.2.0: `automationml.org`
+- AutomationML, Application Recommendation „Automation Project Configuration“ (AR APC) 1.2.0 bis 1.4.0 (Versionen laut Fixtures): `automationml.org`
 - PROFINET GSDML-Spezifikation: `profibus.com` (Downloads, GSDML Specification for PROFINET)
 - CRA, Verordnung (EU) 2024/2847: `publications.europa.eu/resource/celex/32024R2847` (EUR-Lex blockt automatisierte Abrufe; CELLAR mit `Accept-Language: de`)
 - Leitlinie der Kommission zum CRA, C(2026) 5252 vom 27.07.2026: `ec.europa.eu/newsroom/dae/redirection/document/131456`

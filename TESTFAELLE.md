@@ -1,32 +1,35 @@
 # Testfälle: PLC SBOM Builder (`plc-sbom`)
 
-Stand: 31.10.2026, Version 0.1.0 (Meilensteine M1 und M2 abgeschlossen, M5 und M6 umgesetzt). Diese Datei beschreibt alle automatischen Testfälle, die Testläufe und ihre Ergebnisse. Die Bedienung des Werkzeugs steht in [ANLEITUNG.md](ANLEITUNG.md), Ziele und Regeln in [CLAUDE.md](CLAUDE.md).
+Stand: 01.11.2026, Version 0.1.0 (Meilensteine M1 und M2 abgeschlossen, M5, M6 und M7 umgesetzt). Diese Datei beschreibt alle automatischen Testfälle, die Testläufe und ihre Ergebnisse. Die Bedienung des Werkzeugs steht in [ANLEITUNG.md](ANLEITUNG.md), Ziele und Regeln in [CLAUDE.md](CLAUDE.md).
 
 ## 1. Ergebnis
 
-**398 Testfälle, 398 bestanden, 0 fehlgeschlagen, 0 übersprungen.** Letzter Lauf am 01.11.2026, 00:22 Uhr, Laufzeit 0,95 s. `dotnet format --verify-no-changes` ohne Befund. Dazu die Gegenprüfung mit sbomqs ohne Abweichung (Abschnitt 6.1).
+**480 Testfälle, 480 bestanden, 0 fehlgeschlagen, 0 übersprungen.** Letzter Lauf am 01.11.2026, 10:42 Uhr, Laufzeit 1,0 s. `dotnet format --verify-no-changes` ohne Befund. Dazu die Gegenprüfung mit sbomqs ohne Abweichung (Abschnitt 6.1). Fünf Testfälle lesen Dateien aus `fixtures/_local/tia-aml/` (ohne Lizenz, nicht eingecheckt); sie liefen lokal mit und überspringen sich in CI.
 
 | Testklasse | Datei | Testfälle | Bestanden | Prüfgegenstand |
 |---|---|---:|---:|---|
-| `CliAppTests` | [Cli/CliAppTests.cs](tests/PlcSbom.Tests/Cli/CliAppTests.cs) | 40 | 40 | Kommandozeile, Hilfe, Exit-Codes, Gerüst der Befehle |
+| `CliAppTests` | [Cli/CliAppTests.cs](tests/PlcSbom.Tests/Cli/CliAppTests.cs) | 39 | 39 | Kommandozeile, Hilfe, Exit-Codes, Gerüst der Befehle |
 | `ValidateCommandTests` | [Cli/ValidateCommandTests.cs](tests/PlcSbom.Tests/Cli/ValidateCommandTests.cs) | 11 | 11 | `plc-sbom validate` mit echten Dateien |
 | `SbomValidatorTests` | [Validation/SbomValidatorTests.cs](tests/PlcSbom.Tests/Validation/SbomValidatorTests.cs) | 74 | 74 | Schema und Regeln der BSI TR-03183-2 |
 | `GapRulesTests` | [Gaps/GapRulesTests.cs](tests/PlcSbom.Tests/Gaps/GapRulesTests.cs) | 28 | 28 | Lückenregeln am Modell, Lückenkatalog |
 | `CycloneDxWriterTests` | [Output/CycloneDxWriterTests.cs](tests/PlcSbom.Tests/Output/CycloneDxWriterTests.cs) | 21 | 21 | CycloneDX-Writer, Golden File, Determinismus |
 | `ResultFileTests` | [Output/ResultFileTests.cs](tests/PlcSbom.Tests/Output/ResultFileTests.cs) | 8 | 8 | Ergebnisdatei `<out>.result.json` |
 | `IdentifierTests` | [Output/IdentifierTests.cs](tests/PlcSbom.Tests/Output/IdentifierTests.cs) | 11 | 11 | UUIDv5, `bom-ref`, Pfad der Ergebnisdatei |
-| `DocsConsistencyTests` | [Docs/DocsConsistencyTests.cs](tests/PlcSbom.Tests/Docs/DocsConsistencyTests.cs) | 45 | 45 | Abgleich von ANLEITUNG.md, CLAUDE.md, README.md mit dem Code |
+| `DocsConsistencyTests` | [Docs/DocsConsistencyTests.cs](tests/PlcSbom.Tests/Docs/DocsConsistencyTests.cs) | 47 | 47 | Abgleich von ANLEITUNG.md, CLAUDE.md, README.md mit dem Code |
 | `SampleFileTests` | [Samples/SampleFileTests.cs](tests/PlcSbom.Tests/Samples/SampleFileTests.cs) | 1 | 1 | Minimal-SBOM als Golden File für die Gegenprüfung |
 | `LibraryReferenceTests` | [Adapters/Codesys/LibraryReferenceTests.cs](tests/PlcSbom.Tests/Adapters/Codesys/LibraryReferenceTests.cs) | 14 | 14 | CODESYS-Bibliotheksangabe `Titel, Version (Hersteller)` |
 | `PlcOpenReaderTests` | [Adapters/Codesys/PlcOpenReaderTests.cs](tests/PlcSbom.Tests/Adapters/Codesys/PlcOpenReaderTests.cs) | 15 | 15 | PLCopen-XML-Leser an echten Fixtures, sicheres XML |
 | `CodesysV35AdapterTests` | [Adapters/Codesys/CodesysV35AdapterTests.cs](tests/PlcSbom.Tests/Adapters/Codesys/CodesysV35AdapterTests.cs) | 28 | 28 | Adapter `codesys`/`v35`: Geräte, Bibliotheken, Gerätebeschreibungen, Lücken, Golden Files |
 | `DeviceDescriptionIndexTests` | [Adapters/Codesys/DeviceDescriptionIndexTests.cs](tests/PlcSbom.Tests/Adapters/Codesys/DeviceDescriptionIndexTests.cs) | 12 | 12 | CODESYS-Gerätebeschreibungen lesen und zuordnen |
-| `InspectCommandTests` | [Cli/InspectCommandTests.cs](tests/PlcSbom.Tests/Cli/InspectCommandTests.cs) | 10 | 10 | `plc-sbom inspect` für `codesys`, `studio5000` und `twincat` |
+| `InspectCommandTests` | [Cli/InspectCommandTests.cs](tests/PlcSbom.Tests/Cli/InspectCommandTests.cs) | 14 | 14 | `plc-sbom inspect` für `codesys`, `studio5000`, `twincat` und `tia-aml` |
 | `L5xReaderTests` | [Adapters/Studio5000/L5xReaderTests.cs](tests/PlcSbom.Tests/Adapters/Studio5000/L5xReaderTests.cs) | 10 | 10 | L5X-Leser an den echten Exporten |
 | `TwinCatReaderTests` | [Adapters/TwinCat/TwinCatReaderTests.cs](tests/PlcSbom.Tests/Adapters/TwinCat/TwinCatReaderTests.cs) | 10 | 10 | Leser für `.tsproj`, `_Config/PLC/*.xti` und `.plcproj` an den echten Projekten |
 | `TwinCatAdapterTests` | [Adapters/TwinCat/TwinCatAdapterTests.cs](tests/PlcSbom.Tests/Adapters/TwinCat/TwinCatAdapterTests.cs) | 37 | 37 | Adapter `twincat`: EtherCAT-Teilnehmer, Hersteller, deaktivierte Geräte, Laufzeit, Bibliotheken, nicht gelesene Geräte, Golden Files, keine Netzdaten |
 | `Studio5000AdapterTests` | [Adapters/Studio5000/Studio5000AdapterTests.cs](tests/PlcSbom.Tests/Adapters/Studio5000/Studio5000AdapterTests.cs) | 23 | 23 | Adapter `studio5000`: Station, Firmware-Soll, Kodierung, Hersteller, AOIs, Golden Files, keine Netzdaten |
-| **Summe** | | **312** | **312** | |
+| `AmlReaderTests` | [Adapters/TiaAml/AmlReaderTests.cs](tests/PlcSbom.Tests/Adapters/TiaAml/AmlReaderTests.cs) | 11 | 11 | AML-Leser: Kopf, Rollen, integrierte Teile, IO-System-Links, Steuerzeichen, keine Netzdaten |
+| `TiaAmlAdapterTests` | [Adapters/TiaAml/TiaAmlAdapterTests.cs](tests/PlcSbom.Tests/Adapters/TiaAml/TiaAmlAdapterTests.cs) | 49 | 49 | Adapter `tia-aml`: Versionsprüfung, Firmware-Regeln, passive Module, Hersteller, GSD-Geräte, Stationen über IO-Systeme, Fehlerfälle, Golden Files, keine Netzdaten |
+| `WildcardTests` | [WildcardTests.cs](tests/PlcSbom.Tests/WildcardTests.cs) | 17 | 17 | Muster mit `*` und `?` für `devices`, `ignoreDevices`, `passiveOrderNumbers`, `vendorOverrides` |
+| **Summe** | | **480** | **480** | |
 
 Bei parametrisierten Tests (xUnit `Theory`) zählt jeder Datensatz als eigener Testfall. Die Tabellen in Abschnitt 4 fassen sie in einer Zeile zusammen und nennen die Anzahl.
 
@@ -57,13 +60,15 @@ Der Testlauf nutzt Microsoft.Testing.Platform mit xunit.v3 (docs/entscheidungen.
 | Golden Files Studio 5000 | [golden/studio5000-ra-l85e.cdx.json](tests/PlcSbom.Tests/golden/studio5000-ra-l85e.cdx.json), [golden/studio5000-acd-aoi.cdx.json](tests/PlcSbom.Tests/golden/studio5000-acd-aoi.cdx.json), [golden/studio5000-module-baum.cdx.json](tests/PlcSbom.Tests/golden/studio5000-module-baum.cdx.json), [golden/studio5000-module-baum.inspect.json](tests/PlcSbom.Tests/golden/studio5000-module-baum.inspect.json) | SBOM aus den beiden echten Controller-Exporten mit Modulen bzw. AOI und aus der synthetischen Datei, eingebettet in die Maschine des Handmodells; Rohinventar von `inspect` |
 | TwinCAT-Fixtures | [fixtures/twincat/](fixtures/twincat/) | Vier echte Projekte (AixOCAT HeatPump: zehn EtherCAT-Teilnehmer, deaktivierter Master; SPT EtherCAT Diagnostics: SPS-Projekt über `_Config/PLC/*.xti`; TcOpen Cognex: PROFINET-Geräte; TcOpen Core: drei SPS-Projekte, `LibraryReference`) und ein synthetisches (Fremdgerät, ausgelagertes E/A-Gerät, feste Versionen); Herkunft in [fixtures/FIXTURES.md](fixtures/FIXTURES.md) |
 | Golden Files TwinCAT | [golden/twincat-*.cdx.json](tests/PlcSbom.Tests/golden/), [golden/twincat-spt-ethercat-diagnostics.inspect.json](tests/PlcSbom.Tests/golden/twincat-spt-ethercat-diagnostics.inspect.json) | SBOM aus allen fünf Projekten, eingebettet in die Maschine des Handmodells; Rohinventar von `inspect` |
+| TIA-AML-Fixtures | [fixtures/tia-aml/](fixtures/tia-aml/), lokal `fixtures/_local/tia-aml/` | Ein echter Export aus TIA V17 (S7-1200, GSD-Gerät Leuze BCL248i, MIT) und ein synthetischer mit zwei CPUs; lokal ohne Lizenz die Exporte aus V18 (sieben Geräte am IO-System) und V21 (PM ohne Firmware-Attribut) sowie zwei AML-Dateien anderer Werkzeuge; Herkunft in [fixtures/FIXTURES.md](fixtures/FIXTURES.md) |
+| Golden Files TIA-AML | [golden/tia-aml-v17-ganze-datei.cdx.json](tests/PlcSbom.Tests/golden/tia-aml-v17-ganze-datei.cdx.json), [golden/tia-aml-v17-plc.cdx.json](tests/PlcSbom.Tests/golden/tia-aml-v17-plc.cdx.json), [golden/tia-aml-zwei-cpus.cdx.json](tests/PlcSbom.Tests/golden/tia-aml-zwei-cpus.cdx.json), [golden/tia-aml-zwei-cpus.inspect.json](tests/PlcSbom.Tests/golden/tia-aml-zwei-cpus.inspect.json) | SBOM aus V17 ohne `plc` (ganze Datei) und mit `plc` (GSD-Gerät nicht zugeordnet), aus der synthetischen Datei mit zwei Stationen, `devices`, `ignoreDevices` und deklarierter Bibliothek, eingebettet in die Maschine des Handmodells; Rohinventar von `inspect` |
 | Golden File der Minimal-SBOM | [golden/minimal-synthetisch.cdx.json](tests/PlcSbom.Tests/golden/minimal-synthetisch.cdx.json) | Die Minimal-SBOM als Datei. Einzige Testdatei, in der Dateiname, Hash und Dateieigenschaften vorhanden sind; Eingang der Gegenprüfung mit sbomqs neben `hand-model.cdx.json` |
 
 ## 4. Testfälle
 
 Spalte „Ergebnis“: Ergebnis des letzten Laufs. „bestanden“ heißt, dass alle Zusicherungen des Testfalls zutrafen.
 
-### 4.1 Kommandozeile: `CliAppTests` (40)
+### 4.1 Kommandozeile: `CliAppTests` (39)
 
 | ID | Testfall | Prüft | Fälle | Ergebnis |
 |---|---|---|---:|---|
@@ -74,7 +79,7 @@ Spalte „Ergebnis“: Ergebnis des letzten Laufs. „bestanden“ heißt, dass 
 | CLI-05 | `Version_prints_the_tool_version` | `--version` gibt die Version im Format `x.y.z` aus, Exit 0 | 1 | bestanden |
 | CLI-06 | `No_command_is_a_usage_error` | Aufruf ohne Befehl: Exit 2 und Hinweis auf `plc-sbom --help` | 1 | bestanden |
 | CLI-07 | `Invalid_calls_end_with_exit_2` | Falsche Aufrufe enden mit Exit 2 und `[USAGE]`: unbekannter Befehl, fehlendes `--config` bzw. `--release`, `--report pdf`, unbekannte Option, `report --format pdf`, unbekannte Adapter-ID, fehlendes `--adapter`, `doctor --adapter twincat`, `validate` ohne Datei, `--timeout 0`, `--timeout zehn` | 12 | bestanden |
-| CLI-08 | `Commands_not_yet_built_name_their_milestone` | Noch nicht umgesetzte Befehle enden mit Exit 2 und `[NOT_IMPLEMENTED]` und nennen ihren Meilenstein: `build` M9, `report` M10, `compare` M11, `ids` M12, `doctor` M14, `inspect` für `tia-aml` M7, `tia-portal` M14 | 7 | bestanden |
+| CLI-08 | `Commands_not_yet_built_name_their_milestone` | Noch nicht umgesetzte Befehle enden mit Exit 2 und `[NOT_IMPLEMENTED]` und nennen ihren Meilenstein: `build` M9, `report` M10, `compare` M11, `ids` M12, `doctor` M14, `inspect` für `tia-portal` M14 | 6 | bestanden |
 | CLI-09 | `Openness_commands_off_windows_are_an_environment_problem` | `export-aml`, `doctor --adapter tia-portal` und `doctor --adapter tia-portal --deep` außerhalb von Windows: Exit 3 und `[OPENNESS_WINDOWS_ONLY]` | 3 | bestanden |
 | CLI-10 | `Openness_commands_on_windows_pass_the_platform_check` | Auf Windows kommt `export-aml` an der Plattformprüfung vorbei und meldet Meilenstein M14 | 1 | bestanden |
 | CLI-11 | `Common_options_are_accepted_after_the_command` | `--verbose` und `--timeout` werden auch nach dem Befehl angenommen | 1 | bestanden |
@@ -271,14 +276,14 @@ Eingabe ist ein fester Prüfbericht mit einem Fehler, zwei Warnungen und zwei Hi
 | ID-03 | `Registry_makes_refs_unique_in_call_order` | Doppelte `bom-ref` werden in Aufrufreihenfolge eindeutig gemacht | 1 | bestanden |
 | ID-04 | `Result_file_sits_next_to_the_sbom` | `sbom-maschine.cdx.json` → `sbom-maschine.result.json`, `x.json` → `x.result.json`, `x.sbom` → `x.sbom.result.json` | 3 | bestanden |
 
-### 4.8 Doku-Abgleich: `DocsConsistencyTests` (45)
+### 4.8 Doku-Abgleich: `DocsConsistencyTests` (47)
 
 Diese Tests sichern die Regel aus CLAUDE.md Abschnitt 14 ab, soweit sie sich maschinell prüfen lässt. Fehlt nach einer Änderung im Code ein Lückencode in der Doku, schlägt der Build fehl.
 
 | ID | Testfall | Prüft | Fälle | Ergebnis |
 |---|---|---|---:|---|
-| DOC-01 | `Anleitung_lists_every_gap_code_with_its_severity` | Jeder der 21 Lückencodes steht genau einmal in der Tabelle von ANLEITUNG.md, mit derselben Schwere wie im Code | 21 | bestanden |
-| DOC-02 | `Claude_md_lists_every_gap_code` | Jeder der 21 Lückencodes steht in einer Tabelle von CLAUDE.md | 21 | bestanden |
+| DOC-01 | `Anleitung_lists_every_gap_code_with_its_severity` | Jeder der 22 Lückencodes steht genau einmal in der Tabelle von ANLEITUNG.md, mit derselben Schwere wie im Code | 22 | bestanden |
+| DOC-02 | `Claude_md_lists_every_gap_code` | Jeder der 22 Lückencodes steht in einer Tabelle von CLAUDE.md | 22 | bestanden |
 | DOC-03 | `Anleitung_lists_no_gap_code_the_tool_does_not_know` | ANLEITUNG.md nennt keinen Lückencode, den das Werkzeug nicht kennt | 1 | bestanden |
 | DOC-04 | `User_docs_state_the_tool_version` | ANLEITUNG.md und README.md nennen die aktuelle Version (0.1.0) | 2 | bestanden |
 
@@ -351,7 +356,7 @@ Diese Tests sichern die Regel aus CLAUDE.md Abschnitt 14 ab, soweit sie sich mas
 | DD-06 | `Missing_directory_ends_with_exit_2` | `DEVDESC_DIR_NOT_FOUND` | 1 | bestanden |
 | DD-07 | `Other_xml_is_no_device_description` | `NOT_DEVDESC` | 1 | bestanden |
 
-### 4.13 Befehl `inspect`: `InspectCommandTests` (10)
+### 4.13 Befehl `inspect`: `InspectCommandTests` (14)
 
 | ID | Testfall | Prüft | Fälle | Ergebnis |
 |---|---|---|---:|---|
@@ -365,6 +370,10 @@ Diese Tests sichern die Regel aus CLAUDE.md Abschnitt 14 ab, soweit sie sich mas
 | IN-08 | `Non_l5x_file_ends_with_exit_2` | PLCopen-Datei mit `--adapter studio5000`: `[NOT_L5X]`, Exit 2 | 1 | bestanden |
 | IN-09 | `Twincat_inventory_matches_the_golden_file` | Rohinventar von SPT EtherCAT Diagnostics byte-gleich mit dem Golden File, keine AMS-Net-ID in der Ausgabe | 1 | bestanden |
 | IN-10 | `Non_tsproj_file_ends_with_exit_2` | PLCopen-Datei mit `--adapter twincat`: `[NOT_TSPROJ]`, Exit 2 | 1 | bestanden |
+| IN-11 | `Tia_aml_inventory_matches_the_golden_file` | synthetische AML-Datei mit zwei CPUs: Exit 0, Rohinventar byte-gleich mit dem Golden File, keine IP-Adresse, Warnung `[TIA_AML_CATALOG_VERSION_DIFFERS]` auf stderr | 1 | bestanden |
+| IN-12 | `Tia_aml_inventory_shows_cpus_and_assignment` | V17: TIA-Version, CPU `PLC_1`, GSD-Gerät ohne Zuordnung mit Behandlung `gsdDevice`, stderr leer | 1 | bestanden |
+| IN-13 | `Non_aml_file_ends_with_exit_2` | PLCopen-Datei mit `--adapter tia-aml`: `[NOT_AML]`, Exit 2 | 1 | bestanden |
+| IN-14 | `Gsdml_for_tia_aml_names_milestone_m8` | `--gsdml` mit `tia-aml`: `[NOT_IMPLEMENTED]` mit M8, Exit 2 | 1 | bestanden |
 
 ### 4.15 L5X-Leser: `L5xReaderTests` (10)
 
@@ -442,6 +451,71 @@ Diese Tests sichern die Regel aus CLAUDE.md Abschnitt 14 ab, soweit sie sich mas
 | TC-21 | `Sbom_contains_no_network_data` | AMS-Net-IDs, `TargetNetId` und BIC stehen in der Quelle, nicht in der SBOM | 5 | bestanden |
 | TC-22 | `Sbom_writes_twincat_properties` | `vendorKey:RevisionNo`, `device:disabled`, `firmware:origin` not-in-project, bom-ref `…-rt`, Lücke `runtime-version-unknown` | 1 | bestanden |
 
+### 4.19 AML-Leser: `AmlReaderTests` (11)
+
+| ID | Testfall | Prüft | Fälle | Ergebnis |
+|---|---|---|---:|---|
+| AR-01 | `Header_and_project_of_a_v17_export` | V17: `SchemaVersion` 2.15, `WriterHeader` vollständig, Projektname, zwei Geräte, keine unbekannte Rolle | 1 | bestanden |
+| AR-02 | `Built_in_items_are_not_listed_and_positions_follow_the_rack` | S7-1200: nur Rack und CPU, integrierte E/A und HSC fehlen; CPU mit Position `0/1`, `TypeIdentifier`, `TypeName`, `FirmwareVersion`, `DeviceItemType` | 1 | bestanden |
+| AR-03 | `Gsd_device_in_folder_with_modules` | GSD-Gerät im Ordner „Ungrouped devices“, vier Teile mit Positionen, Kopfmodul ohne Firmware, nicht mit dem IO-System verbunden | 1 | bestanden |
+| AR-04 | `Io_system_belongs_to_its_cpu` | IO-System der S7-1200 hängt unter der CPU | 1 | bestanden |
+| AR-05 | `Link_to_io_system_connects_the_device_of_the_interface` | synthetisch: ET 200SP (Schnittstelle unter dem Busadapter), G120C und GSD-Gerät mit dem IO-System ihrer CPU verbunden, G120C ohne Link ohne | 1 | bestanden |
+| AR-06 | `Control_characters_are_removed_from_names` | `&#x9;_0` → `_0`, `null` → leer | 1 | bestanden |
+| AR-07 | `Network_data_and_tag_tables_are_not_read` | IP-Adresse steht in der Quelle, nicht im gelesenen Projekt; keine Subnetzmaske, keine Variablentabelle, keine Element-IDs im JSON | 1 | bestanden |
+| AR-08 | `Other_root_element_ends_with_exit_2` | anderes Wurzelelement: `NOT_AML` | 1 | bestanden |
+| AR-09 | `Dtd_is_refused` | Datei mit DTD: `XML_INVALID` | 1 | bestanden |
+| AR-10 | `Namespace_and_unknown_roles_do_not_stop_the_reader` | CAEX mit Namespace, Element mit fremder Rolle: Projekt und Gerät darunter gefunden, Rolle gemeldet, Position ohne `PositionNumber` aus dem Namen | 1 | bestanden |
+| AR-11 | `Local_v18_export_has_seven_devices_on_the_io_system` | lokal, V18: acht Geräte, sieben mit IO-System-Link, Racks der G120C ohne Steuerzeichen | 1 | bestanden (überspringt sich ohne Datei) |
+
+### 4.20 Adapter `tia-aml`: `TiaAmlAdapterTests` (49)
+
+| ID | Testfall | Prüft | Fälle | Ergebnis |
+|---|---|---|---:|---|
+| TA-01 | `Station_carries_tia_version_export_time_and_hash` | Adapter, Quellpfad, SHA-256, Werkzeug „TIA Portal V17“ mit Release und Hersteller, Exportzeit | 1 | bestanden |
+| TA-02 | `Writer_other_than_tia_portal_ends_with_exit_2` | `WriterName` „TIA Selection Tool“: `NOT_TIA_AML` | 1 | bestanden |
+| TA-03 | `Unknown_writer_version_is_a_warning_and_kept_as_written` | `WriterVersion` 2200: Version `2200`, Warnung `TIA_AML_WRITER_VERSION_UNKNOWN` | 1 | bestanden |
+| TA-04 | `Unknown_type_identifier_prefix_is_a_warning_and_no_component` | Präfix `Catalog:`: CPU fehlt, Warnung `TIA_AML_TYPE_IDENTIFIER_UNKNOWN` mit dem Wert | 1 | bestanden |
+| TA-05 | `Type_identifier_is_split_by_prefix` | `OrderNumber:` mit und ohne `/V…` und `//…`, `System:`, `GSD:` mit DAP, M und D, unbekanntes Präfix | 8 | bestanden |
+| TA-06 | `Cpu_is_the_controller_with_projected_firmware` | CPU 1214C: Steuerung, Firmware `V4.5` projected, Klassifizierung, Position, Siemens AG `assumed`, keine Lücke | 1 | bestanden |
+| TA-07 | `Firmware_v0_0_and_racks_are_passive` | `BA 2xRJ45` (`V0.0`) und Profilschiene passiv, Muster-Bestellnummer, `System:Rack` gar nicht | 1 | bestanden |
+| TA-08 | `Device_without_firmware_attribute_is_a_warning` | PM ohne `FirmwareVersion`: nicht passiv, ohne Firmware, `firmware-attribute-missing` (Warnung) und `firmware-not-in-project` | 1 | bestanden |
+| TA-09 | `Passive_order_numbers_declare_devices_without_firmware_attribute` | `6EP1*` erklärt das PM als passiv (`device:passive` = `declared`), ein Gerät mit Firmware bleibt Firmware | 1 | bestanden |
+| TA-10 | `Vendor_overrides_win_over_the_assumption` | erstes passendes Muster gilt, Herkunft `declared`, Firmware `4.7.10` unverändert | 1 | bestanden |
+| TA-11 | `Catalogue_version_is_a_vendor_key_and_a_mismatch_warns` | `/V2.1` als `catalogVersion`, Firmware `V2.2`, Warnung `TIA_AML_CATALOG_VERSION_DIFFERS` | 1 | bestanden |
+| TA-12 | `Gsd_head_module_has_no_order_number_vendor_or_firmware` | BCL248i: kein Hersteller, keine Bestellnummer, keine Firmware, `GSDML`/`GsdType`/`GsdId`, drei Lücken, Hinweis auf `SoftwareRelease` | 1 | bestanden |
+| TA-13 | `Gsd_modules_are_passive` | Module M10 und M11 passiv | 1 | bestanden |
+| TA-14 | `Without_plc_the_whole_file_is_the_station` | V17 ohne `plc`: CPU, GSD-Gerät und Module in einer Station, nichts unter der Maschine | 1 | bestanden |
+| TA-15 | `With_plc_devices_off_the_io_system_are_unassigned` | V17 mit `plc`: GSD-Gerät unter der Maschine mit `device-unassigned` und Quell-Properties; passive Module ohne die Lücke | 1 | bestanden |
+| TA-16 | `Two_cpus_give_two_stations_split_by_io_system` | synthetisch: zwei Stationen mit genau ihren Geräten, je eine Steuerung, zwei Geräte ohne Station | 1 | bestanden |
+| TA-17 | `Devices_pattern_adds_a_device_without_io_system` | `devices` nimmt den G120C ohne IO-System auf | 1 | bestanden |
+| TA-18 | `Devices_pattern_matches_item_names_too` | `Pump_?` trifft auch den G120C der anderen Station: `TIA_AML_DEVICE_IN_TWO_STATIONS` | 1 | bestanden |
+| TA-19 | `Ignored_devices_are_listed_separately` | `Testaufbau_*` ausgeschlossen, nicht unter der Maschine | 1 | bestanden |
+| TA-20 | `Unused_patterns_are_warnings` | Muster ohne Treffer in `devices` und `ignoreDevices`: zwei Warnungen `TIA_AML_PATTERN_UNUSED` | 1 | bestanden |
+| TA-21 | `Device_claimed_by_two_stations_ends_with_exit_2` | `devices` auf ein Gerät am IO-System der anderen CPU: Exit 2 mit Gerätename | 1 | bestanden |
+| TA-22 | `Same_cpu_for_two_stations_ends_with_exit_2` | zwei Stationen mit derselben CPU: Exit 2 | 1 | bestanden |
+| TA-23 | `Unknown_plc_ends_with_exit_2_and_lists_the_cpus` | `PLC_9`: `TIA_AML_PLC_NOT_FOUND` mit „PLC_1, PLC_2“ | 1 | bestanden |
+| TA-24 | `Several_cpus_without_plc_end_with_exit_2` | zwei CPUs ohne `plc`: `TIA_AML_PLC_REQUIRED` mit Liste | 1 | bestanden |
+| TA-25 | `Two_stations_on_one_file_need_plc_each` | zwei Stationen, eine ohne `plc`: `TIA_AML_PLC_REQUIRED` | 1 | bestanden |
+| TA-26 | `Missing_file_ends_with_exit_2` | fehlende Datei: `SOURCE_NOT_FOUND` | 1 | bestanden |
+| TA-27 | `Station_without_declared_libraries_carries_both_gaps` | keine Software, `libraries-not-read` und `program-not-read` | 1 | bestanden |
+| TA-28 | `Declared_libraries_replace_libraries_not_read` | LGF 7.0.1 und eine Bibliothek ohne Hersteller und Version: Herkunft `declared`, nur noch `program-not-read` | 1 | bestanden |
+| TA-29 | `Sbom_matches_the_golden_file` | V17 ohne und mit `plc` byte-gleich mit den Golden Files | 2 | bestanden |
+| TA-30 | `Sbom_of_two_stations_matches_the_golden_file` | zwei Stationen mit `devices`, `ignoreDevices` und deklarierter Bibliothek byte-gleich mit dem Golden File | 1 | bestanden |
+| TA-31 | `Sbom_passes_schema_and_tr_rules_without_errors` | V17 ohne und mit `plc`: Schema gültig, kein Fehler, zwei Läufe byte-gleich | 2 | bestanden |
+| TA-32 | `Sbom_of_two_stations_passes_without_errors` | synthetisch: kein Fehler, `FIRMWARE_ATTRIBUTE_MISSING` als Warnung | 1 | bestanden |
+| TA-33 | `Sbom_contains_no_network_data` | IP-Adresse, Subnetzmaske und `IpProtocolSelection` stehen in der Quelle, nicht in der SBOM | 3 | bestanden |
+| TA-34 | `Sbom_writes_tia_properties` | bom-ref `linie-1-fw`, `source:exportedAt`, `device:position`, `vendorKey:catalogVersion`, Lücken `firmware-attribute-missing` und `libraries-not-read`, kein passives Modul | 1 | bestanden |
+| TA-35 | `Local_v18_export_runs_without_errors` | lokal, V18: eine Station, alle sieben Geräte am IO-System zugeordnet, drei G120C mit `4.7.10`, vier IM 155-6 mit `V3.3`, keine IP-Adresse, SBOM ohne Fehler, keine Warnung | 1 | bestanden (überspringt sich ohne Datei) |
+| TA-36 | `Local_v21_export_runs_without_errors` | lokal, V21: Werkzeug mit Hersteller „Siemens“, PM mit `firmware-attribute-missing`, Profilschiene als Muster, CPU `V2.8`, SBOM ohne Fehler | 1 | bestanden (überspringt sich ohne Datei) |
+| TA-37 | `Local_exports_from_other_tools_end_with_exit_2` | lokal: TIA Selection Tool und Beckhoff-Export ergeben `NOT_TIA_AML` | 2 | bestanden (überspringt sich ohne Datei) |
+
+### 4.21 Muster: `WildcardTests` (17)
+
+| ID | Testfall | Prüft | Fälle | Ergebnis |
+|---|---|---|---:|---|
+| WC-01 | `Patterns_match_the_whole_text` | `*`, `?`, ganze Zeichenkette, Groß-/Kleinschreibung, Rücksprung bei mehreren `*` | 12 | bestanden |
+| WC-02 | `Order_numbers_match_with_or_without_spaces` | Muster mit und ohne Leerzeichen, `?` in der Bestellnummer, `*` als Zeichen in der Bestellnummer (`1***0`) | 5 | bestanden |
+
 ## 5. Testläufe
 
 Alle Läufe lokal auf macOS 26.6.2 (arm64) mit .NET SDK 10.0.403, Ausgangsstand Commit `914bc98` plus die neuen, noch nicht committeten Testdateien.
@@ -462,10 +536,11 @@ Alle Läufe lokal auf macOS 26.6.2 (arm64) mit .NET SDK 10.0.403, Ausgangsstand 
 | 11 | 31.10.2026, 23:15, CI | GitHub Actions, Lauf 41247352670 auf Commit `37ce75b`: Build, 312 Tests, Format und Lizenzen auf `ubuntu-latest` und `windows-latest`, Rauchtest aus beiden Paketen, Gegenprüfung mit sbomqs über alle fünf Golden Files | alle Jobs grün; sbomqs ohne Abweichung (devdesc 33 gleich, 32 erklärt; robin 36/89; zwei Steuerungen 36/59; Hand-Modell 74/41; Minimal 20/5) | Abschluss M1 und M2; bestätigt die Pfadsuche aus Lauf 9 |
 | 12 | 31.10.2026, 23:36, M5 | 347 Tests mit TRX-Bericht, Formatprüfung; neu: L5X-Leser und Adapter `studio5000` (E-017); Gegenprüfung mit sbomqs v2.1.3 über alle acht Golden Files | 347 bestanden, 0,93 s, Format ohne Befund; Tabelle der Gegenprüfung ohne Abweichung (ra-L85E 16 gleich, 9 erklärt; acd 25/20; Modulbaum 39/36; übrige wie Lauf 11), der Abgleich endete aber mit Exit 1; beim Ablesen übersehen, siehe Lauf 13. Zwischenstand: 4 Golden Files fehlten und wurden erzeugt und von Hand geprüft; das JSON-Feld `eKey` in `inspect` in `ekey` umbenannt | M5 |
 | 13 | 01.11.2026, CI und lokal | CI-Lauf 41250633501 auf Commit `d92b7cd`: Build und Tests auf ubuntu und windows grün, Job `crosscheck` rot. Danach Gegenprüfung lokal mit sbomqs v2.1.3, Exit-Code geprüft | Fehler im Abgleichwerkzeug, nicht im Validator: Die beiden baugleichen 1756-EN2T der synthetischen Datei haben bei sbomqs dieselbe Kennung, der Abgleich brach dort mit „Abgleich nicht eindeutig“ ab und ließ die Einträge aus der Tabelle weg. Behoben in `tools/crosscheck-sbomqs.cs`: Eintrag gegen jede Komponente mit dieser Kennung prüfen, zählen nur bei gleicher Bewertung. Danach Exit 0, Modulbaum 51 gleich, 44 erklärt, 0 Abweichungen; Gegenprobe mit einer Kopie, in der nur einer der beiden EN2T keinen Hersteller hat: Exit 1 mit „Abgleich nicht eindeutig“ | M5-Fix |
-| 14 | 01.11.2026, 00:22, M6 | 398 Tests mit TRX-Bericht, Formatprüfung; neu: TwinCAT-Leser und Adapter `twincat` (E-018), Lückencode `devices-not-read`; Gegenprüfung mit sbomqs v2.1.3 über alle 13 Golden Files, Exit-Code geprüft | 398 bestanden, 0,95 s, Format ohne Befund; sbomqs Exit 0, keine Abweichung (HeatPump 90 gleich, 175 erklärt; SPT 59/156; Cognex 36/79; Core 28/67; synthetisch 37/58). Zwischenstände: Konstante `Core` kollidierte mit dem Namensraum (Test umbenannt); die Stationslücke `devices-not-read` fehlte in der SBOM, weil der Writer Stationslücken ohne Programm und Steuerung verwarf. Fehler im Werkzeug, behoben, Test W-19 | Grundlage dieser Datei |
+| 14 | 01.11.2026, 00:22, M6 | 398 Tests mit TRX-Bericht, Formatprüfung; neu: TwinCAT-Leser und Adapter `twincat` (E-018), Lückencode `devices-not-read`; Gegenprüfung mit sbomqs v2.1.3 über alle 13 Golden Files, Exit-Code geprüft | 398 bestanden, 0,95 s, Format ohne Befund; sbomqs Exit 0, keine Abweichung (HeatPump 90 gleich, 175 erklärt; SPT 59/156; Cognex 36/79; Core 28/67; synthetisch 37/58). Zwischenstände: Konstante `Core` kollidierte mit dem Namensraum (Test umbenannt); die Stationslücke `devices-not-read` fehlte in der SBOM, weil der Writer Stationslücken ohne Programm und Steuerung verwarf. Fehler im Werkzeug, behoben, Test W-19 | M6 |
 | 15 | 01.11.2026, CI | GitHub Actions, Lauf 41251063889 auf Commit `6dac068` (M5 mit Abgleich-Fix): Build, Tests, Format und Lizenzen auf ubuntu und windows, Paket-Rauchtest, `crosscheck` | alle Jobs grün | bestätigt M5 |
+| 16 | 01.11.2026, 10:42, M7 | 480 Tests mit TRX-Bericht, Formatprüfung; neu: AML-Leser, Adapter `tia-aml` (E-019), Muster, Lückencode `firmware-attribute-missing`, `inspect --adapter tia-aml`; Gegenprüfung mit sbomqs v2.1.3 über alle 16 Golden Files, Exit-Code geprüft; `inspect` von Hand über alle sechs AML-Dateien | 480 bestanden, 1,0 s, Format ohne Befund; sbomqs Exit 0, keine Abweichung (V17 ganze Datei 21 gleich, 14 erklärt; V17 mit `plc` 21/14; zwei CPUs 71/54). Zwischenstände: Ein `*` im Muster passte nicht auf ein `*` im Text (Profilschiene `6ES7 590-1***0-0AA0`), weil der Vergleich das Zeichen zuerst wörtlich nahm. Fehler im Werkzeug, behoben, Test WC-02; ein Test erwartete einen falschen Gerätenamen der synthetischen Datei (Fehler im Test); zwei Doku-Abgleiche schlugen fehl, bis `firmware-attribute-missing` in ANLEITUNG.md und CLAUDE.md stand. Gegenprobe wie in CI (`-c Release -p:ContinuousIntegrationBuild=true`, `fixtures/_local/tia-aml/` entfernt): 475 bestanden, 5 übersprungen, Exit 0 | M7, Grundlage dieser Datei |
 
-Die Tests selbst haben keinen Fehler im Werkzeug aufgedeckt, die Gegenprüfung in Lauf 5 zwei.
+Die Gegenprüfung in Lauf 5 hat zwei Fehler im Werkzeug aufgedeckt, die Tests in Lauf 14 (Writer, W-19) und Lauf 16 (Mustervergleich, WC-02) je einen.
 
 ### 5.1 Manuelle Prüfläufe mit der Kommandozeile
 
@@ -487,12 +562,13 @@ Die Meldung zu `--foo` kommt auf Englisch aus der Bibliothek System.CommandLine;
 - `cyclonedx-cli validate` als zweite, unabhängige Schemaprüfung: noch nicht eingerichtet.
 - Lauf auf Windows: nur in CI (`windows-latest`), nicht lokal.
 - Test, dass die Schemaprüfung ohne Netz auskommt: Das Schema ist eingebettet und fremde Verweise werden abgelehnt, ein eigener Test mit gesperrtem Netz fehlt.
-- Adapter `tia-aml` und `tia-portal`, `inspect` für diese, `build`, `report`, `compare`, `ids` und der Openness-Worker: noch nicht umgesetzt; die Tests prüfen nur, dass sie mit `[NOT_IMPLEMENTED]` bzw. `[OPENNESS_WINDOWS_ONLY]` enden.
+- Adapter `tia-portal`, `inspect` dafür, `build`, `report`, `compare`, `ids` und der Openness-Worker: noch nicht umgesetzt; die Tests prüfen nur, dass sie mit `[NOT_IMPLEMENTED]` bzw. `[OPENNESS_WINDOWS_ONLY]` enden.
+- Adapter `tia-aml`: Die Exporte aus V18 und V21 haben keine Lizenz und liegen nur lokal; ihre fünf Testfälle laufen in CI nicht. Ein Golden File aus dem Comquent-V21-Demo-Export fehlt (E-019). HMI-Panels und IO-Systeme an Kommunikationsmodulen sind ohne Fixture.
 - Self-contained-Paket: Der Aufruf aus dem ausgepackten Paket läuft in CI als Rauchtest, nicht lokal.
 
 ### 6.1 Gegenprüfung mit sbomqs
 
-Kein xUnit-Test, sondern [tools/crosscheck-sbomqs.cs](tools/crosscheck-sbomqs.cs), in CI im Job `crosscheck`. Methode und Feldzuordnung: [docs/regeln-tr03183.md](docs/regeln-tr03183.md) Abschnitt 10, Begründung: docs/entscheidungen.md E-010. Lauf am 31.10.2026 lokal mit sbomqs v2.1.3 (Darwin arm64, Prüfsumme gegen `checksums.txt` des Releases geprüft):
+Kein xUnit-Test, sondern [tools/crosscheck-sbomqs.cs](tools/crosscheck-sbomqs.cs), in CI im Job `crosscheck`. Methode und Feldzuordnung: [docs/regeln-tr03183.md](docs/regeln-tr03183.md) Abschnitt 10, Begründung: docs/entscheidungen.md E-010. Lauf am 01.11.2026 lokal mit sbomqs v2.1.3 (Darwin arm64, Prüfsumme gegen `checksums.txt` des Releases geprüft), Exit 0:
 
 | Datei | gleich, vorhanden | gleich, fehlt | erklärt | Abweichung |
 |---|---:|---:|---:|---:|
@@ -504,6 +580,9 @@ Kein xUnit-Test, sondern [tools/crosscheck-sbomqs.cs](tools/crosscheck-sbomqs.cs
 | `studio5000-acd-aoi.cdx.json` | 25 | 0 | 20 | 0 |
 | `studio5000-module-baum.cdx.json` | 51 | 0 | 44 | 0 |
 | `studio5000-ra-l85e.cdx.json` | 16 | 0 | 9 | 0 |
+| `tia-aml-v17-ganze-datei.cdx.json` | 21 | 0 | 14 | 0 |
+| `tia-aml-v17-plc.cdx.json` | 21 | 0 | 14 | 0 |
+| `tia-aml-zwei-cpus.cdx.json` | 71 | 0 | 54 | 0 |
 | `twincat-aixocat-heatpump.cdx.json` | 90 | 0 | 175 | 0 |
 | `twincat-spt-ethercat-diagnostics.cdx.json` | 59 | 0 | 156 | 0 |
 | `twincat-tcopen-cognex.cdx.json` | 36 | 0 | 79 | 0 |

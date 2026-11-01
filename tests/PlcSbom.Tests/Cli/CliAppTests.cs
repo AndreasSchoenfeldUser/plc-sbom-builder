@@ -114,7 +114,6 @@ public sealed class CliAppTests
     [InlineData("M10", "report", "sbom.json", "--format", "md", "--out", "bericht.md")]
     [InlineData("M11", "compare", "sbom.json", "--field", "feld/1042.json", "--csv", "x.csv")]
     [InlineData("M12", "ids", "sbom.json", "--csaf", "csaf/")]
-    [InlineData("M7", "inspect", "Linie1.aml", "--adapter", "tia-aml")]
     [InlineData("M14", "inspect", "Linie1.zap21", "--adapter", "tia-portal")]
     [InlineData("M14", "doctor")]
     public async Task Commands_not_yet_built_name_their_milestone(string milestone, params string[] args)

@@ -5,6 +5,7 @@ using System.Text.Json.Serialization;
 using PlcSbom.Core;
 using PlcSbom.Core.Adapters.Codesys.V35;
 using PlcSbom.Core.Adapters.Studio5000;
+using PlcSbom.Core.Adapters.TiaAml;
 using PlcSbom.Core.Adapters.TwinCat;
 
 namespace PlcSbom.Cli.Commands;
@@ -26,11 +27,10 @@ public static class InspectCommand
     /// <summary>Milestone of each adapter whose inspect is not built yet.</summary>
     private static readonly Dictionary<string, string> Pending = new(StringComparer.Ordinal)
     {
-        [AdapterIds.TiaAml] = "M7",
         [AdapterIds.TiaPortal] = "M14",
     };
 
-    public static async Task<int> RunAsync(string path, string adapter, string? gsdml, TextWriter stdout)
+    public static async Task<int> RunAsync(string path, string adapter, string? gsdml, TextWriter stdout, TextWriter stderr)
     {
         if (Pending.TryGetValue(adapter, out var milestone))
         {
@@ -40,11 +40,29 @@ public static class InspectCommand
         }
         if (gsdml is not null)
         {
-            throw new UsageException("USAGE", $"--gsdml gilt nur für die Adapter {AdapterIds.TiaAml} und {AdapterIds.TiaPortal}.");
+            throw adapter == AdapterIds.TiaAml
+                ? new UsageException("NOT_IMPLEMENTED", $"--gsdml ist in plc-sbom {ToolVersion.Short} noch nicht umgesetzt. GSD-Geräte mit GSDML-Dateien folgen mit Meilenstein M8.")
+                : new UsageException("USAGE", $"--gsdml gilt nur für die Adapter {AdapterIds.TiaAml} und {AdapterIds.TiaPortal}.");
         }
 
         string json;
-        if (adapter == AdapterIds.TwinCat)
+        if (adapter == AdapterIds.TiaAml)
+        {
+            var content = TiaAmlAdapter.ReadFile(path);
+            var inspection = TiaAmlAdapter.Inspect(AmlReader.Read(content, path), path);
+            json = JsonSerializer.Serialize(new TiaAmlInventory(
+                Format: 1,
+                Adapter: AdapterIds.TiaAml,
+                File: path,
+                Sha256: Convert.ToHexStringLower(SHA256.HashData(content)),
+                Inspection: inspection), Json);
+            // Warnings also go to stderr, so a pipeline log shows them without parsing the JSON.
+            foreach (var warning in inspection.Warnings)
+            {
+                await stderr.WriteLineAsync(warning.UserMessage).ConfigureAwait(false);
+            }
+        }
+        else if (adapter == AdapterIds.TwinCat)
         {
             if (!File.Exists(path))
             {
@@ -88,4 +106,6 @@ public static class InspectCommand
     private sealed record Studio5000Inventory(int Format, string Adapter, string File, string Sha256, L5xProject Project);
 
     private sealed record TwinCatInventory(int Format, string Adapter, string File, string Sha256, TwinCatProject Project);
+
+    private sealed record TiaAmlInventory(int Format, string Adapter, string File, string Sha256, TiaAmlInspection Inspection);
 }

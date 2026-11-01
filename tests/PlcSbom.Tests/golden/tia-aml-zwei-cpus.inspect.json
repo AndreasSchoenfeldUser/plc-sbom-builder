@@ -1,0 +1,314 @@
+{
+  "format": 1,
+  "adapter": "tia-aml",
+  "file": "fixtures/tia-aml/zwei-cpus-synthetisch.aml",
+  "sha256": "78d1e06e3add966ea517519f536163ef2a3f50b3916f420a13aba0e6177b3ba1",
+  "inspection": {
+    "projectName": "Linie1-synthetisch",
+    "tool": {
+      "name": "TIA Portal",
+      "version": "V21",
+      "release": "2100.0.121.1",
+      "vendor": "Siemens AG"
+    },
+    "exportedAt": "2026-10-22T08:15:00.1234567+00:00",
+    "cpus": [
+      {
+        "name": "PLC_1",
+        "device": "S71500/ET200MP station_1",
+        "typeName": "CPU 1511-1 PN",
+        "firmwareVersion": "V2.8",
+        "ioSystems": [
+          "PROFINET IO-System"
+        ]
+      },
+      {
+        "name": "PLC_2",
+        "device": "S71500/ET200MP station_2",
+        "typeName": "CPU 1515-2 PN",
+        "firmwareVersion": "V2.9",
+        "ioSystems": [
+          "PROFINET IO-System"
+        ]
+      }
+    ],
+    "devices": [
+      {
+        "name": "S71500/ET200MP station_1",
+        "typeIdentifier": "System:Device.S71500",
+        "assignedTo": [
+          {
+            "cpu": "PLC_1",
+            "via": "cpu"
+          }
+        ],
+        "items": [
+          {
+            "name": "Rail_0",
+            "position": "0",
+            "typeIdentifier": "OrderNumber:6ES7 590-1***0-0AA0",
+            "typeName": "Rack",
+            "treatment": "rack"
+          },
+          {
+            "name": "PM 70W 120/230VAC",
+            "position": "0/0",
+            "typeIdentifier": "OrderNumber:6EP1332-4BA00",
+            "typeName": "PM 70W 120/230VAC",
+            "treatment": "firmwareAttributeMissing"
+          },
+          {
+            "name": "PLC_1",
+            "position": "0/1",
+            "typeIdentifier": "OrderNumber:6ES7 511-1AK02-0AB0",
+            "typeName": "CPU 1511-1 PN",
+            "firmwareVersion": "V2.8",
+            "deviceItemType": "CPU",
+            "treatment": "firmware"
+          },
+          {
+            "name": "DI 16x24VDC HF_1",
+            "position": "0/2",
+            "typeIdentifier": "OrderNumber:6ES7 521-1BH00-0AB0/V2.1",
+            "typeName": "DI 16x24VDC HF",
+            "firmwareVersion": "V2.2",
+            "treatment": "firmware"
+          }
+        ]
+      },
+      {
+        "name": "S71500/ET200MP station_2",
+        "typeIdentifier": "System:Device.S71500",
+        "assignedTo": [
+          {
+            "cpu": "PLC_2",
+            "via": "cpu"
+          }
+        ],
+        "items": [
+          {
+            "name": "Rail_0",
+            "position": "0",
+            "typeIdentifier": "OrderNumber:6ES7 590-1***0-0AA0",
+            "typeName": "Rack",
+            "treatment": "rack"
+          },
+          {
+            "name": "PLC_2",
+            "position": "0/1",
+            "typeIdentifier": "OrderNumber:6ES7 515-2AM02-0AB0",
+            "typeName": "CPU 1515-2 PN",
+            "firmwareVersion": "V2.9",
+            "deviceItemType": "CPU",
+            "treatment": "firmware"
+          }
+        ]
+      },
+      {
+        "name": "ET 200SP station_1",
+        "folder": "Ungrouped devices",
+        "typeIdentifier": "System:Device.ET200SP",
+        "assignedTo": [
+          {
+            "cpu": "PLC_1",
+            "via": "io-system"
+          }
+        ],
+        "items": [
+          {
+            "name": "Rack_0",
+            "position": "0",
+            "typeIdentifier": "System:Rack.ET200SP",
+            "typeName": "Rack",
+            "treatment": "structure"
+          },
+          {
+            "name": "IO_Device_1",
+            "position": "0/0",
+            "typeIdentifier": "OrderNumber:6ES7 155-6AU01-0CN0",
+            "typeName": "IM 155-6 PN HF",
+            "firmwareVersion": "V4.2",
+            "deviceItemType": "HeadModule",
+            "treatment": "firmware"
+          },
+          {
+            "name": "BA 2xRJ45",
+            "position": "0/0/127",
+            "typeIdentifier": "OrderNumber:6ES7 193-6AR00-0AA0",
+            "typeName": "BA 2xRJ45",
+            "firmwareVersion": "V0.0",
+            "treatment": "passive"
+          },
+          {
+            "name": "DI 8x24VDC ST_1",
+            "position": "0/1",
+            "typeIdentifier": "OrderNumber:6ES7 131-6BF01-0BA0",
+            "typeName": "DI 8x24VDC ST",
+            "firmwareVersion": "V0.0",
+            "treatment": "passive"
+          },
+          {
+            "name": "AI 4xU/I 2-wire ST_1",
+            "position": "0/2",
+            "typeIdentifier": "OrderNumber:6ES7 134-6HD01-0BA1",
+            "typeName": "AI 4xU/I 2-wire ST",
+            "firmwareVersion": "V2.0",
+            "treatment": "firmware"
+          }
+        ]
+      },
+      {
+        "name": "ET 200SP station_2",
+        "folder": "Ungrouped devices",
+        "typeIdentifier": "System:Device.ET200SP",
+        "assignedTo": [
+          {
+            "cpu": "PLC_2",
+            "via": "io-system"
+          }
+        ],
+        "items": [
+          {
+            "name": "Rack_0",
+            "position": "0",
+            "typeIdentifier": "System:Rack.ET200SP",
+            "typeName": "Rack",
+            "treatment": "structure"
+          },
+          {
+            "name": "IO_Device_2",
+            "position": "0/0",
+            "typeIdentifier": "OrderNumber:6ES7 155-6AU01-0CN0",
+            "typeName": "IM 155-6 PN HF",
+            "firmwareVersion": "V4.2",
+            "deviceItemType": "HeadModule",
+            "treatment": "firmware"
+          },
+          {
+            "name": "DQ 8x24VDC/0.5A ST_1",
+            "position": "0/1",
+            "typeIdentifier": "OrderNumber:6ES7 132-6BF01-0BA0",
+            "typeName": "DQ 8x24VDC/0.5A ST",
+            "firmwareVersion": "V0.0",
+            "treatment": "passive"
+          }
+        ]
+      },
+      {
+        "name": "Testaufbau_1",
+        "folder": "Ungrouped devices",
+        "typeIdentifier": "System:Device.ET200SP",
+        "assignedTo": [],
+        "items": [
+          {
+            "name": "Rack_0",
+            "position": "0",
+            "typeIdentifier": "System:Rack.ET200SP",
+            "typeName": "Rack",
+            "treatment": "structure"
+          },
+          {
+            "name": "IO_Test",
+            "position": "0/0",
+            "typeIdentifier": "OrderNumber:6ES7 155-6AU00-0BN0",
+            "typeName": "IM 155-6 PN ST",
+            "firmwareVersion": "V4.1",
+            "deviceItemType": "HeadModule",
+            "treatment": "firmware"
+          }
+        ]
+      },
+      {
+        "name": "GSD device_1",
+        "folder": "Ungrouped devices",
+        "typeIdentifier": "GSD:GSDML-V2.41-LEUZE-BCL248I-20211213.XML/D",
+        "assignedTo": [
+          {
+            "cpu": "PLC_1",
+            "via": "io-system"
+          }
+        ],
+        "items": [
+          {
+            "name": "Rack",
+            "position": "0",
+            "typeIdentifier": "GSD:GSDML-V2.41-LEUZE-BCL248I-20211213.XML/R/DAP",
+            "typeName": "Rack",
+            "treatment": "structure"
+          },
+          {
+            "name": "Scanner_1",
+            "position": "0/0",
+            "typeIdentifier": "GSD:GSDML-V2.41-LEUZE-BCL248I-20211213.XML/DAP/DAP",
+            "typeName": "BCL248i",
+            "deviceItemType": "HeadModule",
+            "treatment": "gsdDevice"
+          },
+          {
+            "name": "[M10] Activation_1",
+            "position": "0/1",
+            "typeIdentifier": "GSD:GSDML-V2.41-LEUZE-BCL248I-20211213.XML/M/ID_MOD_Activation",
+            "typeName": "[M10] Activation",
+            "treatment": "gsdModule"
+          }
+        ]
+      },
+      {
+        "name": "SINAMICS G_1",
+        "typeIdentifier": "System:Device.G120C-2",
+        "assignedTo": [
+          {
+            "cpu": "PLC_2",
+            "via": "io-system"
+          }
+        ],
+        "items": [
+          {
+            "name": "_0",
+            "position": "0",
+            "typeIdentifier": "System:Rack.G120CPN-2",
+            "treatment": "structure"
+          },
+          {
+            "name": "Pump_1",
+            "position": "0/0",
+            "typeIdentifier": "OrderNumber:6SL3210-1KE14-3AF2",
+            "typeName": "G120C PN",
+            "firmwareVersion": "4.7.10",
+            "deviceItemType": "HeadModule",
+            "treatment": "firmware"
+          }
+        ]
+      },
+      {
+        "name": "SINAMICS G_2",
+        "typeIdentifier": "System:Device.G120C-2",
+        "assignedTo": [],
+        "items": [
+          {
+            "name": "_0",
+            "position": "0",
+            "typeIdentifier": "System:Rack.G120CPN-2",
+            "treatment": "structure"
+          },
+          {
+            "name": "Pump_2",
+            "position": "0/0",
+            "typeIdentifier": "OrderNumber:6SL3210-1KE14-3AF2",
+            "typeName": "G120C PN",
+            "firmwareVersion": "4.7.10",
+            "deviceItemType": "HeadModule",
+            "treatment": "firmware"
+          }
+        ]
+      }
+    ],
+    "warnings": [
+      {
+        "code": "TIA_AML_CATALOG_VERSION_DIFFERS",
+        "message": "fixtures/tia-aml/zwei-cpus-synthetisch.aml: S71500/ET200MP station_1/DI 16x24VDC HF_1 hat im TypeIdentifier die Version V2.1, als FirmwareVersion aber V2.2. In die SBOM geht die FirmwareVersion.",
+        "userMessage": "[TIA_AML_CATALOG_VERSION_DIFFERS] fixtures/tia-aml/zwei-cpus-synthetisch.aml: S71500/ET200MP station_1/DI 16x24VDC HF_1 hat im TypeIdentifier die Version V2.1, als FirmwareVersion aber V2.2. In die SBOM geht die FirmwareVersion."
+      }
+    ]
+  }
+}

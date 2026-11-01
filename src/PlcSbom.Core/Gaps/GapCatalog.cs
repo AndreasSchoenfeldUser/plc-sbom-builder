@@ -49,6 +49,7 @@ public sealed record GapDefinition(string Code, Severity Severity, IReadOnlyList
 public static class GapCatalog
 {
     public const string FirmwareNotInProject = "firmware-not-in-project";
+    public const string FirmwareAttributeMissing = "firmware-attribute-missing";
     public const string FirmwareProjectedOnly = "firmware-projected-only";
     public const string HashUnavailable = "hash-unavailable";
     public const string FilenameUnavailable = "filename-unavailable";
@@ -73,6 +74,7 @@ public static class GapCatalog
     private static readonly GapDefinition[] Definitions =
     [
         new(FirmwareNotInProject, Severity.Note, [TrField.Version], "Das Projekt führt keine Firmware-Version für dieses Gerät."),
+        new(FirmwareAttributeMissing, Severity.Warning, [], "Die Quelle führt für dieses Gerät kein Firmware-Attribut; ob es eine eigene Firmware hat, ist offen."),
         new(FirmwareProjectedOnly, Severity.Note, [], "Die Firmware ist nur als projektierter Sollwert bekannt, ein Ist-Stand liegt nicht vor."),
         new(HashUnavailable, Severity.Note, [TrField.Hash], "Die ausgelieferte Form liegt dem Werkzeug nicht vor, ein SHA-512 ist nicht bestimmbar."),
         new(FilenameUnavailable, Severity.Note, [TrField.Filename], "Die Komponente liegt nicht als Datei vor, ein Dateiname ist nicht bestimmbar."),
