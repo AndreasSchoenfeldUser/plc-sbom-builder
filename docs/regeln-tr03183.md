@@ -242,3 +242,17 @@ Vor dem ersten Lauf ohne Abweichung hat der Abgleich an absichtlich veränderten
 | Eindeutige Kennungen | 5.2.2 (Abhängigkeiten über `bom-ref`) | Präfix `vendor-<datei>/` bzw. `partial-<datei>/` vor jeder `bom-ref`; fehlende `bom-ref`s werden in Dokumentreihenfolge vergeben. Doppelte `bom-ref` in der Datei: `INPUT_SBOM_INVALID` (Fehler) |
 
 Die Zuordnung einer Hersteller-SBOM zu einer Firmware steht in ANLEITUNG.md Abschnitt 4.2: gleiche CPE, oder gleicher Hersteller, gleiche Bestellnummer (Property `<namespace>:device:orderNumber`) und gleiche Version. Eine echte Hersteller-SBOM für ein Steuerungsgerät gibt es bisher nicht (CLAUDE.md 1.3); belegt ist die Zuordnung nur an der synthetischen Datei der Beispielmaschine. Wie Hersteller die Bestellnummer in ihre SBOM schreiben, ist offen (E-021).
+
+## 13. as-built-SBOM aus dem Abgleich mit dem Feld (M11)
+
+`compare --as-built` schreibt die SBOM einer Maschine mit der im Feld gelesenen Firmware ([AsBuiltWriter.cs](../src/PlcSbom.Core/FieldState/AsBuiltWriter.cs), E-023). Sie wird wie jede SBOM geprüft; Fehler sind Exit 1.
+
+| Regel | TR | Umsetzung |
+|---|---|---|
+| Eine SBOM je Softwarestand | 3.1, 5.1 | Eigene SBOM je Seriennummer: `serialNumber` als UUIDv5 aus Maschine, Release, Commit und Seriennummer, `<ns>:machine:serialNumber` an der Maschine |
+| Version der Komponente | 5.2.2 | Ist-Firmware als `version`, `<ns>:firmware:origin = as-found`; der projektierte Wert bleibt als `<ns>:firmware:projected` sichtbar. `firmware-not-in-project` entfällt, sobald das Feld eine Version nennt |
+| Andere Kennungen | 5.2.4 (CPE, falls vorhanden) | CPE mit der projektierten Version im Versionsfeld bekommt die Ist-Version; sonst wird sie entfernt statt geraten (`AS_BUILT_CPE_REMOVED`) |
+| Bei Abweichung gilt die referenzierte BOM | 3.2.5 | Eine Hersteller-SBOM beschreibt die projektierte Version; bei anderer Ist-Version gilt sie nicht mehr: Dateiname, Hash und Bestandteile entfallen, `vendor-sbom-missing`, `hash-unavailable`, `filename-unavailable` kommen zurück, Vollständigkeit `unknown` (`AS_BUILT_VENDOR_SBOM_DETACHED`) |
+| Zeitstempel | 5.2.1 | `SOURCE_DATE_EPOCH`, sonst der Tag aus der Feld-Datei; die as-built-SBOM ist reproduzierbar |
+
+Gegenprüfung mit sbomqs: `maschine-xy-1042.cdx.json` ohne Abweichung (TESTFAELLE.md Abschnitt 6.1).

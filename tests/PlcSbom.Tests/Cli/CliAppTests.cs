@@ -99,6 +99,9 @@ public sealed class CliAppTests
     [InlineData("inspect", "a.aml")]                                            // --adapter missing
     [InlineData("doctor", "--adapter", "twincat")]
     [InlineData("validate")]                                                    // sbom argument missing
+    [InlineData("report", "sbom.json", "--out", "x.md")]                        // --format missing
+    [InlineData("compare", "sbom.json")]                                        // --field missing
+    [InlineData("ids", "sbom.json")]                                            // --csaf missing
     [InlineData("build", "--config", "m.yml", "--release", "R1", "--timeout", "0")]
     [InlineData("build", "--config", "m.yml", "--release", "R1", "--timeout", "zehn")]
     public async Task Invalid_calls_end_with_exit_2(params string[] args)
@@ -110,9 +113,6 @@ public sealed class CliAppTests
     }
 
     [Theory]
-    [InlineData("M10", "report", "sbom.json", "--format", "md", "--out", "bericht.md")]
-    [InlineData("M11", "compare", "sbom.json", "--field", "feld/1042.json", "--csv", "x.csv")]
-    [InlineData("M12", "ids", "sbom.json", "--csaf", "csaf/")]
     [InlineData("M14", "inspect", "Linie1.zap21", "--adapter", "tia-portal")]
     [InlineData("M14", "doctor")]
     public async Task Commands_not_yet_built_name_their_milestone(string milestone, params string[] args)

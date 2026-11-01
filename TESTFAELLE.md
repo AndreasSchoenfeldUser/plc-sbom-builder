@@ -1,17 +1,17 @@
 # Testfälle: PLC SBOM Builder (`plc-sbom`)
 
-Stand: 01.11.2026, Version 0.1.0 (Meilensteine M1 und M2 abgeschlossen, M5 bis M9 umgesetzt). Diese Datei beschreibt alle automatischen Testfälle, die Testläufe und ihre Ergebnisse. Die Bedienung des Werkzeugs steht in [ANLEITUNG.md](ANLEITUNG.md), Ziele und Regeln in [CLAUDE.md](CLAUDE.md).
+Stand: 01.11.2026, Version 0.1.0 (Meilensteine M1 und M2 abgeschlossen, M5 bis M12 umgesetzt). Diese Datei beschreibt alle automatischen Testfälle, die Testläufe und ihre Ergebnisse. Die Bedienung des Werkzeugs steht in [ANLEITUNG.md](ANLEITUNG.md), Ziele und Regeln in [CLAUDE.md](CLAUDE.md).
 
 ## 1. Ergebnis
 
-**639 Testfälle, 639 bestanden, 0 fehlgeschlagen, 0 übersprungen.** Letzter Lauf am 01.11.2026, 16:20 Uhr, Laufzeit 1,3 s. `dotnet format --verify-no-changes` ohne Befund. Dazu die Gegenprüfung mit sbomqs ohne Abweichung (Abschnitt 6.1). Fünf Testfälle lesen Dateien aus `fixtures/_local/tia-aml/` (ohne Lizenz, nicht eingecheckt); sie liefen lokal mit und überspringen sich in CI.
+**750 Testfälle, 750 bestanden, 0 fehlgeschlagen, 0 übersprungen.** Letzter Lauf am 01.11.2026, 16:25 Uhr, Laufzeit 1,6 s. `dotnet format --verify-no-changes` ohne Befund. Dazu die Gegenprüfung mit sbomqs ohne Abweichung (Abschnitt 6.1). Acht Testfälle lesen Dateien aus `fixtures/_local/` (ohne Lizenz, nicht eingecheckt): fünf aus `tia-aml/`, drei aus `csaf/`; sie liefen lokal mit und überspringen sich in CI (Gegenprobe wie in CI: 742 bestanden, 8 übersprungen).
 
 | Testklasse | Datei | Testfälle | Bestanden | Prüfgegenstand |
 |---|---|---:|---:|---|
 | `CliAppTests` | [Cli/CliAppTests.cs](tests/PlcSbom.Tests/Cli/CliAppTests.cs) | 38 | 38 | Kommandozeile, Hilfe, Exit-Codes, Gerüst der Befehle |
 | `ValidateCommandTests` | [Cli/ValidateCommandTests.cs](tests/PlcSbom.Tests/Cli/ValidateCommandTests.cs) | 11 | 11 | `plc-sbom validate` mit echten Dateien |
 | `SbomValidatorTests` | [Validation/SbomValidatorTests.cs](tests/PlcSbom.Tests/Validation/SbomValidatorTests.cs) | 74 | 74 | Schema und Regeln der BSI TR-03183-2 |
-| `GapRulesTests` | [Gaps/GapRulesTests.cs](tests/PlcSbom.Tests/Gaps/GapRulesTests.cs) | 28 | 28 | Lückenregeln am Modell, Lückenkatalog |
+| `GapRulesTests` | [Gaps/GapRulesTests.cs](tests/PlcSbom.Tests/Gaps/GapRulesTests.cs) | 29 | 29 | Lückenregeln am Modell, Lückenkatalog mit Abhilfe je Code |
 | `CycloneDxWriterTests` | [Output/CycloneDxWriterTests.cs](tests/PlcSbom.Tests/Output/CycloneDxWriterTests.cs) | 22 | 22 | CycloneDX-Writer, Golden File, Determinismus |
 | `ResultFileTests` | [Output/ResultFileTests.cs](tests/PlcSbom.Tests/Output/ResultFileTests.cs) | 8 | 8 | Ergebnisdatei `<out>.result.json` |
 | `IdentifierTests` | [Output/IdentifierTests.cs](tests/PlcSbom.Tests/Output/IdentifierTests.cs) | 11 | 11 | UUIDv5, `bom-ref`, Pfad der Ergebnisdatei |
@@ -35,8 +35,16 @@ Stand: 01.11.2026, Version 0.1.0 (Meilensteine M1 und M2 abgeschlossen, M5 bis M
 | `ProgramHashAndGlobTests` | [Build/ProgramHashAndGlobTests.cs](tests/PlcSbom.Tests/Build/ProgramHashAndGlobTests.cs) | 10 | 10 | Hash über Programmquellen nach dem dokumentierten Verfahren, Dateimuster für `vendorSboms` |
 | `MachineBuilderTests` | [Build/MachineBuilderTests.cs](tests/PlcSbom.Tests/Build/MachineBuilderTests.cs) | 42 | 42 | `build` ohne Ausgabe: Beispielmaschine als Golden File, Determinismus, Programm, Commit und Zeit, Erklärungen aus `machine.yml`, Hersteller- und Teil-SBOMs, Fehlerfälle |
 | `InputSbomReaderTests` | [Merge/InputSbomReaderTests.cs](tests/PlcSbom.Tests/Merge/InputSbomReaderTests.cs) | 13 | 13 | Hersteller- und Teil-SBOMs einlesen: Präfix, Wurzel, effektive Lizenz, `input-field-missing`, Zuordnungsschlüssel, unbrauchbare Dateien |
-| `BuildCommandTests` | [Cli/BuildCommandTests.cs](tests/PlcSbom.Tests/Cli/BuildCommandTests.cs) | 6 | 6 | `plc-sbom build` von Anfang bis Ende: Konsole, Exit-Codes, SBOM, Ergebnisdatei |
-| **Summe** | | **639** | **639** | |
+| `BuildCommandTests` | [Cli/BuildCommandTests.cs](tests/PlcSbom.Tests/Cli/BuildCommandTests.cs) | 7 | 7 | `plc-sbom build` von Anfang bis Ende: Konsole, Exit-Codes, SBOM, Prüfbericht, Ergebnisdatei |
+| `SbomViewTests` | [Sbom/SbomViewTests.cs](tests/PlcSbom.Tests/Sbom/SbomViewTests.cs) | 6 | 6 | Lesesicht auf eine fertige SBOM: Namespace, Komponenten, Abhängigkeiten, Werkzeuge |
+| `FieldStateReaderTests` | [FieldState/FieldStateReaderTests.cs](tests/PlcSbom.Tests/FieldState/FieldStateReaderTests.cs) | 17 | 17 | Feld-Datei lesen, Antworten der S7-1500 Web-API, Fehlerfälle |
+| `FieldComparerTests` | [FieldState/FieldComparerTests.cs](tests/PlcSbom.Tests/FieldState/FieldComparerTests.cs) | 24 | 24 | Abgleich Soll gegen Ist: Zuordnung, Firmware-Vergleich, `configured`, passive Geräte |
+| `AsBuiltWriterTests` | [FieldState/AsBuiltWriterTests.cs](tests/PlcSbom.Tests/FieldState/AsBuiltWriterTests.cs) | 13 | 13 | as-built-SBOM: Golden File, Ist-Firmware, CPE, Hersteller-SBOM lösen, Seriennummer |
+| `ComparisonCsvTests` | [FieldState/ComparisonCsvTests.cs](tests/PlcSbom.Tests/FieldState/ComparisonCsvTests.cs) | 2 | 2 | CSV des Abgleichs: Golden File, BOM, Trennzeichen, Anführungszeichen |
+| `ReportTests` | [Output/ReportTests.cs](tests/PlcSbom.Tests/Output/ReportTests.cs) | 12 | 12 | Prüfbericht HTML und Markdown: Golden Files, Abschnitte, Baum, Lückenliste, Maskierung, keine externen Ressourcen |
+| `IdsCheckTests` | [Identifiers/IdsCheckTests.cs](tests/PlcSbom.Tests/Identifiers/IdsCheckTests.cs) | 25 | 25 | CSAF-Index, Modellnummern und CPE vergleichen, Abdeckung, Golden File, echte Siemens- und OASIS-Dokumente (lokal) |
+| `FieldCommandsTests` | [Cli/FieldCommandsTests.cs](tests/PlcSbom.Tests/Cli/FieldCommandsTests.cs) | 10 | 10 | `report`, `compare`, `ids` von Anfang bis Ende: Exit-Codes, Dateien, Ergebnisdatei |
+| **Summe** | | **750** | **750** | |
 
 Bei parametrisierten Tests (xUnit `Theory`) zählt jeder Datensatz als eigener Testfall. Die Tabellen in Abschnitt 4 fassen sie in einer Zeile zusammen und nennen die Anzahl.
 
@@ -73,6 +81,10 @@ Der Testlauf nutzt Microsoft.Testing.Platform mit xunit.v3 (docs/entscheidungen.
 | Beispielmaschine | [samples/maschine-xy/](samples/maschine-xy/) | `machine.yml` mit drei Stationen (robin für CODESYS, V17-AML mit GSDML und deklarierter LGF, AixOCAT für TwinCAT), Programmquellen, Teil-SBOM aus Syft 1.54.1, synthetische Hersteller-SBOM zur CPU 1214C V4.5, CPE-Tabelle; Herkunft in [samples/maschine-xy/README.md](samples/maschine-xy/README.md) |
 | Golden File der Beispielmaschine | [golden/maschine-xy.cdx.json](tests/PlcSbom.Tests/golden/maschine-xy.cdx.json) | SBOM aus `build` mit `SOURCE_DATE_EPOCH=1792234800` und festem Commit. 49 Komponenten, 3 Stationen, 0 Fehler, 117 Warnungen, 109 Hinweise |
 | Golden File der Minimal-SBOM | [golden/minimal-synthetisch.cdx.json](tests/PlcSbom.Tests/golden/minimal-synthetisch.cdx.json) | Die Minimal-SBOM als Datei. Einzige Testdatei, in der Dateiname, Hash und Dateieigenschaften vorhanden sind; Eingang der Gegenprüfung mit sbomqs neben `hand-model.cdx.json` |
+| Web-API-Fixtures | [fixtures/feld/s7-webapi/](fixtures/feld/s7-webapi/) | Echte Antworten der S7-1500 Web-API (IM0 `actual`, IM0 `configured`, IM1) einer CPU 1518-3 PN aus den Unit-Tests von Siemens (MIT); die Tests betten sie in eine Feld-Datei ein |
+| Feld-Datei der Beispielmaschine | [samples/maschine-xy/feld/1042.json](samples/maschine-xy/feld/1042.json) | Ist-Stand der Maschine 1042: CPU mit V4.6.1, Scanner und EK1100 mit Firmware, BaseUnit V0.0, Switch außerhalb des Projekts. Comquent-eigen, synthetisch |
+| CSAF-Fixtures | [fixtures/csaf/](fixtures/csaf/), lokal `fixtures/_local/csaf/` | Synthetisches CSAF-Dokument (Aufbau wie Siemens, abgekürzte Modellnummer, CPE 2.3 und 2.2, ohne Schwachstellen); lokal sechs Siemens-Advisories und das BSI-Beispiel der CSAF-Spezifikation; Herkunft in [fixtures/FIXTURES.md](fixtures/FIXTURES.md) |
+| Golden Files M10 bis M12 | [golden/maschine-xy.bericht.html](tests/PlcSbom.Tests/golden/maschine-xy.bericht.html), [golden/maschine-xy.bericht.md](tests/PlcSbom.Tests/golden/maschine-xy.bericht.md), [golden/maschine-xy-1042.bericht.md](tests/PlcSbom.Tests/golden/maschine-xy-1042.bericht.md), [golden/maschine-xy-1042.cdx.json](tests/PlcSbom.Tests/golden/maschine-xy-1042.cdx.json), [golden/maschine-xy-1042.abgleich.csv](tests/PlcSbom.Tests/golden/maschine-xy-1042.abgleich.csv), [golden/maschine-xy.ids.json](tests/PlcSbom.Tests/golden/maschine-xy.ids.json) | Bericht von `build` (HTML, Markdown), Bericht von `report --field`, as-built-SBOM der Maschine 1042 (Zeitstempel = Feld-Datum), CSV des Abgleichs, Abdeckungsbericht gegen das synthetische CSAF |
 
 ## 4. Testfälle
 
@@ -88,8 +100,8 @@ Spalte „Ergebnis“: Ergebnis des letzten Laufs. „bestanden“ heißt, dass 
 | CLI-04 | `Build_help_shows_the_options_of_section_7_1` | Die Hilfe zu `build` nennt `--config`, `--release`, `--commit`, `--out`, `--report`, `--release-build` | 1 | bestanden |
 | CLI-05 | `Version_prints_the_tool_version` | `--version` gibt die Version im Format `x.y.z` aus, Exit 0 | 1 | bestanden |
 | CLI-06 | `No_command_is_a_usage_error` | Aufruf ohne Befehl: Exit 2 und Hinweis auf `plc-sbom --help` | 1 | bestanden |
-| CLI-07 | `Invalid_calls_end_with_exit_2` | Falsche Aufrufe enden mit Exit 2 und `[USAGE]`: unbekannter Befehl, fehlendes `--config` bzw. `--release`, `--report pdf`, unbekannte Option, `report --format pdf`, unbekannte Adapter-ID, fehlendes `--adapter`, `doctor --adapter twincat`, `validate` ohne Datei, `--timeout 0`, `--timeout zehn` | 12 | bestanden |
-| CLI-08 | `Commands_not_yet_built_name_their_milestone` | Noch nicht umgesetzte Befehle enden mit Exit 2 und `[NOT_IMPLEMENTED]` und nennen ihren Meilenstein: `report` M10, `compare` M11, `ids` M12, `doctor` M14, `inspect` für `tia-portal` M14 (`build` seit M9 umgesetzt, Tests in 4.28) | 5 | bestanden |
+| CLI-07 | `Invalid_calls_end_with_exit_2` | Falsche Aufrufe enden mit Exit 2 und `[USAGE]`: unbekannter Befehl, fehlendes `--config` bzw. `--release`, `--report pdf`, unbekannte Option, `report --format pdf`, unbekannte Adapter-ID, fehlendes `--adapter`, `doctor --adapter twincat`, `validate` ohne Datei, `report` ohne `--format`, `compare` ohne `--field`, `ids` ohne `--csaf`, `--timeout 0`, `--timeout zehn` | 15 | bestanden |
+| CLI-08 | `Commands_not_yet_built_name_their_milestone` | Noch nicht umgesetzte Befehle enden mit Exit 2 und `[NOT_IMPLEMENTED]` und nennen ihren Meilenstein: `doctor` M14, `inspect` für `tia-portal` M14 (`build` seit M9 umgesetzt, Tests in 4.28; `report`, `compare`, `ids` seit M10 bis M12, Tests in 4.36) | 2 | bestanden |
 | CLI-09 | `Openness_commands_off_windows_are_an_environment_problem` | `export-aml`, `doctor --adapter tia-portal` und `doctor --adapter tia-portal --deep` außerhalb von Windows: Exit 3 und `[OPENNESS_WINDOWS_ONLY]` | 3 | bestanden |
 | CLI-10 | `Openness_commands_on_windows_pass_the_platform_check` | Auf Windows kommt `export-aml` an der Plattformprüfung vorbei und meldet Meilenstein M14 | 1 | bestanden |
 | CLI-11 | `Common_options_are_accepted_after_the_command` | `--verbose` und `--timeout` werden auch nach dem Befehl angenommen; der Lauf endet erst an der fehlenden `machine.yml` (`CONFIG_NOT_FOUND`), nicht am Aufruf | 1 | bestanden |
@@ -205,7 +217,7 @@ Grundlage ist die Minimal-SBOM. Ohne Änderung ergibt sie nur den Hinweis `LOGIC
 | SV-46 | `Stations_are_counted_from_the_own_namespace_only` | `cdx:station` und `firma:station` ergänzt | 2 Stationen (`cdx:` zählt nicht) | 1 | bestanden |
 | SV-47 | `Hand_model_golden_file_has_no_errors` | Golden File | Schema gültig, 0 Fehler, 11 Komponenten | 1 | bestanden |
 
-### 4.4 Lückenregeln und Katalog: `GapRulesTests` (28)
+### 4.4 Lückenregeln und Katalog: `GapRulesTests` (29)
 
 Die Lückenregeln setzen die Lücken, die aus dem Modell allein folgen, unabhängig vom Adapter.
 
@@ -235,6 +247,7 @@ Die Lückenregeln setzen die Lücken, die aus dem Modell allein folgen, unabhän
 | GR-22 | `Every_catalog_gap_has_a_german_description` | Jede Lücke hat einen Beschreibungssatz | 1 | bestanden |
 | GR-23 | `Severities_follow_section_4_4` | Schwere nach CLAUDE.md 4.4: `hash-unavailable`, `firmware-not-in-project`, `device-unassigned` Hinweis; `version-unresolved`, `libraries-not-read` Warnung | 5 | bestanden |
 | GR-24 | `Unknown_code_is_not_found` | Unbekannter Code wird im Katalog nicht gefunden | 1 | bestanden |
+| GR-25 | `Every_gap_code_says_what_closes_it` | Jeder Lückencode hat einen Abhilfetext für den Prüfbericht („Was sie schließt“), ein unbekannter Code keinen | 1 | bestanden |
 
 ### 4.5 CycloneDX-Writer: `CycloneDxWriterTests` (22)
 
@@ -664,16 +677,128 @@ Diese Tests sichern die Regel aus CLAUDE.md Abschnitt 14 ab, soweit sie sich mas
 | IN-08 | `Order_number_property_of_any_namespace_except_cdx_and_bsi_is_the_key` | Bestellnummer aus `<namespace>:device:orderNumber`, `cdx:` zählt nicht; Hersteller aus `manufacturer` | 1 | bestanden |
 | IN-09 | `Unexplained_missing_fields_respect_gaps_and_logical_components` | Hilfsfunktion des Validators: acht fehlende Felder, Lückenvermerk erklärt alle, logische Komponente | 1 | bestanden |
 
-### 4.28 Befehl `build` von Anfang bis Ende: `BuildCommandTests` (6)
+### 4.28 Befehl `build` von Anfang bis Ende: `BuildCommandTests` (7)
 
 | ID | Testfall | Prüft | Fälle | Ergebnis |
 |---|---|---|---:|---|
-| BC-01 | `Sample_machine_builds_with_exit_0_and_writes_sbom_and_result` | Exit 0, Konsolenzeilen je Phase, SBOM und Ergebnisdatei mit `command` = `build` | 1 | bestanden |
+| BC-01 | `Sample_machine_builds_with_exit_0_and_writes_sbom_and_result` | Exit 0, Konsolenzeilen je Phase, SBOM, HTML-Bericht `sbom-maschine.html` und Ergebnisdatei mit `command` = `build` | 1 | bestanden |
 | BC-02 | `Command_output_equals_the_builder_output` | Datei des Befehls gleich dem Golden File, solange die Werkzeugversion 0.1.0 ist | 1 | bestanden |
 | BC-03 | `Release_build_fails_on_warnings` | `--release-build`: Exit 1, „NICHT BESTANDEN“ | 1 | bestanden |
-| BC-04 | `Report_none_skips_the_report_line` | `--report none` ohne Zeile `[bericht]` | 1 | bestanden |
+| BC-04 | `Report_none_skips_the_report` | `--report none`: keine Zeile `[bericht]`, kein Bericht | 1 | bestanden |
 | BC-05 | `Missing_config_is_exit_2_with_a_result_file` | Exit 2, `CONFIG_NOT_FOUND`, keine SBOM, Ergebnisdatei mit `exitCode` 2 und dem Code | 1 | bestanden |
 | BC-06 | `Unreadable_vendor_sbom_is_exit_1` | Kaputte Hersteller-SBOM neben der Beispielmaschine: Exit 1, Fehler `INPUT_SBOM_INVALID`, SBOM wird trotzdem geschrieben | 1 | bestanden |
+| BC-07 | `Report_md_writes_the_markdown_report_like_the_golden_file` | `--report md` schreibt `sbom-maschine.md`, gleich dem Golden File bis auf den Pfad der SBOM, solange die Werkzeugversion 0.1.0 ist | 1 | bestanden |
+
+### 4.29 Lesesicht auf eine SBOM: `SbomViewTests` (6)
+
+| ID | Testfall | Prüft | Fälle | Ergebnis |
+|---|---|---|---:|---|
+| SBV-01 | `Sample_machine_namespace_components_and_dependencies` | Beispielmaschine: Namespace `firma`, 48 Komponenten, Zeitstempel, Ersteller, CPU mit Station, Bestellnummer, Hash, Lücke, zwei Abhängigkeiten, Vollständigkeit, Hersteller mit URL | 1 | bestanden |
+| SBV-02 | `Tools_carry_the_engineering_release` | `metadata.tools` mit TIA Portal V17 und `firma:tool:release` | 1 | bestanden |
+| SBV-03 | `Namespace_falls_back_to_the_station_property_and_never_is_cdx_or_bsi` | Ohne `logicalComponent` gilt der Namespace von `<ns>:station`; `cdx:` zählt nicht | 1 | bestanden |
+| SBV-04 | `Foreign_sbom_has_no_namespace_but_components` | Fremde SBOM: kein Namespace, Komponenten trotzdem lesbar, keine Lücken, kein Gerät | 1 | bestanden |
+| SBV-05 | `Nested_components_are_listed_with_their_parent` | Verschachtelte Komponenten in Dokumentreihenfolge mit Elternteil | 1 | bestanden |
+| SBV-06 | `Text_that_is_no_json_object_throws` | Array oder abgeschnittenes JSON: `JsonException` | 1 | bestanden |
+
+### 4.30 Feld-Datei: `FieldStateReaderTests` (17)
+
+| ID | Testfall | Prüft | Fälle | Ergebnis |
+|---|---|---|---:|---|
+| FR-01 | `Sample_field_file_is_read` | `samples/maschine-xy/feld/1042.json`: Maschine, Seriennummer, Datum, Anlass, fünf Geräte mit allen Werten, SHA-256 | 1 | bestanden |
+| FR-02 | `Web_api_responses_give_order_number_firmware_and_serial` | Echte Antworten IM0 `actual` und `configured` (Fixture): Bestellnummer ohne angehängtes Leerzeichen, Firmware `V4.1.0`, Hardware-Stand `0`, Seriennummer, `via` = `webapi`, `configured` | 1 | bestanden |
+| FR-03 | `Web_api_configured_response_is_optional` | Nur `actual`: kein `configured`, Werte aus `actual` | 1 | bestanden |
+| FR-04 | `Web_api_response_other_than_im0_is_invalid` | Echte IM1-Antwort als `actual`: `FIELD_INVALID` mit Hinweis auf IM0 | 1 | bestanden |
+| FR-05 | `Web_api_error_response_skips_the_device_with_a_warning` | JSON-RPC-Fehlerantwort: Gerät übersprungen, Warnung `FIELD_WEBAPI_ERROR` mit Text der CPU | 1 | bestanden |
+| FR-06 | `Web_api_together_with_values_is_invalid` | `webapi` und `firmware` im selben Gerät: Fehler | 1 | bestanden |
+| FR-07 | `Invalid_field_files_are_exit_2` | Unbekannter Schlüssel oben und im Gerät, `machine` fehlt, Datum falsch, `devices` fehlt, Gerät ohne `position` und `orderNumber`, Zahl statt Text, doppelter Schlüssel, Array: Exit 2, `FIELD_INVALID`, Meldung mit Datei | 9 | bestanden |
+| FR-08 | `Hardware_revision_may_be_a_number` | `hardwareRevision` als Zahl wird Text | 1 | bestanden |
+| FR-09 | `Missing_file_is_exit_2` | Fehlende Datei: `FIELD_NOT_FOUND` | 1 | bestanden |
+
+### 4.31 Abgleich: `FieldComparerTests` (24)
+
+| ID | Testfall | Prüft | Fälle | Ergebnis |
+|---|---|---|---:|---|
+| FC-01 | `Sample_machine_against_field_file_1042` | Beispielmaschine gegen 1042: 13 geprüft, 2 gleich, 1 abweichend (CPU über Position, Firmware V4.6.1 statt V4.5), 10 nur im Projekt, 1 nur im Feld, 1 passiv, 12 Abweichungen; Scanner `501xxxxx` passt auf `50132148` | 1 | bestanden |
+| FC-02 | `Position_wins_over_order_number` | Zwei Geräte gleicher Bestellnummer: die Position entscheidet | 1 | bestanden |
+| FC-03 | `Unknown_position_falls_back_to_the_order_number_without_spaces` | Unbekannte Position: Bestellnummer ohne Leerzeichen und in Kleinschreibung; `V2.8.3` gegen `V2.8` gleich mit Hinweis | 1 | bestanden |
+| FC-04 | `Among_equal_order_numbers_the_same_firmware_is_matched_first` | Zwei gleiche Bestellnummern: Zuordnung über gleiche Firmware, beide gleich | 1 | bestanden |
+| FC-05 | `Different_order_number_at_the_same_position_is_a_deviation` | Andere Bestellnummer an derselben Position: abweichend | 1 | bestanden |
+| FC-06 | `Web_api_configuration_in_the_cpu_is_compared_too` | Echte Web-API-Antworten gegen ein Soll V4.1 (gleich) und V4.0 (abweichend, auch `configured`) | 1 | bestanden |
+| FC-07 | `Field_device_with_firmware_zero_and_no_match_is_passive_not_a_deviation` | Gerät mit V0.0 ohne Gegenstück: `passiv`, keine Abweichung | 1 | bestanden |
+| FC-08 | `Field_device_in_an_unknown_station_is_field_only_with_a_note` | Unbekannte Station: `nur-im-feld` mit Hinweis | 1 | bestanden |
+| FC-09 | `Other_machine_is_exit_2` | Andere Maschine: `FIELD_MACHINE_MISMATCH` | 1 | bestanden |
+| FC-10 | `Sbom_without_plc_sbom_properties_is_exit_2` | Fremde SBOM: `SBOM_NOT_PLC_SBOM` | 1 | bestanden |
+| FC-11 | `Firmware_versions` | `V2.8`/`2.8`, `4.7.10`/`V04.07.10` gleich; `V2.8`/`V2.8.3` in beide Richtungen genauer; `V2.9`, `V2.80` verschieden; nur eine Seite; keine | 10 | bestanden |
+| FC-12 | `Firmware_zero` | `V0.0`, `0.0.0` sind 0.0; `V0.1` und keine Version nicht | 4 | bestanden |
+
+### 4.32 as-built-SBOM: `AsBuiltWriterTests` (13)
+
+| ID | Testfall | Prüft | Fälle | Ergebnis |
+|---|---|---|---:|---|
+| AB-01 | `Sample_machine_1042_matches_golden_file` | Golden File `maschine-xy-1042.cdx.json` | 1 | bestanden |
+| AB-02 | `As_built_sbom_passes_schema_and_tr_rules` | Schema gültig, keine Fehler | 1 | bestanden |
+| AB-03 | `Firmware_from_the_field_with_origin_as_found_and_the_projected_value_kept` | CPU V4.6.1 `as-found`, `firmware:projected` V4.5, Seriennummer, Hardware-Stand, ohne `firmware-projected-only`; EK1100 V2.3 ohne `firmware-not-in-project`; Geräte ohne Ist-Stand unverändert; 3 Firmware-Stände übernommen | 1 | bestanden |
+| AB-04 | `Cpe_follows_the_version_in_its_version_field` | CPE mit `4.6.1` | 1 | bestanden |
+| AB-05 | `Vendor_sbom_of_the_projected_version_is_detached` | Hersteller-SBOM gelöst: kein `inputSbom`, kein Hash, kein Dateiname, Lücken zurück, keine Abhängigkeiten, `unknown`, Bestandteile entfernt, eine Warnung | 1 | bestanden |
+| AB-06 | `Same_version_in_the_field_keeps_the_vendor_sbom` | Ist `4.5` = Soll `V4.5`: Hersteller-SBOM bleibt, keine Warnung, `as-found` | 1 | bestanden |
+| AB-07 | `Machine_gets_serial_number_field_source_and_a_new_sbom_uri` | Seriennummer, Feld-Datei, Datum an der Maschine; `serialNumber` = UUIDv5 mit Seriennummer; Zeitstempel | 1 | bestanden |
+| AB-08 | `Cpe_version_is_replaced_only_where_the_old_version_stands` | Version im Versionsfeld ersetzt; `*` im Versionsfeld, CPE 2.2 und maskiertes `:` | 4 | bestanden |
+| AB-09 | `Cpe_without_the_old_version_is_removed_with_a_warning` | CPE ohne alte Version: entfernt, `AS_BUILT_CPE_REMOVED` | 1 | bestanden |
+| AB-10 | `Two_runs_give_identical_bytes` | Zwei Läufe byte-gleich | 1 | bestanden |
+
+### 4.33 CSV des Abgleichs: `ComparisonCsvTests` (2)
+
+| ID | Testfall | Prüft | Fälle | Ergebnis |
+|---|---|---|---:|---|
+| CSV-01 | `Sample_machine_1042_matches_golden_file` | Golden File `maschine-xy-1042.abgleich.csv` | 1 | bestanden |
+| CSV-02 | `Csv_has_bom_semicolons_lf_and_quotes_where_needed` | UTF-8-BOM, kein CR, Kopfzeile, `;` und `"` im Feld in Anführungszeichen | 1 | bestanden |
+
+### 4.34 Prüfbericht: `ReportTests` (12)
+
+| ID | Testfall | Prüft | Fälle | Ergebnis |
+|---|---|---|---:|---|
+| RP-01 | `Html_report_of_build_matches_golden_file` | Golden File `maschine-xy.bericht.html` (Bericht von `build` mit Hardware-Anhang) | 1 | bestanden |
+| RP-02 | `Markdown_report_of_build_matches_golden_file` | Golden File `maschine-xy.bericht.md` | 1 | bestanden |
+| RP-03 | `Markdown_report_with_field_comparison_matches_golden_file` | Golden File `maschine-xy-1042.bericht.md` (Bericht von `report --field` aus der SBOM allein) | 1 | bestanden |
+| RP-04 | `Report_has_every_section_of_claude_md_8_2` | Alle Abschnitte aus CLAUDE.md 8.2, Titel, „bestanden (Entwicklungs-Build)“, Zeit der SBOM, Befunde | 1 | bestanden |
+| RP-05 | `Release_build_report_does_not_pass_with_warnings` | Release-Build mit Warnungen: „nicht bestanden“ | 1 | bestanden |
+| RP-06 | `Tree_puts_the_controller_firmware_with_vendor_parts_under_its_station` | Steuerung mit Bestandteilen der Hersteller-SBOM, Hardware-Gruppe, Teil-SBOM rekursiv, zehn Klemmen | 1 | bestanden |
+| RP-07 | `Gap_table_names_every_gap_with_what_closes_it` | Lückenliste mit Kopfzeile, Zeile `firmware-projected-only` mit Abhilfe, keine Zeile ohne Abhilfe | 1 | bestanden |
+| RP-08 | `Report_from_the_sbom_alone_explains_what_only_build_knows` | Ohne `build`: Hinweis zum Anhang, Engineering-Werkzeug „–“, Abschnitt Abgleich | 1 | bestanden |
+| RP-09 | `Html_report_has_no_external_resources_and_no_script` | Kein `<script>`, kein `<link>`, kein `src`/`href` mit Schema, kein `url(`; dunkles Schema; LF | 1 | bestanden |
+| RP-10 | `Html_and_markdown_escape_text` | `<script>` maskiert in HTML und Markdown, `*` und `|` in Markdown | 1 | bestanden |
+| RP-11 | `Foreign_sbom_gives_a_report_without_stations` | Fremde SBOM: „keine Stationen“, Abschnitt „Ohne Station“, Komponente „vollständig“ | 1 | bestanden |
+| RP-12 | `Two_runs_give_identical_bytes` | Zwei Läufe byte-gleich | 1 | bestanden |
+
+### 4.35 Kennungsprüfung: `IdsCheckTests` (25)
+
+| ID | Testfall | Prüft | Fälle | Ergebnis |
+|---|---|---|---:|---|
+| IDS-01 | `Synthetic_csaf_document_is_read_with_vendor_branches_and_full_product_names` | Synthetisches CSAF: ein Dokument, fünf Produkte mit Identifikationshilfe, Hersteller aus der `vendor`-Ebene, `full_product_names` mit CPE 2.2 | 1 | bestanden |
+| IDS-02 | `Files_that_are_no_csaf_are_skipped_with_a_warning` | Kaputtes JSON und CycloneDX-Datei übersprungen: `CSAF_INVALID`, `CSAF_NOT_CSAF` | 1 | bestanden |
+| IDS-03 | `Missing_directory_is_exit_2` | `CSAF_DIR_NOT_FOUND` | 1 | bestanden |
+| IDS-04 | `Csaf_model_numbers_match_full_abbreviated_and_with_wildcards` | Voll, Kleinschreibung, abgekürzt, `?`, Beispiel aus CSAF 2.0 (`6RA801?-??V62-0AA0`), `*`, andere Nummer | 8 | bestanden |
+| IDS-05 | `Cpe_match_in_2_3_and_2_2_form` | CPE 2.3 mit `*`, andere Version, anderes Produkt, CPE-2.2-URI voll und gekürzt, `-`, maskierter Punkt, keine CPE | 8 | bestanden |
+| IDS-06 | `Sample_machine_against_synthetic_csaf` | Beispielmaschine: 48 Komponenten, 4 mit Kennung, 2 gefunden, 1 Muster; CPU über `model_numbers` und `cpe`, in der CPE-Tabelle; `ms` über CPE 2.2; EK1100 ohne Kennung | 1 | bestanden |
+| IDS-07 | `Coverage_report_matches_golden_file` | Golden File `maschine-xy.ids.json` | 1 | bestanden |
+| IDS-08 | `Foreign_sbom_without_identifiers_has_only_none` | Fremde SBOM ohne CPE-Tabelle: `keine Kennung` | 1 | bestanden |
+| IDS-09 | `Local_siemens_documents_carry_model_numbers_and_no_cpe` | Sechs Siemens-Dokumente (lokal): 404 Produkte, keine CPE, Modellnummern ohne Leerzeichen, Hersteller „Siemens“ | 1 | bestanden lokal, in CI übersprungen |
+| IDS-10 | `Local_siemens_documents_find_the_cpu_of_the_sample_machine` | CPU 1214C in SSA-224824, SSA-717113, SSA-876787, nur volle Treffer | 1 | bestanden lokal, in CI übersprungen |
+| IDS-11 | `Local_oasis_example_carries_cpe_2_2` | BSI-Beispiel der Spezifikation (lokal): sechs CPE-2.2-URIs, Treffer gegen CPE 2.3 | 1 | bestanden lokal, in CI übersprungen |
+
+### 4.36 Befehle `report`, `compare`, `ids` von Anfang bis Ende: `FieldCommandsTests` (10)
+
+| ID | Testfall | Prüft | Fälle | Ergebnis |
+|---|---|---|---:|---|
+| FX-01 | `Report_writes_the_file_and_ends_with_exit_0` | `report --format html` und `md`: Datei, Exit 0, Prüfstatus in der Konsole | 2 | bestanden |
+| FX-02 | `Report_with_field_and_release_build` | `--field` und `--release-build`: „nicht bestanden (Release-Build)“, Zeile `[abgleich]`, Abschnitt im Bericht | 1 | bestanden |
+| FX-03 | `Report_of_a_missing_or_broken_sbom_is_exit_2` | `SBOM_NOT_FOUND`, `SBOM_INVALID` | 1 | bestanden |
+| FX-04 | `Compare_with_deviations_is_exit_1_and_writes_as_built_csv_and_result` | Exit 1, Konsolenzeilen, as-built-SBOM mit Feld-Datum, CSV, Ergebnisdatei `sbom-maschine.compare-1042.result.json` mit `comparison` | 1 | bestanden |
+| FX-05 | `Compare_as_built_uses_source_date_epoch_when_set` | Mit `SOURCE_DATE_EPOCH` dessen Zeit | 1 | bestanden |
+| FX-06 | `Compare_without_deviations_is_exit_0` | SBOM ohne Geräte, leere Feld-Datei: Exit 0 | 1 | bestanden |
+| FX-07 | `Compare_with_invalid_field_file_is_exit_2` | `FIELD_INVALID` | 1 | bestanden |
+| FX-08 | `Ids_reports_coverage_with_exit_0_and_writes_json` | Exit 0, Zeilen `[csaf]`, `[kennung]`, `[abdeckung]`, JSON mit `found` 2 | 1 | bestanden |
+| FX-09 | `Ids_with_a_directory_without_csaf_is_exit_2` | Nur fremdes JSON im Verzeichnis: Warnung `CSAF_NOT_CSAF`, Exit 2 `CSAF_NONE` | 1 | bestanden |
 
 ## 5. Testläufe
 
@@ -700,6 +825,7 @@ Alle Läufe lokal auf macOS 26.6.2 (arm64) mit .NET SDK 10.0.403, Ausgangsstand 
 | 16 | 01.11.2026, 10:42, M7 | 480 Tests mit TRX-Bericht, Formatprüfung; neu: AML-Leser, Adapter `tia-aml` (E-019), Muster, Lückencode `firmware-attribute-missing`, `inspect --adapter tia-aml`; Gegenprüfung mit sbomqs v2.1.3 über alle 16 Golden Files, Exit-Code geprüft; `inspect` von Hand über alle sechs AML-Dateien | 480 bestanden, 1,0 s, Format ohne Befund; sbomqs Exit 0, keine Abweichung (V17 ganze Datei 21 gleich, 14 erklärt; V17 mit `plc` 21/14; zwei CPUs 71/54). Zwischenstände: Ein `*` im Muster passte nicht auf ein `*` im Text (Profilschiene `6ES7 590-1***0-0AA0`), weil der Vergleich das Zeichen zuerst wörtlich nahm. Fehler im Werkzeug, behoben, Test WC-02; ein Test erwartete einen falschen Gerätenamen der synthetischen Datei (Fehler im Test); zwei Doku-Abgleiche schlugen fehl, bis `firmware-attribute-missing` in ANLEITUNG.md und CLAUDE.md stand. Gegenprobe wie in CI (`-c Release -p:ContinuousIntegrationBuild=true`, `fixtures/_local/tia-aml/` entfernt): 475 bestanden, 5 übersprungen, Exit 0 | M7 |
 | 17 | 01.11.2026, 11:50, M8 | 508 Tests, Formatprüfung; neu: GSDML-Leser, GSD-Geräte mit GSDML (E-020), `inspect --gsdml`; Gegenprüfung mit sbomqs v2.1.3 über alle 17 Golden Files, Exit-Code geprüft; `inspect --gsdml` von Hand mit und ohne passende Datei | 508 bestanden, 1,4 s, Format ohne Befund; sbomqs Exit 0, keine Abweichung (V17 mit GSDML 21 gleich, 14 erklärt; übrige wie Lauf 16). Zwischenstände: fünf erwartete Fehlschläge, weil die drei M7-Golden-Files die neue Lücke `gsdml-not-found` am GSD-Gerät noch nicht hatten (begründet in E-020, neu erzeugt und im Diff geprüft: je eine Zeile), das neue Golden File fehlte und der alte M8-Platzhaltertest von `inspect` überholt war; eine Importreihenfolge korrigierte `dotnet format`. Gegenprobe wie in CI (`-c Release -p:ContinuousIntegrationBuild=true`, `fixtures/_local/tia-aml/` entfernt): 503 bestanden, 5 übersprungen | M8, Grundlage dieser Datei |
 | 18 | 01.11.2026, 16:20, M9 | 639 Tests mit TRX-Bericht, Formatprüfung, Lizenzprüfung; neu: `build`, Leser für `machine.yml`, CPE-Tabelle, Programm-Hash, Hersteller- und Teil-SBOMs (E-021), Lückencode `input-field-missing`; Gegenprüfung mit sbomqs v2.1.3 über alle 18 Golden Files, Exit-Code geprüft; Paket für osx-arm64 gebaut, Beispielmaschine zweimal damit gebaut und mit `cmp` verglichen | 639 bestanden, 1,3 s, Format und Lizenzen ohne Befund; sbomqs Exit 0, keine Abweichung (Beispielmaschine 215 gleich, 280 erklärt); beide Paketläufe byte-gleich und gleich dem Golden File. Zwischenstände: Erster Lauf von `build` endete mit Exit 4, weil beim Herausziehen der Feldprüfung im Validator der Fall „Property fehlt“ einen Indexfehler auslöste (Fehler im Werkzeug, behoben, abgesichert durch alle Validator-Tests); die Zeitangabe am Ende scheiterte an der invarianten Kultur (Fehler im Werkzeug, behoben); fünf Tests mit falscher Erwartung (Fehler im Test). Die erste Gegenprüfung war „nicht eindeutig“: CPU-Firmware und Wurzel der Hersteller-SBOM standen mit gleichem Namen und gleicher Version doppelt in der SBOM. Fehler im Entwurf, nicht im Validator; geändert, die Wurzel geht in der Firmware auf (E-021), Tests MB-24 und MB-25. Vor dem Commit fiel auf, dass `git status` die neuen Ordner `Build/` nicht zeigte: Die Regel `build/` in `.gitignore` traf sie auf macOS (`core.ignorecase`). Auf `/build/` geändert | M9, Grundlage dieser Datei |
+| 19 | 01.11.2026, 16:25, M10 bis M12 | 750 Tests mit TRX-Bericht, Formatprüfung; neu: Lesesicht `SbomView`, Prüfbericht (E-022), Feld-Datei mit Web-API, Abgleich, as-built-SBOM, CSV (E-023), CSAF-Index und Kennungsprüfung (E-024); Gegenprüfung mit sbomqs v2.1.3 über alle 19 Golden Files, Exit-Code geprüft; Paket für osx-arm64 gebaut und den neuen CI-Rauchtest damit nachgespielt; Gegenprobe wie in CI ohne `fixtures/_local/` | 750 bestanden, 1,6 s, Format ohne Befund; sbomqs Exit 0, keine Abweichung (as-built 1042: 195 gleich, 280 erklärt); Rauchtest: alle Exit-Codes wie erwartet, as-built aus dem Paket ohne `SOURCE_DATE_EPOCH` byte-gleich dem Golden File; ohne `_local`: 742 bestanden, 8 übersprungen. Zwischenstände: Typ und Namensraum hießen beide `FieldState` (Kompilierfehler, Typ in `AsFoundState` umbenannt); ein Test gab die Bestellnummer ohne Bindestriche an (Fehler im Test); `compare` listete alle 116 Warnungen der as-built-SBOM (auf eine Zusammenfassung gekürzt); der Teil-SBOM-Zweig im Baum zeigte nur eine Ebene (rekursiv gemacht); die Konsolenzeile von `report` hatte doppelte Klammern | M10 bis M12, Grundlage dieser Datei |
 
 Die Gegenprüfung in Lauf 5 hat zwei Fehler im Werkzeug aufgedeckt, die Tests in Lauf 14 (Writer, W-19) und Lauf 16 (Mustervergleich, WC-02) je einen, der erste Lauf von `build` in Lauf 18 zwei und die Gegenprüfung in Lauf 18 einen im Entwurf.
 
@@ -718,6 +844,13 @@ Zusätzlich zu den automatischen Tests am 31.10.2026 von Hand aufgerufen (`dotne
 | `build --config samples/maschine-xy/machine.yml --release R2026.10 --commit a1b2c3d…` mit `SOURCE_DATE_EPOCH=1792234800` (01.11.2026, Paket osx-arm64) | 0 | drei Zeilen `[adapter …]`, „1 Hersteller-SBOM (1 zugeordnet), 1 Teil-SBOM (syft), 1 GSDML-Datei“, „Maschine XY > 3 Stationen > 49 Komponenten“, „OK, 117 Warnungen, 109 Hinweise“; Datei gleich dem Golden File |
 | `build --config samples/maschine-xy/machine.yml --release dev-1` ohne `--commit` und `SOURCE_DATE_EPOCH` | 0 | Commit `e0f46ff…` aus git, Zeitstempel `2026-11-01T11:39:26Z` = Commit-Zeit in UTC, Version der Programme `dev-1 (git e0f46ff)` |
 | `build --config gibt-es-nicht.yml --release R1` | 2 | `[CONFIG_NOT_FOUND] Die Maschinenbeschreibung gibt-es-nicht.yml gibt es nicht.`; Ergebnisdatei mit `exitCode` 2 |
+| `build … --out build/sbom-maschine.cdx.json` mit `SOURCE_DATE_EPOCH=1792234800` (01.11.2026, M10) | 0 | `[bericht]   build/sbom-maschine.html`; SBOM gleich dem Golden File |
+| `report build/sbom-maschine.cdx.json --format md --out build/sbom-bericht.md` | 0 | `[bericht]   build/sbom-bericht.md (Markdown), Prüfung bestanden (Entwicklungs-Build)` |
+| `report … --format html --field samples/maschine-xy/feld/1042.json --release-build` | 0 | Prüfung nicht bestanden (Release-Build), Zeile `[abgleich]  13 geprüft: 2 gleich, 1 abweichend, 10 nur im Projekt, 1 nur im Feld, 1 passiv` |
+| `compare build/sbom-maschine.cdx.json --field samples/maschine-xy/feld/1042.json --as-built … --csv …` | 1 | wie in ANLEITUNG.md Abschnitt 18.2; Warnung `AS_BUILT_VENDOR_SBOM_DETACHED` |
+| `ids build/sbom-maschine.cdx.json --csaf fixtures/csaf --cpe-map … --out build/kennungen.json` | 0 | „2 von 4 Komponenten mit Kennung in CSAF gefunden (50 %); 1 mit Bestellnummer als Muster, 43 ohne Kennung“ |
+| `ids <golden> --csaf fixtures/_local/csaf/siemens` über alle 19 Golden Files | 0 | gefunden: CPU 1214C (Beispielmaschine, V17), CPU 1511-1 PN und CPU 1515-2 PN (zwei CPUs); nicht gefunden: ET 200SP, G120C, E/A-Module, Stromversorgung, Rockwell-Module; ohne Kennung: EtherCAT-Klemmen, CODESYS-Geräte, Bibliotheken (E-024) |
+| `doctor` | 2 | `[NOT_IMPLEMENTED] Der Befehl „doctor“ ist in plc-sbom 0.1.0 noch nicht umgesetzt. Er folgt mit Meilenstein M14.` |
 
 Die Meldung zu `--foo` kommt auf Englisch aus der Bibliothek System.CommandLine; die übrigen Meldungen sind wie vorgesehen deutsch.
 
@@ -726,7 +859,9 @@ Die Meldung zu `--foo` kommt auf Englisch aus der Bibliothek System.CommandLine;
 - `cyclonedx-cli validate` als zweite, unabhängige Schemaprüfung: noch nicht eingerichtet.
 - Lauf auf Windows: nur in CI (`windows-latest`), nicht lokal.
 - Test, dass die Schemaprüfung ohne Netz auskommt: Das Schema ist eingebettet und fremde Verweise werden abgelehnt, ein eigener Test mit gesperrtem Netz fehlt.
-- Adapter `tia-portal`, `inspect` dafür, `report`, `compare`, `ids` und der Openness-Worker: noch nicht umgesetzt; die Tests prüfen nur, dass sie mit `[NOT_IMPLEMENTED]` bzw. `[OPENNESS_WINDOWS_ONLY]` enden.
+- Adapter `tia-portal`, `inspect` dafür und der Openness-Worker: noch nicht umgesetzt; die Tests prüfen nur, dass sie mit `[NOT_IMPLEMENTED]` bzw. `[OPENNESS_WINDOWS_ONLY]` enden.
+- `compare`: Die Web-API-Fixture beschreibt eine CPU 1518, die in keinem AML-Export steht; sie ist gegen ein synthetisches Soll getestet, das AML-Soll gegen die allgemeine Feld-Datei (E-023). Antworten für Module hinter der CPU und `Modules.Browse` sind ohne Fixture. Der HTML-Bericht ist nur über Golden File und Zeichenketten geprüft, nicht in einem Browser.
+- `ids`: Die echten CSAF-Dokumente (Siemens, OASIS) haben keine freie Lizenz und liegen nur lokal; ihre drei Testfälle laufen in CI nicht (E-024). CERT@VDE-Dokumente sind nicht geprüft.
 - `build`: Hersteller-SBOMs sind nur mit einer synthetischen Datei belegt, weil kein Steuerungshersteller eine veröffentlicht (E-021). Der echte Git-Aufruf (`git rev-parse`, `git log`) läuft nur im manuellen Prüflauf (5.1), die Tests ersetzen git durch eine Attrappe. Ein Lauf mit `core.autocrlf=true` ist nicht getestet; PH-04 prüft auf windows nur, dass `samples/**` byte-genau ausgecheckt wird.
 - Adapter `tia-aml`: Die Exporte aus V18 und V21 haben keine Lizenz und liegen nur lokal; ihre fünf Testfälle laufen in CI nicht. Ein Golden File aus dem Comquent-V21-Demo-Export fehlt (E-019). HMI-Panels und IO-Systeme an Kommunikationsmodulen sind ohne Fixture, GSDML-Dateien mit mehreren Zugangspunkten ebenso (E-020).
 - Self-contained-Paket: Der Aufruf aus dem ausgepackten Paket läuft in CI als Rauchtest, nicht lokal.
@@ -755,6 +890,7 @@ Kein xUnit-Test, sondern [tools/crosscheck-sbomqs.cs](tools/crosscheck-sbomqs.cs
 | `twincat-tcopen-core.cdx.json` | 28 | 0 | 67 | 0 |
 | `twincat-zelle-synthetisch.cdx.json` | 37 | 0 | 58 | 0 |
 | `maschine-xy.cdx.json` (M9) | 215 | 0 | 280 | 0 |
+| `maschine-xy-1042.cdx.json` (M11, as-built) | 195 | 0 | 280 | 0 |
 
 Gegenprobe mit sechs absichtlich veränderten Kopien der Minimal-SBOM (nur lokal, nicht eingecheckt):
 

@@ -103,9 +103,40 @@ public static class GapCatalog
 
     private static readonly Dictionary<string, GapDefinition> ByCode = Definitions.ToDictionary(d => d.Code, StringComparer.Ordinal);
 
+    /// <summary>What closes a gap: shown in the report next to each code (CLAUDE.md section 8.2).</summary>
+    private static readonly Dictionary<string, string> Remedies = new(StringComparer.Ordinal)
+    {
+        [FirmwareNotInProject] = "Ist-Stand aus dem Feld einlesen (plc-sbom compare --as-built).",
+        [FirmwareAttributeMissing] = "Firmware im Projekt nachtragen oder das Gerät mit „passiveOrderNumbers“ in machine.yml als passiv erklären.",
+        [FirmwareProjectedOnly] = "Ist-Stand aus dem Feld einlesen (plc-sbom compare --as-built).",
+        [HashUnavailable] = "Hersteller-SBOM mit SHA-512 der Firmware-Datei unter „vendorSboms“ einbinden; bei Firmware und Anwenderprogramm sonst zulässig (TR 3.2.1).",
+        [FilenameUnavailable] = "Hersteller-SBOM mit Dateinamen unter „vendorSboms“ einbinden; sonst zulässig (TR 3.2.1).",
+        [VersionUnresolved] = "Bibliothek im Projekt auf eine feste Version setzen.",
+        [LibrariesNotRead] = "Bibliotheken der Station unter „libraries“ in machine.yml deklarieren.",
+        [RuntimeVersionUnknown] = "Version der Laufzeit aus dem Feld einlesen oder deklarieren.",
+        [EkeyDisabled] = "Elektronische Kodierung des Moduls im Projekt einschalten oder den Ist-Stand prüfen.",
+        [LicenseUnknown] = "Distributionslizenz des Herstellers unter „licenses“ in machine.yml eintragen.",
+        [VendorSbomMissing] = "SBOM vom Hersteller anfordern und unter „vendorSboms“ einbinden.",
+        [ProtectedBlockUnknown] = "Lieferanten unter „protectedBlockVendors“ in machine.yml eintragen.",
+        [GsdmlNotFound] = "GSDML-Datei in ein Verzeichnis aus „gsdml“ legen; doppelte Dateien mit anderem Inhalt entfernen.",
+        [DevdescNotFound] = "Passende Gerätebeschreibung (*.devdesc.xml) in ein Verzeichnis aus „deviceDescriptions“ legen.",
+        [OrderNumberNotInProject] = "Bestellnummer über eine Gerätebeschreibung oder den Ist-Stand ermitteln.",
+        [SupplierUnknown] = "Hersteller mit „vendorOverrides“ in machine.yml erklären.",
+        [CreatorContactUnknown] = "E-Mail-Adresse oder URL des Herstellers unter „vendorContacts“ in machine.yml eintragen.",
+        [DeviceUnassigned] = "Gerät mit „devices“ einer Station zuordnen oder mit „ignoreDevices“ ausschließen.",
+        [DevicesNotRead] = "Geräte, die der Adapter nicht liest, über eine Hersteller- oder Teil-SBOM ergänzen.",
+        [ProgramNotRead] = "Erst der Adapter tia-portal liest Bausteine (M14).",
+        [ProgramSourceMissing] = "Quellverzeichnis der Station unter „program“ in machine.yml angeben.",
+        [FilePropertiesUnknown] = "Bibliothek als Datei mit bekannten Eigenschaften einbinden; die Quelle sagt nichts dazu.",
+        [InputFieldMissing] = "Vollständige SBOM beim Lieferanten bzw. vom erzeugenden Werkzeug anfordern.",
+    };
+
     public static IReadOnlyList<GapDefinition> All => Definitions;
 
     public static GapDefinition? Find(string code) => ByCode.GetValueOrDefault(code);
+
+    /// <summary>What closes the gap; null for codes the tool does not know (foreign SBOMs).</summary>
+    public static string? Remedy(string code) => Remedies.GetValueOrDefault(code);
 
     /// <summary>Gap codes that make the dependency list of a station's program incomplete.</summary>
     public static IReadOnlySet<string> MakeDependenciesIncomplete { get; } =

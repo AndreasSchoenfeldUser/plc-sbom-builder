@@ -1,0 +1,43 @@
+{
+  "machine": "Maschine XY",
+  "serialNumber": "1042",
+  "date": "2026-10-22",
+  "source": "inbetriebnahme",
+  "devices": [
+    {
+      "station": "PLC_1",
+      "position": "S7-1200 station_1/0/1",
+      "orderNumber": "6ES7 214-1AG40-0XB0",
+      "firmware": "V4.6.1",
+      "hardwareRevision": "5",
+      "serial": "S V-L9A12345",
+      "via": "webserver"
+    },
+    {
+      "station": "PLC_1",
+      "position": "GSD device_1/0/0",
+      "orderNumber": "50132148",
+      "firmware": "V1.4.0",
+      "serial": "2109ABC0042",
+      "via": "manuell"
+    },
+    {
+      "station": "PLC_1",
+      "orderNumber": "6ES7 193-6BP00-0DA0",
+      "firmware": "V0.0",
+      "via": "webserver"
+    },
+    {
+      "station": "PLC_1",
+      "orderNumber": "6GK5 208-0BA00-2AC2",
+      "firmware": "V4.2",
+      "via": "proneta"
+    },
+    {
+      "station": "Roboterzelle",
+      "position": "Device 1 (EtherCAT)/1",
+      "firmware": "V2.3",
+      "via": "coe"
+    }
+  ]
+}

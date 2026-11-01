@@ -5,6 +5,8 @@ using PlcSbom.Core;
 using PlcSbom.Core.Build;
 using PlcSbom.Core.Config;
 using PlcSbom.Core.Output;
+using PlcSbom.Core.Output.Report;
+using PlcSbom.Core.Sbom;
 using PlcSbom.Core.Validation;
 
 namespace PlcSbom.Cli.Commands;
@@ -37,14 +39,24 @@ public static class BuildCommand
 
             var exitCode = report.ExitCode(options.ReleaseBuild);
             await ReportWriter.WriteAsync(report, options.ReleaseBuild, options.Verbose, stdout).ConfigureAwait(false);
+
+            CommandFiles.Write(options.Out, sbom);
             if (options.Report != "none")
             {
-                await stdout.WriteLineAsync("[bericht]   Der Prüfbericht folgt mit Meilenstein M10; in dieser Version wird keiner geschrieben.").ConfigureAwait(false);
+                var reportPath = CommandFiles.ReportPathFor(options.Out, options.Report);
+                var document = ReportBuilder.Build(new ReportInput
+                {
+                    Sbom = SbomView.Parse(Encoding.UTF8.GetString(sbom)),
+                    SbomPath = options.Out.Replace('\\', '/'),
+                    Validation = report,
+                    ReleaseBuild = options.ReleaseBuild,
+                    Extras = ReportExtras.From(outcome.Machine, outcome.IgnoredDevices),
+                });
+                CommandFiles.Write(reportPath, CommandFiles.Render(document, options.Report));
+                await stdout.WriteLineAsync($"[bericht]   {reportPath}").ConfigureAwait(false);
             }
-
-            WriteFile(options.Out, sbom);
             var resultPath = ResultFile.PathFor(options.Out);
-            WriteFile(resultPath, ResultFile.Write("build", options.Out, report, exitCode));
+            CommandFiles.Write(resultPath, ResultFile.Write("build", options.Out, report, exitCode));
             await stdout.WriteLineAsync($"[ausgabe]   {options.Out}").ConfigureAwait(false);
             await stdout.WriteLineAsync($"[ausgabe]   {resultPath}").ConfigureAwait(false);
             await stdout.WriteLineAsync($"Fertig in {clock.Elapsed.TotalSeconds.ToString("0.0", CultureInfo.InvariantCulture).Replace('.', ',')} s").ConfigureAwait(false);
@@ -87,22 +99,6 @@ public static class BuildCommand
             partial += $" ({string.Join(", ", tools)})";
         }
         return $"{vendor}, {partial}, {Count(outcome.GsdmlFiles, "GSDML-Datei", "GSDML-Dateien")}";
-    }
-
-    private static void WriteFile(string path, byte[] content)
-    {
-        try
-        {
-            if (Path.GetDirectoryName(Path.GetFullPath(path)) is { } directory)
-            {
-                Directory.CreateDirectory(directory);
-            }
-            File.WriteAllBytes(path, content);
-        }
-        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
-        {
-            throw new UsageException("OUTPUT_NOT_WRITABLE", $"Die Datei {path} lässt sich nicht schreiben: {ex.Message}", ex);
-        }
     }
 
     private static void TryWriteAborted(string sbomPath, PlcSbomException cause)

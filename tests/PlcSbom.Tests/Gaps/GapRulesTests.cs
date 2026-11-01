@@ -268,4 +268,11 @@ public sealed class GapRulesTests
     {
         Assert.Null(GapCatalog.Find("gibt-es-nicht"));
     }
+
+    [Fact]
+    public void Every_gap_code_says_what_closes_it()
+    {
+        Assert.All(GapCatalog.All, g => Assert.False(string.IsNullOrWhiteSpace(GapCatalog.Remedy(g.Code)), g.Code));
+        Assert.Null(GapCatalog.Remedy("unbekannt"));
+    }
 }

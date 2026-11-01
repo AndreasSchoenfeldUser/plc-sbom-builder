@@ -101,7 +101,7 @@ public sealed class CpeMap
         firmware.Length > 1 && firmware[0] is 'V' or 'v' && char.IsDigit(firmware[1]) ? firmware[1..] : firmware;
 
     /// <summary>CPE 2.3 formatted string: characters other than letters, digits, '.', '_' and '-' are quoted with '\'.</summary>
-    private static string Escape(string value)
+    internal static string Escape(string value)
     {
         var b = new StringBuilder(value.Length);
         foreach (var c in value)

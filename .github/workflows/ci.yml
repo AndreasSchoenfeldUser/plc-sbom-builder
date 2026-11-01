@@ -99,8 +99,18 @@ jobs:
             expect 0 build --config samples/maschine-xy/machine.yml --release R2026.10 \
               --commit a1b2c3d4e5f60718293a4b5c6d7e8f9012345678 --out "out/m9/$run/sbom-maschine.cdx.json" --report none
           done
-          unset SOURCE_DATE_EPOCH
           cmp out/m9/a/sbom-maschine.cdx.json out/m9/b/sbom-maschine.cdx.json
+          # M10 to M12: report from build, compare with the field file (deviations: exit 1), ids.
+          expect 0 build --config samples/maschine-xy/machine.yml --release R2026.10 \
+            --commit a1b2c3d4e5f60718293a4b5c6d7e8f9012345678 --out out/m10/sbom-maschine.cdx.json
+          test -s out/m10/sbom-maschine.html
+          expect 1 compare out/m10/sbom-maschine.cdx.json --field samples/maschine-xy/feld/1042.json \
+            --as-built out/m10/sbom-1042.cdx.json --csv out/m10/abgleich-1042.csv
+          test -s out/m10/sbom-maschine.compare-1042.result.json
+          expect 0 validate out/m10/sbom-1042.cdx.json
+          expect 0 report out/m10/sbom-1042.cdx.json --format md --out out/m10/bericht-1042.md --field samples/maschine-xy/feld/1042.json
+          expect 0 ids out/m10/sbom-maschine.cdx.json --csaf fixtures/csaf --cpe-map samples/maschine-xy/kennungen/cpe-map.yml --out out/m10/ids.json
+          unset SOURCE_DATE_EPOCH
 
       - uses: actions/upload-artifact@v7
         with:

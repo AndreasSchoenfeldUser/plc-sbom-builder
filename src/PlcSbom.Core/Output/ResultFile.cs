@@ -1,5 +1,6 @@
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using PlcSbom.Core.FieldState;
 using PlcSbom.Core.Gaps;
 using PlcSbom.Core.Validation;
 
@@ -38,7 +39,7 @@ public static class ResultFile
             Findings = [new Finding(Severity.Error, cause.Code, cause.Message)],
         }, cause.ExitCode);
 
-    public static byte[] Write(string command, string sbomFile, ValidationReport report, int exitCode)
+    public static byte[] Write(string command, string sbomFile, ValidationReport report, int exitCode, Comparison? comparison = null, string? asBuilt = null)
     {
         using var stream = new MemoryStream();
         using (var w = new Utf8JsonWriter(stream, new JsonWriterOptions
@@ -60,6 +61,10 @@ public static class ResultFile
             w.WriteNumber("notes", report.Notes);
             w.WriteNumber("components", report.Components);
             w.WriteNumber("stations", report.Stations);
+            if (comparison is not null)
+            {
+                WriteComparison(w, comparison, asBuilt);
+            }
 
             w.WriteStartObject("gaps");
             var gapCodes = GapCatalog.All.ToDictionary(g => TrValidator.ToCode(g.Code), g => g.Code, StringComparer.Ordinal);
@@ -104,5 +109,50 @@ public static class ResultFile
         }
         stream.WriteByte((byte)'\n');
         return stream.ToArray();
+    }
+
+    /// <summary>compare: key figures and every device that is not "gleich" (CLAUDE.md section 7.3).</summary>
+    private static void WriteComparison(Utf8JsonWriter w, Comparison comparison, string? asBuilt)
+    {
+        w.WriteStartObject("comparison");
+        w.WriteString("field", comparison.Field.SourcePath);
+        w.WriteString("fieldSha256", comparison.Field.Sha256);
+        w.WriteString("serialNumber", comparison.Field.SerialNumber);
+        if (asBuilt is not null)
+        {
+            w.WriteString("asBuilt", asBuilt.Replace('\\', '/'));
+        }
+        w.WriteNumber("checked", comparison.Checked);
+        w.WriteNumber("equal", comparison.Count(ComparisonStatus.Equal));
+        w.WriteNumber("different", comparison.Count(ComparisonStatus.Different));
+        w.WriteNumber("projectOnly", comparison.Count(ComparisonStatus.ProjectOnly));
+        w.WriteNumber("fieldOnly", comparison.Count(ComparisonStatus.FieldOnly));
+        w.WriteNumber("passive", comparison.Count(ComparisonStatus.Passive));
+        w.WriteNumber("deviations", comparison.Deviations);
+        w.WriteStartArray("deviationList");
+        foreach (var e in comparison.Entries.Where(e => e.Status is ComparisonStatus.Different or ComparisonStatus.ProjectOnly or ComparisonStatus.FieldOnly))
+        {
+            w.WriteStartObject();
+            w.WriteString("status", e.StatusText);
+            Optional(w, "component", e.Sbom?.BomRef);
+            Optional(w, "station", e.Station);
+            Optional(w, "position", e.Position);
+            Optional(w, "orderNumberSbom", e.SbomOrderNumber);
+            Optional(w, "orderNumberField", e.Field?.OrderNumber);
+            Optional(w, "firmwareSbom", e.SbomFirmware);
+            Optional(w, "firmwareField", e.Field?.Firmware);
+            w.WriteString("message", string.Join(" ", e.Notes));
+            w.WriteEndObject();
+        }
+        w.WriteEndArray();
+        w.WriteEndObject();
+    }
+
+    private static void Optional(Utf8JsonWriter w, string name, string? value)
+    {
+        if (value is not null)
+        {
+            w.WriteString(name, value);
+        }
     }
 }

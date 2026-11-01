@@ -14,18 +14,18 @@ Eine SBOM allein erfüllt den Cyber Resilience Act nicht. Das Werkzeug bewertet 
 
 | Befehl | Zweck | Stand |
 |---|---|---|
-| `build` | SBOM aus `machine.yml` und den SPS-Projekten erzeugen, mit Hersteller- und Teil-SBOMs zusammenführen, prüfen, Ergebnisdatei schreiben | **nutzbar** für die Adapter `codesys` (Quelle `v35`), `studio5000`, `twincat` und `tia-aml`; Prüfbericht folgt (M10) |
+| `build` | SBOM aus `machine.yml` und den SPS-Projekten erzeugen, mit Hersteller- und Teil-SBOMs zusammenführen, prüfen, Prüfbericht und Ergebnisdatei schreiben | **nutzbar** für die Adapter `codesys` (Quelle `v35`), `studio5000`, `twincat` und `tia-aml` |
 | `validate` | vorhandene SBOM prüfen (Schema und TR-03183-2), Ergebnisdatei schreiben | **nutzbar** |
 | `inspect` | Rohinventar eines Adapters ausgeben | **nutzbar für `codesys`** (CODESYS V3.5, PLCopen XML), **`studio5000`** (Rockwell, L5X), **`twincat`** (Beckhoff TwinCAT 3) und **`tia-aml`** (Siemens TIA Portal V17–V21, AML-Export, mit `--gsdml` für GSD-Geräte); `tia-portal` folgt (M14) |
-| `report` | Prüfbericht als HTML oder Markdown | folgt (M10) |
-| `compare` | SBOM mit dem Ist-Stand aus dem Feld abgleichen | folgt (M11) |
-| `ids` | Kennungen gegen CSAF-Advisories prüfen | folgt (M12) |
+| `report` | Prüfbericht als HTML oder Markdown zu einer vorhandenen SBOM (Abschnitt 17) | **nutzbar** |
+| `compare` | SBOM mit dem Ist-Stand aus dem Feld abgleichen, as-built-SBOM je Seriennummer (Abschnitt 18) | **nutzbar** |
+| `ids` | Kennungen gegen CSAF-Advisories und CPE-Tabelle prüfen (Abschnitt 19) | **nutzbar** |
 | `export-aml`, `doctor` | TIA Portal Openness (nur Windows mit TIA V21) | folgt (M14) |
 
 Ein Befehl, der noch fehlt, endet mit Exit 2 und nennt den Meilenstein:
 
 ```text
-[NOT_IMPLEMENTED] Der Befehl „report“ ist in plc-sbom 0.1.0 noch nicht umgesetzt. Er folgt mit Meilenstein M10.
+[NOT_IMPLEMENTED] Der Befehl „doctor“ ist in plc-sbom 0.1.0 noch nicht umgesetzt. Er folgt mit Meilenstein M14.
 ```
 
 Die Optionen aller Befehle sind schon angelegt und erscheinen in der Hilfe (`plc-sbom <befehl> --help`).
@@ -65,10 +65,10 @@ plc-sbom build --config machine.yml --release <kennung> [--commit <sha>]
 | `--release` | Release-Kennung, Version der Maschine und der Anwenderprogramme, z. B. `R2026.10` oder `dev-142`; ohne Leerzeichen |
 | `--commit` | Git-Commit, aus dem gebaut wird. Ohne Angabe die Umgebungsvariable `GIT_COMMIT` (Jenkins), sonst `git rev-parse HEAD` im Verzeichnis der Maschinenbeschreibung |
 | `--out` | SBOM-Datei, Vorgabe `build/sbom-maschine.cdx.json`; das Verzeichnis wird angelegt |
-| `--report` | Prüfbericht neben der SBOM; in Version 0.1.0 noch ohne Wirkung (M10), `none` unterdrückt den Hinweis |
+| `--report` | Prüfbericht neben der SBOM: `html` (Vorgabe), `md` oder `none`. Er heißt wie die SBOM ohne `.cdx.json`, also `build/sbom-maschine.html` (Abschnitt 17) |
 | `--release-build` | Warnungen zählen als Befund, Exit 1 |
 
-Ein Aufruf erledigt alles: Jede Station wird mit ihrem Adapter gelesen, die Angaben aus `machine.yml` kommen dazu (Hersteller, Kontakte, Lizenzen, CPE, passive Geräte), je Station entsteht das Anwenderprogramm mit dem Hash über seine Quellen, Hersteller- und Teil-SBOMs werden eingehängt. Danach prüft das Werkzeug die fertige Datei wie `validate` und schreibt SBOM und Ergebnisdatei.
+Ein Aufruf erledigt alles: Jede Station wird mit ihrem Adapter gelesen, die Angaben aus `machine.yml` kommen dazu (Hersteller, Kontakte, Lizenzen, CPE, passive Geräte), je Station entsteht das Anwenderprogramm mit dem Hash über seine Quellen, Hersteller- und Teil-SBOMs werden eingehängt. Danach prüft das Werkzeug die fertige Datei wie `validate` und schreibt SBOM, Prüfbericht und Ergebnisdatei.
 
 Beispiel mit der Beispielmaschine aus dem Repository (`samples/maschine-xy`, gekürzt):
 
@@ -85,7 +85,7 @@ Beispiel mit der Beispielmaschine aus dem Repository (`samples/maschine-xy`, gek
             Warnung: [LICENSE_UNKNOWN] plc-1-fw-gsd-device-1-0-0: Keine Distributionslizenz bekannt.
             ...
             109 Hinweise ausgeblendet, mit --verbose anzeigen.
-[bericht]   Der Prüfbericht folgt mit Meilenstein M10; in dieser Version wird keiner geschrieben.
+[bericht]   build/sbom-maschine.html
 [ausgabe]   build/sbom-maschine.cdx.json
 [ausgabe]   build/sbom-maschine.result.json
 Fertig in 0,3 s
@@ -320,7 +320,7 @@ Eine logische Komponente (Property `<namespace>:logicalComponent` = `true`, etwa
 | Exit | Bedeutung | Wer ist dran |
 |---|---|---|
 | 0 | erfolgreich (Warnungen im Entwicklungs-Build und Hinweise ändern daran nichts) | – |
-| 1 | Befund: Prüfung nicht bestanden | Entwickler, Projekt |
+| 1 | Befund: Prüfung nicht bestanden; `compare` findet Abweichungen | Entwickler, Projekt |
 | 2 | Aufruf oder Konfiguration falsch: `machine.yml` ungültig, Datei fehlt, unbekannte Option, Befehl noch nicht umgesetzt | Repository |
 | 3 | Umgebung, z. B. Openness-Befehl auf Linux (`OPENNESS_WINDOWS_ONLY`) | Agent-Betreuer |
 | 4 | Abbruch durch unerwarteten Fehler (`UNEXPECTED`) | Agent-Betreuer |
@@ -395,7 +395,7 @@ Die Begründung je Code mit der TR-Stelle steht in [docs/regeln-tr03183.md](docs
 | `gaps` | Anzahl je Lückencode |
 | `findings` | alle Meldungen mit Schwere, Code, Komponente, betroffenen TR-Feldern und Text; bei `build` auch die Warnungen der Adapter und zu eingelesenen SBOMs, Commit und Zeitstempel |
 
-`command` ist `build` oder `validate`. Endet `build` mit Exit 2, 3 oder 4, schreibt es die Ergebnisdatei trotzdem: `exitCode` nennt den Exit, `errors` ist 1, und der einzige Eintrag in `findings` trägt den Code der Ursache, etwa `CONFIG_NOT_FOUND`. Eine SBOM entsteht dann nicht. So kann die Pipeline die Datei immer lesen.
+`command` ist `build`, `validate` oder `compare`. `compare` schreibt seine Ergebnisdatei neben die SBOM als `<sbom>.compare-<seriennummer>.result.json` und lässt die von `build` stehen; dazu kommt der Abschnitt `comparison` (Abschnitt 18.5). Endet `build` mit Exit 2, 3 oder 4, schreibt es die Ergebnisdatei trotzdem: `exitCode` nennt den Exit, `errors` ist 1, und der einzige Eintrag in `findings` trägt den Code der Ursache, etwa `CONFIG_NOT_FOUND`. Eine SBOM entsteht dann nicht. So kann die Pipeline die Datei immer lesen.
 
 ## 10. In der Pipeline
 
@@ -416,7 +416,7 @@ stage('SBOM') {
   }
 }
 stage('Archiv') {
-  steps { archiveArtifacts artifacts: 'build/sbom-*.cdx.json, build/*.result.json' }
+  steps { archiveArtifacts artifacts: 'build/sbom-*.cdx.json, build/sbom-*.html, build/*.result.json' }
 }
 ```
 
@@ -443,6 +443,17 @@ Jenkins setzt `GIT_COMMIT`; `--commit` ist dann nicht nötig. Für reproduzierba
 | `[VENDOR_SBOM_NOT_TR_CONFORM]`, `[PARTIAL_SBOM_NOT_TR_CONFORM]` (Warnung) | Die eingelesene SBOM erfüllt die TR nicht | `plc-sbom validate <datei>` zeigt die Einzelheiten; Abschnitt 4.4 |
 | `[INPUT_SBOM_REF_UNKNOWN]` (Warnung) | Eine eingelesene SBOM verweist in `dependencies` auf `bom-ref`s, die es in ihr nicht gibt | Die Verweise sind nicht übernommen; Datei beim Lieferanten melden |
 | `[SBOM_NOT_FOUND]` | Die angegebene Datei gibt es nicht | Pfad prüfen; relative Pfade gelten ab dem Arbeitsverzeichnis |
+| `[SBOM_INVALID]` | `report`, `compare`, `ids`: Die SBOM ist kein JSON-Objekt | Datei mit `plc-sbom validate` prüfen |
+| `[SBOM_NOT_PLC_SBOM]` | `compare`: Die SBOM enthält keine Properties von plc-sbom (Station, Position, Bestellnummer) | SBOM mit `plc-sbom build` erzeugen |
+| `[FIELD_NOT_FOUND]`, `[FIELD_NOT_READABLE]` | Die Feld-Datei aus `--field` fehlt oder ist nicht lesbar | Pfad prüfen |
+| `[FIELD_INVALID]` | Die Feld-Datei ist kein gültiges JSON, hat einen unbekannten oder doppelten Schlüssel, ein Gerät ohne `position` und `orderNumber`, oder unter `webapi` keine Antwort mit IM0 | Datei und Stelle stehen in der Meldung; Abschnitt 18.1 |
+| `[FIELD_MACHINE_MISMATCH]` | Die Feld-Datei nennt eine andere Maschine als die SBOM | Feld-Datei der richtigen Maschine nehmen oder `machine` korrigieren |
+| `[FIELD_WEBAPI_ERROR]` (Warnung) | Die CPU hat auf `Modules.ReadIdentificationMaintenance` mit einem Fehler geantwortet; das Gerät ist nicht abgeglichen | Antwort neu abfragen, Rechte des Web-API-Benutzers prüfen |
+| `[AS_BUILT_VENDOR_SBOM_DETACHED]` (Warnung) | Die Hersteller-SBOM beschreibt die projektierte Firmware, im Feld läuft eine andere; sie ist in der as-built-SBOM nicht zugeordnet | Hersteller-SBOM zur Ist-Version beschaffen |
+| `[AS_BUILT_CPE_REMOVED]` (Warnung) | Die CPE trägt die projektierte Version nicht im Versionsfeld; sie ist in der as-built-SBOM entfernt | CPE-Tabelle prüfen (`{version}` im Versionsfeld) |
+| `[CSAF_DIR_NOT_FOUND]`, `[CSAF_NONE]` | `ids`: Das Verzeichnis aus `--csaf` fehlt oder enthält kein CSAF-Dokument | Advisories als `*.json` ablegen (Abschnitt 19) |
+| `[CSAF_INVALID]`, `[CSAF_NOT_CSAF]` (Warnung) | `ids`: Eine Datei im Verzeichnis ist kein JSON bzw. kein CSAF-Dokument; sie wird übersprungen | Datei entfernen oder neu laden |
+| `[SOURCE_DATE_EPOCH_INVALID]` bei `compare` | wie bei `build` | Variable korrigieren oder entfernen |
 | `[JSON_INVALID]` | Die Datei ist kein gültiges JSON | Datei mit einem JSON-Werkzeug prüfen, oft abgeschnitten oder falsch kodiert |
 | `[NOT_CYCLONEDX]` | `bomFormat` fehlt oder ist nicht `CycloneDX` | Die Datei ist vermutlich SPDX oder ein anderes Format; SPDX prüft das Werkzeug nicht |
 | `[SPEC_VERSION_UNSUPPORTED]` | CycloneDX älter als 1.6 | SBOM mit CycloneDX 1.6 neu erzeugen |
@@ -780,6 +791,205 @@ IP-Adressen, Subnetzmasken, PROFINET-Gerätenamen und Variablentabellen werden n
 
 Alle gelesenen Stellen und Regeln: [docs/adapter-tia-aml.md](docs/adapter-tia-aml.md).
 
-## 17. Was folgt
+## 17. Prüfbericht: `report`
 
-Die nächsten Schritte nach Meilensteinplan (CLAUDE.md Abschnitt 12): M1, M2 (CODESYS V3.5), M5 (Rockwell Studio 5000), M6 (Beckhoff TwinCAT 3), M7 (Siemens TIA Portal, AML-Export), M8 (GSD-Geräte mit GSDML-Dateien) und M9 (`build` mit `machine.yml`, Hersteller- und Teil-SBOMs) sind umgesetzt; alle Prüfregeln mit ihrer TR-Stelle stehen in [docs/regeln-tr03183.md](docs/regeln-tr03183.md). CODESYS V2.3 und CODESYS 4 (M3, M4) warten auf Demo-Projekte. Als Nächstes kommt der Prüfbericht in HTML und Markdown (M10), danach der Abgleich mit dem Ist-Stand aus dem Feld (M11) und die Kennungsprüfung gegen CSAF (M12). TIA Portal über Openness kommt zuletzt (M14).
+```text
+plc-sbom report <sbom> --format html|md --out <datei> [--field <feld-datei>] [--release-build]
+```
+
+Den Prüfbericht schreibt `build` von selbst neben die SBOM (`--report`, Abschnitt 4). `report` schreibt ihn zu einer vorhandenen SBOM, etwa einer archivierten oder einer as-built-SBOM, wahlweise mit dem Abgleich gegen eine Feld-Datei.
+
+```text
+> plc-sbom report build/sbom-maschine.cdx.json --format md --out build/sbom-bericht.md
+[bericht]   build/sbom-bericht.md (Markdown), Prüfung bestanden (Entwicklungs-Build)
+```
+
+| Option | Wirkung |
+|---|---|
+| `--format` | `html` (eine Datei ohne Skript und ohne Verweise ins Netz, hell und dunkel nach Systemeinstellung, druckbar) oder `md` (Markdown, etwa für ein Repository oder ein Wiki) |
+| `--out` | Berichtsdatei; das Verzeichnis wird angelegt |
+| `--field` | Feld-Datei wie bei `compare` (Abschnitt 18); ergänzt den Abschnitt „Abgleich mit dem Feld“ |
+| `--release-build` | Prüfstatus wie im Release-Build: Warnungen gelten als „nicht bestanden“ |
+
+`report` endet mit Exit 0, sobald der Bericht geschrieben ist, auch wenn die SBOM Fehler hat; als Gate dienen `build` und `validate`. Fehlt die SBOM oder ist sie kein JSON-Objekt: Exit 2.
+
+**Inhalt.** Der Bericht entsteht aus der SBOM und ihrer Prüfung:
+
+- **Kopf:** Maschine, Release, Commit, Ersteller der SBOM, Datei, Format, SBOM-Kennung, Erzeugungszeit (`metadata.timestamp`, nicht die Uhrzeit des Berichts), Werkzeugversion, Prüfstatus und die Zahl der Fehler, Warnungen und Hinweise.
+- **Kennzahlen:** Komponenten, Stationen, Firmware-Komponenten, Hersteller-SBOMs, Teil-SBOMs, Komponenten ohne Hash.
+- **Quellen** je Station (Adapter, Datei, SHA-256, Engineering-Werkzeug, Exportzeit bei AML), die eingelesenen Hersteller- und Teil-SBOMs und die Werkzeuge aus `metadata.tools`.
+- **Maschinenbaum:** Maschine → Station → Steuerung (mit den Bestandteilen aus der Hersteller-SBOM), Anwenderprogramm, E/A-Module und Feldgeräte, Laufzeit, Bibliotheken, Teil-SBOMs; nicht zugeordnete Geräte eigens. Im HTML lassen sich die Gruppen aufklappen.
+- **Komponenten je Station** als Tabelle: Typ, Name, Version, Kennung (CPE, sonst PURL, sonst `bom-ref`), Pflichtfelder („vollständig“ oder die Lückencodes je Schwere), Herkunft von Hersteller und Werten (`source`, `gsdml`, `devdesc`, `declared`, `assumed`, Firmware `projected` usw.).
+- **Lücken** je Code mit Schwere, Anzahl, Komponenten, Erklärung und was die Lücke schließt.
+- **Weitere Befunde**, die kein Lückencode sind (etwa `[PARTIAL_SBOM_NOT_TR_CONFORM]`).
+- **Abgleich mit dem Feld**, nur mit `--field`.
+- **Anhang: Hardware ohne eigene Firmware** (passive Module, Racks) und mit `ignoreDevices` ausgeschlossene Geräte.
+
+Passive Module, Racks und ausgeschlossene Geräte stehen nicht in der SBOM, weil sie keine Software enthalten; ebenso wenig, welches Engineering-Werkzeug zu welcher Station gehört. Diese Angaben hat nur `build`, das die Projekte liest. Der Bericht von `report` sagt an diesen Stellen, dass sie fehlen, statt sie zu schätzen.
+
+Gleiche SBOM ergibt denselben Bericht, Byte für Byte. Die Berichte der Beispielmaschine liegen als Vergleich unter `tests/PlcSbom.Tests/golden/maschine-xy.bericht.html` und `.md`.
+
+## 18. Abgleich mit dem Feld: `compare`
+
+```text
+plc-sbom compare <sbom> --field <feld-datei> [--as-built <datei>] [--csv <datei>] [--verbose]
+```
+
+`compare` stellt den projektierten Stand der SBOM neben einen ausgelesenen Ist-Stand, etwa aus der Inbetriebnahme, und meldet jede Abweichung. Das Werkzeug liest keine Anlage im Netz aus; den Ist-Stand liefern Herstellerwerkzeuge oder ein eigenes Skript als Datei.
+
+### 18.1 Feld-Datei
+
+```json
+{
+  "machine": "Maschine XY",
+  "serialNumber": "1042",
+  "date": "2026-10-22",
+  "source": "inbetriebnahme",
+  "devices": [
+    { "station": "PLC_1", "position": "S7-1200 station_1/0/1", "orderNumber": "6ES7 214-1AG40-0XB0",
+      "firmware": "V4.6.1", "hardwareRevision": "5", "serial": "S V-L9A12345", "via": "webserver" }
+  ]
+}
+```
+
+| Schlüssel | Pflicht | Inhalt |
+|---|---|---|
+| `machine` | ja | Name der Maschine, genau wie in der SBOM; sonst Exit 2 (`[FIELD_MACHINE_MISMATCH]`) |
+| `serialNumber` | ja | Seriennummer der Maschine |
+| `date` | ja | Tag des Auslesens, `JJJJ-MM-TT` |
+| `source` | nein | Anlass, etwa `inbetriebnahme`, `abnahme`, `service` |
+| `devices` | ja | Liste der Geräte |
+
+Je Gerät: `station`, `position`, `orderNumber`, `firmware`, `hardwareRevision`, `serial`, `via` (wie gelesen, etwa `webserver`, `proneta`, `manuell`), alle optional, aber `position` oder `orderNumber` muss da sein. `position` ist der Wert von `<namespace>:device:position` aus der SBOM; `inspect` und der Prüfbericht zeigen ihn. Unbekannte Schlüssel sind ein Fehler (Exit 2), wie bei `machine.yml`.
+
+**Antworten der S7-1500 Web-API.** Statt der Werte kann ein Gerät unter `webapi` die Antworten der CPU auf `Modules.ReadIdentificationMaintenance` mit `number` 0 unverändert enthalten, `actual` und optional `configured`:
+
+```json
+{ "station": "PLC_1", "webapi": {
+    "actual":     { "jsonrpc": "2.0", "id": "…", "result": { "data": { "order_number": "6ES7 518-3AT10-0AB0 ", "serial_number": "10S C-521E1fFj24", "hardware_revision": 0, "software_revision": { "type": "V", "major": 4, "minor": 1, "patch": 0 }, "…": "…" } } },
+    "configured": { "jsonrpc": "2.0", "id": "…", "result": { "data": { "…": "…" } } } } }
+```
+
+Bestellnummer, Seriennummer, Hardware-Stand und Firmware (`V4.1.0`) kommen dann aus `actual`; die Leerzeichen, mit denen die CPU Texte auffüllt, schneidet das Werkzeug ab. `configured` ist der Stand, den das in die CPU geladene Projekt erwartet; weicht er von der SBOM ab, läuft in der CPU ein anderes Projekt, und das Gerät ist `abweichend`. Hat die CPU mit einem Fehler geantwortet, bleibt das Gerät mit Warnung `[FIELD_WEBAPI_ERROR]` außen vor. Werte und `webapi` zusammen in einem Gerät sind ein Fehler.
+
+### 18.2 Zuordnung und Ergebnis
+
+Ein Gerät der Feld-Datei wird zuerst über Station und Position einem Gerät der SBOM zugeordnet, sonst über die Bestellnummer (ohne Leerzeichen, Groß-/Kleinschreibung egal); bei mehreren gleichen zuerst dem mit gleicher Firmware. Eine Bestellnummer mit Platzhaltern in der SBOM (`501xxxxx`) passt als Muster.
+
+| Ergebnis | Bedeutung | Abweichung |
+|---|---|---|
+| `gleich` | zugeordnet, Bestellnummer und Firmware stimmen | nein |
+| `abweichend` | zugeordnet, Bestellnummer oder Firmware weichen ab, oder `configured` der Web-API weicht ab | ja |
+| `nur-im-projekt` | in der SBOM, im Ist-Stand nicht gefunden | ja |
+| `nur-im-feld` | im Ist-Stand, kein Gerät der SBOM passt | ja |
+| `passiv` | im Ist-Stand mit Firmware 0.0 (etwa eine BaseUnit), kein Gerät der SBOM passt; passive Geräte stehen nie in der SBOM | nein |
+
+Die Firmware wird ohne führendes `V` verglichen. Ist eine Seite genauer, beginnt aber gleich (projektiert `V2.8`, im Feld `V2.8.3`), gilt das als gleich, mit Hinweis. Kennt nur das Feld eine Firmware (EtherCAT-Klemme, GSD-Gerät), ist das Gerät `gleich` mit dem Hinweis, dass die SBOM keine führt.
+
+**Exit 1** bei jeder Abweichung; ohne Abweichung Exit 0. Gleich und passiv zeigt die Konsole nur mit `--verbose`. Beispiel mit der Beispielmaschine (gekürzt):
+
+```text
+> plc-sbom compare build/sbom-maschine.cdx.json --field samples/maschine-xy/feld/1042.json --as-built build/sbom-1042.cdx.json --csv build/abgleich-1042.csv
+[sbom]      build/sbom-maschine.cdx.json: Maschine XY R2026.10, 13 Geräte
+[feld]      samples/maschine-xy/feld/1042.json: Maschine XY, Seriennummer 1042, 22.10.2026 (inbetriebnahme), 5 Geräte
+[abgleich]  abweichend      PLC_1 S7-1200 station_1/0/1 CPU 1214C DC/DC/DC: Firmware im Feld V4.6.1, in der SBOM V4.5.
+[abgleich]  nur-im-projekt  Roboterzelle Device 1 (EtherCAT)/1/10 EL3214: Im Ist-Stand nicht gefunden.
+            ...
+[abgleich]  nur-im-projekt  Verpackung Gerät 4102/0000 0005: Im Ist-Stand nicht gefunden.
+[abgleich]  nur-im-feld     PLC_1 6GK5 208-0BA00-2AC2: Kein Gerät der SBOM passt (Station und Position, Bestellnummer).
+[abgleich]  13 geprüft: 2 gleich, 1 abweichend, 10 nur im Projekt, 1 nur im Feld, 1 passiv
+[as-built]  Seriennummer 1042: 3 Firmware-Stände aus dem Feld übernommen
+[prüfung]   as-built-SBOM: Schema CycloneDX 1.6 OK, 0 Fehler, 116 Warnungen, 109 Hinweise
+            Warnung: [AS_BUILT_VENDOR_SBOM_DETACHED] plc-1-fw: Die Hersteller-SBOM samples/maschine-xy/sbom/lieferanten/siemens-cpu1214c-v4.5-synthetisch.cdx.json beschreibt V4.5, im Feld läuft V4.6.1. Sie ist in der as-built-SBOM nicht mehr zugeordnet.
+[ausgabe]   build/abgleich-1042.csv
+[ausgabe]   build/sbom-1042.cdx.json
+[ausgabe]   build/sbom-maschine.compare-1042.result.json
+```
+
+### 18.3 as-built-SBOM
+
+Mit `--as-built` schreibt `compare` die SBOM dieser einen Maschine mit der Firmware, die im Feld läuft, auch wenn Geräte abweichen. Je Gerät mit Ist-Firmware:
+
+- Version und `<namespace>:firmware:version` sind der Ist-Stand, `<namespace>:firmware:origin` ist `as-found`, `<namespace>:firmware:projected` hält den alten Wert.
+- `<namespace>:device:serialNumber`, `<namespace>:device:hardwareRevision` und `<namespace>:field:via` kommen aus der Feld-Datei.
+- Die Lücken `firmware-projected-only` und `firmware-not-in-project` entfallen.
+- Trägt die CPE im Versionsfeld die projektierte Version (wie aus der CPE-Tabelle), bekommt sie die neue; sonst wird sie entfernt (`[AS_BUILT_CPE_REMOVED]`).
+- Eine Hersteller-SBOM beschreibt die projektierte Version. Weicht die Ist-Version ab, ist sie nicht mehr zugeordnet: Dateiname, Hash und Bestandteile entfallen, `vendor-sbom-missing`, `hash-unavailable` und `filename-unavailable` stehen wieder da (`[AS_BUILT_VENDOR_SBOM_DETACHED]`).
+
+Die Maschine bekommt `<namespace>:machine:serialNumber`, `<namespace>:field:source`, `:field:sha256` und `:field:date`, die SBOM eine eigene `serialNumber` aus Maschine, Release, Commit und Seriennummer. Zeitstempel ist `SOURCE_DATE_EPOCH`, sonst der Tag aus der Feld-Datei um 00:00 UTC; gleiche Eingabe ergibt dieselbe Datei. Geräte, die nicht in der Feld-Datei stehen, bleiben wie projektiert. Die as-built-SBOM wird wie bei `validate` geprüft; Fehler darin sind Exit 1.
+
+### 18.4 CSV
+
+`--csv` schreibt eine Zeile je Gerät: Station, Position, Gerät, Bestellnummer SBOM und Feld, Firmware SBOM und Feld, Ergebnis, Zuordnung (`Position` oder `Bestellnummer`), Seriennummer des Geräts, Hinweis. Trennzeichen `;`, UTF-8 mit BOM, damit Excel mit deutschen Einstellungen die Umlaute richtig zeigt.
+
+```text
+Station;Position;Gerät;Bestellnummer SBOM;Bestellnummer Feld;Firmware SBOM;Firmware Feld;Ergebnis;Zuordnung;Seriennummer Gerät;Hinweis
+PLC_1;S7-1200 station_1/0/1;CPU 1214C DC/DC/DC;6ES7 214-1AG40-0XB0;6ES7 214-1AG40-0XB0;V4.5;V4.6.1;abweichend;Position;S V-L9A12345;Firmware im Feld V4.6.1, in der SBOM V4.5.
+PLC_1;GSD device_1/0/0;BCL248i;501xxxxx;50132148;;V1.4.0;gleich;Position;2109ABC0042;Firmware V1.4.0 nur im Feld bekannt, die SBOM führt keine.
+```
+
+### 18.5 Ergebnisdatei
+
+`compare` schreibt `<sbom>.compare-<seriennummer>.result.json` neben die SBOM, aus `build/sbom-maschine.cdx.json` und Seriennummer 1042 also `build/sbom-maschine.compare-1042.result.json`. Aufbau wie in Abschnitt 9; die Befunde sind die der as-built-SBOM und die Warnungen des Abgleichs. Dazu (gekürzt):
+
+```json
+"comparison": {
+  "field": "samples/maschine-xy/feld/1042.json",
+  "fieldSha256": "d7a267dff9cae416397c172c13f32509bb18d09e0a84ab70b4dd5fe2308ba34f",
+  "serialNumber": "1042",
+  "asBuilt": "build/sbom-1042.cdx.json",
+  "checked": 13, "equal": 2, "different": 1, "projectOnly": 10, "fieldOnly": 1, "passive": 1,
+  "deviations": 12,
+  "deviationList": [
+    { "status": "abweichend", "component": "plc-1-fw", "station": "PLC_1", "position": "S7-1200 station_1/0/1",
+      "orderNumberSbom": "6ES7 214-1AG40-0XB0", "orderNumberField": "6ES7 214-1AG40-0XB0",
+      "firmwareSbom": "V4.5", "firmwareField": "V4.6.1", "message": "Firmware im Feld V4.6.1, in der SBOM V4.5." }
+  ]
+}
+```
+
+## 19. Kennungen prüfen: `ids`
+
+```text
+plc-sbom ids <sbom> --csaf <verzeichnis> [--cpe-map <datei>] [--out <datei.json>] [--verbose]
+```
+
+`ids` prüft, ob sich die Komponenten einer SBOM in CSAF-Advisories wiederfinden lassen, also ob die Kennungen für eine spätere Überwachung tragen. Es bewertet keine Schwachstellen: Versionen, betroffene Produkte und Schwachstellen liest `ids` nicht. Die Advisories legt man selbst als `*.json` in ein Verzeichnis (etwa von Siemens ProductCERT, CERT@VDE, CISA); `ids` geht nicht ins Netz.
+
+```text
+> plc-sbom ids build/sbom-maschine.cdx.json --csaf fixtures/csaf --cpe-map samples/maschine-xy/kennungen/cpe-map.yml --out build/kennungen.json
+[csaf]      fixtures/csaf: 1 Dokument, 3 Produkte mit model_numbers, 2 mit CPE
+[cpe]       samples/maschine-xy/kennungen/cpe-map.yml: 1 Eintrag
+[kennung]   nicht gefunden  partial-hmi-web/pkg:npm/maschine-xy-hmi-web@1.4.0?package-id=2ca70c872f5ed6a5 (maschine-xy-hmi-web) cpe:2.3:a:maschine-xy-hmi-web:maschine-xy-hmi-web:1.4.0:*:*:*:*:*:*:*
+[kennung]   gefunden        partial-hmi-web/pkg:npm/ms@2.1.3?package-id=bb1077662b3cb7e0 (ms) cpe:2.3:a:vercel:ms:2.1.3:*:*:*:*:node.js:*:*: PLCSBOM-TEST-0001
+[kennung]   nicht gefunden  partial-hmi-web/pkg:npm/picocolors@1.1.1?package-id=9b208867cdc8b323 (picocolors) cpe:2.3:a:picocolors:picocolors:1.1.1:*:*:*:*:*:*:*
+[kennung]   gefunden        plc-1-fw (CPU 1214C DC/DC/DC, Firmware) 6ES7 214-1AG40-0XB0: PLCSBOM-TEST-0001; CPE-Tabelle: Eintrag vorhanden
+[kennung]   muster          plc-1-fw-gsd-device-1-0-0 (BCL248i, Firmware) 501xxxxx; CPE-Tabelle: kein Eintrag
+[abdeckung] 2 von 4 Komponenten mit Kennung in CSAF gefunden (50 %); 1 mit Bestellnummer als Muster, 43 ohne Kennung
+[ausgabe]   build/kennungen.json
+```
+
+`fixtures/csaf` enthält nur ein synthetisches Testdokument. Mit sechs echten Advisories von Siemens findet `ids` die CPU 1214C der Beispielmaschine in SSA-224824, SSA-717113 und SSA-876787.
+
+**Wie verglichen wird.**
+
+- **Bestellnummer** (`<namespace>:device:orderNumber`) gegen `product_identification_helper.model_numbers`, ohne Leerzeichen und ohne Groß-/Kleinschreibung. Siemens schreibt `6ES7214-1AG40-0XB0`, die SBOM `6ES7 214-1AG40-0XB0`; beides passt. Eine Modellnummer im Advisory darf abgekürzt sein oder `?` und `*` enthalten (CSAF 2.0); solche Treffer zeigt die Konsole als „abgekürzt“.
+- **CPE** der Komponente gegen `product_identification_helper.cpe`, als CPE 2.3 oder CPE 2.2 (`cpe:/a:…`), Teil für Teil; `*` im Advisory passt auf alles.
+- **CPE-Tabelle** (`--cpe-map`): zeigt, ob es eine Zeile für Hersteller und Bestellnummer gibt, auch wenn die SBOM mangels Firmware-Version keine CPE trägt.
+
+| Ergebnis | Bedeutung |
+|---|---|
+| `gefunden` | mindestens ein Advisory nennt Bestellnummer oder CPE |
+| `nicht gefunden` | die Komponente hat eine Kennung, kein Advisory im Verzeichnis nennt sie |
+| `muster` | einzige Kennung ist eine Bestellnummer mit Platzhaltern (`501xxxxx`); sie ist nicht vergleichbar |
+| `keine Kennung` | weder Bestellnummer noch CPE, nur die `bom-ref` (etwa EtherCAT-Klemmen, Bibliotheken); nur mit `--verbose` einzeln gezeigt |
+
+Die Abdeckung ist „gefunden“ geteilt durch „gefunden“ plus „nicht gefunden“. `ids` endet immer mit Exit 0, wenn es lesen konnte; es misst und ist kein Gate. Exit 2, wenn SBOM, Verzeichnis oder CPE-Tabelle fehlen oder im Verzeichnis kein CSAF-Dokument liegt. Dateien, die kein CSAF sind, überspringt `ids` mit Warnung.
+
+`--out` schreibt den Abdeckungsbericht als JSON: `csaf` (Dokumente, Produkte mit `model_numbers` und mit CPE, übersprungene Dateien), `coverage` (Komponenten, mit Kennung, gefunden, nicht gefunden, Muster, ohne Kennung) und je Komponente `status` (`found`, `not-found`, `pattern`, `none`) mit den Treffern (`document`, `productId`, `product`, `vendor`, `via` = `model_numbers` oder `cpe`, `identifier`, `partial`).
+
+**Was sich bisher gezeigt hat** (01.11.2026): Die Advisories von Siemens und die OT-Advisories von CISA nennen Bestellnummern, aber keine CPE. Für Siemens-Geräte trägt also die Bestellnummer. EtherCAT-Klemmen und CODESYS-Geräte haben im Projekt keine Bestellnummer und lassen sich so nicht prüfen; der Ist-Stand aus dem Feld (Abschnitt 18) kann sie liefern.
+
+## 20. Was folgt
+
+Die nächsten Schritte nach Meilensteinplan (CLAUDE.md Abschnitt 12): M1, M2 (CODESYS V3.5), M5 (Rockwell Studio 5000), M6 (Beckhoff TwinCAT 3), M7 (Siemens TIA Portal, AML-Export), M8 (GSD-Geräte mit GSDML-Dateien), M9 (`build` mit `machine.yml`, Hersteller- und Teil-SBOMs), M10 (Prüfbericht), M11 (Abgleich mit dem Feld) und M12 (Kennungsprüfung gegen CSAF) sind umgesetzt; alle Prüfregeln mit ihrer TR-Stelle stehen in [docs/regeln-tr03183.md](docs/regeln-tr03183.md). CODESYS V2.3 und CODESYS 4 (M3, M4) warten auf Demo-Projekte. Als Nächstes kommen ein vollständiges Jenkinsfile und die Release-Pakete mit eigener SBOM (M13). TIA Portal über Openness kommt zuletzt (M14).

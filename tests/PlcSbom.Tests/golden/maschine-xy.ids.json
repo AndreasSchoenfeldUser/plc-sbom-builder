@@ -1,0 +1,332 @@
+{
+  "format": 1,
+  "command": "ids",
+  "sbom": "build/sbom-maschine.cdx.json",
+  "csaf": {
+    "documents": 1,
+    "products": 5,
+    "withModelNumbers": 3,
+    "withCpe": 2,
+    "skipped": 0
+  },
+  "coverage": {
+    "components": 48,
+    "withIdentifier": 4,
+    "found": 2,
+    "notFound": 2,
+    "pattern": 1,
+    "none": 43
+  },
+  "components": [
+    {
+      "bomRef": "partial-hmi-web/af63bd4c8601b7f1",
+      "name": "hmi-web",
+      "status": "none"
+    },
+    {
+      "bomRef": "partial-hmi-web/pkg:npm/maschine-xy-hmi-web@1.4.0?package-id=2ca70c872f5ed6a5",
+      "name": "maschine-xy-hmi-web",
+      "status": "not-found",
+      "cpe": "cpe:2.3:a:maschine-xy-hmi-web:maschine-xy-hmi-web:1.4.0:*:*:*:*:*:*:*"
+    },
+    {
+      "bomRef": "partial-hmi-web/pkg:npm/ms@2.1.3?package-id=bb1077662b3cb7e0",
+      "name": "ms",
+      "status": "found",
+      "cpe": "cpe:2.3:a:vercel:ms:2.1.3:*:*:*:*:node.js:*:*",
+      "hits": [
+        {
+          "document": "PLCSBOM-TEST-0001",
+          "productId": "6",
+          "product": "ms 2.1.3",
+          "via": "cpe",
+          "identifier": "cpe:/a:vercel:ms:2.1.3",
+          "partial": false
+        }
+      ]
+    },
+    {
+      "bomRef": "partial-hmi-web/pkg:npm/picocolors@1.1.1?package-id=9b208867cdc8b323",
+      "name": "picocolors",
+      "status": "not-found",
+      "cpe": "cpe:2.3:a:picocolors:picocolors:1.1.1:*:*:*:*:*:*:*"
+    },
+    {
+      "bomRef": "plc-1-app",
+      "name": "PLC_1, Anwenderprogramm",
+      "status": "none",
+      "vendor": "Musterbau GmbH"
+    },
+    {
+      "bomRef": "plc-1-fw",
+      "name": "CPU 1214C DC/DC/DC, Firmware",
+      "status": "found",
+      "vendor": "Siemens AG",
+      "orderNumber": "6ES7 214-1AG40-0XB0",
+      "cpe": "cpe:2.3:o:siemens:simatic_s7-1200_cpu_firmware:4.5:*:*:*:*:*:*:*",
+      "inCpeMap": true,
+      "hits": [
+        {
+          "document": "PLCSBOM-TEST-0001",
+          "productId": "1",
+          "product": "SIMATIC S7-1200 CPU 1214C DC/DC/DC (6ES7214-1AG40-0XB0)",
+          "vendor": "Siemens",
+          "via": "model_numbers",
+          "identifier": "6ES7214-1AG40-0XB0",
+          "partial": false
+        },
+        {
+          "document": "PLCSBOM-TEST-0001",
+          "productId": "3",
+          "product": "SIMATIC S7-1200 CPU Firmware",
+          "vendor": "Siemens",
+          "via": "cpe",
+          "identifier": "cpe:2.3:o:siemens:simatic_s7-1200_cpu_firmware:*:*:*:*:*:*:*:*",
+          "partial": false
+        }
+      ]
+    },
+    {
+      "bomRef": "plc-1-fw-gsd-device-1-0-0",
+      "name": "BCL248i, Firmware",
+      "status": "pattern",
+      "vendor": "Leuze electronic GmbH + Co. KG",
+      "orderNumber": "501xxxxx",
+      "inCpeMap": false
+    },
+    {
+      "bomRef": "plc-1-lib-lgf",
+      "name": "LGF",
+      "status": "none",
+      "vendor": "Siemens AG"
+    },
+    {
+      "bomRef": "roboterzelle-app",
+      "name": "Roboterzelle, Anwenderprogramm",
+      "status": "none",
+      "vendor": "Musterbau GmbH"
+    },
+    {
+      "bomRef": "roboterzelle-fw-device-1-ethercat-1",
+      "name": "EK1100, Firmware",
+      "status": "none",
+      "vendor": "Beckhoff Automation GmbH & Co. KG"
+    },
+    {
+      "bomRef": "roboterzelle-fw-device-1-ethercat-1-10",
+      "name": "EL3214, Firmware",
+      "status": "none",
+      "vendor": "Beckhoff Automation GmbH & Co. KG"
+    },
+    {
+      "bomRef": "roboterzelle-fw-device-1-ethercat-1-2",
+      "name": "EL3064, Firmware",
+      "status": "none",
+      "vendor": "Beckhoff Automation GmbH & Co. KG"
+    },
+    {
+      "bomRef": "roboterzelle-fw-device-1-ethercat-1-3",
+      "name": "EL3204-0200, Firmware",
+      "status": "none",
+      "vendor": "Beckhoff Automation GmbH & Co. KG"
+    },
+    {
+      "bomRef": "roboterzelle-fw-device-1-ethercat-1-4",
+      "name": "EL3204-0200, Firmware",
+      "status": "none",
+      "vendor": "Beckhoff Automation GmbH & Co. KG"
+    },
+    {
+      "bomRef": "roboterzelle-fw-device-1-ethercat-1-5",
+      "name": "EL3204-0200, Firmware",
+      "status": "none",
+      "vendor": "Beckhoff Automation GmbH & Co. KG"
+    },
+    {
+      "bomRef": "roboterzelle-fw-device-1-ethercat-1-6",
+      "name": "EL3403-0010, Firmware",
+      "status": "none",
+      "vendor": "Beckhoff Automation GmbH & Co. KG"
+    },
+    {
+      "bomRef": "roboterzelle-fw-device-1-ethercat-1-7",
+      "name": "EL4004, Firmware",
+      "status": "none",
+      "vendor": "Beckhoff Automation GmbH & Co. KG"
+    },
+    {
+      "bomRef": "roboterzelle-fw-device-1-ethercat-1-8",
+      "name": "EL2652, Firmware",
+      "status": "none",
+      "vendor": "Beckhoff Automation GmbH & Co. KG"
+    },
+    {
+      "bomRef": "roboterzelle-fw-device-1-ethercat-1-9",
+      "name": "EL2622, Firmware",
+      "status": "none",
+      "vendor": "Beckhoff Automation GmbH & Co. KG"
+    },
+    {
+      "bomRef": "roboterzelle-lib-tc2-standard",
+      "name": "Tc2_Standard",
+      "status": "none",
+      "vendor": "Beckhoff Automation GmbH"
+    },
+    {
+      "bomRef": "roboterzelle-lib-tc2-system",
+      "name": "Tc2_System",
+      "status": "none",
+      "vendor": "Beckhoff Automation GmbH"
+    },
+    {
+      "bomRef": "roboterzelle-lib-tc2-utilities",
+      "name": "Tc2_Utilities",
+      "status": "none",
+      "vendor": "Beckhoff Automation GmbH"
+    },
+    {
+      "bomRef": "roboterzelle-lib-tc3-module",
+      "name": "Tc3_Module",
+      "status": "none",
+      "vendor": "Beckhoff Automation GmbH"
+    },
+    {
+      "bomRef": "roboterzelle-lib-visudialogs",
+      "name": "VisuDialogs",
+      "status": "none"
+    },
+    {
+      "bomRef": "roboterzelle-lib-visuelem3dpath",
+      "name": "VisuElem3DPath",
+      "status": "none"
+    },
+    {
+      "bomRef": "roboterzelle-lib-visuelemmeter",
+      "name": "VisuElemMeter",
+      "status": "none"
+    },
+    {
+      "bomRef": "roboterzelle-lib-visuelems",
+      "name": "VisuElems",
+      "status": "none"
+    },
+    {
+      "bomRef": "roboterzelle-lib-visuelemsdatetime",
+      "name": "VisuElemsDateTime",
+      "status": "none"
+    },
+    {
+      "bomRef": "roboterzelle-lib-visuelemsspecialcontrols",
+      "name": "VisuElemsSpecialControls",
+      "status": "none"
+    },
+    {
+      "bomRef": "roboterzelle-lib-visuelemswincontrols",
+      "name": "VisuElemsWinControls",
+      "status": "none"
+    },
+    {
+      "bomRef": "roboterzelle-lib-visuelemtexteditor",
+      "name": "VisuElemTextEditor",
+      "status": "none"
+    },
+    {
+      "bomRef": "roboterzelle-lib-visuinputs",
+      "name": "visuinputs",
+      "status": "none"
+    },
+    {
+      "bomRef": "roboterzelle-lib-visunativecontrol",
+      "name": "VisuNativeControl",
+      "status": "none"
+    },
+    {
+      "bomRef": "roboterzelle-rt",
+      "name": "TwinCAT 3 Runtime",
+      "status": "none",
+      "vendor": "Beckhoff Automation GmbH & Co. KG"
+    },
+    {
+      "bomRef": "vendor-siemens-cpu1214c-v4-5-synthetisch/rtos",
+      "name": "Beispiel-Echtzeitkern",
+      "status": "none",
+      "vendor": "Siemens AG"
+    },
+    {
+      "bomRef": "vendor-siemens-cpu1214c-v4-5-synthetisch/tcpip",
+      "name": "Beispiel-TCP/IP-Stack",
+      "status": "none",
+      "vendor": "Siemens AG"
+    },
+    {
+      "bomRef": "verpackung-app",
+      "name": "Verpackung, Anwenderprogramm",
+      "status": "none",
+      "vendor": "Musterbau GmbH"
+    },
+    {
+      "bomRef": "verpackung-fw",
+      "name": "Gerät 4102/0000 0005, Firmware",
+      "status": "none"
+    },
+    {
+      "bomRef": "verpackung-lib-3slicense",
+      "name": "3SLicense",
+      "status": "none",
+      "vendor": "3S - Smart Software Solutions GmbH"
+    },
+    {
+      "bomRef": "verpackung-lib-breakpoint-logging-functions",
+      "name": "Breakpoint Logging Functions",
+      "status": "none",
+      "vendor": "3S - Smart Software Solutions GmbH"
+    },
+    {
+      "bomRef": "verpackung-lib-caa-device-diagnosis",
+      "name": "CAA Device Diagnosis",
+      "status": "none",
+      "vendor": "CAA Technical Workgroup"
+    },
+    {
+      "bomRef": "verpackung-lib-iostandard",
+      "name": "IoStandard",
+      "status": "none"
+    },
+    {
+      "bomRef": "verpackung-lib-robin",
+      "name": "Robin",
+      "status": "none",
+      "vendor": "INESC TEC"
+    },
+    {
+      "bomRef": "verpackung-lib-sm3-basic",
+      "name": "SM3_Basic",
+      "status": "none",
+      "vendor": "3S - Smart Software Solutions GmbH"
+    },
+    {
+      "bomRef": "verpackung-lib-sm3-cnc",
+      "name": "SM3_CNC",
+      "status": "none",
+      "vendor": "3S - Smart Software Solutions GmbH"
+    },
+    {
+      "bomRef": "verpackung-lib-sm3-robotics",
+      "name": "SM3_Robotics",
+      "status": "none",
+      "vendor": "3S - Smart Software Solutions GmbH"
+    },
+    {
+      "bomRef": "verpackung-lib-sm3-robotics-visu",
+      "name": "SM3_Robotics_Visu",
+      "status": "none",
+      "vendor": "3S - Smart Software Solutions GmbH"
+    },
+    {
+      "bomRef": "verpackung-lib-sm3-transformation",
+      "name": "SM3_Transformation",
+      "status": "none",
+      "vendor": "3S - Smart Software Solutions GmbH"
+    }
+  ]
+}

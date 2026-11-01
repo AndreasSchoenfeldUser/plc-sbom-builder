@@ -49,7 +49,8 @@ public sealed class BuildCommandTests : IDisposable
         Assert.Contains("[quellen]   1 Hersteller-SBOM (1 zugeordnet), 1 Teil-SBOM (syft), 1 GSDML-Datei", output);
         Assert.Contains("[merge]     Maschine XY > 3 Stationen > 49 Komponenten", output);
         Assert.Contains("[prüfung]   Schema CycloneDX 1.6 ............ OK", output);
-        Assert.Contains("[bericht]   Der Prüfbericht folgt mit Meilenstein M10", output);
+        Assert.Contains($"[bericht]   {Path.Combine(_dir, "build", "sbom-maschine.html")}", output);
+        Assert.StartsWith("<!doctype html>", File.ReadAllText(Path.Combine(_dir, "build", "sbom-maschine.html")));
         Assert.Contains($"[ausgabe]   {Out}", output);
         Assert.Matches(@"Fertig in \d+,\d s", output);
     }
@@ -74,12 +75,27 @@ public sealed class BuildCommandTests : IDisposable
     }
 
     [Fact]
-    public async Task Report_none_skips_the_report_line()
+    public async Task Report_none_skips_the_report()
     {
         var (_, output, _) = await Run("--report", "none");
 
         Assert.DoesNotContain("[bericht]", output);
+        Assert.False(File.Exists(Path.Combine(_dir, "build", "sbom-maschine.html")));
     }
+
+    [Fact]
+    public async Task Report_md_writes_the_markdown_report_like_the_golden_file()
+    {
+        var (_, output, _) = await Run("--report", "md");
+
+        var path = Path.Combine(_dir, "build", "sbom-maschine.md");
+        Assert.Contains($"[bericht]   {path}", output);
+        // The golden file names build/sbom-maschine.cdx.json; the command names the path given with --out.
+        var expected = File.ReadAllText(Golden.PathOf("maschine-xy.bericht.md")).Replace(SampleMachineSbomPath, Out.Replace('\\', '/'), StringComparison.Ordinal);
+        Assert.Equal(ToolVersion.Short == "0.1.0" ? expected : File.ReadAllText(path), File.ReadAllText(path));
+    }
+
+    private const string SampleMachineSbomPath = "build/sbom-maschine.cdx.json";
 
     [Fact]
     public async Task Missing_config_is_exit_2_with_a_result_file()

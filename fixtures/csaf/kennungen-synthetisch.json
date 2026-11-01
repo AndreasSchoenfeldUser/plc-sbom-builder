@@ -1,0 +1,153 @@
+{
+  "document": {
+    "category": "csaf_base",
+    "csaf_version": "2.0",
+    "distribution": {
+      "text": "Synthetisches Testdokument von Comquent für plc-sbom ids. Kein Security Advisory, keine Aussage über Schwachstellen.",
+      "tlp": {
+        "label": "WHITE"
+      }
+    },
+    "lang": "de",
+    "notes": [
+      {
+        "category": "summary",
+        "text": "Produktbaum nach dem Aufbau der Dokumente von Siemens ProductCERT (fixtures/_local/csaf/siemens) und mit CPE nach dem BSI-Beispiel der CSAF-Spezifikation (fixtures/_local/csaf/oasis). Bestellnummern aus den Fixtures des Repositorys. Enthält bewusst keine Schwachstellen.",
+        "title": "Zweck"
+      }
+    ],
+    "publisher": {
+      "category": "other",
+      "name": "Comquent GmbH (Testdaten)",
+      "namespace": "https://comquent.de"
+    },
+    "title": "Synthetisches CSAF-Dokument zur Kennungsprüfung",
+    "tracking": {
+      "current_release_date": "2026-11-01T00:00:00Z",
+      "id": "PLCSBOM-TEST-0001",
+      "initial_release_date": "2026-11-01T00:00:00Z",
+      "revision_history": [
+        {
+          "date": "2026-11-01T00:00:00Z",
+          "number": "1",
+          "summary": "Angelegt für die Tests von plc-sbom ids."
+        }
+      ],
+      "status": "final",
+      "version": "1"
+    }
+  },
+  "product_tree": {
+    "branches": [
+      {
+        "branches": [
+          {
+            "branches": [
+              {
+                "category": "product_version_range",
+                "name": "vers:intdot/<4.7.0",
+                "product": {
+                  "name": "SIMATIC S7-1200 CPU 1214C DC/DC/DC (6ES7214-1AG40-0XB0)",
+                  "product_id": "1",
+                  "product_identification_helper": {
+                    "model_numbers": [
+                      "6ES7214-1AG40-0XB0"
+                    ]
+                  }
+                }
+              }
+            ],
+            "category": "product_name",
+            "name": "SIMATIC S7-1200 CPU 1214C DC/DC/DC (6ES7214-1AG40-0XB0)"
+          },
+          {
+            "branches": [
+              {
+                "category": "product_version_range",
+                "name": "vers:all/*",
+                "product": {
+                  "name": "SIMATIC S7-1500 CPU 1511-1 PN, abgekürzte Modellnummer",
+                  "product_id": "2",
+                  "product_identification_helper": {
+                    "model_numbers": [
+                      "6ES7511-1A?02"
+                    ]
+                  }
+                }
+              }
+            ],
+            "category": "product_name",
+            "name": "SIMATIC S7-1500 CPU 1511-1 PN"
+          },
+          {
+            "branches": [
+              {
+                "category": "product_version_range",
+                "name": "vers:all/*",
+                "product": {
+                  "name": "SIMATIC S7-1200 CPU Firmware",
+                  "product_id": "3",
+                  "product_identification_helper": {
+                    "cpe": "cpe:2.3:o:siemens:simatic_s7-1200_cpu_firmware:*:*:*:*:*:*:*:*"
+                  }
+                }
+              }
+            ],
+            "category": "product_name",
+            "name": "SIMATIC S7-1200 CPU Firmware"
+          },
+          {
+            "branches": [
+              {
+                "category": "product_version_range",
+                "name": "vers:all/*",
+                "product": {
+                  "name": "SIMATIC ET 200SP Open Controller (ohne Identifikationshilfe)",
+                  "product_id": "4"
+                }
+              }
+            ],
+            "category": "product_name",
+            "name": "SIMATIC ET 200SP Open Controller"
+          }
+        ],
+        "category": "vendor",
+        "name": "Siemens"
+      },
+      {
+        "branches": [
+          {
+            "branches": [
+              {
+                "category": "product_version",
+                "name": "alle",
+                "product": {
+                  "name": "EK1100 EtherCAT-Koppler",
+                  "product_id": "5",
+                  "product_identification_helper": {
+                    "model_numbers": [
+                      "EK1100"
+                    ]
+                  }
+                }
+              }
+            ],
+            "category": "product_name",
+            "name": "EK1100"
+          }
+        ],
+        "category": "vendor",
+        "name": "Beckhoff"
+      }
+    ],
+    "full_product_names": [
+      {
+        "name": "ms 2.1.3",
+        "product_id": "6",
+        "product_identification_helper": {
+          "cpe": "cpe:/a:vercel:ms:2.1.3"
+        }
+      }
+    ]
+  }
+}

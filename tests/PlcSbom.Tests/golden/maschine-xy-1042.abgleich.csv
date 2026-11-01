@@ -1,0 +1,16 @@
+﻿Station;Position;Gerät;Bestellnummer SBOM;Bestellnummer Feld;Firmware SBOM;Firmware Feld;Ergebnis;Zuordnung;Seriennummer Gerät;Hinweis
+PLC_1;S7-1200 station_1/0/1;CPU 1214C DC/DC/DC;6ES7 214-1AG40-0XB0;6ES7 214-1AG40-0XB0;V4.5;V4.6.1;abweichend;Position;S V-L9A12345;Firmware im Feld V4.6.1, in der SBOM V4.5.
+PLC_1;GSD device_1/0/0;BCL248i;501xxxxx;50132148;;V1.4.0;gleich;Position;2109ABC0042;Firmware V1.4.0 nur im Feld bekannt, die SBOM führt keine.
+Roboterzelle;Device 1 (EtherCAT)/1;EK1100;;;;V2.3;gleich;Position;;Firmware V2.3 nur im Feld bekannt, die SBOM führt keine.
+Roboterzelle;Device 1 (EtherCAT)/1/10;EL3214;;;;;nur-im-projekt;;;Im Ist-Stand nicht gefunden.
+Roboterzelle;Device 1 (EtherCAT)/1/2;EL3064;;;;;nur-im-projekt;;;Im Ist-Stand nicht gefunden.
+Roboterzelle;Device 1 (EtherCAT)/1/3;EL3204-0200;;;;;nur-im-projekt;;;Im Ist-Stand nicht gefunden.
+Roboterzelle;Device 1 (EtherCAT)/1/4;EL3204-0200;;;;;nur-im-projekt;;;Im Ist-Stand nicht gefunden.
+Roboterzelle;Device 1 (EtherCAT)/1/5;EL3204-0200;;;;;nur-im-projekt;;;Im Ist-Stand nicht gefunden.
+Roboterzelle;Device 1 (EtherCAT)/1/6;EL3403-0010;;;;;nur-im-projekt;;;Im Ist-Stand nicht gefunden.
+Roboterzelle;Device 1 (EtherCAT)/1/7;EL4004;;;;;nur-im-projekt;;;Im Ist-Stand nicht gefunden.
+Roboterzelle;Device 1 (EtherCAT)/1/8;EL2652;;;;;nur-im-projekt;;;Im Ist-Stand nicht gefunden.
+Roboterzelle;Device 1 (EtherCAT)/1/9;EL2622;;;;;nur-im-projekt;;;Im Ist-Stand nicht gefunden.
+Verpackung;;Gerät 4102/0000 0005;;;;;nur-im-projekt;;;Im Ist-Stand nicht gefunden.
+PLC_1;;6ES7 193-6BP00-0DA0;;6ES7 193-6BP00-0DA0;;V0.0;passiv;;;Firmware 0.0: Gerät ohne eigene Firmware, steht nicht in der SBOM.
+PLC_1;;6GK5 208-0BA00-2AC2;;6GK5 208-0BA00-2AC2;;V4.2;nur-im-feld;;;Kein Gerät der SBOM passt (Station und Position, Bestellnummer).

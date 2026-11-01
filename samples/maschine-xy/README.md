@@ -1,6 +1,6 @@
 # Beispielmaschine „Maschine XY“
 
-Eingang für `plc-sbom build` (Meilenstein M9) und für den Test, dass gleiche Eingabe dieselbe SBOM ergibt. Erwartete Ausgabe: [tests/PlcSbom.Tests/golden/maschine-xy.cdx.json](../../tests/PlcSbom.Tests/golden/maschine-xy.cdx.json).
+Eingang für `plc-sbom build` (Meilenstein M9) und für den Test, dass gleiche Eingabe dieselbe SBOM ergibt; dazu für `report`, `compare` und `ids` (M10 bis M12). Erwartete Ausgabe: [tests/PlcSbom.Tests/golden/maschine-xy.cdx.json](../../tests/PlcSbom.Tests/golden/maschine-xy.cdx.json).
 
 ```bash
 SOURCE_DATE_EPOCH=1792234800 plc-sbom build --config samples/maschine-xy/machine.yml --release R2026.10 \
@@ -18,5 +18,6 @@ Mit dieser Zeit und diesem Commit entspricht `build/sbom-maschine.cdx.json` byte
 | `sbom/teil/hmi-web.cdx.json` | Teil-SBOM, erzeugt am 01.11.2026 mit Syft 1.54.1: `cd hmi-web && SYFT_FILE_METADATA_SELECTION=none syft scan dir:. --source-name hmi-web --source-version 1.4.0 -o cyclonedx-json@1.6` | Comquent-eigen, echte Syft-Ausgabe |
 | `sbom/lieferanten/siemens-cpu1214c-v4.5-synthetisch.cdx.json` | Hersteller-SBOM zur CPU 1214C V4.5, vollständig nach TR-03183-2, Bestellnummer als Property, zwei Bestandteile. Hashes über erfundene Dateinamen, URLs unter `example.com`. Kein Dokument von Siemens | Comquent-eigen, synthetisch (docs/entscheidungen.md E-021) |
 | `kennungen/cpe-map.yml` | CPE-Tabelle mit einer Zeile für die CPU 1214C; die CPE ist ein Beispiel | Comquent-eigen |
+| `feld/1042.json` | Ist-Stand der Maschine mit Seriennummer 1042 nach der Inbetriebnahme, allgemeines Feld-Format: CPU mit Firmware V4.6.1 statt V4.5, Scanner mit Firmware, EK1100 mit Firmware, eine BaseUnit (V0.0) und ein Switch, der nicht im Projekt steht. Eingang für `compare` (M11), erwartete Ausgabe: `tests/PlcSbom.Tests/golden/maschine-xy-1042.*` | Comquent-eigen, synthetisch |
 
 Alle Dateien unter `samples/` sind in `.gitattributes` als `-text` eingetragen: Der Hash über die Programmquellen und die SHA-256 der Eingangs-SBOMs hängen an den Bytes, auch an den Zeilenenden.

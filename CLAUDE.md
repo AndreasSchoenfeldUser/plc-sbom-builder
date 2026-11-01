@@ -1,6 +1,6 @@
 # CLAUDE.md: PLC SBOM Builder (`plc-sbom`), Prototyp
 
-> Stand: 01.11.2026 (Meilensteine und CODESYS V2.3/4 ergänzt; M1-Entscheidungen E-007 bis E-011 und TR-Regeln in `docs/regeln-tr03183.md` nachgetragen; M1, M2, M5, M6, M7, M8 und M9 umgesetzt (M9: E-021), M3/M4 zurückgestellt (E-016), Golden File aus dem Comquent-V21-Export offen (E-019); übrige Fakten Stand 29.10.2026). Grundlage: Produktseite comquent.de/produkte/plc-sbom-builder (Quelltext `src/app/produkte/inhalte.ts` im Website-Repository), der Entwurf `plc-sbom-builder-claude.md` mit der Recherche vom 25.10.2026, das Comquent-Whitepaper „SBOM für SPS-Projekte mit TIA Portal V21“, die Siemens-Openness-Skills (V21) und drei öffentliche AML-Exporte aus TIA V17, V18 und V21 (geprüft am 29.10.2026). Recherchefakten mit Datum 25.10.2026 sind nicht erneut geprüft; Versionen und Normstände vor der Nutzung nachsehen.
+> Stand: 01.11.2026 (Meilensteine und CODESYS V2.3/4 ergänzt; M1-Entscheidungen E-007 bis E-011 und TR-Regeln in `docs/regeln-tr03183.md` nachgetragen; M1, M2, M5 bis M12 umgesetzt (M9: E-021, M10: E-022, M11: E-023, M12: E-024), M3/M4 zurückgestellt (E-016), Golden File aus dem Comquent-V21-Export offen (E-019); übrige Fakten Stand 29.10.2026). Grundlage: Produktseite comquent.de/produkte/plc-sbom-builder (Quelltext `src/app/produkte/inhalte.ts` im Website-Repository), der Entwurf `plc-sbom-builder-claude.md` mit der Recherche vom 25.10.2026, das Comquent-Whitepaper „SBOM für SPS-Projekte mit TIA Portal V21“, die Siemens-Openness-Skills (V21) und drei öffentliche AML-Exporte aus TIA V17, V18 und V21 (geprüft am 29.10.2026). Recherchefakten mit Datum 25.10.2026 sind nicht erneut geprüft; Versionen und Normstände vor der Nutzung nachsehen.
 > Produkt der Comquent GmbH (Industrial DevOps, Puchheim). Schwesterwerkzeuge: `plc-build` (../plc-build-tool), `plc-git-bridge` (../plc-git-bridge).
 
 ## 0. Start
@@ -158,10 +158,11 @@ plc-sbom-builder/
 │   │   │   ├── Codesys/            V35/ (PLCopen XML), V23/, C4/
 │   │   │   └── TiaOpenness/        Client für den Worker: Prozessstart, Protokoll, Zeitlimit, PIDs
 │   │   ├── Merge/                  Hersteller- und Teil-SBOMs einlesen und zusammenführen
-│   │   ├── Identifiers/            Bestellnummer, CPE-Tabelle, CSAF-Index
-│   │   ├── FieldState/             Ist-Stände einlesen, Abgleich
+│   │   ├── Sbom/                   Lesesicht auf eine fertige SBOM (report, compare, ids)
+│   │   ├── Identifiers/            Bestellnummer, CPE-Tabelle, CSAF-Index, Kennungsprüfung
+│   │   ├── FieldState/             Ist-Stände einlesen, Abgleich, as-built-SBOM, CSV
 │   │   ├── Validation/             Schema, TR-03183-2-Regeln
-│   │   └── Output/                 CycloneDX-Writer, Bericht (HTML, Markdown), Ergebnisdatei, CSV
+│   │   └── Output/                 CycloneDX-Writer, Report/ (Bericht HTML, Markdown), Ergebnisdatei
 │   └── PlcSbom.Cli/                Befehle, Exit-Codes, Konsolenausgabe
 ├── workers/
 │   └── tia-openness/               eigene Solution, net48, baut nur auf Windows mit TIA V21 (M14)
@@ -172,6 +173,8 @@ plc-sbom-builder/
 │   ├── PlcSbom.Tests/              xUnit, Golden Files unter golden/
 │   └── live/                       nur mit PLC_SBOM_LIVE=1 auf dem Windows-Agenten (M14)
 ├── fixtures/                       echte Beispieldateien + FIXTURES.md (Herkunft, Commit, Pfad, Lizenz)
+│   ├── feld/                       Ist-Stände, z. B. s7-webapi/ (Antworten der S7-1500 Web-API)
+│   ├── csaf/                       CSAF-Dokument für ids (synthetisch; echte Siemens-Dokumente nur in _local)
 │   └── _local/                     gitignored, Dateien ohne Lizenz
 ├── samples/maschine-xy/            machine.yml, Programmquellen, Hersteller- und Teil-SBOM, CPE-Tabelle (erwartete Ausgabe: golden/maschine-xy.cdx.json)
 ├── examples/Jenkinsfile
@@ -674,7 +677,7 @@ Umgesetzt mit M9 (E-021, Regeln mit TR-Stelle in `docs/regeln-tr03183.md` Abschn
    Nur gesetzt, wenn ein Eintrag passt und die Firmware-Version bekannt ist. `{version}` ist die Firmware ohne führendes `V` und in jeder Zeile Pflicht (sonst `CPE_MAP_INVALID`). Nie aus dem Typnamen ableiten. Umgesetzt mit M9 (`Identifiers/CpeMap.cs`).
 3. **bom-ref** für alles ohne CPE (Abschnitt 4.3).
 4. **PURL** nur für echte Softwarepakete (aus Teil-SBOMs). purl-spec kennt keinen Typ für Hardware oder Firmware; kein `pkg:generic` für Firmware erfinden.
-5. **Kennungsprüfung** `plc-sbom ids`: Prüft je Komponente, ob sie in einem lokalen Verzeichnis mit CSAF-Dokumenten (`product_identification_helper.model_numbers`, `cpe`) oder in der CPE-Tabelle auffindbar ist, und meldet die Abdeckung. Bestellnummern werden dabei ohne Leerzeichen verglichen. Das ist **keine** Schwachstellenbewertung, sondern ein Test, ob die Kennungen tragen. CSAF-Quellen: Siemens ProductCERT, CERT@VDE (Phoenix Contact, WAGO, Beckhoff, CODESYS), CISA. Rockwell-Advisories tragen dort keine Identifikationshilfe, nur Namen.
+5. **Kennungsprüfung** `plc-sbom ids`: Prüft je Komponente, ob sie in einem lokalen Verzeichnis mit CSAF-Dokumenten (`product_identification_helper.model_numbers`, `cpe`) oder in der CPE-Tabelle auffindbar ist, und meldet die Abdeckung. Bestellnummern werden dabei ohne Leerzeichen und ohne Groß-/Kleinschreibung verglichen; eine CSAF-Modellnummer darf abgekürzt sein und `?`, `*` enthalten (CSAF 2.0, 3.1.3.3.3). CPE als 2.3-Zeichenkette oder 2.2-URI, attributweise mit `*` als beliebig. Bestellnummern mit Platzhaltern (`501xxxxx`) gelten als Muster und werden nicht verglichen. Das ist **keine** Schwachstellenbewertung, sondern ein Test, ob die Kennungen tragen: Versionen, Produktstatus und Schwachstellen liest `ids` nicht. CSAF-Quellen: Siemens ProductCERT, CERT@VDE (Phoenix Contact, WAGO, Beckhoff, CODESYS), CISA. Rockwell-Advisories tragen dort keine Identifikationshilfe, nur Namen. Umgesetzt mit M12 (E-024). Messung zu H4 am 01.11.2026: In sechs Siemens-Dokumenten stehen 404 Identifikationshilfen, alle als `model_numbers` ohne Leerzeichen, keine CPE; in 60 OT-Advisories von CISA aus 2026 ebenfalls keine CPE. Gefunden werden CPU 1214C, CPU 1511-1 PN und CPU 1515-2 PN der Fixtures; ET 200SP, G120C und E/A-Module stehen in diesen Dokumenten nicht. Die Bestellnummer trägt, die CPE trägt für OT-Geräte derzeit nicht.
 
 ## 7. Kommandozeile
 
@@ -684,16 +687,19 @@ Umgesetzt mit M9 (E-021, Regeln mit TR-Stelle in `docs/regeln-tr03183.md` Abschn
 plc-sbom build      --config machine.yml --release <kennung> [--commit <sha>]
                     [--out build/sbom-maschine.cdx.json] [--report html|md|none] [--release-build]
 plc-sbom validate   <sbom> [--release-build]
-plc-sbom report     <sbom> --format html|md --out build/sbom-bericht.html
+plc-sbom report     <sbom> --format html|md --out build/sbom-bericht.html [--field <datei>] [--release-build]
 plc-sbom compare    <sbom> --field feld/1042.json [--as-built build/sbom-1042.cdx.json] [--csv <datei>]
-plc-sbom ids        <sbom> --csaf <verzeichnis> [--cpe-map kennungen/cpe-map.yml]
+plc-sbom ids        <sbom> --csaf <verzeichnis> [--cpe-map kennungen/cpe-map.yml] [--out <datei.json>]
 plc-sbom inspect    <projektdatei> --adapter <id> [--gsdml <verzeichnis>]
 plc-sbom export-aml --project <.ap21|.zap21> --out <datei.aml> [--allow-upgrade]      (Windows, TIA V21)
 plc-sbom doctor     [--adapter tia-portal] [--deep]                                     (Windows, TIA V21)
 ```
 
-- `build` liest alle Stationen, führt Hersteller- und Teil-SBOMs zusammen, setzt Kennungen, validiert, schreibt SBOM, Bericht und Ergebnisdatei. Ein Aufruf in der Pipeline reicht. Umgesetzt mit M9 bis auf den Bericht (M10); `--report` schreibt bis dahin nur eine Zeile `[bericht]`. Adapter `tia-portal` und die `codesys`-Quellen `v23`, `c4` enden mit `NOT_IMPLEMENTED`.
+- `build` liest alle Stationen, führt Hersteller- und Teil-SBOMs zusammen, setzt Kennungen, validiert, schreibt SBOM, Bericht und Ergebnisdatei. Ein Aufruf in der Pipeline reicht. Umgesetzt mit M9 und M10; der Bericht heißt wie die SBOM ohne `.cdx.json` mit `.html` bzw. `.md` (`build/sbom-maschine.html`). Adapter `tia-portal` und die `codesys`-Quellen `v23`, `c4` enden mit `NOT_IMPLEMENTED`.
 - `validate` prüft eine vorhandene SBOM, auch fremde.
+- `report` schreibt den Prüfbericht zu einer vorhandenen SBOM, mit `--field` samt Abgleich; Prüfstatus wie im Entwicklungs-Build, mit `--release-build` wie im Release-Build. Exit 0, sobald der Bericht geschrieben ist (E-022).
+- `compare` gleicht mit einem Ist-Stand ab (8.3), Exit 1 bei jeder Abweichung (E-023).
+- `ids` misst die Abdeckung der Kennungen (Abschnitt 6), Exit 0 unabhängig vom Ergebnis; `--out` schreibt den Abdeckungsbericht als JSON (E-024).
 - `inspect` gibt das Rohinventar eines Adapters als JSON aus; bei `tia-aml` mit CPUs, IO-Systemen und Gerätezuordnung (5.4.4).
 - `export-aml` und `doctor` laufen über den Openness-Worker; auf anderen Plattformen Exit 3 mit klarer Meldung.
 - `--commit` nach Vorgabe aus `GIT_COMMIT`, sonst `git rev-parse HEAD` im Verzeichnis von `machine.yml`; 7 bis 64 Hexadezimalzeichen, sonst Exit 2 (`COMMIT_INVALID`). `--release` ohne Leerzeichen (`RELEASE_INVALID`).
@@ -732,7 +738,7 @@ Gleich wie bei `plc-build`, damit die ganze Werkzeugfamilie in Pipelines gleich 
 
 ### 7.3 Ergebnisdatei
 
-`build`, `validate`, `compare` und `export-aml` schreiben zusätzlich `<out>.result.json` (z. B. `sbom-maschine.result.json`): Exit-Code, Anzahl Fehler, Warnungen, Hinweise, Komponenten, Stationen, Lücken je Code, Abweichungen. Damit kann die Pipeline einen Entwicklungs-Build mit Warnungen als „instabil“ markieren (Jenkins: `readJSON` + `unstable`), ohne den Exit-Code zu überladen. `build` nimmt die Warnungen des Laufs (Adapter, eingelesene SBOMs, Commit, Zeitstempel) mit auf und schreibt die Datei auch bei Exit 2, 3 und 4, dann mit dem Code der Ursache als einzigem Befund (E-021).
+`build`, `validate`, `compare` und `export-aml` schreiben zusätzlich `<out>.result.json` (z. B. `sbom-maschine.result.json`): Exit-Code, Anzahl Fehler, Warnungen, Hinweise, Komponenten, Stationen, Lücken je Code, Abweichungen. Damit kann die Pipeline einen Entwicklungs-Build mit Warnungen als „instabil“ markieren (Jenkins: `readJSON` + `unstable`), ohne den Exit-Code zu überladen. `compare` schreibt sie neben die SBOM als `<sbom>.compare-<seriennummer>.result.json` (die Ergebnisdatei von `build` bleibt unberührt) mit dem Abschnitt `comparison`: Kennzahlen und jede Abweichung. Die Befunde sind dort die der as-built-SBOM und die Warnungen des Abgleichs (E-023). `build` nimmt die Warnungen des Laufs (Adapter, eingelesene SBOMs, Commit, Zeitstempel) mit auf und schreibt die Datei auch bei Exit 2, 3 und 4, dann mit dem Code der Ursache als einzigem Befund (E-021).
 
 ### 7.4 `machine.yml`
 
@@ -816,6 +822,8 @@ HTML (Vorgabe) oder Markdown, neben der JSON-Datei. Inhalt nach dem Oberflächen
 
 HTML als eine Datei ohne externe Ressourcen (Agent offline, Datei wird archiviert). Deutsch.
 
+Umgesetzt mit M10 (E-022): Der Bericht entsteht aus der SBOM und ihrer Prüfung, nicht aus dem Modell, damit `build` und `report` dasselbe zeigen. Was die SBOM nicht trägt (passive Module und Racks, mit `ignoreDevices` ausgeschlossene Geräte, Engineering-Werkzeug je Station), kommt nur im Bericht von `build` hinzu; der Bericht von `report` sagt das an der Stelle. Zeit im Bericht ist `metadata.timestamp`, gleiche SBOM ergibt denselben Bericht. Die Lückenliste fasst je Code zusammen (Schwere, Anzahl, Komponenten, Erklärung, Abhilfe aus `GapCatalog.Remedy`). Kein Skript; der Baum klappt über `<details>`, hell und dunkel nach Systemeinstellung.
+
 ### 8.3 Abgleich mit dem Feld
 
 `compare` ordnet über Station + Position zu, sonst über Bestellnummer (ohne Leerzeichen). Ergebnis je Gerät `gleich`, `abweichend`, `nur-im-projekt`, `nur-im-feld`. Jede Abweichung ergibt Exit 1. Ausgabe auf der Konsole, im Bericht (Abschnitt „Abgleich mit dem Feld“: SBOM-Stand neben Ist-Stand, Kennzahlen geprüft / gleich / abweichend / nicht gefunden) und mit `--csv` als CSV. `--as-built` schreibt die SBOM für diese Seriennummer auch bei Abweichungen.
@@ -830,6 +838,15 @@ Eingang im Prototyp sind Dateien, keine Geräte:
   ```
 - **Parser für die S7-1500 Web-API** (`Modules.ReadIdentificationMaintenance`, Antworten mit `Actual` und `Configured`), Fixtures aus `github.com/siemens/simatic-s7-webserver-api` (MIT).
 - Nach dem Prototyp, jeweils erst mit Fixture: PRONETA-Export, PROFINET I&M0, EtherCAT CoE 0x100A/0x1018, CIP Identity, OPC UA DI.
+
+Umgesetzt mit M11 (E-023):
+
+- `position` ist genau der Wert von `<ns>:device:position` in der SBOM (bei `tia-aml` mit Gerätename, etwa `S7-1200 station_1/0/1`); trifft sie nichts, gilt die Bestellnummer, bei mehreren gleichen zuerst die mit gleicher Firmware. Bestellnummern mit Platzhaltern in der SBOM (`501xxxxx`) passen als Muster.
+- Die Web-API-Antworten stehen je Gerät unverändert unter `webapi` (`actual`, optional `configured`) im allgemeinen Format; gelesen wird IM0 (`order_number`, `serial_number`, `hardware_revision`, `software_revision`), Leerzeichen der CPU werden abgeschnitten. Weicht `configured` vom SBOM-Stand ab, ist das Gerät `abweichend` (in der CPU läuft ein anderes Projekt). Eine Fehlerantwort überspringt das Gerät mit Warnung `FIELD_WEBAPI_ERROR`. Unbekannte Schlüssel sind Exit 2 (`FIELD_INVALID`), eine Feld-Datei einer anderen Maschine ebenso (`FIELD_MACHINE_MISMATCH`).
+- Firmware wird ohne führendes `V` verglichen; ist eine Seite genauer, aber gleich im Anfang (`V2.8`, `V2.8.3`), gilt das als gleich mit Hinweis. Kennt nur das Feld die Firmware, ist das Gerät `gleich` mit Hinweis.
+- Zusätzlicher Status `passiv`: Gerät im Feld mit Firmware 0.0, das kein Gerät der SBOM trifft. Keine Abweichung, weil passive Geräte nicht in der SBOM stehen.
+- `--as-built`: Version und `firmware:origin = as-found` je Gerät mit Ist-Firmware, `<ns>:firmware:projected`, `<ns>:device:serialNumber`, `<ns>:device:hardwareRevision`; `firmware-projected-only` und `firmware-not-in-project` entfallen. Eine CPE, deren Versionsfeld die projektierte Version trägt, bekommt die neue, sonst wird sie entfernt (`AS_BUILT_CPE_REMOVED`). Eine Hersteller-SBOM, die eine andere Version beschreibt, wird gelöst (`AS_BUILT_VENDOR_SBOM_DETACHED`). Zeitstempel `SOURCE_DATE_EPOCH`, sonst der Tag aus der Feld-Datei.
+- CSV mit `;`, UTF-8 mit BOM, LF.
 
 ### 8.4 Determinismus
 
@@ -916,9 +933,9 @@ Jeder Meilenstein endet mit grünen Tests auf ubuntu und windows, `dotnet format
 | M7 | Adapter `tia-aml` (TIA AML aus dem CAx-Export): Format- und Versionsprüfung, Geräte, Firmware-Regeln, passive Module, Stationszuordnung über IO-System, `inspect` | Golden Files für V17-Fixture (S7-1200 + GSD-Gerät) und Comquent-V21-Export; V18/V21-Dateien aus `_local` laufen lokal ohne Fehler; Stationen mit zwei CPUs richtig getrennt |
 | M8 | GSDML-Leser, GSD-Geräte in `tia-aml` | GSD-Gerät mit Hersteller und Bestellnummer aus GSDML-Fixture; fehlende GSDML ergibt die richtigen Lücken |
 | M9 | `build` mit `machine.yml`, Merge mit Hersteller- und Teil-SBOMs, Programm-Hash, Determinismus | `samples/maschine-xy` (codesys + tia-aml + twincat + eine Syft-SBOM) ergibt bei zwei Läufen und auf beiden Plattformen dieselbe Datei |
-| M10 | `report` (HTML, Markdown) | Baum, Tabellen, Quellen, Lückenliste und Hardware-Anhang wie in 8.2 |
-| M11 | `compare`, `--as-built`, `--csv` | Web-API-Fixture gegen AML-Soll, Abweichungen erkannt, Exit 1 bei Abweichung |
-| M12 | `ids` | Abdeckungsbericht gegen eine Handvoll echter Siemens-CSAF-Dateien |
+| M10 | `report` (HTML, Markdown) | Baum, Tabellen, Quellen, Lückenliste und Hardware-Anhang wie in 8.2 (umgesetzt, E-022) |
+| M11 | `compare`, `--as-built`, `--csv` | Web-API-Fixture gegen AML-Soll, Abweichungen erkannt, Exit 1 bei Abweichung (umgesetzt, E-023; die Web-API-Fixture beschreibt eine CPU 1518, die in keinem AML vorkommt: Web-API gegen synthetisches Soll, AML-Soll gegen allgemeine Feld-Datei; offen ist ein Mitschnitt der CPU aus dem Comquent-Demo) |
+| M12 | `ids` | Abdeckungsbericht gegen eine Handvoll echter Siemens-CSAF-Dateien (umgesetzt, E-024; sechs Dokumente lokal, Ergebnis in Abschnitt 6) |
 | M13 | `examples/Jenkinsfile`, README und ANLEITUNG.md auf Release-Stand, Release-Pakete mit eigener SBOM | Pipeline-Stufen Build → Archiv → optional Dependency-Track, Staffelung Entwicklungs-/Release-Build |
 | M14 | Adapter `tia-portal` (TIA über Openness): Openness-Worker mit `doctor`, `inventory` und `export-aml`, Firewall-Skript, Live-Tests | 5.5.6 erfüllt |
 
@@ -948,8 +965,11 @@ Die Adapter-Meilensteine M2 bis M8 und M14 folgen der festgelegten Reihenfolge: 
 | CODESYS V3.5 | `github.com/kmpm/OSC-MQTT` (Apache-2.0, Bibliotheksprojekt, eingecheckt), `github.com/stefandreyer/I2C-Multiplex` (`*.devdesc.xml`, MIT, vier Dateien eingecheckt; Bestellnummer überall `-`, zwei Kennungen doppelt) | | |
 | CODESYS V2.3 | **Comquent-Demo-Projekt** (von Comquent zu liefern) | `.pro` plus alle Exporte, die V2.3 anbietet (`.exp`, PLCopen XML falls vorhanden); Steuerung, E/A-Konfiguration mit einem Feldbusgerät, zwei Bibliotheken samt `.lib`-Dateien | Comquent-eigen |
 | CODESYS 4 | **Comquent-Demo-Projekt** (von Comquent zu liefern) | Projektablage gespeichert mit zwei aufeinanderfolgenden CODESYS-4-Versionen; Gerät, E/A, zwei Bibliotheken | Comquent-eigen |
-| Feld (S7 Web-API) | `github.com/siemens/simatic-s7-webserver-api` (v3.3.92) | | MIT |
-| CSAF | `cert-portal.siemens.com/productcert/csaf/ssa-452276.json` | mit `model_numbers` | öffentlich |
+| Feld (S7 Web-API) | `github.com/siemens/simatic-s7-webserver-api` (Version 3.3), `tests/Webserver.API.UnitTests/ResponseStrings.cs` | Antworten auf `Modules.ReadIdentificationMaintenance` für IM0 `actual`, IM0 `configured` und IM1 einer CPU 1518-3 PN `V4.1.0`, als Dateien unter `fixtures/feld/s7-webapi/` (eingecheckt, M11) | MIT |
+| Feld (Beispielmaschine) | `samples/maschine-xy/feld/1042.json` | allgemeines Format, Ist-Stand der Maschine 1042 mit abweichender CPU-Firmware, passivem Modul und zusätzlichem Switch | Comquent-eigen |
+| CSAF | `cert-portal.siemens.com/productcert/csaf/ssa-{224824,232418,452276,568427,717113,876787}.json` | `model_numbers` ohne Leerzeichen, keine CPE; Nutzungsbedingungen von Siemens → nur `_local` (M12) | keine freie Lizenz |
+| CSAF | `github.com/oasis-tcs/csaf`, `csaf_2.0/examples/csaf/bsi-2022-0001.json` | einziges gefundenes echtes Dokument mit `cpe` (als CPE-2.2-URI) → nur `_local` (M12) | OASIS IPR, nicht in der Liste |
+| CSAF | `fixtures/csaf/kennungen-synthetisch.json` | **synthetisch**, Aufbau wie Siemens, mit abgekürzter Modellnummer, CPE 2.3 und 2.2, ohne Schwachstellen (eingecheckt, M12) | Comquent-eigen |
 | Teil-SBOM (Syft) | `samples/maschine-xy/sbom/teil/hmi-web.cdx.json`, erzeugt mit Syft 1.54.1 aus `samples/maschine-xy/hmi-web/` (eigene `package.json`, npm-Lockfile) | CycloneDX 1.6, Wurzel ohne Abhängigkeiten, drei npm-Pakete, keine TR-Pflichtfelder (eingecheckt, M9) | Comquent-eigen |
 | Hersteller-SBOM | `samples/maschine-xy/sbom/lieferanten/siemens-cpu1214c-v4.5-synthetisch.cdx.json` | **synthetisch**, vollständig nach TR, Bestellnummer als Property; echte Hersteller-SBOMs für Steuerungen gibt es nicht (1.3, E-021) | Comquent-eigen |
 
@@ -970,6 +990,7 @@ Solange die Comquent-Demo-Projekte fehlen, M3 und M4 zurückstellen und die `_lo
   - Die Seite nennt den Befehlsnamen nicht; die Oberflächenentwürfe zeigen `plc-sbom build --maschine …`, das Werkzeug heißt `plc-sbom build --config …`.
   - TR-03183-2 v2.1.0 erlaubt auch SPDX 3.0.1; die Seite nennt nur CycloneDX 1.6.
   - Die Seite nennt CODESYS V3.5; der Adapter deckt zusätzlich CODESYS V2.3 und CODESYS 4 ab (V2.3 und 4 nach Spike).
+  - CSAF-Advisories von Siemens und CISA (OT) tragen keine CPE, nur Bestellnummern (`model_numbers`); der Abgleich über die Bestellnummer ist der tragende Weg (E-024).
 - **Sicherheit:** keine Lizenzdateien, keine Hersteller-DLLs, keine Kundenprojekte, keine Zugangsdaten im Repository. `.gitignore` wie in `../plc-build-tool/.gitignore`, ergänzt um `/build/` (nur im Wurzelverzeichnis: auf macOS mit `core.ignorecase` träfe `build/` auch die Quellordner `Build/`, E-021) und `fixtures/_local/`. Secrets nie loggen.
 - **Sprache:** Code, Bezeichner, Commit-Nachrichten Englisch; Doku, Meldungen und Berichte Deutsch (Zielgruppe DACH).
 - **Abhängigkeiten** klein halten: .NET 10, `NJsonSchema` (statt `CycloneDX.Core`, E-008), `System.CommandLine`, `YamlDotNet`, `System.Text.Json`. Jede neue Abhängigkeit mit Lizenz in `docs/entscheidungen.md`.

@@ -40,9 +40,9 @@ public static class CliApp
 
         root.Subcommands.Add(Build(Guard, environment, verbose, stdout));
         root.Subcommands.Add(Validate(Guard, verbose, stdout));
-        root.Subcommands.Add(Report(Guard));
-        root.Subcommands.Add(Compare(Guard));
-        root.Subcommands.Add(Ids(Guard));
+        root.Subcommands.Add(Report(Guard, stdout));
+        root.Subcommands.Add(Compare(Guard, environment, verbose, stdout));
+        root.Subcommands.Add(Ids(Guard, verbose, stdout, stderr));
         root.Subcommands.Add(Inspect(Guard, stdout, stderr));
         root.Subcommands.Add(ExportAml(Guard, environment));
         root.Subcommands.Add(Doctor(Guard, environment));
@@ -121,35 +121,54 @@ public static class CliApp
         return command;
     }
 
-    private static Command Report(Func<Func<ParseResult, Task<int>>, Func<ParseResult, CancellationToken, Task<int>>> guard)
+    private static Command Report(Func<Func<ParseResult, Task<int>>, Func<ParseResult, CancellationToken, Task<int>>> guard, TextWriter stdout)
     {
-        var sbom = new Argument<FileInfo>("sbom") { Description = "CycloneDX-Datei" };
+        var sbom = new Argument<string>("sbom") { Description = "CycloneDX-Datei" };
         var format = new Option<string>("--format") { Description = "Format des Berichts", Required = true };
         format.AcceptOnlyFromAmong("html", "md");
-        var output = new Option<FileInfo>("--out") { Description = "Berichtsdatei, z. B. build/sbom-bericht.html", Required = true };
-        var command = new Command("report", "Schreibt den Prüfbericht zu einer SBOM") { sbom, format, output };
-        command.SetAction(guard(_ => NotImplemented("report", "M10")));
+        var output = new Option<string>("--out") { Description = "Berichtsdatei, z. B. build/sbom-bericht.html", Required = true, HelpName = "datei" };
+        var field = new Option<string?>("--field") { Description = "Ist-Stand aus dem Feld; ergänzt den Abschnitt „Abgleich mit dem Feld“", HelpName = "datei" };
+        var releaseBuild = new Option<bool>("--release-build") { Description = "Prüfstatus wie im Release-Build: Warnungen gelten als nicht bestanden" };
+        var command = new Command("report", "Schreibt den Prüfbericht zu einer SBOM als HTML oder Markdown") { sbom, format, output, field, releaseBuild };
+        command.SetAction(guard(p => ReportCommand.RunAsync(
+            new ReportOptions(p.GetValue(sbom)!, p.GetValue(format)!, p.GetValue(output)!, p.GetValue(field), p.GetValue(releaseBuild)),
+            stdout)));
         return command;
     }
 
-    private static Command Compare(Func<Func<ParseResult, Task<int>>, Func<ParseResult, CancellationToken, Task<int>>> guard)
+    private static Command Compare(
+        Func<Func<ParseResult, Task<int>>, Func<ParseResult, CancellationToken, Task<int>>> guard,
+        CliEnvironment environment,
+        Option<bool> verbose,
+        TextWriter stdout)
     {
-        var sbom = new Argument<FileInfo>("sbom") { Description = "SBOM mit dem Soll-Stand" };
-        var field = new Option<FileInfo>("--field") { Description = "Ist-Stand aus dem Feld, z. B. feld/1042.json", Required = true };
-        var asBuilt = new Option<FileInfo?>("--as-built") { Description = "SBOM für diese Seriennummer mit Ist-Firmware schreiben" };
-        var csv = new Option<FileInfo?>("--csv") { Description = "Abgleich zusätzlich als CSV" };
+        var sbom = new Argument<string>("sbom") { Description = "SBOM mit dem Soll-Stand" };
+        var field = new Option<string>("--field") { Description = "Ist-Stand aus dem Feld, z. B. feld/1042.json", Required = true };
+        var asBuilt = new Option<string?>("--as-built") { Description = "SBOM für diese Seriennummer mit Ist-Firmware schreiben", HelpName = "datei" };
+        var csv = new Option<string?>("--csv") { Description = "Abgleich zusätzlich als CSV", HelpName = "datei" };
         var command = new Command("compare", "Gleicht die SBOM mit einem Ist-Stand aus dem Feld ab; Exit 1 bei Abweichung") { sbom, field, asBuilt, csv };
-        command.SetAction(guard(_ => NotImplemented("compare", "M11")));
+        command.SetAction(guard(p => CompareCommand.RunAsync(
+            new Commands.CompareOptions(p.GetValue(sbom)!, p.GetValue(field)!, p.GetValue(asBuilt), p.GetValue(csv), p.GetValue(verbose)),
+            environment.Build,
+            stdout)));
         return command;
     }
 
-    private static Command Ids(Func<Func<ParseResult, Task<int>>, Func<ParseResult, CancellationToken, Task<int>>> guard)
+    private static Command Ids(
+        Func<Func<ParseResult, Task<int>>, Func<ParseResult, CancellationToken, Task<int>>> guard,
+        Option<bool> verbose,
+        TextWriter stdout,
+        TextWriter stderr)
     {
-        var sbom = new Argument<FileInfo>("sbom") { Description = "CycloneDX-Datei" };
-        var csaf = new Option<DirectoryInfo>("--csaf") { Description = "Verzeichnis mit CSAF-Dokumenten", Required = true };
-        var cpeMap = new Option<FileInfo?>("--cpe-map") { Description = "CPE-Zuordnungstabelle, z. B. kennungen/cpe-map.yml" };
-        var command = new Command("ids", "Prüft, ob die Kennungen der Komponenten in CSAF-Dokumenten oder der CPE-Tabelle auffindbar sind") { sbom, csaf, cpeMap };
-        command.SetAction(guard(_ => NotImplemented("ids", "M12")));
+        var sbom = new Argument<string>("sbom") { Description = "CycloneDX-Datei" };
+        var csaf = new Option<string>("--csaf") { Description = "Verzeichnis mit CSAF-Dokumenten", Required = true, HelpName = "verzeichnis" };
+        var cpeMap = new Option<string?>("--cpe-map") { Description = "CPE-Zuordnungstabelle, z. B. kennungen/cpe-map.yml", HelpName = "datei" };
+        var output = new Option<string?>("--out") { Description = "Abdeckungsbericht als JSON", HelpName = "datei" };
+        var command = new Command("ids", "Prüft, ob die Kennungen der Komponenten in CSAF-Dokumenten oder der CPE-Tabelle auffindbar sind") { sbom, csaf, cpeMap, output };
+        command.SetAction(guard(p => IdsCommand.RunAsync(
+            new IdsOptions(p.GetValue(sbom)!, p.GetValue(csaf)!, p.GetValue(cpeMap), p.GetValue(output), p.GetValue(verbose)),
+            stdout,
+            stderr)));
         return command;
     }
 

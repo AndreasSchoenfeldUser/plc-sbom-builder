@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pr&#252;fbericht Maschine XY, R2026.10</title>
+<style>
+:root{--bg:#ffffff;--fg:#1d2127;--muted:#5b6470;--line:#d9dde3;--head:#f3f5f8;--ok:#1d7a3e;--ok-bg:#e3f4e8;--bad:#b42318;--bad-bg:#fde8e6;--accent:#1f5fa8}
+@media (prefers-color-scheme: dark){:root{--bg:#15181d;--fg:#e4e7eb;--muted:#9aa3ad;--line:#343a43;--head:#1e232a;--ok:#6fd08f;--ok-bg:#183424;--bad:#ff8a7d;--bad-bg:#3d1c19;--accent:#7fb2ef}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:1200px;margin:0 auto;padding:24px 16px 48px}
+h1{font-size:1.6rem;margin:0 0 4px}
+h2{font-size:1.25rem;margin:32px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--line)}
+h3{font-size:1.05rem;margin:20px 0 6px}
+p{margin:8px 0}
+.verdict{display:inline-block;margin:4px 0 12px;padding:2px 10px;border-radius:12px;font-weight:600}
+.verdict.ok{color:var(--ok);background:var(--ok-bg)}
+.verdict.bad{color:var(--bad);background:var(--bad-bg)}
+dl{display:grid;grid-template-columns:max-content 1fr;gap:2px 16px;margin:8px 0}
+dt{color:var(--muted)}
+dd{margin:0;overflow-wrap:anywhere}
+.scroll{overflow-x:auto;margin:8px 0}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{border:1px solid var(--line);padding:4px 8px;text-align:left;vertical-align:top;overflow-wrap:anywhere}
+th{background:var(--head);font-weight:600}
+ul.tree{list-style:none;padding-left:0;margin:8px 0}
+ul.tree ul{list-style:none;padding-left:20px;margin:0;border-left:1px solid var(--line)}
+ul.tree li{margin:2px 0;padding-left:6px}
+summary{cursor:pointer}
+.detail{color:var(--muted)}
+footer{margin-top:32px;color:var(--muted);font-size:.85rem}
+@media print{details{display:block}summary{list-style:none}.scroll{overflow:visible}}
+</style>
+</head>
+<body>
+<main>
+<h1>Pr&#252;fbericht Maschine XY, R2026.10</h1>
+<div class="verdict ok">Prüfung bestanden (Entwicklungs-Build)</div>
+<dl>
+<dt>Maschine</dt><dd>Maschine XY</dd>
+<dt>Release</dt><dd>R2026.10</dd>
+<dt>Git-Commit</dt><dd>a1b2c3d4e5f60718293a4b5c6d7e8f9012345678</dd>
+<dt>Ersteller der SBOM</dt><dd>Musterbau GmbH (sbom@musterbau.example)</dd>
+<dt>Datei</dt><dd>build/sbom-maschine.cdx.json</dd>
+<dt>Format</dt><dd>CycloneDX 1.6, JSON</dd>
+<dt>SBOM-Kennung</dt><dd>urn:uuid:1a02a05d-7584-5a0b-9e78-e462de8d242a</dd>
+<dt>Erzeugt</dt><dd>17.10.2026 11:00 UTC</dd>
+<dt>Erzeugt mit</dt><dd>PLC SBOM Builder 0.1.0</dd>
+<dt>Pr&#252;fstatus</dt><dd>bestanden (Entwicklungs-Build)</dd>
+<dt>Befunde</dt><dd>0 Fehler, 117 Warnungen, 109 Hinweise</dd>
+</dl>
+<h2>Kennzahlen</h2>
+<dl>
+<dt>Komponenten</dt><dd>49 (mit der Maschine)</dd>
+<dt>Stationen</dt><dd>3</dd>
+<dt>Firmware-Komponenten</dt><dd>12</dd>
+<dt>Hersteller-SBOMs</dt><dd>1</dd>
+<dt>Teil-SBOMs</dt><dd>1</dd>
+<dt>Komponenten ohne Hash</dt><dd>45</dd>
+</dl>
+<h2>Quellen</h2>
+<div class="scroll"><table>
+<thead><tr><th>Station</th><th>Adapter</th><th>Datei</th><th>SHA-256</th><th>Engineering-Werkzeug</th><th>Export</th></tr></thead>
+<tbody>
+<tr><td>PLC_1</td><td>tia-aml</td><td>fixtures/tia-aml/plc-commissioning-sample_device.aml</td><td>0fade7c6844270656da6718e515d5f9fcbaa056a72891405bf1ae3c4c73bf1d6</td><td>TIA Portal V17 (1700.0.4302.1)</td><td>28.12.2024 20:29 UTC</td></tr>
+<tr><td>Roboterzelle</td><td>twincat</td><td>fixtures/twincat/aixocat-heatpump/HeatPumpTestBenchControl.tsproj</td><td>8770c82a2c3b0138475b64ed6a3136cd1120639c144214c06dc32b0970f44cdb</td><td>TwinCAT XAE 3.1.4022.4</td><td>–</td></tr>
+<tr><td>Verpackung</td><td>codesys (v35)</td><td>fixtures/codesys/v35/robin-codesys_project.xml</td><td>acf12d77f7ad9ba162485e9c8d64545d97ab37e81f396507112917330af17f2d</td><td>CODESYS V3.5 SP15</td><td>–</td></tr>
+</tbody>
+</table></div>
+<h3>Eingelesene SBOMs</h3>
+<div class="scroll"><table>
+<thead><tr><th>Datei</th><th>Art</th><th>SHA-256</th><th>Zugeordnet zu</th></tr></thead>
+<tbody>
+<tr><td>samples/maschine-xy/sbom/lieferanten/siemens-cpu1214c-v4.5-synthetisch.cdx.json</td><td>Hersteller-SBOM</td><td>d71bc02e46af86a149b53bc4d2d6f7cab5a66e34efc7d01943437b9a2dd3d1c0</td><td>CPU 1214C DC/DC/DC, Firmware (plc-1-fw)</td></tr>
+<tr><td>samples/maschine-xy/sbom/teil/hmi-web.cdx.json</td><td>Teil-SBOM</td><td>e8828b3d6a809b3140b77db8819e8ae05cacd3775d47bb70ffbef766273aa369</td><td>Station PLC_1</td></tr>
+</tbody>
+</table></div>
+<h3>Werkzeuge</h3>
+<div class="scroll"><table>
+<thead><tr><th>Werkzeug</th><th>Version</th><th>Hersteller</th></tr></thead>
+<tbody>
+<tr><td>PLC SBOM Builder</td><td>0.1.0</td><td>Comquent GmbH</td></tr>
+<tr><td>CODESYS</td><td>V3.5 SP15</td><td>–</td></tr>
+<tr><td>TIA Portal</td><td>V17 (1700.0.4302.1)</td><td>Siemens AG</td></tr>
+<tr><td>TwinCAT XAE</td><td>3.1.4022.4</td><td>–</td></tr>
+</tbody>
+</table></div>
+<h2>Maschinenbaum</h2>
+<ul class="tree">
+<li><details open><summary>Maschine XY <span class="detail">R2026.10</span></summary>
+<ul>
+<li><details open><summary>Station PLC_1 <span class="detail">tia-aml</span></summary>
+<ul>
+<li><details><summary>Steuerung</summary>
+<ul>
+<li><details><summary>CPU 1214C DC/DC/DC, Firmware <span class="detail">V4.5 &#183; 6ES7 214-1AG40-0XB0 &#183; S7-1200 station_1/0/1</span></summary>
+<ul>
+<li>Beispiel-Echtzeitkern <span class="detail">2.1.0 (Hersteller-SBOM)</span></li>
+<li>Beispiel-TCP/IP-Stack <span class="detail">1.4.2 (Hersteller-SBOM)</span></li>
+</ul></details></li>
+</ul></details></li>
+<li><details><summary>Anwenderprogramm</summary>
+<ul>
+<li>PLC_1, Anwenderprogramm <span class="detail">R2026.10 (git a1b2c3d)</span></li>
+</ul></details></li>
+<li><details><summary>E/A-Module und Feldger&#228;te (1)</summary>
+<ul>
+<li>BCL248i, Firmware <span class="detail">Firmware unbekannt &#183; 501xxxxx &#183; GSD device_1/0/0</span></li>
+</ul></details></li>
+<li><details><summary>Bibliotheken (1)</summary>
+<ul>
+<li>LGF <span class="detail">7.0.1</span></li>
+</ul></details></li>
+<li><details><summary>Teil-SBOMs</summary>
+<ul>
+<li><details><summary>hmi-web <span class="detail">1.4.0 &#183; samples/maschine-xy/sbom/teil/hmi-web.cdx.json</span></summary>
+<ul>
+<li><details><summary>maschine-xy-hmi-web <span class="detail">1.4.0</span></summary>
+<ul>
+<li>ms <span class="detail">2.1.3</span></li>
+<li>picocolors <span class="detail">1.1.1</span></li>
+</ul></details></li>
+</ul></details></li>
+</ul></details></li>
+<li><details><summary>Hardware ohne eigene Firmware (2)</summary>
+<ul>
+<li>[M10] Activation <span class="detail">GSD device_1/0/1</span></li>
+<li>[M11] Reading gate control <span class="detail">GSD device_1/0/2</span></li>
+</ul></details></li>
+</ul></details></li>
+<li><details open><summary>Station Roboterzelle <span class="detail">twincat</span></summary>
+<ul>
+<li><details><summary>Anwenderprogramm</summary>
+<ul>
+<li>Roboterzelle, Anwenderprogramm <span class="detail">R2026.10 (git a1b2c3d)</span></li>
+</ul></details></li>
+<li><details><summary>E/A-Module und Feldger&#228;te (10)</summary>
+<ul>
+<li>EK1100, Firmware <span class="detail">Firmware unbekannt &#183; Device 1 (EtherCAT)/1</span></li>
+<li>EL3214, Firmware <span class="detail">Firmware unbekannt &#183; Device 1 (EtherCAT)/1/10</span></li>
+<li>EL3064, Firmware <span class="detail">Firmware unbekannt &#183; Device 1 (EtherCAT)/1/2</span></li>
+<li>EL3204-0200, Firmware <span class="detail">Firmware unbekannt &#183; Device 1 (EtherCAT)/1/3</span></li>
+<li>EL3204-0200, Firmware <span class="detail">Firmware unbekannt &#183; Device 1 (EtherCAT)/1/4</span></li>
+<li>EL3204-0200, Firmware <span class="detail">Firmware unbekannt &#183; Device 1 (EtherCAT)/1/5</span></li>
+<li>EL3403-0010, Firmware <span class="detail">Firmware unbekannt &#183; Device 1 (EtherCAT)/1/6</span></li>
+<li>EL4004, Firmware <span class="detail">Firmware unbekannt &#183; Device 1 (EtherCAT)/1/7</span></li>
+<li>EL2652, Firmware <span class="detail">Firmware unbekannt &#183; Device 1 (EtherCAT)/1/8</span></li>
+<li>EL2622, Firmware <span class="detail">Firmware unbekannt &#183; Device 1 (EtherCAT)/1/9</span></li>
+</ul></details></li>
+<li><details><summary>Laufzeit</summary>
+<ul>
+<li>TwinCAT 3 Runtime <span class="detail">ohne Version</span></li>
+</ul></details></li>
+<li><details><summary>Bibliotheken (14)</summary>
+<ul>
+<li>Tc2_Standard <span class="detail">angefragt *</span></li>
+<li>Tc2_System <span class="detail">angefragt *</span></li>
+<li>Tc2_Utilities <span class="detail">angefragt *</span></li>
+<li>Tc3_Module <span class="detail">angefragt *</span></li>
+<li>VisuDialogs <span class="detail">angefragt *</span></li>
+<li>VisuElem3DPath <span class="detail">angefragt 3.5.6.0</span></li>
+<li>VisuElemMeter <span class="detail">angefragt 3.5.6.0</span></li>
+<li>VisuElems <span class="detail">angefragt 3.5.6.10</span></li>
+<li>VisuElemsDateTime <span class="detail">angefragt 3.5.6.0</span></li>
+<li>VisuElemsSpecialControls <span class="detail">angefragt 3.5.6.0</span></li>
+<li>VisuElemsWinControls <span class="detail">angefragt 3.5.6.0</span></li>
+<li>VisuElemTextEditor <span class="detail">angefragt 3.5.6.0</span></li>
+<li>visuinputs <span class="detail">angefragt 3.5.6.0</span></li>
+<li>VisuNativeControl <span class="detail">angefragt 3.5.6.0</span></li>
+</ul></details></li>
+</ul></details></li>
+<li><details open><summary>Station Verpackung <span class="detail">codesys</span></summary>
+<ul>
+<li><details><summary>Steuerung</summary>
+<ul>
+<li>Ger&#228;t 4102/0000 0005, Firmware <span class="detail">Firmware unbekannt</span></li>
+</ul></details></li>
+<li><details><summary>Anwenderprogramm</summary>
+<ul>
+<li>Verpackung, Anwenderprogramm <span class="detail">R2026.10 (git a1b2c3d)</span></li>
+</ul></details></li>
+<li><details><summary>Bibliotheken (10)</summary>
+<ul>
+<li>3SLicense <span class="detail">angefragt 0.0.0.0</span></li>
+<li>Breakpoint Logging Functions <span class="detail">angefragt 3.5.5.0</span></li>
+<li>CAA Device Diagnosis <span class="detail">angefragt 3.5.15.0</span></li>
+<li>IoStandard <span class="detail">angefragt 3.5.15.0</span></li>
+<li>Robin <span class="detail">0.1.2</span></li>
+<li>SM3_Basic <span class="detail">angefragt 4.5.1.0</span></li>
+<li>SM3_CNC <span class="detail">angefragt 4.5.1.0</span></li>
+<li>SM3_Robotics <span class="detail">angefragt 4.5.1.0</span></li>
+<li>SM3_Robotics_Visu <span class="detail">angefragt 4.5.1.0</span></li>
+<li>SM3_Transformation <span class="detail">angefragt 4.5.1.0</span></li>
+</ul></details></li>
+</ul></details></li>
+</ul></details></li>
+</ul>
+<h2>Komponenten je Station</h2>
+<h3>Station PLC_1</h3>
+<div class="scroll"><table>
+<thead><tr><th>Typ</th><th>Name</th><th>Version</th><th>Kennung</th><th>Pflichtfelder</th><th>Herkunft</th></tr></thead>
+<tbody>
+<tr><td>Teil-SBOM</td><td>hmi-web</td><td>1.4.0</td><td>partial-hmi-web/af63bd4c8601b7f1</td><td>Warnung: input-field-missing</td><td>aus samples/maschine-xy/sbom/teil/hmi-web.cdx.json</td></tr>
+<tr><td>Anwenderprogramm</td><td>PLC_1, Anwenderprogramm</td><td>R2026.10 (git a1b2c3d)</td><td>plc-1-app</td><td>Hinweis: filename-unavailable, hash-unavailable, program-not-read</td><td>Hersteller declared, Angabe declared</td></tr>
+<tr><td>Firmware</td><td>CPU 1214C DC/DC/DC, Firmware</td><td>V4.5</td><td>cpe:2.3:o:siemens:simatic_s7-1200_cpu_firmware:4.5:*:*:*:*:*:*:*</td><td>Hinweis: firmware-projected-only</td><td>Hersteller assumed, Firmware projected</td></tr>
+<tr><td>Firmware</td><td>BCL248i, Firmware</td><td>–</td><td>plc-1-fw-gsd-device-1-0-0</td><td>Warnung: license-unknown; Hinweis: filename-unavailable, firmware-not-in-project, hash-unavailable, vendor-sbom-missing</td><td>Hersteller gsdml, Firmware not-in-project</td></tr>
+<tr><td>Bibliothek</td><td>LGF</td><td>7.0.1</td><td>plc-1-lib-lgf</td><td>Warnung: file-properties-unknown; Hinweis: filename-unavailable, hash-unavailable</td><td>Hersteller declared, Angabe declared</td></tr>
+</tbody>
+</table></div>
+<h3>Station Roboterzelle</h3>
+<div class="scroll"><table>
+<thead><tr><th>Typ</th><th>Name</th><th>Version</th><th>Kennung</th><th>Pflichtfelder</th><th>Herkunft</th></tr></thead>
+<tbody>
+<tr><td>Anwenderprogramm</td><td>Roboterzelle, Anwenderprogramm</td><td>R2026.10 (git a1b2c3d)</td><td>roboterzelle-app</td><td>Hinweis: filename-unavailable, hash-unavailable</td><td>Hersteller declared, Angabe declared</td></tr>
+<tr><td>Firmware</td><td>EK1100, Firmware</td><td>–</td><td>roboterzelle-fw-device-1-ethercat-1</td><td>Warnung: order-number-not-in-project; Hinweis: filename-unavailable, firmware-not-in-project, hash-unavailable, vendor-sbom-missing</td><td>Hersteller assumed, Firmware not-in-project</td></tr>
+<tr><td>Firmware</td><td>EL3214, Firmware</td><td>–</td><td>roboterzelle-fw-device-1-ethercat-1-10</td><td>Warnung: order-number-not-in-project; Hinweis: filename-unavailable, firmware-not-in-project, hash-unavailable, vendor-sbom-missing</td><td>Hersteller assumed, Firmware not-in-project</td></tr>
+<tr><td>Firmware</td><td>EL3064, Firmware</td><td>–</td><td>roboterzelle-fw-device-1-ethercat-1-2</td><td>Warnung: order-number-not-in-project; Hinweis: filename-unavailable, firmware-not-in-project, hash-unavailable, vendor-sbom-missing</td><td>Hersteller assumed, Firmware not-in-project</td></tr>
+<tr><td>Firmware</td><td>EL3204-0200, Firmware</td><td>–</td><td>roboterzelle-fw-device-1-ethercat-1-3</td><td>Warnung: order-number-not-in-project; Hinweis: filename-unavailable, firmware-not-in-project, hash-unavailable, vendor-sbom-missing</td><td>Hersteller assumed, Firmware not-in-project</td></tr>
+<tr><td>Firmware</td><td>EL3204-0200, Firmware</td><td>–</td><td>roboterzelle-fw-device-1-ethercat-1-4</td><td>Warnung: order-number-not-in-project; Hinweis: filename-unavailable, firmware-not-in-project, hash-unavailable, vendor-sbom-missing</td><td>Hersteller assumed, Firmware not-in-project</td></tr>
+<tr><td>Firmware</td><td>EL3204-0200, Firmware</td><td>–</td><td>roboterzelle-fw-device-1-ethercat-1-5</td><td>Warnung: order-number-not-in-project; Hinweis: filename-unavailable, firmware-not-in-project, hash-unavailable, vendor-sbom-missing</td><td>Hersteller assumed, Firmware not-in-project</td></tr>
+<tr><td>Firmware</td><td>EL3403-0010, Firmware</td><td>–</td><td>roboterzelle-fw-device-1-ethercat-1-6</td><td>Warnung: order-number-not-in-project; Hinweis: filename-unavailable, firmware-not-in-project, hash-unavailable, vendor-sbom-missing</td><td>Hersteller assumed, Firmware not-in-project</td></tr>
+<tr><td>Firmware</td><td>EL4004, Firmware</td><td>–</td><td>roboterzelle-fw-device-1-ethercat-1-7</td><td>Warnung: order-number-not-in-project; Hinweis: filename-unavailable, firmware-not-in-project, hash-unavailable, vendor-sbom-missing</td><td>Hersteller assumed, Firmware not-in-project</td></tr>
+<tr><td>Firmware</td><td>EL2652, Firmware</td><td>–</td><td>roboterzelle-fw-device-1-ethercat-1-8</td><td>Warnung: order-number-not-in-project; Hinweis: filename-unavailable, firmware-not-in-project, hash-unavailable, vendor-sbom-missing</td><td>Hersteller assumed, Firmware not-in-project</td></tr>
+<tr><td>Firmware</td><td>EL2622, Firmware</td><td>–</td><td>roboterzelle-fw-device-1-ethercat-1-9</td><td>Warnung: order-number-not-in-project; Hinweis: filename-unavailable, firmware-not-in-project, hash-unavailable, vendor-sbom-missing</td><td>Hersteller assumed, Firmware not-in-project</td></tr>
+<tr><td>Bibliothek</td><td>Tc2_Standard</td><td>– (angefragt *)</td><td>roboterzelle-lib-tc2-standard</td><td>Warnung: creator-contact-unknown, file-properties-unknown, license-unknown, version-unresolved; Hinweis: filename-unavailable, hash-unavailable</td><td>Hersteller source, Angabe source</td></tr>
+<tr><td>Bibliothek</td><td>Tc2_System</td><td>– (angefragt *)</td><td>roboterzelle-lib-tc2-system</td><td>Warnung: creator-contact-unknown, file-properties-unknown, license-unknown, version-unresolved; Hinweis: filename-unavailable, hash-unavailable</td><td>Hersteller source, Angabe source</td></tr>
+<tr><td>Bibliothek</td><td>Tc2_Utilities</td><td>– (angefragt *)</td><td>roboterzelle-lib-tc2-utilities</td><td>Warnung: creator-contact-unknown, file-properties-unknown, license-unknown, version-unresolved; Hinweis: filename-unavailable, hash-unavailable</td><td>Hersteller source, Angabe source</td></tr>
+<tr><td>Bibliothek</td><td>Tc3_Module</td><td>– (angefragt *)</td><td>roboterzelle-lib-tc3-module</td><td>Warnung: creator-contact-unknown, file-properties-unknown, license-unknown, version-unresolved; Hinweis: filename-unavailable, hash-unavailable</td><td>Hersteller source, Angabe source</td></tr>
+<tr><td>Bibliothek</td><td>VisuDialogs</td><td>– (angefragt *)</td><td>roboterzelle-lib-visudialogs</td><td>Warnung: file-properties-unknown, license-unknown, supplier-unknown, version-unresolved; Hinweis: filename-unavailable, hash-unavailable</td><td>Angabe source</td></tr>
+<tr><td>Bibliothek</td><td>VisuElem3DPath</td><td>– (angefragt 3.5.6.0)</td><td>roboterzelle-lib-visuelem3dpath</td><td>Warnung: file-properties-unknown, license-unknown, supplier-unknown, version-unresolved; Hinweis: filename-unavailable, hash-unavailable</td><td>Angabe source</td></tr>
+<tr><td>Bibliothek</td><td>VisuElemMeter</td><td>– (angefragt 3.5.6.0)</td><td>roboterzelle-lib-visuelemmeter</td><td>Warnung: file-properties-unknown, license-unknown, supplier-unknown, version-unresolved; Hinweis: filename-unavailable, hash-unavailable</td><td>Angabe source</td></tr>
+<tr><td>Bibliothek</td><td>VisuElems</td><td>– (angefragt 3.5.6.10)</td><td>roboterzelle-lib-visuelems</td><td>Warnung: file-properties-unknown, license-unknown, supplier-unknown, version-unresolved; Hinweis: filename-unavailable, hash-unavailable</td><td>Angabe source</td></tr>
+<tr><td>Bibliothek</td><td>VisuElemsDateTime</td><td>– (angefragt 3.5.6.0)</td><td>roboterzelle-lib-visuelemsdatetime</td><td>Warnung: file-properties-unknown, license-unknown, supplier-unknown, version-unresolved; Hinweis: filename-unavailable, hash-unavailable</td><td>Angabe source</td></tr>
+<tr><td>Bibliothek</td><td>VisuElemsSpecialControls</td><td>– (angefragt 3.5.6.0)</td><td>roboterzelle-lib-visuelemsspecialcontrols</td><td>Warnung: file-properties-unknown, license-unknown, supplier-unknown, version-unresolved; Hinweis: filename-unavailable, hash-unavailable</td><td>Angabe source</td></tr>
+<tr><td>Bibliothek</td><td>VisuElemsWinControls</td><td>– (angefragt 3.5.6.0)</td><td>roboterzelle-lib-visuelemswincontrols</td><td>Warnung: file-properties-unknown, license-unknown, supplier-unknown, version-unresolved; Hinweis: filename-unavailable, hash-unavailable</td><td>Angabe source</td></tr>
+<tr><td>Bibliothek</td><td>VisuElemTextEditor</td><td>– (angefragt 3.5.6.0)</td><td>roboterzelle-lib-visuelemtexteditor</td><td>Warnung: file-properties-unknown, license-unknown, supplier-unknown, version-unresolved; Hinweis: filename-unavailable, hash-unavailable</td><td>Angabe source</td></tr>
+<tr><td>Bibliothek</td><td>visuinputs</td><td>– (angefragt 3.5.6.0)</td><td>roboterzelle-lib-visuinputs</td><td>Warnung: file-properties-unknown, license-unknown, supplier-unknown, version-unresolved; Hinweis: filename-unavailable, hash-unavailable</td><td>Angabe source</td></tr>
+<tr><td>Bibliothek</td><td>VisuNativeControl</td><td>– (angefragt 3.5.6.0)</td><td>roboterzelle-lib-visunativecontrol</td><td>Warnung: file-properties-unknown, license-unknown, supplier-unknown, version-unresolved; Hinweis: filename-unavailable, hash-unavailable</td><td>Angabe source</td></tr>
+<tr><td>Laufzeit</td><td>TwinCAT 3 Runtime</td><td>–</td><td>roboterzelle-rt</td><td>Warnung: file-properties-unknown, runtime-version-unknown; Hinweis: filename-unavailable, hash-unavailable</td><td>Hersteller assumed, Angabe assumed</td></tr>
+</tbody>
+</table></div>
+<h3>Station Verpackung</h3>
+<div class="scroll"><table>
+<thead><tr><th>Typ</th><th>Name</th><th>Version</th><th>Kennung</th><th>Pflichtfelder</th><th>Herkunft</th></tr></thead>
+<tbody>
+<tr><td>Anwenderprogramm</td><td>Verpackung, Anwenderprogramm</td><td>R2026.10 (git a1b2c3d)</td><td>verpackung-app</td><td>Hinweis: filename-unavailable, hash-unavailable</td><td>Hersteller declared, Angabe declared</td></tr>
+<tr><td>Firmware</td><td>Ger&#228;t 4102/0000 0005, Firmware</td><td>–</td><td>verpackung-fw</td><td>Warnung: license-unknown, order-number-not-in-project, supplier-unknown; Hinweis: filename-unavailable, firmware-not-in-project, hash-unavailable, vendor-sbom-missing</td><td>Firmware unknown</td></tr>
+<tr><td>Bibliothek</td><td>3SLicense</td><td>– (angefragt 0.0.0.0)</td><td>verpackung-lib-3slicense</td><td>Warnung: creator-contact-unknown, file-properties-unknown, license-unknown, version-unresolved; Hinweis: filename-unavailable, hash-unavailable</td><td>Hersteller source, Angabe source</td></tr>
+<tr><td>Bibliothek</td><td>Breakpoint Logging Functions</td><td>– (angefragt 3.5.5.0)</td><td>verpackung-lib-breakpoint-logging-functions</td><td>Warnung: creator-contact-unknown, file-properties-unknown, license-unknown, version-unresolved; Hinweis: filename-unavailable, hash-unavailable</td><td>Hersteller source, Angabe source</td></tr>
+<tr><td>Bibliothek</td><td>CAA Device Diagnosis</td><td>– (angefragt 3.5.15.0)</td><td>verpackung-lib-caa-device-diagnosis</td><td>Warnung: creator-contact-unknown, file-properties-unknown, license-unknown, version-unresolved; Hinweis: filename-unavailable, hash-unavailable</td><td>Hersteller source, Angabe source</td></tr>
+<tr><td>Bibliothek</td><td>IoStandard</td><td>– (angefragt 3.5.15.0)</td><td>verpackung-lib-iostandard</td><td>Warnung: file-properties-unknown, license-unknown, supplier-unknown, version-unresolved; Hinweis: filename-unavailable, hash-unavailable</td><td>Angabe source</td></tr>
+<tr><td>Bibliothek</td><td>Robin</td><td>0.1.2</td><td>verpackung-lib-robin</td><td>Warnung: creator-contact-unknown, file-properties-unknown, license-unknown; Hinweis: filename-unavailable, hash-unavailable</td><td>Hersteller source, Angabe source</td></tr>
+<tr><td>Bibliothek</td><td>SM3_Basic</td><td>– (angefragt 4.5.1.0)</td><td>verpackung-lib-sm3-basic</td><td>Warnung: creator-contact-unknown, file-properties-unknown, license-unknown, version-unresolved; Hinweis: filename-unavailable, hash-unavailable</td><td>Hersteller source, Angabe source</td></tr>
+<tr><td>Bibliothek</td><td>SM3_CNC</td><td>– (angefragt 4.5.1.0)</td><td>verpackung-lib-sm3-cnc</td><td>Warnung: creator-contact-unknown, file-properties-unknown, license-unknown, version-unresolved; Hinweis: filename-unavailable, hash-unavailable</td><td>Hersteller source, Angabe source</td></tr>
+<tr><td>Bibliothek</td><td>SM3_Robotics</td><td>– (angefragt 4.5.1.0)</td><td>verpackung-lib-sm3-robotics</td><td>Warnung: creator-contact-unknown, file-properties-unknown, license-unknown, version-unresolved; Hinweis: filename-unavailable, hash-unavailable</td><td>Hersteller source, Angabe source</td></tr>
+<tr><td>Bibliothek</td><td>SM3_Robotics_Visu</td><td>– (angefragt 4.5.1.0)</td><td>verpackung-lib-sm3-robotics-visu</td><td>Warnung: creator-contact-unknown, file-properties-unknown, license-unknown, version-unresolved; Hinweis: filename-unavailable, hash-unavailable</td><td>Hersteller source, Angabe source</td></tr>
+<tr><td>Bibliothek</td><td>SM3_Transformation</td><td>– (angefragt 4.5.1.0)</td><td>verpackung-lib-sm3-transformation</td><td>Warnung: creator-contact-unknown, file-properties-unknown, license-unknown, version-unresolved; Hinweis: filename-unavailable, hash-unavailable</td><td>Hersteller source, Angabe source</td></tr>
+</tbody>
+</table></div>
+<h3>Aus samples/maschine-xy/sbom/teil/hmi-web.cdx.json</h3>
+<div class="scroll"><table>
+<thead><tr><th>Typ</th><th>Name</th><th>Version</th><th>Kennung</th><th>Pflichtfelder</th><th>Herkunft</th></tr></thead>
+<tbody>
+<tr><td>Bibliothek</td><td>maschine-xy-hmi-web</td><td>1.4.0</td><td>cpe:2.3:a:maschine-xy-hmi-web:maschine-xy-hmi-web:1.4.0:*:*:*:*:*:*:*</td><td>Warnung: input-field-missing</td><td>aus samples/maschine-xy/sbom/teil/hmi-web.cdx.json</td></tr>
+<tr><td>Bibliothek</td><td>ms</td><td>2.1.3</td><td>cpe:2.3:a:vercel:ms:2.1.3:*:*:*:*:node.js:*:*</td><td>Warnung: input-field-missing</td><td>aus samples/maschine-xy/sbom/teil/hmi-web.cdx.json</td></tr>
+<tr><td>Bibliothek</td><td>picocolors</td><td>1.1.1</td><td>cpe:2.3:a:picocolors:picocolors:1.1.1:*:*:*:*:*:*:*</td><td>Warnung: input-field-missing</td><td>aus samples/maschine-xy/sbom/teil/hmi-web.cdx.json</td></tr>
+</tbody>
+</table></div>
+<h3>Aus samples/maschine-xy/sbom/lieferanten/siemens-cpu1214c-v4.5-synthetisch.cdx.json</h3>
+<div class="scroll"><table>
+<thead><tr><th>Typ</th><th>Name</th><th>Version</th><th>Kennung</th><th>Pflichtfelder</th><th>Herkunft</th></tr></thead>
+<tbody>
+<tr><td>Bibliothek</td><td>Beispiel-Echtzeitkern</td><td>2.1.0</td><td>vendor-siemens-cpu1214c-v4-5-synthetisch/rtos</td><td>vollst&#228;ndig</td><td>aus samples/maschine-xy/sbom/lieferanten/siemens-cpu1214c-v4.5-synthetisch.cdx.json</td></tr>
+<tr><td>Bibliothek</td><td>Beispiel-TCP/IP-Stack</td><td>1.4.2</td><td>vendor-siemens-cpu1214c-v4-5-synthetisch/tcpip</td><td>vollst&#228;ndig</td><td>aus samples/maschine-xy/sbom/lieferanten/siemens-cpu1214c-v4.5-synthetisch.cdx.json</td></tr>
+</tbody>
+</table></div>
+<h2>L&#252;cken</h2>
+<div class="scroll"><table>
+<thead><tr><th>Code</th><th>Schwere</th><th>Anzahl</th><th>Komponenten</th><th>Erkl&#228;rung</th><th>Was sie schlie&#223;t</th></tr></thead>
+<tbody>
+<tr><td>creator-contact-unknown</td><td>Warnung</td><td>13</td><td>roboterzelle-lib-tc2-standard, roboterzelle-lib-tc2-system, roboterzelle-lib-tc2-utilities, roboterzelle-lib-tc3-module, verpackung-lib-3slicense, verpackung-lib-breakpoint-logging-functions, verpackung-lib-caa-device-diagnosis, verpackung-lib-robin, verpackung-lib-sm3-basic, verpackung-lib-sm3-cnc, verpackung-lib-sm3-robotics, verpackung-lib-sm3-robotics-visu, verpackung-lib-sm3-transformation</td><td>F&#252;r den Hersteller ist weder E-Mail-Adresse noch URL bekannt.</td><td>E-Mail-Adresse oder URL des Herstellers unter „vendorContacts“ in machine.yml eintragen.</td></tr>
+<tr><td>file-properties-unknown</td><td>Warnung</td><td>26</td><td>plc-1-lib-lgf, roboterzelle-lib-tc2-standard, roboterzelle-lib-tc2-system, roboterzelle-lib-tc2-utilities, roboterzelle-lib-tc3-module, roboterzelle-lib-visudialogs, roboterzelle-lib-visuelem3dpath, roboterzelle-lib-visuelemmeter, roboterzelle-lib-visuelems, roboterzelle-lib-visuelemsdatetime, roboterzelle-lib-visuelemsspecialcontrols, roboterzelle-lib-visuelemswincontrols, roboterzelle-lib-visuelemtexteditor, roboterzelle-lib-visuinputs, roboterzelle-lib-visunativecontrol, roboterzelle-rt, verpackung-lib-3slicense, verpackung-lib-breakpoint-logging-functions, verpackung-lib-caa-device-diagnosis, verpackung-lib-iostandard, verpackung-lib-robin, verpackung-lib-sm3-basic, verpackung-lib-sm3-cnc, verpackung-lib-sm3-robotics, verpackung-lib-sm3-robotics-visu, verpackung-lib-sm3-transformation</td><td>Ob die Komponente ausf&#252;hrbar, ein Archiv oder strukturiert ist, ist nicht bekannt.</td><td>Bibliothek als Datei mit bekannten Eigenschaften einbinden; die Quelle sagt nichts dazu.</td></tr>
+<tr><td>input-field-missing</td><td>Warnung</td><td>4</td><td>partial-hmi-web/af63bd4c8601b7f1, partial-hmi-web/pkg:npm/maschine-xy-hmi-web@1.4.0?package-id=2ca70c872f5ed6a5, partial-hmi-web/pkg:npm/ms@2.1.3?package-id=bb1077662b3cb7e0, partial-hmi-web/pkg:npm/picocolors@1.1.1?package-id=9b208867cdc8b323</td><td>Die Komponente stammt aus einer eingelesenen SBOM, der Pflichtfelder fehlen; sie wurde unver&#228;ndert &#252;bernommen.</td><td>Vollst&#228;ndige SBOM beim Lieferanten bzw. vom erzeugenden Werkzeug anfordern.</td></tr>
+<tr><td>license-unknown</td><td>Warnung</td><td>26</td><td>plc-1-fw-gsd-device-1-0-0, roboterzelle-lib-tc2-standard, roboterzelle-lib-tc2-system, roboterzelle-lib-tc2-utilities, roboterzelle-lib-tc3-module, roboterzelle-lib-visudialogs, roboterzelle-lib-visuelem3dpath, roboterzelle-lib-visuelemmeter, roboterzelle-lib-visuelems, roboterzelle-lib-visuelemsdatetime, roboterzelle-lib-visuelemsspecialcontrols, roboterzelle-lib-visuelemswincontrols, roboterzelle-lib-visuelemtexteditor, roboterzelle-lib-visuinputs, roboterzelle-lib-visunativecontrol, verpackung-fw, verpackung-lib-3slicense, verpackung-lib-breakpoint-logging-functions, verpackung-lib-caa-device-diagnosis, verpackung-lib-iostandard, verpackung-lib-robin, verpackung-lib-sm3-basic, verpackung-lib-sm3-cnc, verpackung-lib-sm3-robotics, verpackung-lib-sm3-robotics-visu, verpackung-lib-sm3-transformation</td><td>Keine Distributionslizenz bekannt.</td><td>Distributionslizenz des Herstellers unter „licenses“ in machine.yml eintragen.</td></tr>
+<tr><td>order-number-not-in-project</td><td>Warnung</td><td>11</td><td>roboterzelle-fw-device-1-ethercat-1, roboterzelle-fw-device-1-ethercat-1-10, roboterzelle-fw-device-1-ethercat-1-2, roboterzelle-fw-device-1-ethercat-1-3, roboterzelle-fw-device-1-ethercat-1-4, roboterzelle-fw-device-1-ethercat-1-5, roboterzelle-fw-device-1-ethercat-1-6, roboterzelle-fw-device-1-ethercat-1-7, roboterzelle-fw-device-1-ethercat-1-8, roboterzelle-fw-device-1-ethercat-1-9, verpackung-fw</td><td>Weder Projekt noch GSDML nennen eine Bestellnummer.</td><td>Bestellnummer &#252;ber eine Ger&#228;tebeschreibung oder den Ist-Stand ermitteln.</td></tr>
+<tr><td>runtime-version-unknown</td><td>Warnung</td><td>1</td><td>roboterzelle-rt</td><td>Die Version der Laufzeit steht nicht im Projekt.</td><td>Version der Laufzeit aus dem Feld einlesen oder deklarieren.</td></tr>
+<tr><td>supplier-unknown</td><td>Warnung</td><td>12</td><td>roboterzelle-lib-visudialogs, roboterzelle-lib-visuelem3dpath, roboterzelle-lib-visuelemmeter, roboterzelle-lib-visuelems, roboterzelle-lib-visuelemsdatetime, roboterzelle-lib-visuelemsspecialcontrols, roboterzelle-lib-visuelemswincontrols, roboterzelle-lib-visuelemtexteditor, roboterzelle-lib-visuinputs, roboterzelle-lib-visunativecontrol, verpackung-fw, verpackung-lib-iostandard</td><td>Der Hersteller ist nicht ermittelbar.</td><td>Hersteller mit „vendorOverrides“ in machine.yml erkl&#228;ren.</td></tr>
+<tr><td>version-unresolved</td><td>Warnung</td><td>23</td><td>roboterzelle-lib-tc2-standard, roboterzelle-lib-tc2-system, roboterzelle-lib-tc2-utilities, roboterzelle-lib-tc3-module, roboterzelle-lib-visudialogs, roboterzelle-lib-visuelem3dpath, roboterzelle-lib-visuelemmeter, roboterzelle-lib-visuelems, roboterzelle-lib-visuelemsdatetime, roboterzelle-lib-visuelemsspecialcontrols, roboterzelle-lib-visuelemswincontrols, roboterzelle-lib-visuelemtexteditor, roboterzelle-lib-visuinputs, roboterzelle-lib-visunativecontrol, verpackung-lib-3slicense, verpackung-lib-breakpoint-logging-functions, verpackung-lib-caa-device-diagnosis, verpackung-lib-iostandard, verpackung-lib-sm3-basic, verpackung-lib-sm3-cnc, verpackung-lib-sm3-robotics, verpackung-lib-sm3-robotics-visu, verpackung-lib-sm3-transformation</td><td>Die Quelle nennt keine feste Version, sondern einen Platzhalter.</td><td>Bibliothek im Projekt auf eine feste Version setzen.</td></tr>
+<tr><td>filename-unavailable</td><td>Hinweis</td><td>41</td><td>plc-1-app, plc-1-fw-gsd-device-1-0-0, plc-1-lib-lgf, roboterzelle-app, roboterzelle-fw-device-1-ethercat-1, roboterzelle-fw-device-1-ethercat-1-10, roboterzelle-fw-device-1-ethercat-1-2, roboterzelle-fw-device-1-ethercat-1-3, roboterzelle-fw-device-1-ethercat-1-4, roboterzelle-fw-device-1-ethercat-1-5, roboterzelle-fw-device-1-ethercat-1-6, roboterzelle-fw-device-1-ethercat-1-7, roboterzelle-fw-device-1-ethercat-1-8, roboterzelle-fw-device-1-ethercat-1-9, roboterzelle-lib-tc2-standard, roboterzelle-lib-tc2-system, roboterzelle-lib-tc2-utilities, roboterzelle-lib-tc3-module, roboterzelle-lib-visudialogs, roboterzelle-lib-visuelem3dpath, roboterzelle-lib-visuelemmeter, roboterzelle-lib-visuelems, roboterzelle-lib-visuelemsdatetime, roboterzelle-lib-visuelemsspecialcontrols, roboterzelle-lib-visuelemswincontrols, roboterzelle-lib-visuelemtexteditor, roboterzelle-lib-visuinputs, roboterzelle-lib-visunativecontrol, roboterzelle-rt, verpackung-app, verpackung-fw, verpackung-lib-3slicense, verpackung-lib-breakpoint-logging-functions, verpackung-lib-caa-device-diagnosis, verpackung-lib-iostandard, verpackung-lib-robin, verpackung-lib-sm3-basic, verpackung-lib-sm3-cnc, verpackung-lib-sm3-robotics, verpackung-lib-sm3-robotics-visu, verpackung-lib-sm3-transformation</td><td>Die Komponente liegt nicht als Datei vor, ein Dateiname ist nicht bestimmbar.</td><td>Hersteller-SBOM mit Dateinamen unter „vendorSboms“ einbinden; sonst zul&#228;ssig (TR 3.2.1).</td></tr>
+<tr><td>firmware-not-in-project</td><td>Hinweis</td><td>12</td><td>plc-1-fw-gsd-device-1-0-0, roboterzelle-fw-device-1-ethercat-1, roboterzelle-fw-device-1-ethercat-1-10, roboterzelle-fw-device-1-ethercat-1-2, roboterzelle-fw-device-1-ethercat-1-3, roboterzelle-fw-device-1-ethercat-1-4, roboterzelle-fw-device-1-ethercat-1-5, roboterzelle-fw-device-1-ethercat-1-6, roboterzelle-fw-device-1-ethercat-1-7, roboterzelle-fw-device-1-ethercat-1-8, roboterzelle-fw-device-1-ethercat-1-9, verpackung-fw</td><td>Das Projekt f&#252;hrt keine Firmware-Version f&#252;r dieses Ger&#228;t.</td><td>Ist-Stand aus dem Feld einlesen (plc-sbom compare --as-built).</td></tr>
+<tr><td>firmware-projected-only</td><td>Hinweis</td><td>1</td><td>plc-1-fw</td><td>Die Firmware ist nur als projektierter Sollwert bekannt, ein Ist-Stand liegt nicht vor.</td><td>Ist-Stand aus dem Feld einlesen (plc-sbom compare --as-built).</td></tr>
+<tr><td>hash-unavailable</td><td>Hinweis</td><td>41</td><td>plc-1-app, plc-1-fw-gsd-device-1-0-0, plc-1-lib-lgf, roboterzelle-app, roboterzelle-fw-device-1-ethercat-1, roboterzelle-fw-device-1-ethercat-1-10, roboterzelle-fw-device-1-ethercat-1-2, roboterzelle-fw-device-1-ethercat-1-3, roboterzelle-fw-device-1-ethercat-1-4, roboterzelle-fw-device-1-ethercat-1-5, roboterzelle-fw-device-1-ethercat-1-6, roboterzelle-fw-device-1-ethercat-1-7, roboterzelle-fw-device-1-ethercat-1-8, roboterzelle-fw-device-1-ethercat-1-9, roboterzelle-lib-tc2-standard, roboterzelle-lib-tc2-system, roboterzelle-lib-tc2-utilities, roboterzelle-lib-tc3-module, roboterzelle-lib-visudialogs, roboterzelle-lib-visuelem3dpath, roboterzelle-lib-visuelemmeter, roboterzelle-lib-visuelems, roboterzelle-lib-visuelemsdatetime, roboterzelle-lib-visuelemsspecialcontrols, roboterzelle-lib-visuelemswincontrols, roboterzelle-lib-visuelemtexteditor, roboterzelle-lib-visuinputs, roboterzelle-lib-visunativecontrol, roboterzelle-rt, verpackung-app, verpackung-fw, verpackung-lib-3slicense, verpackung-lib-breakpoint-logging-functions, verpackung-lib-caa-device-diagnosis, verpackung-lib-iostandard, verpackung-lib-robin, verpackung-lib-sm3-basic, verpackung-lib-sm3-cnc, verpackung-lib-sm3-robotics, verpackung-lib-sm3-robotics-visu, verpackung-lib-sm3-transformation</td><td>Die ausgelieferte Form liegt dem Werkzeug nicht vor, ein SHA-512 ist nicht bestimmbar.</td><td>Hersteller-SBOM mit SHA-512 der Firmware-Datei unter „vendorSboms“ einbinden; bei Firmware und Anwenderprogramm sonst zul&#228;ssig (TR 3.2.1).</td></tr>
+<tr><td>program-not-read</td><td>Hinweis</td><td>1</td><td>plc-1-app</td><td>Die Quelle enth&#228;lt keine Bausteine, gesch&#252;tzte Bausteine sind unbekannt.</td><td>Erst der Adapter tia-portal liest Bausteine (M14).</td></tr>
+<tr><td>vendor-sbom-missing</td><td>Hinweis</td><td>12</td><td>plc-1-fw-gsd-device-1-0-0, roboterzelle-fw-device-1-ethercat-1, roboterzelle-fw-device-1-ethercat-1-10, roboterzelle-fw-device-1-ethercat-1-2, roboterzelle-fw-device-1-ethercat-1-3, roboterzelle-fw-device-1-ethercat-1-4, roboterzelle-fw-device-1-ethercat-1-5, roboterzelle-fw-device-1-ethercat-1-6, roboterzelle-fw-device-1-ethercat-1-7, roboterzelle-fw-device-1-ethercat-1-8, roboterzelle-fw-device-1-ethercat-1-9, verpackung-fw</td><td>F&#252;r diese Firmware liegt keine SBOM des Herstellers vor.</td><td>SBOM vom Hersteller anfordern und unter „vendorSboms“ einbinden.</td></tr>
+</tbody>
+</table></div>
+<h2>Weitere Befunde</h2>
+<div class="scroll"><table>
+<thead><tr><th>Schwere</th><th>Code</th><th>Komponente</th><th>Meldung</th></tr></thead>
+<tbody>
+<tr><td>Warnung</td><td>PARTIAL_SBOM_NOT_TR_CONFORM</td><td>–</td><td>Die Teil-SBOM samples/maschine-xy/sbom/teil/hmi-web.cdx.json erf&#252;llt BSI TR-03183-2 nicht (39 Fehler, 0 Warnungen). Ihre Komponenten sind &#252;bernommen, fehlende Pflichtfelder mit input-field-missing vermerkt. Einzelheiten zeigt plc-sbom validate samples/maschine-xy/sbom/teil/hmi-web.cdx.json.</td></tr>
+<tr><td>Hinweis</td><td>LOGICAL_COMPONENT</td><td>maschine-xy</td><td>maschine-xy ist eine logische Komponente. Dateiname, Hash und die Eigenschaften ausf&#252;hrbar, Archiv und strukturiert entfallen (TR-03183-2 Abschnitt 3.2.2).</td></tr>
+</tbody>
+</table></div>
+<h2>Anhang: Hardware ohne eigene Firmware</h2>
+<div class="scroll"><table>
+<thead><tr><th>Station</th><th>Ger&#228;t</th><th>Typ</th><th>Bestellnummer</th><th>Position</th><th>Hersteller</th><th>Grund</th></tr></thead>
+<tbody>
+<tr><td>PLC_1</td><td>[M10] Activation_1</td><td>[M10] Activation</td><td>–</td><td>GSD device_1/0/1</td><td>Leuze electronic GmbH + Co. KG</td><td>laut Quelle ohne eigene Firmware</td></tr>
+<tr><td>PLC_1</td><td>[M11] Reading gate control_1</td><td>[M11] Reading gate control</td><td>–</td><td>GSD device_1/0/2</td><td>Leuze electronic GmbH + Co. KG</td><td>laut Quelle ohne eigene Firmware</td></tr>
+</tbody>
+</table></div>
+<footer>Bericht von PLC SBOM Builder zu build/sbom-maschine.cdx.json. Eine SBOM allein erf&#252;llt den Cyber Resilience Act nicht; Schwachstellen bewertet das Werkzeug nicht.</footer>
+</main>
+</body>
+</html>
