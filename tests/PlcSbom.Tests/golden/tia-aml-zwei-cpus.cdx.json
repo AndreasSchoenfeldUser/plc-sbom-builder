@@ -448,6 +448,10 @@
         },
         {
           "name": "plcsbom:gap",
+          "value": "gsdml-not-found"
+        },
+        {
+          "name": "plcsbom:gap",
           "value": "hash-unavailable"
         },
         {

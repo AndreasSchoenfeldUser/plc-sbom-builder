@@ -27,6 +27,7 @@ Regeln:
 | `twincat/synthetisch/zelle-synthetisch.tsproj`, `Zelle/Zelle-synthetisch.plcproj` | TwinCAT 3 | synthetisch (Comquent) | – | – | Comquent-eigen | – |
 | `tia-aml/plc-commissioning-sample_device.aml` | TIA Portal V17 (`WriterVersion 1700`), AML aus dem CAx-Export | `github.com/vformi/PLC.Commissioning.Lib` | `a2cc27fe4986bc881b00e15df6b62d84d6235453` | `src/PLC.Commissioning.Lib.App/samples/sample_device.aml` (gleiche Datei unter `src/PLC.Commissioning.Lib.App.Standalone/samples/`) | MIT, Text in `LICENSES/vformi-PLC.Commissioning.Lib.LICENSE` | 01.11.2026 |
 | `tia-aml/zwei-cpus-synthetisch.aml` | TIA Portal V21, AML | synthetisch (Comquent) | – | – | Comquent-eigen | – |
+| `gsdml/GSDML-V2.41-LEUZE-BCL248i-20211213.xml` | PROFINET GSDML V2.41 (Leuze BCL248i) | `github.com/vformi/PLC.Commissioning.Lib` | `a2cc27fe4986bc881b00e15df6b62d84d6235453` | `src/PLC.Commissioning.Lib.App/samples/GSDML-V2.41-LEUZE-BCL248i-20211213.xml` (gleiche Datei unter `src/PLC.Commissioning.Lib.App.Standalone/samples/`) | MIT (Repository), Text in `LICENSES/vformi-PLC.Commissioning.Lib.LICENSE`; Datei von Leuze ohne eigenen Lizenzhinweis (E-020) | 01.11.2026 |
 
 SHA-256 der echten Dateien: robin `acf12d77f7ad9ba162485e9c8d64545d97ab37e81f396507112917330af17f2d`, OSC-MQTT `db021073f01fde3538c5f752cb1b07b7f3b5280d97b2af99301aeee9fd303845`, ooip `ec3146e46c5ad8cc7275f376d2e557080a6f4b7cbfb72b01b75511a8d3e48de8`.
 
@@ -42,7 +43,7 @@ Die TwinCAT-Projekte sind nur teilweise übernommen: `.tsproj`, die verwiesenen 
 
 `devdesc-geraete-synthetisch.xml` verwendet als Gerätekennungen die der vier echten Gerätebeschreibungen; Gegenstücke für Elemente und Kleinschreibung der Id (`0000 000a`) sind robin und ooip.
 
-SHA-256 der TIA-AML-Datei: plc-commissioning-sample_device `0fade7c6844270656da6718e515d5f9fcbaa056a72891405bf1ae3c4c73bf1d6`. Dasselbe Repository enthält die passende GSDML-Datei `GSDML-V2.41-LEUZE-BCL248i-20211213.xml` (MIT); sie kommt mit M8.
+SHA-256 der TIA-AML-Datei: plc-commissioning-sample_device `0fade7c6844270656da6718e515d5f9fcbaa056a72891405bf1ae3c4c73bf1d6`. SHA-256 der GSDML-Datei aus demselben Repository: `ca1b97e3068ce1663ebba66422d9fbf77d314fc8ff3dfe589ad8c0bf6156eaf7` (beide Kopien im Repository gleich). Der Dateiname behält die Schreibweise des Herstellers (`…BCL248i-20211213.xml`); das AML schreibt ihn in Großbuchstaben, die Tests belegen damit die Suche ohne Groß-/Kleinschreibung. Abgewandelte Kopien (Modul mit Bestellnummer, zweite Datei mit anderem Inhalt) entstehen nur im Test, nicht als Datei.
 
 `zwei-cpus-synthetisch.aml` (TIA) deckt ab, was die echten AML-Exporte nicht zeigen: zwei CPUs mit je einem IO-System in einer Datei, ein GSD-Gerät am IO-System, ein Gerät ohne IO-System für `devices` und eines für `ignoreDevices`, einen `TypeIdentifier` mit Katalogversion (`/V2.1`, abweichend von `FirmwareVersion` `V2.2`). IP-Adressen aus dem Dokumentationsbereich (RFC 5737). Gegenstücke: Elemente, Rollen, Attribute und „Link To IoSystem“ in `CIP_cs_HardwareNetwork.aml` (V18, lokal), PM ohne `FirmwareVersion` und Profilschiene mit `***` in `TIA_Export.aml` (V21, lokal), GSD-Gerät in `plc-commissioning-sample_device.aml`, Name `&#x9;_0` in V18. Für die Katalogversion im `TypeIdentifier` gibt es kein echtes AML-Gegenstück; die Form nennt CLAUDE.md 5.4.3 für Katalog-Kennungen.
 

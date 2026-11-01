@@ -1,10 +1,10 @@
 # Adapter `tia-aml`
 
-Stand 01.11.2026. Liest die AutomationML-Datei aus dem CAx-Export von Siemens TIA Portal V17 bis V21 (Extras → CAx-Daten exportieren). Kein TIA, keine Lizenz, läuft auf jedem Agenten (CLAUDE.md Abschnitt 5.4). Entscheidungen: `docs/entscheidungen.md` E-019. GSD-Geräte mit GSDML-Dateien folgen mit M8.
+Stand 01.11.2026. Liest die AutomationML-Datei aus dem CAx-Export von Siemens TIA Portal V17 bis V21 (Extras → CAx-Daten exportieren). Kein TIA, keine Lizenz, läuft auf jedem Agenten (CLAUDE.md Abschnitt 5.4). Entscheidungen: `docs/entscheidungen.md` E-019 (Adapter, M7) und E-020 (GSDML, M8).
 
 ## 1. Eingang
 
-Angegeben wird die `.aml`-Datei. Eine Datei kann ein ganzes Projekt mit mehreren CPUs enthalten; mehrere Stationen dürfen auf dieselbe Datei zeigen, sie wird einmal gelesen (`TiaAmlAdapter.Read` nimmt alle Stationen der Datei auf einmal).
+Angegeben wird die `.aml`-Datei, für GSD-Geräte zusätzlich Verzeichnisse mit GSDML-Dateien (`gsdml` in `machine.yml`, `--gsdml` bei `inspect`). Eine Datei kann ein ganzes Projekt mit mehreren CPUs enthalten; mehrere Stationen dürfen auf dieselbe Datei zeigen, sie wird einmal gelesen (`TiaAmlAdapter.Read` nimmt alle Stationen der Datei auf einmal).
 
 Alle XML-Dateien werden ohne DTD und ohne Resolver gelesen, über lokale Element- und Attributnamen; ein XML-Namespace (CAEX 3.0) stört nicht.
 
@@ -13,6 +13,7 @@ Alle XML-Dateien werden ohne DTD und ohne Resolver gelesen, über lokale Element
 | Datei | TIA | Inhalt | Lizenz |
 |---|---|---|---|
 | `fixtures/tia-aml/plc-commissioning-sample_device.aml` | V17 (`WriterVersion 1700`) | S7-1200 CPU 1214C `V4.5` mit IO-System, GSD-Gerät Leuze BCL248i mit zwei Modulen, nicht mit dem IO-System verbunden | MIT |
+| `fixtures/gsdml/GSDML-V2.41-LEUZE-BCL248i-20211213.xml` | – | GSDML des Leuze BCL248i aus der V17-Fixture: `VendorID`, `DeviceID`, `VendorName`, ein Zugangspunkt `DAP` mit `OrderNumber` `501xxxxx`, `HardwareRelease` `3`, `SoftwareRelease` `V1.*.*`, 57 Module ohne Bestellnummer; ISO-8859-1 | MIT (Repository, E-020) |
 | `fixtures/tia-aml/zwei-cpus-synthetisch.aml` | V21 | synthetisch: zwei CPUs mit je einem IO-System, zwei ET 200SP, GSD-Gerät und G120C am IO-System, ein G120C und ein Testaufbau ohne IO-System, PM ohne `FirmwareVersion`, `TypeIdentifier` mit `/V2.1`, Name `&#x9;_0`, Netzwerte aus RFC 5737 | Comquent-eigen |
 | `fixtures/_local/tia-aml/openess_CIP-CIP_cs_HardwareNetwork.aml` | V18 | S7-1500 CPU 1511-1 PN, vier ET 200SP mit passiven und firmwarebehafteten Modulen, drei G120C (`4.7.10`), sieben „Link To IoSystem“, Profilschiene `6ES7 590-1***0-0AA0` | keine, nur lokal |
 | `fixtures/_local/tia-aml/interoperabilitaet-TIA_Export.aml` | V21 | S7-1500 CPU 1511-1 PN `V2.8`, PM 70W ohne `FirmwareVersion`, Profilschiene mit `***`, `WriterVendor` „Siemens“ | keine, nur lokal |
@@ -102,13 +103,42 @@ Fehlt `PositionNumber`, steht der Name im Pfad.
 
 `OrderNumber:`-Geräte bekommen `Siemens AG` mit `vendor:origin` = `assumed`. Begründung: `OrderNumber:`-Kennungen stammen aus dem Siemens-Hardwarekatalog bzw. aus Siemens-HSPs; Geräte Dritter kommen über GSD. Alle `OrderNumber:`-Geräte der drei echten Fixtures sind Siemens-Geräte (SIMATIC, SINAMICS). An jeder neuen Fixture prüfen. `vendorOverrides` (Muster auf Bestellnummer → Hersteller, erster Treffer gilt) überschreibt mit `vendor:origin` = `declared`.
 
-### 5.4 GSD-Geräte (bis M8)
+### 5.4 GSD-Geräte und GSDML-Dateien
 
-Das AML nennt für GSD-Geräte nur Dateiname, Art und Id im `TypeIdentifier` und den `TypeName` (V17: Leuze BCL248i).
+Das AML nennt für GSD-Geräte nur Dateiname, Art und Id im `TypeIdentifier` und den `TypeName` (V17: Leuze BCL248i). Hersteller und Bestellnummer stehen in der GSDML-Datei (E-020).
 
-- Kopfmodul (`DAP`): Firmware-Komponente `<TypeName>, Firmware` ohne Hersteller, Bestellnummer und Version. Lücken `order-number-not-in-project`, `supplier-unknown` (Warnungen) und `firmware-not-in-project` (Hinweis). `<ns>:vendorKey:GSDML` = Dateiname, `GsdType`, `GsdId` = Art und Id.
-- Module (`M`) ohne `FirmwareVersion`: passiv, Hardware-Anhang.
-- Die GSDML-Datei selbst liest erst M8 (Hersteller, Bestellnummer, `SoftwareRelease` als `<ns>:gsdml:softwareRelease`, nie als Firmware). `--gsdml` bei `inspect` endet bis dahin mit `[NOT_IMPLEMENTED]`.
+**Suche.** Gesucht wird der Dateiname aus dem `TypeIdentifier` ohne Groß-/Kleinschreibung in allen `gsdml`-Verzeichnissen samt Unterverzeichnissen (das AML schreibt `…BCL248I-20211213.XML`, die Datei heißt `…BCL248i-20211213.xml`). Gelesen wird nur die gesuchte Datei.
+
+| Fall | Ergebnis |
+|---|---|
+| eine Datei, oder mehrere mit gleichem Inhalt | die erste nach Pfad |
+| mehrere mit verschiedenem Inhalt | keine; Lücke `gsdml-not-found` mit allen Fundstellen |
+| keine Datei | Lücke `gsdml-not-found` |
+| kein `gsdml`-Verzeichnis angegeben | Lücke `gsdml-not-found` („kein Verzeichnis angegeben“) |
+| Verzeichnis fehlt | Exit 2 `[GSDML_DIR_NOT_FOUND]` |
+| gefundene Datei ist keine GSDML (Wurzel nicht `ISO15745Profile` mit `ProfileBody/DeviceIdentity`) | Exit 2 `[NOT_GSDML]` |
+
+**Felder der GSDML** (Namen aus der Fixture, lokale Namen ohne Namespace):
+
+| Element / Attribut | Beispiel | Verwendung |
+|---|---|---|
+| `ProfileBody/DeviceIdentity@VendorID`, `@DeviceID` | `0x0152`, `0x0015` | `<ns>:vendorKey:VendorId`, `DeviceId`, wie geschrieben |
+| `DeviceIdentity/VendorName@Value` | `Leuze electronic GmbH + Co. KG` | Hersteller, `vendor:origin` = `gsdml` |
+| `ApplicationProcess/DeviceAccessPointList/DeviceAccessPointItem@ID` | `DAP` | Zugangspunkt zur Id aus `GSD:<Datei>/DAP/<Id>` |
+| `ApplicationProcess/ModuleList/ModuleItem@ID` | `ID_MOD_Activation` | Modul zur Id aus `GSD:<Datei>/M/<Id>` |
+| `ModuleInfo/OrderNumber@Value` (direktes Kind des Zugangspunkts bzw. Moduls) | `501xxxxx` | Bestellnummer, unverändert; mit `*`, `?` oder `xx` → `orderNumber:pattern` = `true` |
+| `ModuleInfo/SoftwareRelease@Value` | `V1.*.*` | `<ns>:gsdml:softwareRelease`, **nicht** die Firmware |
+| `ModuleInfo/HardwareRelease@Value` | `3` | `<ns>:gsdml:hardwareRelease` |
+| Datei | | `<ns>:vendorKey:gsdmlFile` (Pfad der gefundenen Datei), `<ns>:vendorKey:gsdmlSha256` |
+
+Nicht gelesen: Texte (`ExternalTextList`), `ModuleInfo/Name`, `VendorName` im `ModuleInfo`, Submodule, Parameter.
+
+**Ergebnis je Teil:**
+
+- Kopfmodul (`DAP`): Firmware-Komponente `<TypeName>, Firmware`, Hersteller und Bestellnummer aus der GSDML, `firmware-not-in-project` (Hinweis), solange kein Ist-Stand vorliegt. Ohne GSDML zusätzlich `gsdml-not-found`, `order-number-not-in-project` und `supplier-unknown` (Warnungen). `<ns>:vendorKey:GSDML`, `GsdType`, `GsdId` = Dateiname, Art und Id aus dem AML.
+- Steht die Id nicht in der GSDML: Warnung `[TIA_AML_GSDML_ITEM_NOT_FOUND]`; der Hersteller aus der Datei bleibt, die Bestellnummer fehlt (`order-number-not-in-project`).
+- `vendorOverrides` gilt vor der GSDML, wenn die Bestellnummer aus der GSDML auf ein Muster passt (`vendor:origin` = `declared`).
+- Module (`M`) ohne `FirmwareVersion`: passiv, Hardware-Anhang, mit Hersteller und (falls vorhanden) Bestellnummer aus der GSDML, ohne Lücken.
 
 ### 5.5 Bibliotheken und Programm
 
@@ -134,7 +164,7 @@ Die CPU der Station ist die Steuerung (`bom-ref` `<station>-fw`), auf ihrer Firm
 
 ## 7. `inspect`
 
-`plc-sbom inspect <datei.aml> --adapter tia-aml` gibt aus: Projektname, Werkzeug (TIA-Version), Exportzeit, CPUs mit IO-Systemen, und je Gerät die Zuordnung, die jede CPU als Station mit `plc` und ohne `devices` bekäme (`via`: `cpu` oder `io-system`), dazu jedes nicht integrierte Teil mit Position, `TypeIdentifier`, Firmware und Behandlung (`firmware`, `firmwareAttributeMissing`, `passive`, `rack`, `gsdDevice`, `gsdModule`, `structure`, `unknown`). Warnungen stehen im JSON und zusätzlich als `[CODE] Text` auf stderr. Netzdaten und Element-IDs erscheinen nicht.
+`plc-sbom inspect <datei.aml> --adapter tia-aml` gibt aus: Projektname, Werkzeug (TIA-Version), Exportzeit, CPUs mit IO-Systemen, und je Gerät die Zuordnung, die jede CPU als Station mit `plc` und ohne `devices` bekäme (`via`: `cpu` oder `io-system`), dazu jedes nicht integrierte Teil mit Position, `TypeIdentifier`, Firmware und Behandlung (`firmware`, `firmwareAttributeMissing`, `passive`, `rack`, `gsdDevice`, `gsdModule`, `structure`, `unknown`). Mit `--gsdml <verzeichnis>` steht bei GSD-Teilen zusätzlich `gsdml` mit Datei, Hersteller, Bestellnummer und Releases aus der GSDML; eine fehlende oder mehrdeutige Datei ergibt die Warnung `[GSDML_NOT_FOUND]` bzw. `[GSDML_AMBIGUOUS]`. Warnungen stehen im JSON und zusätzlich als `[CODE] Text` auf stderr. Netzdaten und Element-IDs erscheinen nicht.
 
 ## 8. Fehlerfälle
 
@@ -143,11 +173,14 @@ Die CPU der Station ist die Steuerung (`bom-ref` `<station>-fw`), auf ihrer Firm
 | Datei fehlt, kein gültiges XML, DTD | Exit 2 `[SOURCE_NOT_FOUND]`, `[XML_INVALID]` |
 | Wurzel nicht `CAEXFile` | Exit 2 `[NOT_AML]` |
 | nicht von TIA Portal geschrieben | Exit 2 `[NOT_TIA_AML]` |
+| `gsdml`-Verzeichnis fehlt, gefundene Datei keine GSDML | Exit 2 `[GSDML_DIR_NOT_FOUND]`, `[NOT_GSDML]` |
 | `plc` nicht gefunden, mehrere CPUs ohne `plc`, Gerät in zwei Stationen | Exit 2 `[TIA_AML_PLC_NOT_FOUND]`, `[TIA_AML_PLC_REQUIRED]`, `[TIA_AML_DEVICE_IN_TWO_STATIONS]` |
-| unbekannte `WriterVersion`, Rolle, `TypeIdentifier`-Präfix, IO-System ohne CPU, abweichende Katalogversion, unbenutztes Muster | Warnung, weiter |
+| unbekannte `WriterVersion`, Rolle, `TypeIdentifier`-Präfix, IO-System ohne CPU, abweichende Katalogversion, unbenutztes Muster, Id nicht in der GSDML | Warnung, weiter |
+| GSDML-Datei fehlt oder ist mehrdeutig | Lücke `gsdml-not-found` (bei `inspect` Warnung) |
 
 ## 9. Offen
 
+- GSDML-Dateien mit mehreren Zugangspunkten: ohne Fixture. Module mit eigener Bestellnummer nur über eine abgewandelte Kopie der echten Datei im Test belegt.
 - Comquent-V21-Demo-Export (CLAUDE.md Abschnitt 13) mit ET 200SP, GSD-Gerät, Antrieb und HMI-Panel: Golden File folgt, sobald der Export vorliegt. Bis dahin decken V17 (eingecheckt) und V18/V21 (lokal) die echten Fälle ab.
 - HMI-Panels: keine Fixture. Ein Panel ohne IO-System lässt sich über `devices` aufnehmen; wie seine Firmware im AML steht, ist offen.
 - Mehrere CPUs in einem `Device` (S7-400H) und IO-Systeme an Kommunikationsmodulen: ohne Fixture, nur die Regel aus Abschnitt 6 Nr. 4.

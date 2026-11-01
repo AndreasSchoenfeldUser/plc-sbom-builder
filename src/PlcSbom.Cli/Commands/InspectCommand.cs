@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using PlcSbom.Core;
 using PlcSbom.Core.Adapters.Codesys.V35;
+using PlcSbom.Core.Adapters.Gsdml;
 using PlcSbom.Core.Adapters.Studio5000;
 using PlcSbom.Core.Adapters.TiaAml;
 using PlcSbom.Core.Adapters.TwinCat;
@@ -38,18 +39,17 @@ public static class InspectCommand
                 "NOT_IMPLEMENTED",
                 $"„inspect“ für den Adapter {adapter} ist in plc-sbom {ToolVersion.Short} noch nicht umgesetzt. Das folgt mit Meilenstein {milestone}.");
         }
-        if (gsdml is not null)
+        if (gsdml is not null && adapter != AdapterIds.TiaAml)
         {
-            throw adapter == AdapterIds.TiaAml
-                ? new UsageException("NOT_IMPLEMENTED", $"--gsdml ist in plc-sbom {ToolVersion.Short} noch nicht umgesetzt. GSD-Geräte mit GSDML-Dateien folgen mit Meilenstein M8.")
-                : new UsageException("USAGE", $"--gsdml gilt nur für die Adapter {AdapterIds.TiaAml} und {AdapterIds.TiaPortal}.");
+            throw new UsageException("USAGE", $"--gsdml gilt nur für die Adapter {AdapterIds.TiaAml} und {AdapterIds.TiaPortal}.");
         }
 
         string json;
         if (adapter == AdapterIds.TiaAml)
         {
             var content = TiaAmlAdapter.ReadFile(path);
-            var inspection = TiaAmlAdapter.Inspect(AmlReader.Read(content, path), path);
+            var index = gsdml is null ? null : GsdmlIndex.Load([(gsdml, gsdml)]);
+            var inspection = TiaAmlAdapter.Inspect(AmlReader.Read(content, path), path, index);
             json = JsonSerializer.Serialize(new TiaAmlInventory(
                 Format: 1,
                 Adapter: AdapterIds.TiaAml,

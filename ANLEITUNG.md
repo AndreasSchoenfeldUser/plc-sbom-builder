@@ -16,7 +16,7 @@ Eine SBOM allein erfüllt den Cyber Resilience Act nicht. Das Werkzeug bewertet 
 |---|---|---|
 | `validate` | vorhandene SBOM prüfen (Schema und TR-03183-2), Ergebnisdatei schreiben | **nutzbar** |
 | `build` | SBOM aus `machine.yml` und den SPS-Projekten erzeugen | folgt (M9) |
-| `inspect` | Rohinventar eines Adapters ausgeben | **nutzbar für `codesys`** (CODESYS V3.5, PLCopen XML), **`studio5000`** (Rockwell, L5X), **`twincat`** (Beckhoff TwinCAT 3) und **`tia-aml`** (Siemens TIA Portal V17–V21, AML-Export); `--gsdml` folgt (M8), `tia-portal` folgt (M14) |
+| `inspect` | Rohinventar eines Adapters ausgeben | **nutzbar für `codesys`** (CODESYS V3.5, PLCopen XML), **`studio5000`** (Rockwell, L5X), **`twincat`** (Beckhoff TwinCAT 3) und **`tia-aml`** (Siemens TIA Portal V17–V21, AML-Export, mit `--gsdml` für GSD-Geräte); `tia-portal` folgt (M14) |
 | `report` | Prüfbericht als HTML oder Markdown | folgt (M10) |
 | `compare` | SBOM mit dem Ist-Stand aus dem Feld abgleichen | folgt (M11) |
 | `ids` | Kennungen gegen CSAF-Advisories prüfen | folgt (M12) |
@@ -162,7 +162,7 @@ Der Code im Lückenvermerk ist klein geschrieben mit Bindestrich (`hash-unavaila
 | `program-source-missing` | Für das Anwenderprogramm ist kein Quellverzeichnis angegeben, kein Hash | Warnung | Hash |
 | `protected-block-unknown` | Geschützter Baustein ohne bekannten Lieferanten oder Version | Warnung | Ersteller, Version |
 | `ekey-disabled` | Rockwell: elektronische Kodierung eines Moduls aus (nicht an der Steuerung), das Gerät im Feld kann abweichen | Warnung | – |
-| `gsdml-not-found` | Die GSDML-Datei des Geräts liegt in keinem der angegebenen Verzeichnisse | Warnung | – |
+| `gsdml-not-found` | Die GSDML-Datei des Geräts liegt in keinem der angegebenen Verzeichnisse, liegt dort mehrfach mit verschiedenem Inhalt, oder es ist kein Verzeichnis angegeben | Warnung | – |
 | `devdesc-not-found` | CODESYS: Zur Gerätekennung liegt keine oder mehr als eine Gerätebeschreibung in den angegebenen Verzeichnissen | Warnung | – |
 | `order-number-not-in-project` | Weder Projekt noch GSDML nennen eine Bestellnummer | Warnung | – |
 
@@ -253,7 +253,10 @@ Auf Windows-Agenten `bat` statt `sh`. `readJSON` stammt aus dem Plugin „Pipeli
 | `[TIA_AML_PLC_REQUIRED]` | Die AML-Datei enthält mehrere CPUs, oder mehrere Stationen lesen sie, und `plc` fehlt | CPU mit `plc` wählen; die Namen stehen in der Meldung und in `inspect` |
 | `[TIA_AML_PLC_NOT_FOUND]` | Die mit `plc` genannte CPU steht nicht in der AML-Datei | Namen aus der Meldung oder aus `inspect` übernehmen (genaue Schreibweise) |
 | `[TIA_AML_DEVICE_IN_TWO_STATIONS]` | Ein Gerät gehört zu zwei Stationen (gleiche CPU zweimal, oder `devices` greift ein Gerät am IO-System einer anderen Station) | `plc` und `devices` der Stationen prüfen |
-| `[TIA_AML_…]` als Warnung | `WRITER_VERSION_UNKNOWN`, `ROLE_UNKNOWN`, `TYPE_IDENTIFIER_UNKNOWN`, `CATALOG_VERSION_DIFFERS`, `IOSYSTEM_WITHOUT_CPU`, `PATTERN_UNUSED`, `EXPORT_TIME_INVALID`: etwas in der Datei war nicht vollständig auswertbar; der Lauf geht weiter | Meldung lesen; bei `PATTERN_UNUSED` Tippfehler in `devices` oder `ignoreDevices` prüfen |
+| `[TIA_AML_…]` als Warnung | `WRITER_VERSION_UNKNOWN`, `ROLE_UNKNOWN`, `TYPE_IDENTIFIER_UNKNOWN`, `CATALOG_VERSION_DIFFERS`, `IOSYSTEM_WITHOUT_CPU`, `PATTERN_UNUSED`, `EXPORT_TIME_INVALID`, `GSDML_ITEM_NOT_FOUND`: etwas in der Datei war nicht vollständig auswertbar; der Lauf geht weiter | Meldung lesen; bei `PATTERN_UNUSED` Tippfehler in `devices` oder `ignoreDevices` prüfen; bei `GSDML_ITEM_NOT_FOUND` prüfen, ob die GSDML-Datei zur Version im Projekt passt |
+| `[GSDML_DIR_NOT_FOUND]` | Ein Verzeichnis aus `gsdml` bzw. `--gsdml` fehlt | Pfad prüfen (in `machine.yml` relativ zur Konfigurationsdatei) |
+| `[NOT_GSDML]` | Die Datei mit dem gesuchten GSDML-Namen ist keine GSDML-Datei | Datei prüfen oder ersetzen |
+| `[GSDML_NOT_FOUND]`, `[GSDML_AMBIGUOUS]` als Warnung von `inspect` | Die GSDML-Datei eines GSD-Geräts liegt nicht im Verzeichnis, oder mehrfach mit verschiedenem Inhalt | GSDML-Datei einchecken bzw. die überzählige Kopie entfernen |
 
 ## 10. Projekt ansehen: `inspect`
 
@@ -261,7 +264,7 @@ Auf Windows-Agenten `bat` statt `sh`. `readJSON` stammt aus dem Plugin „Pipeli
 plc-sbom inspect <projektdatei> --adapter <id> [--gsdml <verzeichnis>]
 ```
 
-`inspect` gibt das Rohinventar eines Adapters als JSON auf der Konsole aus: was der Adapter in der Datei findet, unverändert und noch ohne Lückenregeln. Damit lässt sich prüfen, ob ein Export das Erwartete enthält, und später die `machine.yml` schreiben. In Version 0.1.0 geht das für die Adapter `codesys`, `studio5000`, `twincat` und `tia-aml`; für `tia-portal` endet der Aufruf mit Exit 2 und `[NOT_IMPLEMENTED]` und nennt den Meilenstein. `--gsdml` gilt nur für die TIA-Adapter und folgt mit M8.
+`inspect` gibt das Rohinventar eines Adapters als JSON auf der Konsole aus: was der Adapter in der Datei findet, unverändert und noch ohne Lückenregeln. Damit lässt sich prüfen, ob ein Export das Erwartete enthält, und später die `machine.yml` schreiben. In Version 0.1.0 geht das für die Adapter `codesys`, `studio5000`, `twincat` und `tia-aml`; für `tia-portal` endet der Aufruf mit Exit 2 und `[NOT_IMPLEMENTED]` und nennt den Meilenstein. `--gsdml` gilt nur für `tia-aml` und nennt ein Verzeichnis mit GSDML-Dateien (Abschnitt 14).
 
 Beispiel (gekürzt):
 
@@ -436,6 +439,35 @@ Für `tia-aml` zeigt `inspect` die CPUs mit ihren IO-Systemen und je Gerät, zu 
 
 Warnungen stehen im JSON und zusätzlich auf stderr. IP-Adressen, Subnetzmasken und Variablentabellen erscheinen nicht.
 
+Mit `--gsdml <verzeichnis>` steht bei jedem GSD-Teil zusätzlich, was die GSDML-Datei sagt. Beispiel aus der V17-Fixture (gekürzt):
+
+```text
+> plc-sbom inspect fixtures/tia-aml/plc-commissioning-sample_device.aml --adapter tia-aml --gsdml fixtures/gsdml/
+...
+  {
+    "name": "BCL248i",
+    "position": "0/0",
+    "typeIdentifier": "GSD:GSDML-V2.41-LEUZE-BCL248I-20211213.XML/DAP/DAP",
+    "typeName": "BCL248i",
+    "deviceItemType": "HeadModule",
+    "treatment": "gsdDevice",
+    "gsdml": {
+      "file": "fixtures/gsdml/GSDML-V2.41-LEUZE-BCL248i-20211213.xml",
+      "vendor": "Leuze electronic GmbH + Co. KG",
+      "orderNumber": "501xxxxx",
+      "softwareRelease": "V1.*.*",
+      "hardwareRelease": "3"
+    }
+  },
+...
+```
+
+Liegt die Datei nicht im Verzeichnis, fehlt `gsdml`, und auf stderr steht etwa:
+
+```text
+[GSDML_NOT_FOUND] Die GSDML-Datei GSDML-V2.41-LEUZE-BCL248I-20211213.XML liegt in keinem der Verzeichnisse aus „gsdml“.
+```
+
 ## 11. CODESYS V3.5
 
 Eingang ist der PLCopen-XML-Export des ganzen Projekts. Die `.project`-Datei ist binär und wird nicht gelesen. Den Export erzeugt man in CODESYS V3.5 über den PLCopen-XML-Export des Projekts und checkt ihn neben dem Projekt ein. Die Station erhält im Ergebnis die Property `<namespace>:adapter:source` = `v35`.
@@ -519,7 +551,15 @@ Eingang ist die AML-Datei aus dem CAx-Export von TIA Portal (Extras → CAx-Date
 
 **Hersteller.** Geräte aus dem Siemens-Katalog (`TypeIdentifier` `OrderNumber:…`) bekommen `Siemens AG` mit `vendor:origin` = `assumed`. Mit `vendorOverrides` (Muster auf Bestellnummer) lässt sich ein anderer Hersteller erklären (`declared`).
 
-**GSD-Geräte.** Für Geräte anderer Hersteller über GSDML nennt das AML nur den Dateinamen der GSDML und den Typnamen. Bis M8 trägt das Kopfmodul deshalb `order-number-not-in-project`, `supplier-unknown` (Warnungen) und `firmware-not-in-project`; der Dateiname steht als `<namespace>:vendorKey:GSDML`. Module des GSD-Geräts gelten als passiv. Mit M8 liest das Werkzeug Hersteller und Bestellnummer aus der GSDML-Datei.
+**GSD-Geräte.** Für Geräte anderer Hersteller über GSDML nennt das AML nur den Dateinamen der GSDML und den Typnamen. Hersteller und Bestellnummer liest das Werkzeug aus der GSDML-Datei. Dazu checkt man die GSDML-Dateien ein und nennt ihre Verzeichnisse unter `gsdml` (ab M9 in `machine.yml`, bei `inspect` mit `--gsdml`). Gesucht wird der Dateiname aus dem AML ohne Groß-/Kleinschreibung, auch in Unterverzeichnissen.
+
+| Fall | In der SBOM |
+|---|---|
+| GSDML gefunden | Hersteller aus der GSDML (`vendor:origin` = `gsdml`), Bestellnummer aus dem Zugangspunkt bzw. Modul; `SoftwareRelease` und `HardwareRelease` als `<namespace>:gsdml:softwareRelease` und `:hardwareRelease`; `VendorId`, `DeviceId`, Pfad und SHA-256 der Datei als `<namespace>:vendorKey:…`. Lücke `firmware-not-in-project` (Hinweis) |
+| GSDML nicht gefunden, mehrfach mit verschiedenem Inhalt, oder kein Verzeichnis angegeben | `gsdml-not-found`, `order-number-not-in-project`, `supplier-unknown` (Warnungen), `firmware-not-in-project` (Hinweis) |
+| GSDML gefunden, aber ohne den Zugangspunkt bzw. das Modul aus dem AML | Hersteller aus der GSDML, `order-number-not-in-project`; Warnung `[TIA_AML_GSDML_ITEM_NOT_FOUND]` |
+
+Die `SoftwareRelease` der GSDML ist nicht die Firmware des Geräts, sondern der Stand, für den die Datei geschrieben ist; die Firmware bleibt offen, bis ein Ist-Stand vorliegt. Manche Hersteller schreiben eine Bestellnummer mit Platzhaltern in die GSDML (Leuze: `501xxxxx`); sie steht unverändert in der SBOM, dazu `<namespace>:device:orderNumber:pattern` = `true`. Ein Muster aus `vendorOverrides` auf diese Bestellnummer geht vor der GSDML. Module des GSD-Geräts gelten als passiv und bekommen den Hersteller aus der GSDML. Der Dateiname aus dem AML steht immer als `<namespace>:vendorKey:GSDML`.
 
 **Bibliotheken und Programm.** Der CAx-Export enthält weder Bibliotheken noch Bausteine. Jede Station mit CPU trägt `libraries-not-read` (Warnung) und `program-not-read` (Hinweis). Bibliotheken lassen sich je Station unter `libraries` deklarieren (ab M9 in `machine.yml`); sie kommen mit `<namespace>:origin` = `declared` in die SBOM, und `libraries-not-read` entfällt. Bibliothekstypen und geschützte Bausteine liefert erst der Adapter `tia-portal` über Openness (M14).
 
@@ -529,4 +569,4 @@ Alle gelesenen Stellen und Regeln: [docs/adapter-tia-aml.md](docs/adapter-tia-am
 
 ## 15. Was folgt
 
-Die nächsten Schritte nach Meilensteinplan (CLAUDE.md Abschnitt 12): M1, M2 (CODESYS V3.5), M5 (Rockwell Studio 5000), M6 (Beckhoff TwinCAT 3) und M7 (Siemens TIA Portal, AML-Export) sind umgesetzt; alle Prüfregeln mit ihrer TR-Stelle stehen in [docs/regeln-tr03183.md](docs/regeln-tr03183.md). CODESYS V2.3 und CODESYS 4 (M3, M4) warten auf Demo-Projekte. Als Nächstes kommen GSD-Geräte mit GSDML-Dateien (M8), zuletzt TIA Portal über Openness. Mit M9 erzeugt `build` die SBOM aus einer `machine.yml`; ab dann beschreibt diese Anleitung auch die Maschinenbeschreibung.
+Die nächsten Schritte nach Meilensteinplan (CLAUDE.md Abschnitt 12): M1, M2 (CODESYS V3.5), M5 (Rockwell Studio 5000), M6 (Beckhoff TwinCAT 3), M7 (Siemens TIA Portal, AML-Export) und M8 (GSD-Geräte mit GSDML-Dateien) sind umgesetzt; alle Prüfregeln mit ihrer TR-Stelle stehen in [docs/regeln-tr03183.md](docs/regeln-tr03183.md). CODESYS V2.3 und CODESYS 4 (M3, M4) warten auf Demo-Projekte. Als Nächstes erzeugt `build` die SBOM aus einer `machine.yml` (M9); ab dann beschreibt diese Anleitung auch die Maschinenbeschreibung. TIA Portal über Openness kommt zuletzt (M14).

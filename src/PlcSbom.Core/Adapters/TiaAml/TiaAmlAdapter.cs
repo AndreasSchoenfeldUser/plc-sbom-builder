@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Security.Cryptography;
+using PlcSbom.Core.Adapters.Gsdml;
 using PlcSbom.Core.Gaps;
 using PlcSbom.Core.Model;
 
@@ -41,6 +42,9 @@ public sealed record TiaAmlOptions
 
     /// <summary>machine.yml "vendorOverrides": order number pattern → vendor, first match wins.</summary>
     public IReadOnlyList<KeyValuePair<string, string>> VendorOverrides { get; init; } = [];
+
+    /// <summary>GSDML files from machine.yml "gsdml". Null: no directory given, GSD devices carry gsdml-not-found.</summary>
+    public GsdmlIndex? Gsdml { get; init; }
 }
 
 /// <summary>Stations of one AML file, devices that belong to none, devices left out on purpose, and warnings.</summary>
@@ -94,7 +98,10 @@ public sealed record TiaAmlInspection(
 
     public sealed record Assignment(string Cpu, string Via);
 
-    public sealed record Item(string Name, string Position, string? TypeIdentifier, string? TypeName, string? FirmwareVersion, string? DeviceItemType, ItemTreatment Treatment);
+    public sealed record Item(string Name, string Position, string? TypeIdentifier, string? TypeName, string? FirmwareVersion, string? DeviceItemType, ItemTreatment Treatment, GsdmlFacts? Gsdml);
+
+    /// <summary>What the GSDML file says about a GSD item (only with --gsdml and a file found).</summary>
+    public sealed record GsdmlFacts(string File, string? Vendor, string? OrderNumber, string? SoftwareRelease, string? HardwareRelease);
 }
 
 /// <summary>
@@ -564,21 +571,54 @@ public static class TiaAmlAdapter
         }
 
         /// <summary>vendorOverrides first, then Siemens AG for OrderNumber: devices (assumed, E-019).</summary>
-        private (string Vendor, ValueOrigin Origin) Vendor(string orderNumber)
+        private (string Vendor, ValueOrigin Origin) Vendor(string orderNumber) =>
+            Override(orderNumber) is { } vendor ? (vendor, ValueOrigin.Declared) : (SiemensName, ValueOrigin.Assumed);
+
+        /// <summary>machine.yml "vendorOverrides": first pattern matching the order number.</summary>
+        private string? Override(string orderNumber) =>
+            options.VendorOverrides.FirstOrDefault(o => Wildcard.IsOrderNumberMatch(o.Key, orderNumber)).Value;
+
+        /// <summary>The GSDML file and item a GSD item refers to (CLAUDE.md 5.4.5), or why there is none.</summary>
+        public sealed record GsdLookup(GsdmlFile? File, GsdmlItem? Item, string? NotFound);
+
+        /// <summary>
+        /// Looks up the GSDML file named in the TypeIdentifier and in it the access point (DAP) or module (M)
+        /// with the id. <paramref name="warnNotFound"/>: inspect reports a missing file as a warning, the
+        /// stations record it as gap gsdml-not-found instead.
+        /// </summary>
+        public GsdLookup Lookup(AmlDevice device, AmlItem item, TypeId type, bool warnNotFound)
         {
-            foreach (var (pattern, vendor) in options.VendorOverrides)
+            var name = type.GsdmlFile!;
+            if (options.Gsdml is null)
             {
-                if (Wildcard.IsOrderNumberMatch(pattern, orderNumber))
-                {
-                    return (vendor, ValueOrigin.Declared);
-                }
+                return new GsdLookup(null, null,
+                    $"Die GSDML-Datei {name} wurde nicht gesucht, weil unter „gsdml“ in machine.yml kein Verzeichnis angegeben ist.");
             }
-            return (SiemensName, ValueOrigin.Assumed);
+            var lookup = options.Gsdml.Find(name);
+            if (lookup.Found is not { } file)
+            {
+                var (code, message) = lookup.IsAmbiguous
+                    ? ("GSDML_AMBIGUOUS", $"Die GSDML-Datei {name} liegt mehrfach mit verschiedenem Inhalt in den Verzeichnissen aus „gsdml“ ({string.Join(", ", lookup.Candidates)}); welche TIA verwendet hat, ist offen.")
+                    : ("GSDML_NOT_FOUND", $"Die GSDML-Datei {name} liegt in keinem der Verzeichnisse aus „gsdml“.");
+                if (warnNotFound)
+                {
+                    Warn(code, message);
+                }
+                return new GsdLookup(null, null, message);
+            }
+            var items = type.GsdKind == "DAP" ? file.AccessPoints : file.Modules;
+            if (type.GsdId is null || !items.TryGetValue(type.GsdId, out var gsdItem))
+            {
+                Warn("TIA_AML_GSDML_ITEM_NOT_FOUND",
+                    $"{options.SourcePath}: {device.Name}/{item.Name} verweist auf „{type.GsdId}“ ({type.GsdKind}), das in {file.File} nicht vorkommt. Bestellnummer und Releases fehlen; passt die GSDML-Datei zum Projekt?");
+                return new GsdLookup(file, null, null);
+            }
+            return new GsdLookup(file, gsdItem, null);
         }
 
         /// <summary>
-        /// GSD devices: the AML names only GSDML file, kind and id. Order number, vendor and firmware are not
-        /// in the file; the GSDML reader (M8) looks up order number and vendor.
+        /// GSD devices: the AML names only GSDML file, kind and id. Vendor and order number come from the GSDML
+        /// file (vendor:origin gsdml). SoftwareRelease describes the GSDML, not the firmware (CLAUDE.md 5.4.5).
         /// </summary>
         private Device Gsd(AmlDevice device, AmlItem item, TypeId type, ItemTreatment treatment)
         {
@@ -594,13 +634,48 @@ public static class TiaAmlAdapter
 
             var isModule = treatment is ItemTreatment.GsdModule or ItemTreatment.Passive;
             var firmware = isModule || item.FirmwareVersion is null ? null : item.FirmwareVersion;
+            var lookup = Lookup(device, item, type, warnNotFound: false);
+            var properties = new SortedDictionary<string, string>(StringComparer.Ordinal);
+            Party? vendor = null;
+            var vendorOrigin = ValueOrigin.Source;
+            var orderNumber = lookup.Item?.OrderNumber;
+            if (lookup.File is { } file)
+            {
+                keys["gsdmlFile"] = file.File;
+                keys["gsdmlSha256"] = file.Sha256;
+                AddKey(keys, "VendorId", file.VendorId);
+                AddKey(keys, "DeviceId", file.DeviceId);
+                if (file.VendorName is not null)
+                {
+                    (vendor, vendorOrigin) = (new Party(file.VendorName), ValueOrigin.Gsdml);
+                }
+                AddKey(properties, "gsdml:softwareRelease", lookup.Item?.SoftwareRelease);
+                AddKey(properties, "gsdml:hardwareRelease", lookup.Item?.HardwareRelease);
+            }
+            if (orderNumber is not null && Override(orderNumber) is { } declared)
+            {
+                (vendor, vendorOrigin) = (new Party(declared), ValueOrigin.Declared);
+            }
+
             var gaps = new List<Gap>();
             if (!isModule)
             {
-                gaps.Add(new Gap(GapCatalog.OrderNumberNotInProject,
-                    $"Das AML nennt für das GSD-Gerät {item.Name} keine Bestellnummer. Sie steht in der GSDML-Datei {type.GsdmlFile}."));
-                gaps.Add(new Gap(GapCatalog.SupplierUnknown,
-                    $"Das AML nennt für das GSD-Gerät {item.Name} keinen Hersteller. Er steht in der GSDML-Datei {type.GsdmlFile}."));
+                if (lookup.NotFound is { } notFound)
+                {
+                    gaps.Add(new Gap(GapCatalog.GsdmlNotFound, notFound));
+                }
+                if (orderNumber is null)
+                {
+                    gaps.Add(new Gap(GapCatalog.OrderNumberNotInProject, lookup.File is null
+                        ? $"Das AML nennt für das GSD-Gerät {item.Name} keine Bestellnummer, und die GSDML-Datei {type.GsdmlFile} liegt nicht vor."
+                        : $"Weder das AML noch {lookup.File.File} nennen für das GSD-Gerät {item.Name} eine Bestellnummer."));
+                }
+                if (vendor is null)
+                {
+                    gaps.Add(new Gap(GapCatalog.SupplierUnknown, lookup.File is null
+                        ? $"Das AML nennt für das GSD-Gerät {item.Name} keinen Hersteller, und die GSDML-Datei {type.GsdmlFile} liegt nicht vor."
+                        : $"Weder das AML noch {lookup.File.File} nennen für das GSD-Gerät {item.Name} einen Hersteller."));
+                }
                 if (firmware is null)
                 {
                     gaps.Add(new Gap(GapCatalog.FirmwareNotInProject,
@@ -611,6 +686,10 @@ public static class TiaAmlAdapter
             return new Device
             {
                 TypeName = item.TypeName ?? item.Name,
+                Vendor = vendor,
+                VendorOrigin = vendorOrigin,
+                OrderNumber = orderNumber,
+                OrderNumberIsPattern = orderNumber is not null && GsdmlFile.IsOrderNumberPattern(orderNumber),
                 DeviceName = item.Name,
                 Position = $"{device.Name}/{item.Position}",
                 Classification = item.DeviceItemType,
@@ -618,17 +697,28 @@ public static class TiaAmlAdapter
                 FirmwareOrigin = firmware is null ? FirmwareOrigin.NotInProject : FirmwareOrigin.Projected,
                 IsPassive = isModule,
                 VendorKeys = keys,
+                SourceProperties = properties,
                 Gaps = gaps,
             };
+        }
+
+        private static void AddKey(SortedDictionary<string, string> target, string key, string? value)
+        {
+            if (value is not null)
+            {
+                target[key] = value;
+            }
         }
     }
 
     // ---- inspect ------------------------------------------------------------------------------------
 
     /// <summary>Raw inventory with the assignment each CPU would get as a station with "plc" and no "devices".</summary>
-    public static TiaAmlInspection Inspect(AmlProject project, string displayPath)
+    public static TiaAmlInspection Inspect(AmlProject project, string displayPath, GsdmlIndex? gsdml = null)
     {
         var warnings = new List<AdapterWarning>();
+        // Interpreting every device collects the item warnings (unknown TypeIdentifier, catalogue version, GSDML).
+        var interpretation = new Interpretation(new TiaAmlOptions { SourcePath = displayPath, Stations = [], Gsdml = gsdml }, warnings);
         var tool = Tool(project, displayPath, warnings);
         var exportedAt = ExportedAt(project, displayPath, warnings);
         RoleWarnings(project, displayPath, warnings);
@@ -651,10 +741,20 @@ public static class TiaAmlAdapter
                     : null)
                 .OfType<TiaAmlInspection.Assignment>()
                 .ToList(),
-            d.Items.Select(i => new TiaAmlInspection.Item(i.Name, i.Position, i.TypeIdentifier, i.TypeName, i.FirmwareVersion, i.DeviceItemType, Treat(i, []))).ToList())).ToList();
+            d.Items.Select(i => new TiaAmlInspection.Item(i.Name, i.Position, i.TypeIdentifier, i.TypeName, i.FirmwareVersion, i.DeviceItemType, Treat(i, []), Facts(d, i))).ToList())).ToList();
 
-        // Interpreting every device collects the item warnings (unknown TypeIdentifier, catalogue version).
-        var interpretation = new Interpretation(new TiaAmlOptions { SourcePath = displayPath, Stations = [] }, warnings);
+        TiaAmlInspection.GsdmlFacts? Facts(AmlDevice device, AmlItem item)
+        {
+            if (gsdml is null || ParseTypeIdentifier(item.TypeIdentifier) is not { Prefix: GsdPrefix, GsdKind: "DAP" or "M" } type)
+            {
+                return null;
+            }
+            var lookup = interpretation.Lookup(device, item, type, warnNotFound: true);
+            return lookup.File is { } file
+                ? new TiaAmlInspection.GsdmlFacts(file.File, file.VendorName, lookup.Item?.OrderNumber, lookup.Item?.SoftwareRelease, lookup.Item?.HardwareRelease)
+                : null;
+        }
+
         foreach (var device in project.Devices)
         {
             _ = interpretation.ToDevices(device, controllerId: null).ToList();

@@ -1,10 +1,12 @@
 using System.Text;
 using PlcSbom.Core;
+using PlcSbom.Core.Adapters.Gsdml;
 using PlcSbom.Core.Adapters.TiaAml;
 using PlcSbom.Core.Gaps;
 using PlcSbom.Core.Model;
 using PlcSbom.Core.Output;
 using PlcSbom.Core.Validation;
+using PlcSbom.Tests.Adapters.Gsdml;
 using PlcSbom.Tests.Samples;
 using static PlcSbom.Tests.Adapters.TiaAml.AmlReaderTests;
 
@@ -20,13 +22,24 @@ public sealed class TiaAmlAdapterTests
     private static TiaAmlResult Read(string fixture, TiaAmlOptions options) => TiaAmlAdapter.Read(Fixtures.PathOf(fixture), options);
 
     /// <summary>The V17 fixture with one text replaced, for writer and type identifier cases.</summary>
-    private static TiaAmlResult ReadChanged(string oldText, string newText, params TiaAmlStationOptions[] stations)
+    private static TiaAmlResult ReadChanged(string oldText, string newText, params TiaAmlStationOptions[] stations) =>
+        ReadChanged(oldText, newText, new TiaAmlOptions { SourcePath = "test.aml", Stations = stations.Length == 0 ? [Station("PLC_1")] : stations });
+
+    private static TiaAmlResult ReadChanged(string oldText, string newText, TiaAmlOptions options)
     {
         var xml = Encoding.UTF8.GetString(Fixtures.Read(V17));
         Assert.Contains(oldText, xml);
         var project = AmlReader.Read(Encoding.UTF8.GetBytes(xml.Replace(oldText, newText, StringComparison.Ordinal)), "test.aml");
-        return TiaAmlAdapter.ToStations(project, "0", new TiaAmlOptions { SourcePath = "test.aml", Stations = stations.Length == 0 ? [Station("PLC_1")] : stations });
+        return TiaAmlAdapter.ToStations(project, "0", options);
     }
+
+    /// <summary>The V17 fixture as one station with the GSDML directory fixtures/gsdml.</summary>
+    private static TiaAmlOptions WithGsdml(GsdmlIndex? index = null) => new()
+    {
+        SourcePath = "export/plc-commissioning-sample_device.aml",
+        Stations = [Station("PLC_1")],
+        Gsdml = index ?? GsdmlReaderTests.FixtureIndex(),
+    };
 
     private static TiaAmlResult TwoStations(Func<TiaAmlStationOptions, TiaAmlStationOptions>? plc1 = null) =>
         Read(Synthetic, (plc1 ?? (s => s))(Station("Linie 1", "PLC_1")), Station("Linie 2", "PLC_2"));
@@ -198,7 +211,7 @@ public sealed class TiaAmlAdapterTests
     }
 
     [Fact]
-    public void Gsd_head_module_has_no_order_number_vendor_or_firmware()
+    public void Gsd_head_module_without_gsdml_directory_has_no_order_number_vendor_or_firmware()
     {
         var gsd = Read(V17, Station("PLC_1")).Stations[0].Devices.Single(d => d.DeviceName == "BCL248i");
 
@@ -210,8 +223,9 @@ public sealed class TiaAmlAdapterTests
         Assert.Equal(
             new Dictionary<string, string> { ["GSDML"] = "GSDML-V2.41-LEUZE-BCL248I-20211213.XML", ["GsdId"] = "DAP", ["GsdType"] = "DAP" },
             gsd.VendorKeys);
-        Assert.Equal([GapCatalog.OrderNumberNotInProject, GapCatalog.SupplierUnknown, GapCatalog.FirmwareNotInProject], gsd.Gaps.Select(g => g.Code));
-        Assert.Contains("SoftwareRelease", gsd.Gaps[2].Message);
+        Assert.Equal([GapCatalog.GsdmlNotFound, GapCatalog.OrderNumberNotInProject, GapCatalog.SupplierUnknown, GapCatalog.FirmwareNotInProject], gsd.Gaps.Select(g => g.Code));
+        Assert.Contains("kein Verzeichnis", gsd.Gaps[0].Message);
+        Assert.Contains("SoftwareRelease", gsd.Gaps[3].Message);
     }
 
     [Fact]
@@ -221,6 +235,108 @@ public sealed class TiaAmlAdapterTests
 
         Assert.Equal(["[M10] Activation_1", "[M11] Reading gate control_1"], Names(modules));
         Assert.All(modules, m => Assert.True(m.IsPassive));
+        Assert.All(modules, m => Assert.Empty(m.Gaps));
+    }
+
+    // ---- GSDML (CLAUDE.md 5.4.5) ----------------------------------------------------------------------
+
+    [Fact]
+    public void Gsdml_gives_vendor_and_order_number_of_the_head_module()
+    {
+        var gsd = Read(V17, WithGsdml()).Stations[0].Devices.Single(d => d.DeviceName == "BCL248i");
+
+        Assert.Equal("Leuze electronic GmbH + Co. KG", gsd.Vendor!.Name);
+        Assert.Equal(ValueOrigin.Gsdml, gsd.VendorOrigin);
+        Assert.Equal("501xxxxx", gsd.OrderNumber);
+        Assert.True(gsd.OrderNumberIsPattern); // one GSDML for several articles
+        Assert.Equal(
+            new Dictionary<string, string>
+            {
+                ["DeviceId"] = "0x0015",
+                ["GSDML"] = "GSDML-V2.41-LEUZE-BCL248I-20211213.XML",
+                ["GsdId"] = "DAP",
+                ["GsdType"] = "DAP",
+                ["VendorId"] = "0x0152",
+                ["gsdmlFile"] = "gsdml/GSDML-V2.41-LEUZE-BCL248i-20211213.xml",
+                ["gsdmlSha256"] = "ca1b97e3068ce1663ebba66422d9fbf77d314fc8ff3dfe589ad8c0bf6156eaf7",
+            },
+            gsd.VendorKeys);
+        Assert.Empty(Read(V17, WithGsdml()).Warnings);
+    }
+
+    [Fact]
+    public void Software_release_of_the_gsdml_is_not_the_firmware()
+    {
+        var gsd = Read(V17, WithGsdml()).Stations[0].Devices.Single(d => d.DeviceName == "BCL248i");
+
+        Assert.Null(gsd.Firmware);
+        Assert.Equal(FirmwareOrigin.NotInProject, gsd.FirmwareOrigin);
+        Assert.Equal(new Dictionary<string, string> { ["gsdml:hardwareRelease"] = "3", ["gsdml:softwareRelease"] = "V1.*.*" }, gsd.SourceProperties);
+        Assert.Equal([GapCatalog.FirmwareNotInProject], gsd.Gaps.Select(g => g.Code));
+    }
+
+    [Fact]
+    public void Gsd_modules_get_the_vendor_and_stay_passive()
+    {
+        var modules = Read(V17, WithGsdml()).Stations[0].Devices.Where(d => d.VendorKeys.GetValueOrDefault("GsdType") == "M").ToList();
+
+        Assert.Equal(2, modules.Count);
+        Assert.All(modules, m => Assert.True(m.IsPassive));
+        Assert.All(modules, m => Assert.Equal(("Leuze electronic GmbH + Co. KG", ValueOrigin.Gsdml), (m.Vendor!.Name, m.VendorOrigin)));
+        Assert.All(modules, m => Assert.Null(m.OrderNumber)); // the file names none for its modules
+    }
+
+    [Fact]
+    public void Gsdml_not_in_the_directories_gives_the_gaps()
+    {
+        using var empty = new GsdmlReaderTests.TempDir();
+
+        var gsd = Read(V17, WithGsdml(GsdmlIndex.Load([(empty.Path, "gsdml")]))).Stations[0].Devices.Single(d => d.DeviceName == "BCL248i");
+
+        Assert.Null(gsd.Vendor);
+        Assert.Equal([GapCatalog.GsdmlNotFound, GapCatalog.OrderNumberNotInProject, GapCatalog.SupplierUnknown, GapCatalog.FirmwareNotInProject], gsd.Gaps.Select(g => g.Code));
+        Assert.Equal("Die GSDML-Datei GSDML-V2.41-LEUZE-BCL248I-20211213.XML liegt in keinem der Verzeichnisse aus „gsdml“.", gsd.Gaps[0].Message);
+        Assert.Equal(Severity.Warning, GapCatalog.Find(GapCatalog.GsdmlNotFound)!.Severity);
+    }
+
+    [Fact]
+    public void Ambiguous_gsdml_gives_gsdml_not_found_with_the_candidates()
+    {
+        using var a = new GsdmlReaderTests.TempDir();
+        using var b = new GsdmlReaderTests.TempDir();
+        a.Write(GsdmlReaderTests.LeuzeInAml, Fixtures.Read(GsdmlReaderTests.Leuze));
+        b.Write(GsdmlReaderTests.LeuzeInAml, [.. Fixtures.Read(GsdmlReaderTests.Leuze), (byte)'\n']);
+
+        var result = Read(V17, WithGsdml(GsdmlIndex.Load([(a.Path, "a"), (b.Path, "b")])));
+
+        var gap = result.Stations[0].Devices.Single(d => d.DeviceName == "BCL248i").Gaps[0];
+        Assert.Equal(GapCatalog.GsdmlNotFound, gap.Code);
+        Assert.Contains("mehrfach mit verschiedenem Inhalt", gap.Message);
+        Assert.Contains("a/GSDML-V2.41-LEUZE-BCL248I-20211213.XML, b/", gap.Message);
+    }
+
+    [Fact]
+    public void Access_point_missing_in_the_gsdml_is_a_warning_and_leaves_the_order_number_open()
+    {
+        var options = WithGsdml() with { SourcePath = "test.aml" };
+        var result = ReadChanged("XML/DAP/DAP<", "XML/DAP/DAP_X<", options);
+
+        var gsd = result.Stations[0].Devices.Single(d => d.DeviceName == "BCL248i");
+        Assert.Equal("Leuze electronic GmbH + Co. KG", gsd.Vendor!.Name); // the file belongs to the vendor
+        Assert.Null(gsd.OrderNumber);
+        Assert.Equal([GapCatalog.OrderNumberNotInProject, GapCatalog.FirmwareNotInProject], gsd.Gaps.Select(g => g.Code));
+        var warning = Assert.Single(result.Warnings);
+        Assert.Equal("TIA_AML_GSDML_ITEM_NOT_FOUND", warning.Code);
+        Assert.Contains("DAP_X", warning.Message);
+    }
+
+    [Fact]
+    public void Vendor_overrides_win_over_the_gsdml()
+    {
+        var gsd = Read(V17, WithGsdml() with { VendorOverrides = [new("501*", "Leuze electronic GmbH + Co. KG, Owen")] })
+            .Stations[0].Devices.Single(d => d.DeviceName == "BCL248i");
+
+        Assert.Equal(("Leuze electronic GmbH + Co. KG, Owen", ValueOrigin.Declared), (gsd.Vendor!.Name, gsd.VendorOrigin));
     }
 
     // ---- Stations (CLAUDE.md 5.4.4) -----------------------------------------------------------------
@@ -379,6 +495,26 @@ public sealed class TiaAmlAdapterTests
         { V17, "tia-aml-v17-ganze-datei.cdx.json", null },
         { V17, "tia-aml-v17-plc.cdx.json", "PLC_1" },
     };
+
+    [Fact]
+    public void Sbom_with_gsdml_matches_the_golden_file()
+    {
+        Golden.AssertMatches("tia-aml-v17-gsdml.cdx.json", Sbom(Read(V17, WithGsdml())));
+    }
+
+    [Fact]
+    public async Task Sbom_with_gsdml_passes_schema_and_tr_rules_without_errors()
+    {
+        var json = Encoding.UTF8.GetString(Sbom(Read(V17, WithGsdml())));
+
+        var report = await SbomValidator.ValidateAsync(json);
+
+        Assert.True(report.SchemaValid);
+        Assert.DoesNotContain(report.Findings, f => f.Severity == Severity.Error);
+        Assert.Contains("\"name\": \"plcsbom:gsdml:softwareRelease\",\n          \"value\": \"V1.*.*\"", json);
+        Assert.Contains("\"name\": \"plcsbom:device:vendor:origin\",\n          \"value\": \"gsdml\"", json);
+        Assert.Contains("\"name\": \"plcsbom:device:orderNumber:pattern\",\n          \"value\": \"true\"", json);
+    }
 
     [Theory]
     [MemberData(nameof(GoldenCases))]

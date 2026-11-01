@@ -1,6 +1,6 @@
 # CLAUDE.md: PLC SBOM Builder (`plc-sbom`), Prototyp
 
-> Stand: 01.11.2026 (Meilensteine und CODESYS V2.3/4 ergänzt; M1-Entscheidungen E-007 bis E-011 und TR-Regeln in `docs/regeln-tr03183.md` nachgetragen; M1, M2, M5, M6 und M7 umgesetzt, M3/M4 zurückgestellt (E-016), Golden File aus dem Comquent-V21-Export offen (E-019); übrige Fakten Stand 29.10.2026). Grundlage: Produktseite comquent.de/produkte/plc-sbom-builder (Quelltext `src/app/produkte/inhalte.ts` im Website-Repository), der Entwurf `plc-sbom-builder-claude.md` mit der Recherche vom 25.10.2026, das Comquent-Whitepaper „SBOM für SPS-Projekte mit TIA Portal V21“, die Siemens-Openness-Skills (V21) und drei öffentliche AML-Exporte aus TIA V17, V18 und V21 (geprüft am 29.10.2026). Recherchefakten mit Datum 25.10.2026 sind nicht erneut geprüft; Versionen und Normstände vor der Nutzung nachsehen.
+> Stand: 01.11.2026 (Meilensteine und CODESYS V2.3/4 ergänzt; M1-Entscheidungen E-007 bis E-011 und TR-Regeln in `docs/regeln-tr03183.md` nachgetragen; M1, M2, M5, M6, M7 und M8 umgesetzt, M3/M4 zurückgestellt (E-016), Golden File aus dem Comquent-V21-Export offen (E-019); übrige Fakten Stand 29.10.2026). Grundlage: Produktseite comquent.de/produkte/plc-sbom-builder (Quelltext `src/app/produkte/inhalte.ts` im Website-Repository), der Entwurf `plc-sbom-builder-claude.md` mit der Recherche vom 25.10.2026, das Comquent-Whitepaper „SBOM für SPS-Projekte mit TIA Portal V21“, die Siemens-Openness-Skills (V21) und drei öffentliche AML-Exporte aus TIA V17, V18 und V21 (geprüft am 29.10.2026). Recherchefakten mit Datum 25.10.2026 sind nicht erneut geprüft; Versionen und Normstände vor der Nutzung nachsehen.
 > Produkt der Comquent GmbH (Industrial DevOps, Puchheim). Schwesterwerkzeuge: `plc-build` (../plc-build-tool), `plc-git-bridge` (../plc-git-bridge).
 
 ## 0. Start
@@ -286,8 +286,8 @@ Beispiel der Produktseite (verkürzt, Zielbild):
 | `<ns>:firmware:version` | Firmware-Stand wie in der Quelle |
 | `<ns>:firmware:origin` | `projected`, `as-found`, `not-in-project`, `unknown` |
 | `<ns>:device:passive` | `declared`, wenn der Anwender das Gerät über `passiveOrderNumbers` als passiv erklärt hat (nur im Modell bzw. Bericht; passive Geräte stehen nicht in der SBOM) |
-| `<ns>:vendorKey:<name>` | Herstellerschlüssel wie `GSDML`, `GsdType`, `GsdId`, `VendorId`, `DeviceId`, `ProductCode`, `RevisionNo`, `catalogVersion` |
-| `<ns>:gsdml:softwareRelease` | `SoftwareRelease` aus der GSDML; beschreibt die GSDML, **nicht** die Firmware |
+| `<ns>:vendorKey:<name>` | Herstellerschlüssel wie `GSDML`, `GsdType`, `GsdId`, `VendorId`, `DeviceId`, `gsdmlFile`, `gsdmlSha256`, `ProductCode`, `RevisionNo`, `catalogVersion` |
+| `<ns>:gsdml:softwareRelease`, `<ns>:gsdml:hardwareRelease` | `SoftwareRelease` bzw. `HardwareRelease` aus der GSDML; beschreiben die GSDML, **nicht** die Firmware (E-020) |
 | `<ns>:library` | Bibliothek eines Bibliothekstyps |
 | `<ns>:library:reference`, `<ns>:library:resolution`, `<ns>:library:company` | CODESYS und TwinCAT: Referenz wie im Export (`#SM3_Basic`, `Tc2_Standard`), Auflösung (`fixed`, `redirection`, `default`, `none`, bei TwinCAT zusätzlich `indirect`), Herstellerangabe der Referenz |
 | `<ns>:aoi:revisionExtension` | Rockwell: `RevisionExtension` einer Add-On Instruction, nicht Teil der Version |
@@ -318,7 +318,7 @@ Beispiel der Produktseite (verkürzt, Zielbild):
 | `license-unknown` | Keine Distributionslizenz bekannt | Warnung |
 | `vendor-sbom-missing` | Für eine Firmware liegt keine Hersteller-SBOM vor | Hinweis |
 | `protected-block-unknown` | Geschützter Baustein ohne bekannten Lieferanten oder Version | Warnung |
-| `gsdml-not-found` | GSDML-Datei aus dem `TypeIdentifier` liegt in keinem `gsdml`-Verzeichnis | Warnung |
+| `gsdml-not-found` | GSDML-Datei aus dem `TypeIdentifier` liegt in keinem `gsdml`-Verzeichnis, mehrfach mit verschiedenem Inhalt, oder kein `gsdml`-Verzeichnis ist angegeben (E-020) | Warnung |
 | `devdesc-not-found` | CODESYS: zur Gerätekennung keine oder mehrere Gerätebeschreibungen in den `deviceDescriptions`-Verzeichnissen | Warnung |
 | `order-number-not-in-project` | Gerät ohne Bestellnummer in Projekt, GSDML bzw. Gerätebeschreibung | Warnung |
 | `supplier-unknown` | Hersteller nicht ermittelbar | Warnung |
@@ -433,7 +433,7 @@ Eingang: `.tsproj` plus die `.plcproj` je SPS-Projekt, auf die sie verweist (dir
 
 ### 5.4 Siemens TIA Portal V17–V21, AML-Export: `tia-aml` (M7, M8)
 
-Liest die AutomationML-Datei aus dem CAx-Export von TIA Portal. Kein TIA, keine Lizenz, läuft auf jedem Agenten. M7 umgesetzt (ohne GSDML-Auswertung, die folgt mit M8); vollständige Feldtabelle, Regeln und Fixtures in `docs/adapter-tia-aml.md`, Entscheidungen E-019.
+Liest die AutomationML-Datei aus dem CAx-Export von TIA Portal. Kein TIA, keine Lizenz, läuft auf jedem Agenten. M7 und M8 umgesetzt; vollständige Feldtabelle, Regeln und Fixtures in `docs/adapter-tia-aml.md`, Entscheidungen E-019 und E-020 (GSDML).
 
 #### 5.4.1 Eingang
 
@@ -522,14 +522,15 @@ Eine Station ist **eine CPU und die Geräte ihres IO-Systems**.
 
 #### 5.4.5 GSD-Geräte und GSDML-Dateien
 
-Im AML steht für GSD-Geräte nur `TypeIdentifier` (GSDML-Dateiname, Art, Id) und `TypeName`, keine Bestellnummer, kein Hersteller, keine Firmware (belegt durch Fixture `sample_device.aml`, Leuze BCL248i). Stand M7 (ohne GSDML): Kopfmodul als Firmware-Komponente mit `order-number-not-in-project`, `supplier-unknown`, `firmware-not-in-project`; Dateiname, Art und Id als `<ns>:vendorKey:GSDML`, `GsdType`, `GsdId`; Module passiv. Der Rest dieses Abschnitts folgt mit M8.
+Im AML steht für GSD-Geräte nur `TypeIdentifier` (GSDML-Dateiname, Art, Id) und `TypeName`, keine Bestellnummer, kein Hersteller, keine Firmware (belegt durch Fixture `sample_device.aml`, Leuze BCL248i). Umgesetzt mit M8 (E-020), belegt durch die GSDML-Fixture `fixtures/gsdml/GSDML-V2.41-LEUZE-BCL248i-20211213.xml` aus demselben Repository.
 
-- `machine.yml` nennt unter `gsdml` Verzeichnisse mit GSDML-Dateien (im Repository der Maschine oder auf dem Agenten). Gesucht wird der Dateiname aus dem `TypeIdentifier`, ohne Groß-/Kleinschreibung.
-- Aus der GSDML-Datei (PROFINET GSDML, XML) lesen: `DeviceIdentity@VendorID` und `@DeviceID`, `DeviceIdentity/VendorName@Value` (Hersteller), das `DeviceAccessPointItem` mit der `ID` aus dem `TypeIdentifier` und daraus `ModuleInfo/OrderNumber@Value`, `ModuleInfo/SoftwareRelease@Value`, `ModuleInfo/HardwareRelease@Value`; für Module das `ModuleItem` mit der Modul-Id. Element- und Attributnamen an einer echten GSDML-Fixture belegen, bevor sie im Code stehen.
-- Ergebnis: Hersteller mit `vendor:origin = gsdml`, Bestellnummer aus der GSDML, `VendorID`/`DeviceID` und Dateiname als `vendorKey`, SHA-256 der GSDML-Datei als `<ns>:vendorKey:gsdmlSha256`.
-- **`SoftwareRelease` ist nicht die Firmware des Geräts**, sondern der Stand, den die GSDML beschreibt. Er geht nur als `<ns>:gsdml:softwareRelease` in die SBOM. Die Firmware bleibt `firmware-not-in-project`, bis der Ist-Stand vorliegt.
-- GSD-Module (`M/…`) ohne eigene Firmware-Angabe sind passiv und kommen in den Hardware-Anhang.
-- Datei nicht gefunden: `gsdml-not-found` und `order-number-not-in-project` (Warnungen), Hersteller `supplier-unknown`, außer `vendorOverrides` greift.
+- `machine.yml` nennt unter `gsdml` Verzeichnisse mit GSDML-Dateien (im Repository der Maschine oder auf dem Agenten). Gesucht wird der Dateiname aus dem `TypeIdentifier`, ohne Groß-/Kleinschreibung (das AML schreibt ihn in Großbuchstaben), rekursiv; gelesen wird nur die gesuchte Datei. Gleicher Name mit gleichem Inhalt mehrfach: die erste nach Pfad; mit verschiedenem Inhalt: keine (`gsdml-not-found` mit allen Fundstellen). Verzeichnis fehlt: Exit 2 (`GSDML_DIR_NOT_FOUND`); gefundene Datei ist keine GSDML: Exit 2 (`NOT_GSDML`).
+- Aus der GSDML-Datei gelesen (Namen an der Fixture belegt): `ProfileBody/DeviceIdentity@VendorID` und `@DeviceID`, `DeviceIdentity/VendorName@Value` (Hersteller), das `DeviceAccessPointItem` bzw. `ModuleItem` mit der `ID` aus dem `TypeIdentifier` (unter `ApplicationProcess/DeviceAccessPointList` bzw. `ModuleList`) und aus dessen direktem `ModuleInfo` `OrderNumber@Value`, `SoftwareRelease@Value`, `HardwareRelease@Value`.
+- Ergebnis: Hersteller mit `vendor:origin = gsdml` (`vendorOverrides` gilt davor, wenn die Bestellnummer aus der GSDML passt), Bestellnummer unverändert, `VendorId`, `DeviceId`, `gsdmlFile` (Pfad) und `gsdmlSha256` als `vendorKey`; `GSDML`, `GsdType`, `GsdId` bleiben die Werte aus dem AML. Die Fixture nennt `501xxxxx`: Bestellnummern mit `*`, `?` oder `xx` bekommen `orderNumber:pattern = true`.
+- **`SoftwareRelease` ist nicht die Firmware des Geräts**, sondern der Stand, den die GSDML beschreibt. Er geht nur als `<ns>:gsdml:softwareRelease` in die SBOM, `HardwareRelease` als `<ns>:gsdml:hardwareRelease`. Die Firmware bleibt `firmware-not-in-project`, bis der Ist-Stand vorliegt.
+- GSD-Module (`M/…`) ohne eigene Firmware-Angabe sind passiv und kommen in den Hardware-Anhang, mit Hersteller und, falls vorhanden, Bestellnummer aus der GSDML.
+- Datei nicht gefunden oder kein `gsdml` angegeben: `gsdml-not-found`, `order-number-not-in-project`, `supplier-unknown` (Warnungen). Id nicht in der GSDML: Warnung (`TIA_AML_GSDML_ITEM_NOT_FOUND`), Hersteller aus der Datei, `order-number-not-in-project`.
+- `inspect --gsdml <verzeichnis>` zeigt je GSD-Teil Datei, Hersteller, Bestellnummer und Releases; fehlende oder mehrdeutige Dateien als Warnung (`GSDML_NOT_FOUND`, `GSDML_AMBIGUOUS`).
 - Der GSDML-Leser liegt in `Adapters/Gsdml/` und wird später auch von `tia-portal` genutzt.
 
 #### 5.4.6 Fehlerfälle
@@ -537,8 +538,9 @@ Im AML steht für GSD-Geräte nur `TypeIdentifier` (GSDML-Dateiname, Art, Id) un
 | Fall | Exit |
 |---|---|
 | Datei fehlt, kein gültiges XML, kein `CAEXFile`, nicht von TIA Portal geschrieben | 2 (`SOURCE_NOT_FOUND`, `XML_INVALID`, `NOT_AML`, `NOT_TIA_AML`) |
+| `gsdml`-Verzeichnis fehlt, gefundene Datei ist keine GSDML | 2 (`GSDML_DIR_NOT_FOUND`, `NOT_GSDML`) |
 | `plc` nicht gefunden, mehrere CPUs ohne `plc`, Gerät in zwei Stationen | 2 (`TIA_AML_PLC_NOT_FOUND`, `TIA_AML_PLC_REQUIRED`, `TIA_AML_DEVICE_IN_TWO_STATIONS`) |
-| Unbekannte `WriterVersion`, unbekannte Rolle, unbekannter `TypeIdentifier`-Präfix, abweichende Katalogversion, IO-System ohne CPU, Muster ohne Treffer | Warnung, weiter; nicht in der SBOM, sondern als Adapter-Warnung mit Code (E-019) |
+| Unbekannte `WriterVersion`, unbekannte Rolle, unbekannter `TypeIdentifier`-Präfix, abweichende Katalogversion, IO-System ohne CPU, Muster ohne Treffer, Id nicht in der GSDML | Warnung, weiter; nicht in der SBOM, sondern als Adapter-Warnung mit Code (E-019, E-020) |
 
 ### 5.5 Siemens TIA Portal V21 über Openness: `tia-portal` (M14)
 
@@ -914,7 +916,8 @@ Die Adapter-Meilensteine M2 bis M8 und M14 folgen der festgelegten Reihenfolge: 
 | L5X | `github.com/RockwellAutomation/ra-logix-cicd`, `1-production-files/L5Xs/*.L5X` | 1756-L85E, V36.11; zwei AOI-Exporte (eingecheckt) | MIT |
 | L5X | `github.com/hutcheb/acd`, `resources/*.L5X` | V34.01, AOI, 1756-EN2T, Redundanz (eingecheckt) | Apache-2.0 |
 | L5X | `github.com/Colt-H/L5X-Creator`, `github.com/reh3376/acd-l5x-tool-lib` | generiert, keine Studio-5000-Exporte; nicht als Beleg genutzt (`docs/adapter-studio5000.md`) | MIT |
-| TIA-AML | `github.com/vformi/PLC.Commissioning.Lib`, `src/PLC.Commissioning.Lib.App/samples/sample_device.aml` | **TIA V17** (`WriterVersion 1700`), S7-1200 CPU 1214C `V4.5`, GSD-Gerät Leuze BCL248i (eingecheckt; passende GSDML im selben Repository für M8) | MIT (geprüft 29.10.2026 und 01.11.2026) |
+| TIA-AML | `github.com/vformi/PLC.Commissioning.Lib`, `src/PLC.Commissioning.Lib.App/samples/sample_device.aml` | **TIA V17** (`WriterVersion 1700`), S7-1200 CPU 1214C `V4.5`, GSD-Gerät Leuze BCL248i (eingecheckt) | MIT (geprüft 29.10.2026 und 01.11.2026) |
+| GSDML | `github.com/vformi/PLC.Commissioning.Lib`, `src/PLC.Commissioning.Lib.App/samples/GSDML-V2.41-LEUZE-BCL248i-20211213.xml` | GSDML zum BCL248i der V17-Fixture, Bestellnummer `501xxxxx`, `SoftwareRelease` `V1.*.*` (eingecheckt, M8) | MIT (Repository; Datei von Leuze ohne eigenen Hinweis, E-020) |
 | TIA-AML | `github.com/frattam-eng/openess_CIP`, `openess_CIP/CIP_cs_HardwareNetwork.aml` | **TIA V18**, S7-1500, vier ET 200SP mit passiven und firmwarebehafteten Modulen, zwei G120C, sieben IO-System-Links | keine → nur `_local` |
 | TIA-AML | `github.com/JBuschkind/Interoperabilit-tsprojekt`, `Testing-Files/TIA_Export.aml` u. a. | **TIA V21** (`WriterVersion 2100`), S7-1500 CPU 1511-1 PN `V2.8`, PM ohne Firmware-Attribut, Profilschiene mit `***` | keine → nur `_local` |
 | TIA-AML, GSDML | **Comquent-Demo-Projekt** (von Comquent zu liefern) | TIA V21, S7-1500, ET 200SP, ein GSD-Gerät mit weitergabefähiger GSDML, ein Antrieb, ein HMI-Panel, eine LGF-Instanz, ein know-how-geschützter Baustein; als `.zap21` für M14 und als AML-Export für M7/M8 | Comquent-eigen |

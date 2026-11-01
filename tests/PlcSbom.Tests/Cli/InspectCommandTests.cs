@@ -126,13 +126,41 @@ public sealed class InspectCommandTests
     }
 
     [Fact]
-    public async Task Gsdml_for_tia_aml_names_milestone_m8()
+    public async Task Gsdml_adds_vendor_and_order_number_to_gsd_items()
     {
-        var (exit, _, error) = await Run("inspect", Fixtures.PathOf("tia-aml/plc-commissioning-sample_device.aml"), "--adapter", "tia-aml", "--gsdml", "gsdml/");
+        var gsdml = Fixtures.PathOf("gsdml");
+
+        var (exit, output, error) = await Run("inspect", Fixtures.PathOf("tia-aml/plc-commissioning-sample_device.aml"), "--adapter", "tia-aml", "--gsdml", gsdml);
+
+        Assert.Equal(ExitCodes.Ok, exit);
+        Assert.Equal("", error);
+        var items = JsonNode.Parse(output)!["inspection"]!["devices"]![0]!["items"]!.AsArray();
+        var dap = items.Single(i => i!["treatment"]!.GetValue<string>() == "gsdDevice")!["gsdml"]!;
+        Assert.Equal("Leuze electronic GmbH + Co. KG", dap["vendor"]!.GetValue<string>());
+        Assert.Equal("501xxxxx", dap["orderNumber"]!.GetValue<string>());
+        Assert.Equal("V1.*.*", dap["softwareRelease"]!.GetValue<string>());
+        Assert.EndsWith("GSDML-V2.41-LEUZE-BCL248i-20211213.xml", dap["file"]!.GetValue<string>());
+        Assert.All(items.Where(i => i!["treatment"]!.GetValue<string>() == "gsdModule"), m => Assert.NotNull(m!["gsdml"]));
+        Assert.All(items.Where(i => i!["treatment"]!.GetValue<string>() == "structure"), m => Assert.Null(m!["gsdml"]));
+    }
+
+    [Fact]
+    public async Task Gsdml_not_found_is_a_warning_on_stderr()
+    {
+        var (exit, output, error) = await Run("inspect", Fixtures.PathOf("tia-aml/plc-commissioning-sample_device.aml"), "--adapter", "tia-aml", "--gsdml", Fixtures.PathOf("codesys/devdesc"));
+
+        Assert.Equal(ExitCodes.Ok, exit);
+        Assert.Equal("[GSDML_NOT_FOUND] Die GSDML-Datei GSDML-V2.41-LEUZE-BCL248I-20211213.XML liegt in keinem der Verzeichnisse aus „gsdml“.\n", error.ReplaceLineEndings("\n"));
+        Assert.Equal("GSDML_NOT_FOUND", JsonNode.Parse(output)!["inspection"]!["warnings"]![0]!["code"]!.GetValue<string>());
+    }
+
+    [Fact]
+    public async Task Missing_gsdml_directory_ends_with_exit_2()
+    {
+        var (exit, _, error) = await Run("inspect", Fixtures.PathOf("tia-aml/plc-commissioning-sample_device.aml"), "--adapter", "tia-aml", "--gsdml", Fixtures.PathOf("gibt-es-nicht"));
 
         Assert.Equal(ExitCodes.Usage, exit);
-        Assert.StartsWith("[NOT_IMPLEMENTED] ", error);
-        Assert.Contains("M8", error);
+        Assert.StartsWith("[GSDML_DIR_NOT_FOUND] ", error);
     }
 
     [Fact]

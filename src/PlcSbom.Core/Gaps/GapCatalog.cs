@@ -85,7 +85,7 @@ public static class GapCatalog
         new(LicenseUnknown, Severity.Warning, [TrField.DistributionLicence], "Keine Distributionslizenz bekannt."),
         new(VendorSbomMissing, Severity.Note, [], "Für diese Firmware liegt keine SBOM des Herstellers vor."),
         new(ProtectedBlockUnknown, Severity.Warning, [TrField.Creator, TrField.Version], "Geschützter Baustein ohne bekannten Lieferanten oder Version."),
-        new(GsdmlNotFound, Severity.Warning, [], "Die GSDML-Datei des Geräts liegt in keinem der Verzeichnisse aus „gsdml“."),
+        new(GsdmlNotFound, Severity.Warning, [], "Die GSDML-Datei des Geräts liegt in keinem der Verzeichnisse aus „gsdml“, liegt dort mehrfach mit verschiedenem Inhalt, oder es ist kein Verzeichnis angegeben."),
         new(DevdescNotFound, Severity.Warning, [], "Zur Kennung des Geräts liegt keine eindeutige CODESYS-Gerätebeschreibung in den Verzeichnissen aus „deviceDescriptions“."),
         new(OrderNumberNotInProject, Severity.Warning, [], "Weder Projekt noch GSDML nennen eine Bestellnummer."),
         new(SupplierUnknown, Severity.Warning, [TrField.Creator], "Der Hersteller ist nicht ermittelbar."),
